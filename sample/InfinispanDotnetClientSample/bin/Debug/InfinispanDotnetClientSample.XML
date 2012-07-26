@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>InfinispanDotnetClientSample</name>
+    </assembly>
+    <members>
+        <member name="M:InfinispanDotnetClientSample.Program.Main(System.String[])">
+            <summary>
+            This is the Sample Application that uses the Infinispan .NET client library.
+            </summary>
+            <param name="args">string</param>
+        </member>
+    </members>
+</doc>

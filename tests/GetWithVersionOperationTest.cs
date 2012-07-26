@@ -1,13 +1,13 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Trans;
+using Infinispan.DotNetClient.Trans.TCP;
 using System.Text;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -73,22 +73,19 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeOperationTest()
         {
-
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
 
-           
-            GetWithVersionOperation target = new GetWithVersionOperation(codec,key,null,0,null);
+
+            GetWithVersionOperation target = new GetWithVersionOperation(codec, key, null, 0, null);
             Transport transport = trans;
             BinaryVersionedValue expected = null;
             BinaryVersionedValue actual;
             actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual.Ver1);
-           
         }
     }
 }

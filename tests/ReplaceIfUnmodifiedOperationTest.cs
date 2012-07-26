@@ -1,14 +1,14 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Protocol;
-using System.Text;
+using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Trans;
+using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
+using System.Text;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -74,28 +74,27 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest1()
+        public void executeOperationTest()
         {
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             Serializer s = new DefaultSerializer();
-            byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
+            byte[] key = s.serialize("key12");
             byte[] value = s.serialize("trinitrotoluene");
 
-            byte[] cacheName = null; 
-            int topologyId = 0; 
+            byte[] cacheName = null;
+            int topologyId = 0;
             Flag[] flags = null;
-            
-            int lifespan = 0; 
-            int maxIdle = 0; 
+
+            int lifespan = 0;
+            int maxIdle = 0;
             long version = 0;
             ReplaceIfUnmodifiedOperation target = new ReplaceIfUnmodifiedOperation(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle, version);
             Transport transport = trans;
-            VersionedOperationResponse expected = null; 
+            VersionedOperationResponse expected = null;
             VersionedOperationResponse actual;
             actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual.isUpdated());
-            
         }
     }
 }

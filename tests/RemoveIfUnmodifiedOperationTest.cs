@@ -1,15 +1,14 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Trans;
+using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
 using System.Text;
-using Infinispan.DotNetClient.Util;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -75,22 +74,19 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeOperationTest()
         {
-
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             Serializer s = new DefaultSerializer();
             byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
-            
-            RemoveIfUnmodifiedOperation target = new RemoveIfUnmodifiedOperation(codec,key,null,0,null,11); 
+
+            RemoveIfUnmodifiedOperation target = new RemoveIfUnmodifiedOperation(codec, key, null, 0, null, 11);
             Transport transport = trans;
-            VersionedOperationResponse expected = null; 
+            VersionedOperationResponse expected = null;
             VersionedOperationResponse actual;
             actual = target.executeOperation(transport);
-           // Assert.AreEqual(expected, actual.getValue);
-            
+            // Assert.AreEqual(expected, actual.getValue);
         }
     }
 }

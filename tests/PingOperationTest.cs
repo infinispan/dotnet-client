@@ -1,11 +1,11 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
-using Infinispan.DotNetClient.Protocol;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -71,17 +71,15 @@ namespace DotNetClientTest
         ///A test for execute
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeTest()
         {
-            Transport trans = new TCPTransport(System.Net.IPAddress.Loopback,11222);
+            Transport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
-            PingOperation target = new PingOperation(codec,0,trans); 
-            PingOperation.PingResult expected = PingOperation.PingResult.SUCCESS; 
+            PingOperation target = new PingOperation(codec, 0, trans);
+            PingOperation.PingResult expected = PingOperation.PingResult.SUCCESS;
             PingOperation.PingResult actual;
             actual = target.execute();
             Assert.AreEqual(expected, actual);
-            
         }
     }
 }

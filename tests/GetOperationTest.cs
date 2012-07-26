@@ -1,13 +1,13 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
-using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Util;
-using System.Text;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -73,18 +73,17 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeOperationTest()
         {
-            TCPTransport trans = new TCPTransport( System.Net.IPAddress.Loopback, 11222);
+            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             Serializer s = new DefaultSerializer();
 
-           // byte[] key = s.serialize("11");
+            // byte[] key = s.serialize("11");
 
-            byte[] key = s.serialize("key11");
+            byte[] key = s.serialize("key10");
             //byte[] key= UTF8Encoding.UTF8.GetBytes("key10");
-            
+
             GetOperation target = new GetOperation(codec, key, null, 0, null);
             Transport transport = trans;
             string expected = "hexachlorocyclohexane 777";

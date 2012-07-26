@@ -1,20 +1,21 @@
-﻿using Infinispan.DotNetClient.Util;
+﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Protocol;
-using System.Text;
+using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Trans;
+using System.Collections.Generic;
 
-namespace DotNetClientTest
+namespace tests
 {
-   
+    
     
     /// <summary>
-    ///This is a test class for ClientConfigTest and is intended
-    ///to contain all ClientConfigTest Unit Tests
+    ///This is a test class for BulkGetOperationTest and is intended
+    ///to contain all BulkGetOperationTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class ClientConfigTest
+    public class BulkGetOperationTest
     {
 
 
@@ -26,7 +27,6 @@ namespace DotNetClientTest
         ///</summary>
         public TestContext TestContext
         {
-           
             get
             {
                 return testContextInstance;
@@ -69,29 +69,23 @@ namespace DotNetClientTest
 
 
         /// <summary>
-        ///A test for readAttr
+        ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
-        public void readAttrTest()
-        {           
-            ClientConfig target = new ClientConfig();
-            string key1 = "serverIP";
-            string expected = "";
-            string actual;
-            actual = target.readAttr(key1);
+        public void executeOperationTest()
+        {
+            Codec codec = null; // TODO: Initialize to an appropriate value
+            byte[] cacheName = null; // TODO: Initialize to an appropriate value
+            int topologyId = 0; // TODO: Initialize to an appropriate value
+            Flag[] flags = null; // TODO: Initialize to an appropriate value
+            int entryCount = 0; // TODO: Initialize to an appropriate value
+            BulkGetOperation target = new BulkGetOperation(codec, cacheName, topologyId, flags, entryCount); // TODO: Initialize to an appropriate value
+            Transport transport = null; // TODO: Initialize to an appropriate value
+            Dictionary<byte[], byte[]> expected = null; // TODO: Initialize to an appropriate value
+            Dictionary<byte[], byte[]> actual;
+            actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual);
-
-            /*
-            ClientConfig target = new ClientConfig();
-            string actual = target.readAttr("key");
-            Assert.AreEqual("", actual);
-          */
+            Assert.Inconclusive("Verify the correctness of this test method.");
         }
-
-        /// <summary>
-        ///A test for readAttr
-        ///</summary>
-        
     }
 }

@@ -1,14 +1,13 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
-using Infinispan.DotNetClient.Protocol;
-using System.Text;
 using Infinispan.DotNetClient.Util;
 
-
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -74,9 +73,9 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeOperationTest()
         {
+
             Transport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             Serializer s = new DefaultSerializer();
@@ -84,19 +83,16 @@ namespace DotNetClientTest
 
 
             //byte[] key = s.serialize("11");
-            byte[] key = s.serialize("key11");
+            byte[] key = s.serialize("key15");
             //byte[] key=UTF8Encoding.UTF8.GetBytes("key10");
             byte[] val = s.serialize("hexachlorocyclohexane777");//UTF8Encoding.UTF8.GetBytes("hexachlorocyclohexane777");
             PutOperation target = new PutOperation(codec, key, null, 0, null, val, 0, 0); // TODO: Initialize to an appropriate value
             Transport transport = trans;
-                        
+
             byte[] expected = null; // TODO: Initialize to an appropriate value
             byte[] actual;
             actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual);
-           
         }
-
-       
     }
 }
