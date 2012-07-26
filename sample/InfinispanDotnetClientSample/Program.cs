@@ -5,7 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Protocol;
-using Infinispan.DotnetClient;
+
 
 namespace InfinispanDotnetClientSample
 {
@@ -20,7 +20,7 @@ namespace InfinispanDotnetClientSample
             //Create new Configuration, overriding the setting in the App.config file.
             ClientConfig conf= new ClientConfig("127.0.0.1",11222,"default",0,false);
             //Here we are using a custom Serializer
-            Serializer s= new StringSerializer();
+            Serializer s= new DefaultSerializer();
             //Create a new RemoteCacheManager
             RemoteCacheManager manager = new RemoteCacheManager(conf, s);
             //Get hold of a cache from the remote cache manager
@@ -38,12 +38,12 @@ namespace InfinispanDotnetClientSample
             Console.WriteLine("key 1 value after PutIfAbsent: " + cache.get<String>("key 1"));
             Console.WriteLine("Key 2 value after PutIfAbsent: " + cache.get<String>("key 2"));
             //Replace an existing value with a new one.
-            cache.replace<String, String>("key 1", "fluoride",0,0);
+           // cache.replace<String, String>("key 1", "fluoride",0,0);
             Console.WriteLine("key 1 value after replace: " + cache.get<String>("key 1"));
             //Check whether a particular key exists
             Console.WriteLine("key 1 is exist ?: " + cache.containsKey("key 1"));
             //Remove a particular entry from the cache
-            cache.remove<String>("key 1");
+           // cache.remove<String>("key 1");
             Console.WriteLine("key 1 is exist after remove?: " + cache.containsKey("key 1"));
 
             Console.ReadLine();

@@ -4,48 +4,6 @@
         <name>dotnetclient</name>
     </assembly>
     <members>
-        <member name="M:Infinispan.DotNetClient.Operations.HotRodOperation.readHeaderAndValidate(Infinispan.DotNetClient.Trans.Transport,Infinispan.DotNetClient.Protocol.HeaderParams)">
-            Magic	| Message Id | Op code | Status | Topology Change Marker
-        </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCache.size">
-            
-            Remote Cache Interface
-            Author: sunimalr@gmail.com
-            
-        </member>
-        <member name="T:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1">
-            <summary>
-            
-            Abstraction of operations that involves a Key. eg: RemoveOperation
-              
-            Author: sunimalr@gmail.com
-            </summary>
-        </member>
-        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.sendKeyOperation(System.Byte[],Infinispan.DotNetClient.Trans.Transport,System.Byte,System.Byte)">
-            <summary>
-            Sends a request which involves only a 'key' (no value) to the server
-            </summary>
-            <param name="key"></param>
-            <param name="transport"></param>
-            <param name="opCode">OPeration Code of the request</param>
-            <param name="opRespCode">Expected response code</param>
-            <returns>Status returned form the server</returns>
-        </member>
-        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.returnVersionedOperationResponse(Infinispan.DotNetClient.Trans.Transport,Infinispan.DotNetClient.Protocol.HeaderParams)">
-            <summary>
-            USed to get the versioned operation response. It contains version information of the data in the server.  
-            </summary>
-            <param name="transport"></param>
-            <param name="param"></param>
-            <returns>Version data on the entry picked</returns>
-        </member>
-        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.returnPossiblePrevValue(Infinispan.DotNetClient.Trans.Transport)">
-            <summary>
-            If forceReturnValue is true, this returns the previous value of the entry.
-            </summary>
-            <param name="transport"></param>
-            <returns>Previous value of the queried entry</returns>
-        </member>
         <member name="T:Infinispan.DotNetClient.Util.DefaultSerializer">
              <summary>
              This is the default serializer.
@@ -75,6 +33,42 @@
              <param name="dataArray"></param>
              <returns>Deserialized object from byte array</returns>
         </member>
+        <member name="T:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1">
+            <summary>
+            
+            Abstraction of operations that involves a Key. eg: RemoveOperation
+              
+            Author: sunimalr@gmail.com
+            </summary>
+        </member>
+        <member name="M:Infinispan.DotNetClient.Operations.HotRodOperation.readHeaderAndValidate(Infinispan.DotNetClient.Trans.Transport,Infinispan.DotNetClient.Protocol.HeaderParams)">
+            Magic	| Message Id | Op code | Status | Topology Change Marker
+        </member>
+        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.sendKeyOperation(System.Byte[],Infinispan.DotNetClient.Trans.Transport,System.Byte,System.Byte)">
+            <summary>
+            Sends a request which involves only a 'key' (no value) to the server
+            </summary>
+            <param name="key"></param>
+            <param name="transport"></param>
+            <param name="opCode">OPeration Code of the request</param>
+            <param name="opRespCode">Expected response code</param>
+            <returns>Status returned form the server</returns>
+        </member>
+        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.returnVersionedOperationResponse(Infinispan.DotNetClient.Trans.Transport,Infinispan.DotNetClient.Protocol.HeaderParams)">
+            <summary>
+            USed to get the versioned operation response. It contains version information of the data in the server.  
+            </summary>
+            <param name="transport"></param>
+            <param name="param"></param>
+            <returns>Version data on the entry picked</returns>
+        </member>
+        <member name="M:Infinispan.DotNetClient.Operations.AbstractKeyOperation`1.returnPossiblePrevValue(Infinispan.DotNetClient.Trans.Transport)">
+            <summary>
+            If forceReturnValue is true, this returns the previous value of the entry.
+            </summary>
+            <param name="transport"></param>
+            <returns>Previous value of the queried entry</returns>
+        </member>
         <member name="T:Infinispan.DotNetClient.Operations.AbstractKeyValueOperation`1">
              <summary>
             Abstraction of operations that involves a Key and a value. eg: PutOperation
@@ -82,46 +76,6 @@
             Author: sunimalr@gmail.com 
              </summary>
              <typeparam name="T"></typeparam>
-        </member>
-        <member name="T:Infinispan.DotNetClient.VersionedOperationResponse">
-            <summary>
-            Keeps information on the version of the data present in the server.
-            </summary>
-        </member>
-        <member name="T:Infinispan.DotNetClient.Util.ClientConfig">
-             <summary>
-            This class keeps configuration settings and also reads them from the app.config file 
-            Author: sunimalr@gmail.com
-             </summary>
-        </member>
-        <member name="M:Infinispan.DotNetClient.Util.ClientConfig.#ctor(System.String,System.Int32,System.String,System.Int32,System.Boolean)">
-            <summary>
-            This method can be used to override the settings mentioned in the Configuration file.
-            </summary>
-            <param name="ServerIP"></param>
-            <param name="ServerPort"></param>
-            <param name="CacheName"></param>
-            <param name="TopologyID"></param>
-            <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
-        </member>
-        <member name="M:Infinispan.DotNetClient.Util.ClientConfig.#ctor">
-            <summary>
-            This is the default constructer and can be used in a situation where configuration settings mentioned in XML config files are used.
-            </summary>
-        </member>
-        <member name="T:Infinispan.DotNetClient.RemoteCacheManager">
-            
-            Aggregates RemoteCaches and lets user to get hold of a remotecache.
-            Author: sunimalr@gmail.com
-            
-        </member>
-        <member name="F:Infinispan.DotNetClient.Util.UnsignedNumeric.logger">
-            Reads an int stored in variable-length format.  Reads between one and five bytes.  Smaller values take fewer
-            bytes.  Negative numbers are not supported.
-        </member>
-        <member name="M:Infinispan.DotNetClient.Util.UnsignedNumeric.readUnsignedInt(System.Byte[],System.Int32)">
-            Reads an int stored in variable-length format.  Reads between one and five bytes.  Smaller values take fewer
-            bytes.  Negative numbers are not supported.
         </member>
         <member name="F:Infinispan.DotNetClient.ServerStatistics.TIME_SINCE_START">
             Number of seconds since Hot Rod started.
@@ -149,6 +103,52 @@
         </member>
         <member name="F:Infinispan.DotNetClient.ServerStatistics.REMOVE_MISSES">
             Number of removal misses.
+        </member>
+        <member name="T:Infinispan.DotNetClient.RemoteCacheManager">
+            
+            Aggregates RemoteCaches and lets user to get hold of a remotecache.
+            Author: sunimalr@gmail.com
+            
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCache.size">
+            
+            Remote Cache Interface
+            Author: sunimalr@gmail.com
+            
+        </member>
+        <member name="F:Infinispan.DotNetClient.Util.UnsignedNumeric.logger">
+            Reads an int stored in variable-length format.  Reads between one and five bytes.  Smaller values take fewer
+            bytes.  Negative numbers are not supported.
+        </member>
+        <member name="M:Infinispan.DotNetClient.Util.UnsignedNumeric.readUnsignedInt(System.Byte[],System.Int32)">
+            Reads an int stored in variable-length format.  Reads between one and five bytes.  Smaller values take fewer
+            bytes.  Negative numbers are not supported.
+        </member>
+        <member name="T:Infinispan.DotNetClient.Util.ClientConfig">
+             <summary>
+            This class keeps configuration settings and also reads them from the app.config file 
+            Author: sunimalr@gmail.com
+             </summary>
+        </member>
+        <member name="M:Infinispan.DotNetClient.Util.ClientConfig.#ctor(System.String,System.Int32,System.String,System.Int32,System.Boolean)">
+            <summary>
+            This method can be used to override the settings mentioned in the Configuration file.
+            </summary>
+            <param name="ServerIP"></param>
+            <param name="ServerPort"></param>
+            <param name="CacheName"></param>
+            <param name="TopologyID"></param>
+            <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
+        </member>
+        <member name="M:Infinispan.DotNetClient.Util.ClientConfig.#ctor">
+            <summary>
+            This is the default constructer and can be used in a situation where configuration settings mentioned in XML config files are used.
+            </summary>
+        </member>
+        <member name="T:Infinispan.DotNetClient.VersionedOperationResponse">
+            <summary>
+            Keeps information on the version of the data present in the server.
+            </summary>
         </member>
         <member name="T:Infinispan.DotnetClient.RemoteCacheImpl">
             

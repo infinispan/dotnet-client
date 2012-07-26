@@ -105,12 +105,50 @@
             Number of removal misses.
         </member>
         <member name="T:Infinispan.DotNetClient.RemoteCacheManager">
-            
+            <summary>
             Aggregates RemoteCaches and lets user to get hold of a remotecache.
             Author: sunimalr@gmail.com
-            
+            </summary>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCache.size">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.#ctor(Infinispan.DotNetClient.Util.ClientConfig,Infinispan.DotNetClient.Util.Serializer)">
+            <summary>
+            Constructor with specified serializer s
+            </summary>
+            <param name="configuration"></param>
+            <param name="s"></param>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.#ctor(Infinispan.DotNetClient.Util.ClientConfig)">
+            <summary>
+            Constructor with default serializer
+            </summary>
+            <param name="configuration"></param>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.getCache">
+            <summary>
+            Cache with default settings mentioned in App.config file
+            </summary>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.getCache(System.String)">
+             <summary>
+            Cache with default settings and a given cacheName
+             </summary>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.getCache(System.Boolean)">
+            <summary>
+            Cache with specified forceRetunValue parameter
+            </summary>
+            <param name="forceRetunValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCacheManager.getCache(System.String,System.Boolean)">
+             <summary>
+            Specified named cache with customized forceRetunValue option
+             </summary>
+             <param name="cacheName">If the user needs to give the cachename manually it can be passed here</param>
+             <param name="forceRetunValue">If forceRetunValue is true, cache returns the value existed before the operation</param>
+             <returns></returns>
+        </member>
+        <member name="M:Infinispan.DotNetClient.RemoteCache.size">
             
             Remote Cache Interface
             Author: sunimalr@gmail.com
@@ -150,13 +188,13 @@
             Keeps information on the version of the data present in the server.
             </summary>
         </member>
-        <member name="T:Infinispan.DotnetClient.RemoteCacheImpl">
+        <member name="T:Infinispan.DotNetClient.RemoteCacheImpl">
             
             Concrete implementation of RemoteCache inteface
             Author: sunimalr@gmail.com
             
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
             <summary>
             The constructor of RemoteCacheImpl which uses default config properties.
             </summary>
@@ -165,7 +203,7 @@
             <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
             <param name="start">Boolean start</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.String,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.String,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
             <summary>
             The constructor of RemoteCacheImpl
             </summary>
@@ -175,7 +213,7 @@
             <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
             <param name="start">Boolean start</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.Boolean,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.Boolean,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
             <summary>
              The constructor of RemoteCacheImpl
             </summary>
@@ -185,7 +223,7 @@
             <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
             <param name="start">Boolean start</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.String,System.Boolean,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.#ctor(Infinispan.DotNetClient.RemoteCacheManager,Infinispan.DotNetClient.Util.ClientConfig,System.String,System.Boolean,Infinispan.DotNetClient.Util.Serializer,Infinispan.DotNetClient.Trans.TCP.TCPTransportFactory)">
             <summary>
             The constructor of RemoteCacheImpl
             </summary>
@@ -196,25 +234,25 @@
             <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
             <param name="start">Boolean start</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.size">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.size">
             <summary>
             Used to get the number of records of the cache
             </summary>
             <returns>Current number of records in the cache</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.isEmpty">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.isEmpty">
             <summary>
             Used to check whether the cache is empty or not
             </summary>
             <returns>True if number of entries of the cache is zero</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.stats">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.stats">
             <summary>
             Used to retreive statistical information about the remote cache
             </summary>
             <returns>Server Statistics</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.put``2(``1,``0)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.put``2(``1,``0)">
             <summary>
             Used to insert a new entry to the cache. Lifespan and maxidle time is infinite
             </summary>
@@ -223,7 +261,7 @@
             <param name="key">key</param>
             <param name="val">value</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.put``2(``1,``0,System.Int32,System.Int32)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.put``2(``1,``0,System.Int32,System.Int32)">
             <summary>
             Used to insert a new entry to the cache
             </summary>
@@ -234,7 +272,7 @@
             <param name="lifespaninMillis">Lifespan in milliseconds</param>
             <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.putIfAbsent``2(``1,``0)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.putIfAbsent``2(``1,``0)">
             <summary>
             Puts a new entry to cache only if the specified key is absent. Lifespan and maxidle time is infinite.
             </summary>
@@ -243,7 +281,7 @@
             <param name="key">key</param>
             <param name="val">value</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.putIfAbsent``2(``1,``0,System.Int32,System.Int32)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.putIfAbsent``2(``1,``0,System.Int32,System.Int32)">
             <summary>
             Puts a new entry to cache only if the specified key is absent.
             </summary>
@@ -254,7 +292,7 @@
             <param name="lifespaninMillis">Lifespan in milliseconds</param>
             <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.replace``2(``1,``0)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.replace``2(``1,``0)">
             <summary>
             Replaces an existing value with a new value. Lifespan and maxidle time is infinite.
             </summary>
@@ -263,7 +301,7 @@
             <param name="key">key</param>
             <param name="val">value</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.replace``2(``1,``0,System.Int32,System.Int32)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.replace``2(``1,``0,System.Int32,System.Int32)">
             <summary>
             Replaces an existing value with a new value.
             </summary>
@@ -274,14 +312,14 @@
             <param name="lifespaninMillis">Lifespan in milliseconds</param>
             <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.containsKey(System.Object)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.containsKey(System.Object)">
             <summary>
             Checks whether the passes key exists in the cache
             </summary>
             <param name="key">Key</param>
             <returns>True if the passed key exixts. False if not exist.</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.get``1(System.Object)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.get``1(System.Object)">
             <summary>
             Used to retrieve the method 
             </summary>
@@ -289,7 +327,7 @@
             <param name="key">Key</param>
             <returns>Retrieved Value</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.getBulk``2(System.Int32)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.getBulk``2(System.Int32)">
             <summary>
             Gets bulk data from the cache
             </summary>
@@ -298,7 +336,7 @@
             <param name="size">Number of records</param>
             <returns>Dictionary of retrieved data</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.getBulk``2">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.getBulk``2">
             <summary>
             Gets bulk data from the cache
             </summary>
@@ -306,7 +344,7 @@
             <typeparam name="V">Value</typeparam>
             <returns>Dictionary of retrieved data</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.remove``1(System.Object)">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.remove``1(System.Object)">
             <summary>
             Removes a record with given key
             </summary>
@@ -314,12 +352,12 @@
             <param name="key">Key</param>
             <returns>Removed value</returns>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.clear">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.clear">
             <summary>
             Clears the cache
             </summary>
         </member>
-        <member name="M:Infinispan.DotnetClient.RemoteCacheImpl.ping">
+        <member name="M:Infinispan.DotNetClient.RemoteCacheImpl.ping">
             <summary>
             Application level operation to check existance of the cache
             </summary>
