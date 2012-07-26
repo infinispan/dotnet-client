@@ -4,3 +4,5 @@ TestResults
 *.sln
 *.testsettings
 *.suo
+bin
+obj
