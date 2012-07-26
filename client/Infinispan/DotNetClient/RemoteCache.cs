@@ -5,7 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Operations;
 
-namespace Infinispan.DotnetClient
+namespace Infinispan.DotNetClient
 {
     public interface RemoteCache
     {
@@ -24,7 +24,6 @@ namespace Infinispan.DotnetClient
         ServerStatistics stats();
 
         void put<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
-
 
         V putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 

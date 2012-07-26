@@ -9,7 +9,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient;
 
-namespace Infinispan.DotnetClient
+namespace Infinispan.DotNetClient
 {
 
     /**

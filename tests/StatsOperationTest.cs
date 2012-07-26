@@ -1,14 +1,13 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using System.Collections.Generic;
 using Infinispan.DotNetClient.Trans.TCP;
-using Infinispan.DotNetClient.Protocol;
-using System.Text;
-using Infinispan.DotNetClient;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -74,20 +73,19 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest1()
+        public void executeOperationTest()
         {
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             byte[] cacheName = null;
-            int topologyId = 0; 
+            int topologyId = 0;
             Flag[] flags = null;
             StatsOperation target = new StatsOperation(codec, cacheName, topologyId, flags);
             Transport transport = trans;
-            string expected = ""; 
+            string expected = "";
             Dictionary<string, string> actual;
             actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual[ServerStatistics.CURRENT_NR_OF_ENTRIES]);
-            
         }
     }
 }

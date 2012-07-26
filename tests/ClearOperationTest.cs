@@ -1,11 +1,12 @@
 ﻿using Infinispan.DotNetClient.Operations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
-using Infinispan.DotNetClient.Protocol;
 
-namespace DotNetClientTest
+namespace tests
 {
     
     
@@ -71,18 +72,14 @@ namespace DotNetClientTest
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        [DeploymentItem("dotnet_client.dll")]
         public void executeOperationTest()
         {
-
-
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
-           
-            ClearOperation target = new ClearOperation(codec,null,0,null); 
-            Transport transport = null; 
+
+            ClearOperation target = new ClearOperation(codec, null, 0, null);
+            Transport transport = null;
             target.executeOperation(transport);
-           
         }
     }
 }

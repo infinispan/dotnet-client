@@ -8,20 +8,28 @@ using System.IO;
 
 namespace Infinispan.DotNetClient.Util
 {
+    /// <summary>
+    /// This is the serializer interface.
+    /// Users can implement this interface and develop their own serializer without using defualt serializer.
+    ///  
+    /// Author: sunimalr@gmail.com
+    /// </summary>
     public interface Serializer
     {
-    /*
-     * This is the serializer interface.
-     * Users can implement this interface and develop their own serializer without using defualt serializer.
-     * 
-     * Author: sunimalr@gmail.com
-     * 
-     */
         
-        //converts an object ob to a byte array. 
+        /// <summary>
+        /// converts an object ob to a byte array. 
+        /// </summary>
+        /// <param name="ob">Object which needs to be serialized (convert to byte array)</param>
+        /// <returns>Serialized boject as a  byte array</returns>
         byte[] serialize(Object ob);
             
-        //converts a byte array to a object. 
+        //
+        /// <summary>
+        ///converts a byte array to a object.  
+        /// </summary>
+        /// <param name="dataArray">byte array that needs to be Deserialized (convert to object)</param>
+        /// <returns>Deserialized object</returns>
         Object deserialize(byte[] dataArray);
     }
 }
