@@ -61,15 +61,22 @@ namespace Infinispan.DotNetClient.Util
         ///converts a byte array to a object. 
         /// </summary>
         /// <param name="dataArray"></param>
-        /// <returns>Deserialized object from byte array</returns>
+        /// <returns>Deserialized object from byte array if dataarray is not null, else null will be returned.</returns>
         public Object deserialize(byte[] dataArray)
         {
-            this.memoryStreamOut.Write(dataArray, 0, dataArray.Length);
-            this.memoryStreamOut.Seek(0, SeekOrigin.Begin);
-            Object o = (Object)binaryFormatter.Deserialize(memoryStreamOut);
-            memoryStreamOut.Flush();
-            logger.Trace("Deserialized : " + o.ToString());
-            return o;
+            if (dataArray == null)
+            {
+                return null;
+            }
+            else
+            {
+                this.memoryStreamOut.Write(dataArray, 0, dataArray.Length);
+                this.memoryStreamOut.Seek(0, SeekOrigin.Begin);
+                Object o = (Object)binaryFormatter.Deserialize(memoryStreamOut);
+                memoryStreamOut.Flush();
+                logger.Trace("Deserialized : " + o.ToString());
+                return o;
+            }
         }
     }
 }
