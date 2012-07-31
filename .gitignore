@@ -1,4 +1,5 @@
-# ignore files
+# ignore
+files
 TestResults
 *.vsmdi
 *.sln
@@ -7,3 +8,4 @@ TestResults
 bin
 obj
 *.dll
+release/infinispanclient*.zip
