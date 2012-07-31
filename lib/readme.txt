@@ -1,2 +1,2 @@
-Add project's dependencies here. Make sure no DLL files are committed but only keep them locally. 
-In order to do that use the ../.gitignore
+Following dependencies (versions) should be downloaded here:
+- NLog version 2.0: http://nlog-project.org/download
