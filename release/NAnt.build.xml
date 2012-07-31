@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<project name="Prepare release" default="build" basedir=".">
+  <description>Used for packing the release archive for the C# client.</description>
+  
+  <property name="version" value="1.0.0.ALPHA1" overwrite="false"/>
+  <property name="tmpdir" value="infinispanclient-${version}" overwrite="false" />
+
+  <target name="clean" description="remove all generated files">
+    <delete dir="${tmpdir}" failonerror="false" />
+    <delete file="infinispanclient-${version}.zip"/>
+  </target>
+
+  <target name="builddirs">
+    <mkdir dir="${tmpdir}"/>
+    <mkdir dir="${tmpdir}\bin"/>
+    <mkdir dir="${tmpdir}\config"/>
+  </target>
+
+  <target name="bin">
+    <csc target="library" doc="${tmpdir}\bin\infinispanclient.xml" output="${tmpdir}\bin\infinispanclient.dll" debug="true">
+      <sources basedir="..\client">
+        <include name="Infinispan/**/*.cs" />
+      </sources>
+      <references>
+        <include name="../lib/NLog.dll" />
+      </references>
+    </csc>
+    <copy file="../lib/NLog.dll" todir="${tmpdir}\bin"/>
+  </target>
+
+  <target name="config">
+    <copy file="../client/NLog.config" todir="${tmpdir}\config"/>
+    <copy file="../client/App.config" todir="${tmpdir}\config"/>
+  </target>
+
+  <target name="sample">
+    <copy file="sample" todir="${tmpdir}/sample"/>
+  </target>
+
+  <target name="build" depends="clean, builddirs, bin, config, sample" description="builds the distribution zip">
+    <copy file="files/README.txt" todir="${tmpdir}"/>
+    <zip zipfile="infinispanclient-${version}.zip">
+      <fileset basedir="${tmpdir}" prefix="${tmpdir}">
+        <include name="**/*" />
+      </fileset>
+    </zip>
+  </target>
+
+</project>

@@ -6,3 +6,4 @@ TestResults
 *.suo
 bin
 obj
+*.dll

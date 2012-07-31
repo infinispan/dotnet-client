@@ -9,7 +9,7 @@ using Infinispan.DotNetClient.Protocol;
 
 namespace InfinispanDotnetClientSample
 {
-    class Program
+    class SampleInfinispanClientApplication
     {
         /// <summary>
         /// This is the Sample Application that uses the Infinispan .NET client library.
@@ -43,7 +43,7 @@ namespace InfinispanDotnetClientSample
             //Check whether a particular key exists
             Console.WriteLine("key 1 is exist ?: " + cache.containsKey("key 1"));
             //Remove a particular entry from the cache
-           // cache.remove<String>("key 1");
+            //cache.remove<String>("key 1");
             Console.WriteLine("key 1 is exist after remove?: " + cache.containsKey("key 1"));
 
             Console.ReadLine();
