@@ -2,7 +2,7 @@
 <project name="Prepare release" default="build" basedir=".">
   <description>Used for packing the release archive for the C# client.</description>
   
-  <property name="version" value="1.0.0.ALPHA1" overwrite="false"/>
+  <property name="version" value="1.0.0.Alpha1" overwrite="false"/>
   <property name="tmpdir" value="infinispanclient-${version}" overwrite="false" />
 
   <target name="clean" description="remove all generated files">
@@ -44,6 +44,7 @@
         <include name="**/*" />
       </fileset>
     </zip>
+    <delete dir="${tmpdir}" failonerror="false" />
   </target>
 
 </project>

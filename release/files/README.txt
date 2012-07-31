@@ -5,7 +5,7 @@ Running the sample application:
    - in order to be able to run the sample application you’ll need to download the Infinispan server. An Infinispan server distribution can be found here: http://www.jboss.org/infinispan/downloads.html
    - unzip the distribution in a folder. We’ll refer to it as <ISPN_HOME>
    - start a hotrod server by running “"bin\startServer.bat -r hotrod" from the <ISPN_HOME> directory. (for more details see: https://docs.jboss.org/author/display/ISPN/Using+Hot+Rod+Server)
-   - open the Microsoft Studio solution located in the “solution” folder of the infinispan dot-net client distribution
+   - open the Microsoft Visual Studio solution located in the “solution” folder of the infinispan dot-net client distribution
    - run the SampleInfinispanClientApplication
 
 Feedback:
