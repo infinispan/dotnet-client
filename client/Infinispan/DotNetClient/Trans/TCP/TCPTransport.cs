@@ -51,6 +51,16 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
         }
 
+        public IPAddress getIpAddress()
+        {
+            return ServerIP;
+        }
+
+        public int getServerPort()
+        {
+            return ServerPort;
+        }
+
         public BinaryWriter BWriter
         {
             get { return bWriter; }

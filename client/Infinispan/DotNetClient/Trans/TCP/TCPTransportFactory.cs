@@ -7,6 +7,9 @@ using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
 using System.Net;
+using Infinispan.DotNetClient.Trans.TCP;
+using Infinispan.DotNetClient.Exceptions;
+using System.Threading;
 
 namespace Infinispan.DotNetClient.Trans.TCP
 {
@@ -17,41 +20,51 @@ namespace Infinispan.DotNetClient.Trans.TCP
         private ClientConfig config;
         private int maxTransportPoolSize;
         private int minTransportPoolSize;
-        private ConcurrentQueue<Transport> transportPool;
-        
+        private ConnectionPool connectionPool;
+        private RequestBalancer balancer;
+
         public TCPTransportFactory(ClientConfig configuration)
         {
             this.config = configuration;
             serverIP = IPAddress.Parse(config.ServerIP);
             serverPort = Convert.ToInt16(config.ServerPort);
-            initializeTransportPool();
+            //initializeTransportPool();
         }
 
         public Transport getTransport()
         {
-            Transport t;
-            if (transportPool.IsEmpty)
+            //IPEndPoint addr;
+            //Monitor.Enter(this);
+            //addr = balancer.nextServer();
+            //Monitor.Exit(this);
+            //return borrowTransportFromPool(addr);
+            return new TCPTransport(IPAddress.Loopback, 11222);
+        }
+
+        private void createAndPreparePool(List<IPEndPoint> staticConfiguredServers)
+        {
+            connectionPool = ConnectionPool.getInstance();
+            foreach (IPEndPoint addr in staticConfiguredServers)
             {
-                t = new TCPTransport(this.serverIP, this.serverPort);
+                connectionPool.prepareConnectionPool(addr);
             }
-            else
-            {
-                transportPool.TryDequeue(out t);
-            }
-            return t;
         }
 
         public void releaseTransport(Transport transport)
         {
-            transportPool.Enqueue(transport);
+            ConnectionPool.getInstance().releaseTransport(transport);
         }
-
-        public void initializeTransportPool()
+        
+        private Transport borrowTransportFromPool(IPEndPoint addr)
         {
-            transportPool = new ConcurrentQueue<Transport>();
-            for (int i = 0; i < maxTransportPoolSize; i++)
+            connectionPool = ConnectionPool.getInstance();
+            try
             {
-                transportPool.Enqueue(new TCPTransport(this.serverIP,this.serverPort));
+                return connectionPool.borrowTransport(addr);
+            }
+            catch (TransportException e)
+            {
+                throw e;
             }
         }
     }

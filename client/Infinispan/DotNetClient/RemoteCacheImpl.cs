@@ -198,21 +198,22 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        public V putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public void putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
+            byte[] bytes = null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             PutIFAbsentOperation op = operationsFactory.newPutIfAbsentOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
+                bytes = (byte[])op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            byte[] bytes = (byte[])op.executeOperation(transport);
-            return (V)serializer.deserialize(bytes);
+            //return (V)serializer.deserialize(bytes);
         }
 
         /// <summary>
@@ -240,16 +241,18 @@ namespace Infinispan.DotNetClient
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
+            byte[] bytes;
             ReplaceOperation op = operationsFactory.newReplaceOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
+                bytes = (byte[])op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            byte[] bytes = (byte[])op.executeOperation(transport);
+            
             return (V)serializer.deserialize(bytes);
         }
 
@@ -261,15 +264,17 @@ namespace Infinispan.DotNetClient
         public bool containsKey(Object key)
         {
             ContainsKeyOperation op = operationsFactory.newContainsKeyOperation(serializer.serialize(key));
+            bool res=false;
             transport = transportFactory.getTransport();
             try
             {
+                res= (Boolean)op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return (Boolean)op.executeOperation(transport);
+            return res;
         }
 
         /// <summary>
@@ -278,11 +283,21 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="V">Value</typeparam>
         /// <param name="key">Key</param>
         /// <returns>Retrieved Value</returns>
-        public V get<V>(Object key)
+        public V get<V,K>(K key)
         {
             byte[] keyBytes = serializer.serialize(key);
+            byte[] bytes=null;
+            transport = transportFactory.getTransport();
             GetOperation op = operationsFactory.newGetKeyOperation(keyBytes);
-            byte[] bytes = (byte[])op.executeOperation(transport);
+            try
+            {
+                bytes = (byte[])op.executeOperation(transport);
+            }
+            finally
+            {
+                transportFactory.releaseTransport(transport);
+            }
+            
             V result = (V)serializer.deserialize(bytes);
             return result;
         }
@@ -360,12 +375,13 @@ namespace Infinispan.DotNetClient
             transport = transportFactory.getTransport();
             try
             {
+                op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            op.executeOperation(transport);
+            
         }
 
         /// <summary>
@@ -374,15 +390,17 @@ namespace Infinispan.DotNetClient
         /// <returns>PingRsult</returns>
         public PingOperation.PingResult ping()
         {
+            PingOperation.PingResult res = PingOperation.PingResult.FAIL;
             transport = transportFactory.getTransport();
             try
             {
+                res=operationsFactory.newPingOperation(transport).execute();
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return operationsFactory.newPingOperation(transport).execute();
+            return res;
         }
     }
 }

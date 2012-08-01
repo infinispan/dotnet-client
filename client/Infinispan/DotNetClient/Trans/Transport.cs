@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Net;
 
 namespace Infinispan.DotNetClient.Trans
 {
@@ -20,6 +21,10 @@ namespace Infinispan.DotNetClient.Trans
         BinaryWriter getBinaryWriter();
 
         BinaryReader getBinaryReader();
+
+        IPAddress getIpAddress();
+
+        int getServerPort();
 
         void writeArray(byte[] toAppend);
 

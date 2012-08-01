@@ -83,7 +83,7 @@ namespace tests
 
 
             //byte[] key = s.serialize("11");
-            byte[] key = s.serialize("key1");
+            byte[] key = s.serialize("key10");
             //byte[] key=UTF8Encoding.UTF8.GetBytes("key10");
             byte[] val = s.serialize("hexachlorocyclohexane777");//UTF8Encoding.UTF8.GetBytes("hexachlorocyclohexane777");
             PutOperation target = new PutOperation(codec, key, null, 0, null, val, 0, 0); // TODO: Initialize to an appropriate value

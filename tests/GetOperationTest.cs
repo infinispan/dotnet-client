@@ -81,7 +81,7 @@ namespace tests
 
             // byte[] key = s.serialize("11");
 
-            byte[] key = s.serialize("key1");
+            byte[] key = s.serialize("key50");
             //byte[] key= UTF8Encoding.UTF8.GetBytes("key10");
 
             GetOperation target = new GetOperation(codec, key, null, 0, null);

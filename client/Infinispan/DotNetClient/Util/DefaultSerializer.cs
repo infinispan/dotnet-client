@@ -19,7 +19,7 @@ namespace Infinispan.DotNetClient.Util
     /// </summary>
     public class DefaultSerializer : Serializer
     {
-
+        //TODO: Improve Serialization Efficiency
         private static Logger logger;
         private BinaryFormatter binaryFormatter;
         private MemoryStream memoryStreamIn = new MemoryStream();
@@ -53,7 +53,7 @@ namespace Infinispan.DotNetClient.Util
         /// <returns>Serialzed object as a byte array</returns>
         public byte[] serialize(Object ob)
         {
-            return new DefaultSerializer().iternal_serialize(ob);// returnArr;
+            return new DefaultSerializer().iternal_serialize(ob);
         }
 
         
@@ -70,10 +70,8 @@ namespace Infinispan.DotNetClient.Util
             }
             else
             {
-                this.memoryStreamOut.Write(dataArray, 0, dataArray.Length);
-                this.memoryStreamOut.Seek(0, SeekOrigin.Begin);
-                Object o = (Object)binaryFormatter.Deserialize(memoryStreamOut);
-                memoryStreamOut.Flush();
+                MemoryStream m = new MemoryStream(dataArray);
+                Object o = (Object)binaryFormatter.Deserialize(m);
                 logger.Trace("Deserialized : " + o.ToString());
                 return o;
             }

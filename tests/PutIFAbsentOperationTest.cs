@@ -80,7 +80,7 @@ namespace tests
             Serializer s = new DefaultSerializer();
 
             //byte[] key = UTF8Encoding.UTF8.GetBytes("key11");
-            byte[] key = s.serialize("key12");
+            byte[] key = s.serialize("key50");
             byte[] val = s.serialize("ozone");
 
             PutIFAbsentOperation target = new PutIFAbsentOperation(codec, key, null, 0, null, val, 0, 0);

@@ -1,11 +1,11 @@
-# ignore
-files
+# ignore files
 TestResults
 *.vsmdi
 *.sln
 *.testsettings
 *.suo
+*.zip
+*.dll
 bin
 obj
 *.dll
-release/infinispanclient*.zip

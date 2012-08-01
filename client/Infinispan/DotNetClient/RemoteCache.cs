@@ -25,13 +25,13 @@ namespace Infinispan.DotNetClient
 
         void put<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        V putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        void putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
         V replace<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
         bool containsKey(Object key);
         
-        V get<V>(Object key);
+        V get<V,K>(K key);
 
         Dictionary<K, V> getBulk<K, V>(int size);
 

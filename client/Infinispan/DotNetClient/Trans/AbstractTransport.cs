@@ -182,5 +182,16 @@ namespace Infinispan.DotNetClient.Trans
         {
             throw new NotImplementedException();
         }
+
+
+        public System.Net.IPAddress getIpAddress()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int getServerPort()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
