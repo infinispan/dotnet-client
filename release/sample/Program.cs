@@ -4,6 +4,7 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Protocol;
+using System;
 
 
 namespace InfinispanDotnetClientSample
@@ -41,8 +42,8 @@ namespace InfinispanDotnetClientSample
             //Put if absent is used to add entries if they are not existing in the cache
             cache.putIfAbsent<String, String>("key 1", "trinitrotoluene", 0, 0);
             cache.putIfAbsent<String, String>("key 2", "formaldehyde", 0, 0);
-            Console.WriteLine("key 1 value after PutIfAbsent: " + cache.get<String>("key 1"));
-            Console.WriteLine("Key 2 value after PutIfAbsent: " + cache.get<String>("key 2"));
+            Console.WriteLine("key 1 value after PutIfAbsent: " + cache.get<String, String>("key 1"));
+            Console.WriteLine("Key 2 value after PutIfAbsent: " + cache.get<String, String>("key 2"));
 
             cache.replace<String, String>("key 1", "fluoride", 0, 0);
             Console.WriteLine("key 1 value after replace: " + cache.get<String, String>("key 1"));  
