@@ -74,6 +74,7 @@ namespace tests
         [TestMethod()]
         public void executeOperationTest()
         {
+            Console.WriteLine("Mircea Markus");
             Codec codec = null; // TODO: Initialize to an appropriate value
             byte[] cacheName = null; // TODO: Initialize to an appropriate value
             int topologyId = 0; // TODO: Initialize to an appropriate value

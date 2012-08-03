@@ -15,7 +15,7 @@ namespace tests
     ///to contain all ClearOperationTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class ClearOperationTest
+    public class ClearOperationTest : SingleServerAbstractTest
     {
 
 

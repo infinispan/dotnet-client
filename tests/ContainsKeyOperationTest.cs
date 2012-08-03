@@ -16,7 +16,7 @@ namespace tests
     ///to contain all ContainsKeyOperationTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class ContainsKeyOperationTest
+    public class ContainsKeyOperationTest:SingleServerAbstractTest
     {
 
 
@@ -75,6 +75,9 @@ namespace tests
         [TestMethod()]
         public void executeOperationTest()
         {
+            Console.WriteLine("mmmm ");
+
+           
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
@@ -85,6 +88,7 @@ namespace tests
             bool actual;
             actual = target.executeOperation(transport);
             Assert.AreEqual(expected, actual);
+            
         }
     }
 }

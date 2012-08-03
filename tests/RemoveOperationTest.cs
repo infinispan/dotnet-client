@@ -7,6 +7,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
 using System.Text;
+using System.Diagnostics;
 
 namespace tests
 {
@@ -76,6 +77,18 @@ namespace tests
         [TestMethod()]
         public void executeOperationTest()
         {
+            Console.WriteLine("initialize invoked!");
+            //inspired from here http://www.csharp-station.com/howto/processstart.aspx
+            Process hrServer = new Process();
+
+            hrServer.StartInfo.FileName = "bin\\startServer.bat";
+            hrServer.StartInfo.WorkingDirectory = "c:\\temp\\infinispan-5.2.0.ALPHA2-all";
+            hrServer.StartInfo.Arguments = "-r hotrod";
+
+            hrServer.Start();
+            bool hasExited = hrServer.HasExited;
+            Console.WriteLine("Has exited? " + hasExited);
+
             TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
             Codec codec = new Codec();
             Serializer s = new DefaultSerializer();
