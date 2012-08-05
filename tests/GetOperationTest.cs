@@ -43,10 +43,11 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -55,17 +56,18 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key7", "carbon");
+        }
         //
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
         #endregion
 
 
@@ -73,26 +75,9 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void getTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            Serializer s = new DefaultSerializer();
-
-            // byte[] key = s.serialize("11");
-
-            byte[] key = s.serialize("key50");
-            //byte[] key= UTF8Encoding.UTF8.GetBytes("key10");
-
-            GetOperation target = new GetOperation(codec, key, null, 0, null);
-            Transport transport = trans;
-            string expected = "hexachlorocyclohexane 777";
-            byte[] actual;
-            actual = target.executeOperation(transport);
-            string res = (string)(s.deserialize(actual));
-
-
-            Assert.AreEqual(expected, res);
+            Assert.AreEqual("carbon", SingleServerAbstractTest.r.getCache().get<String,String>("key7"));
         }
     }
 }

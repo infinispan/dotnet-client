@@ -43,11 +43,12 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
+        
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -55,17 +56,19 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key8", "bromine");
+        }
+        
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
 
 
@@ -73,26 +76,11 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void replaceTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            Serializer s = new DefaultSerializer();
-            byte[] key = s.serialize("key10");
-            byte[] value = s.serialize("trinitrotoluene");
-
-            byte[] cacheName = null;
-            int topologyId = 0;
-            Flag[] flags = null;
-
-            int lifespan = 0;
-            int maxIdle = 0;
-            ReplaceOperation target = new ReplaceOperation(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle);
-            Transport transport = trans;
-            byte[] expected = null;
-            byte[] actual;
-            actual = target.executeOperation(transport);
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual("bromine", SingleServerAbstractTest.r.getCache().get<String,String>("key8"));
+            SingleServerAbstractTest.r.getCache().replace<String, String>("key8", "neon");
+            Assert.AreEqual("neon", SingleServerAbstractTest.r.getCache().get<String, String>("key8"));
         }
     }
 }

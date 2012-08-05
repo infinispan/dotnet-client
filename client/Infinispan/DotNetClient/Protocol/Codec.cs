@@ -113,6 +113,7 @@ namespace Infinispan.DotNetClient.Protocol
 
             
             byte status = trans.readByte(); //Reads the status
+            logger.Trace(String.Format("Status : " + status));
 
             byte topchange = trans.readByte(); //Reads the Topology change byte. Equals 0 for No Change in topology
 

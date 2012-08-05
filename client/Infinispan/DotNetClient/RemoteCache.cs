@@ -25,11 +25,17 @@ namespace Infinispan.DotNetClient
 
         void put<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
+        void put<V, K>(K key, V val);
+
         void putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+
+        void putIfAbsent<V, K>(K key, V val);
 
         V replace<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        bool containsKey(Object key);
+        V replace<V, K>(K key, V val);
+
+        bool containsKey<K>(K key);
         
         V get<V,K>(K key);
 
@@ -37,10 +43,18 @@ namespace Infinispan.DotNetClient
 
         Dictionary<K, V> getBulk<K, V>();
 
-        V remove<V>(Object key);
+        V remove<K, V>(K key);
         
         void clear();
 
         PingOperation.PingResult ping();
+
+        BinaryVersionedValue getWithVersion<K, V>(K key);
+
+        VersionedOperationResponse removeIfUnmodified<K>(K key, long version);
+
+        VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis);
+
+        VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version);
     }
 }

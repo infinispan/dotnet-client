@@ -42,10 +42,11 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -54,17 +55,21 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key1", "hydrogen");
+            SingleServerAbstractTest.r.getCache().put<String, String>("key2", "helium");
+            SingleServerAbstractTest.r.getCache().put<String, String>("key3", "lithium");
+        }
+        
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
 
 
@@ -72,20 +77,12 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void getBulkTest()
         {
-            Codec codec = null; // TODO: Initialize to an appropriate value
-            byte[] cacheName = null; // TODO: Initialize to an appropriate value
-            int topologyId = 0; // TODO: Initialize to an appropriate value
-            Flag[] flags = null; // TODO: Initialize to an appropriate value
-            int entryCount = 0; // TODO: Initialize to an appropriate value
-            BulkGetOperation target = new BulkGetOperation(codec, cacheName, topologyId, flags, entryCount); // TODO: Initialize to an appropriate value
-            Transport transport = null; // TODO: Initialize to an appropriate value
-            Dictionary<byte[], byte[]> expected = null; // TODO: Initialize to an appropriate value
-            Dictionary<byte[], byte[]> actual;
-            actual = target.executeOperation(transport);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Dictionary<String,String> actual = SingleServerAbstractTest.r.getCache().getBulk<String, String>();
+            Assert.AreEqual("hydrogen", actual["key1"]);
+            Assert.AreEqual("helium", actual["key2"]);
+            Assert.AreEqual("lithium", actual["key3"]);
         }
     }
 }

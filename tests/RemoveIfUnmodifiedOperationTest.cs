@@ -44,11 +44,12 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
+        
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -56,17 +57,20 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key8", "bromine");
+            SingleServerAbstractTest.r.getCache().put<String, String>("key8", "brominew");
+        }
+        
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
 
 
@@ -74,19 +78,14 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void removeIfUnmodifiedTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            Serializer s = new DefaultSerializer();
-            byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
-
-            RemoveIfUnmodifiedOperation target = new RemoveIfUnmodifiedOperation(codec, key, null, 0, null, 11);
-            Transport transport = trans;
-            VersionedOperationResponse expected = null;
-            VersionedOperationResponse actual;
-            actual = target.executeOperation(transport);
-            // Assert.AreEqual(expected, actual.getValue);
+            long version = SingleServerAbstractTest.r.getCache().getWithVersion<String, String>("key8").Ver1;
+            SingleServerAbstractTest.r.getCache().put<String, String>("key8", "hexane");
+            SingleServerAbstractTest.r.getCache().removeIfUnmodified<String>("key8", version);
+            Assert.IsTrue(SingleServerAbstractTest.r.getCache().containsKey<String>("key8"));
+            SingleServerAbstractTest.r.getCache().removeIfUnmodified<String>("key8", version+1);
+            Assert.IsFalse(SingleServerAbstractTest.r.getCache().containsKey<String>("key8"));
         }
     }
 }

@@ -43,10 +43,11 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -55,16 +56,18 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key4", "oxygen");
+        }
         //
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
         //
         #endregion
 
@@ -73,18 +76,9 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void containsKeyTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            byte[] key = UTF8Encoding.UTF8.GetBytes("key10");
-
-            ContainsKeyOperation target = new ContainsKeyOperation(codec, key, null, 0, null);
-            Transport transport = trans;
-            bool expected = false;
-            bool actual;
-            actual = target.executeOperation(transport);
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(true, SingleServerAbstractTest.r.getCache().containsKey<String>("key4"));
         }
     }
 }
