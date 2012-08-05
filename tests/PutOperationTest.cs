@@ -43,11 +43,12 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
+        
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -61,11 +62,12 @@ namespace tests
         //}
         //
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
 
 
@@ -73,26 +75,12 @@ namespace tests
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void putTest()
         {
-
-            Transport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            Serializer s = new DefaultSerializer();
-            Serializer s2 = new DefaultSerializer();
-
-
-            //byte[] key = s.serialize("11");
-            byte[] key = s.serialize("key10");
-            //byte[] key=UTF8Encoding.UTF8.GetBytes("key10");
-            byte[] val = s.serialize("hexachlorocyclohexane777");//UTF8Encoding.UTF8.GetBytes("hexachlorocyclohexane777");
-            PutOperation target = new PutOperation(codec, key, null, 0, null, val, 0, 0); // TODO: Initialize to an appropriate value
-            Transport transport = trans;
-
-            byte[] expected = null; // TODO: Initialize to an appropriate value
-            byte[] actual;
-            actual = target.executeOperation(transport);
-            Assert.AreEqual(expected, actual);
+            SingleServerAbstractTest.r.getCache().put<String, String>("key13", "boron");
+            Assert.AreEqual("boron", SingleServerAbstractTest.r.getCache().get<String, String>("key13"));
+            SingleServerAbstractTest.r.getCache().put<String, String>("key14", "chlorine");
+            Assert.AreEqual("chlorine", SingleServerAbstractTest.r.getCache().get<String, String>("key14"));
         }
     }
 }

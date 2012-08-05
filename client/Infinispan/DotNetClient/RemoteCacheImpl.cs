@@ -261,7 +261,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>True if the passed key exixts. False if not exist.</returns>
-        public bool containsKey(Object key)
+        public bool containsKey<K>(K key)
         {
             ContainsKeyOperation op = operationsFactory.newContainsKeyOperation(serializer.serialize(key));
             bool res=false;
@@ -349,7 +349,7 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Key Data Type</typeparam>
         /// <param name="key">Key</param>
         /// <returns>Removed value</returns>
-        public V remove<V>(Object key)
+        public V remove<K,V>(K key)
         {
             RemoveOperation removeOperation = operationsFactory.newRemoveOperation(serializer.serialize(key));
             transport = transportFactory.getTransport();
@@ -401,6 +401,58 @@ namespace Infinispan.DotNetClient
                 transportFactory.releaseTransport(transport);
             }
             return res;
+        }
+
+        public BinaryVersionedValue getWithVersion<K,V>(K key)
+        {
+            BinaryVersionedValue res = null;
+            transport = transportFactory.getTransport();
+            try
+            {
+                res = operationsFactory.newGetWithVersionOperation(serializer.serialize(key)).executeOperation(transport);
+            }
+            finally
+            {
+                transportFactory.releaseTransport(transport);
+            }
+            return res;
+        }
+
+        public VersionedOperationResponse removeIfUnmodified<K>(K key, long version)
+        {
+            VersionedOperationResponse res = null;
+            transport = transportFactory.getTransport();
+            try
+            {
+                res = operationsFactory.newRemoveIfUnmodifiedOperation(serializer.serialize(key),version).executeOperation(transport);
+            }
+            finally
+            {
+                transportFactory.releaseTransport(transport);
+            }
+            return res;
+        }
+
+        public VersionedOperationResponse replaceIfUnmodified<K,V>(K key,V val, long version , int lifespaninMillis, int maxIdleTimeinMillis)
+        {
+            VersionedOperationResponse res = null;
+            transport = transportFactory.getTransport();
+            int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
+            int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
+            try
+            {
+                res = operationsFactory.newReplaceIfUnmodifiedOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs, version).executeOperation(transport);
+            }
+            finally
+            {
+                transportFactory.releaseTransport(transport);
+            }
+            return res;
+        }
+
+        public VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version)
+        {
+            return replaceIfUnmodified<K, V>(key, val, version, 0, 0);
         }
     }
 }

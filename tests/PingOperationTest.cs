@@ -4,11 +4,14 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
+using System.Threading;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace tests
 {
-    
-    
+
+
     /// <summary>
     ///This is a test class for PingOperationTest and is intended
     ///to contain all PingOperationTest Unit Tests
@@ -16,8 +19,6 @@ namespace tests
     [TestClass()]
     public class PingOperationTest
     {
-
-
         private TestContext testContextInstance;
 
         /// <summary>
@@ -41,10 +42,11 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -59,26 +61,23 @@ namespace tests
         //}
         //
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
-
 
         /// <summary>
         ///A test for execute
         ///</summary>
         [TestMethod()]
-        public void executeTest()
+        public void pingTest()
         {
-            Transport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            PingOperation target = new PingOperation(codec, 0, trans);
             PingOperation.PingResult expected = PingOperation.PingResult.SUCCESS;
             PingOperation.PingResult actual;
-            actual = target.execute();
+            actual = SingleServerAbstractTest.r.getCache().ping();
             Assert.AreEqual(expected, actual);
         }
     }
