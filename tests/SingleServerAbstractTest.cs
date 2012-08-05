@@ -5,38 +5,40 @@ using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Diagnostics;
+using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Util;
+using System.Threading;
 
 namespace tests
 {
     [TestClass]
     public abstract class SingleServerAbstractTest
     {
-        Process hrServer;
+        static Process hrServer;
+        static bool isServerStarted = false;
+        static ClientConfig conf= new ClientConfig();
+        public static Serializer s= new DefaultSerializer();
+        public static RemoteCacheManager r = new RemoteCacheManager(conf, s);
 
-        [TestInitialize]
-        public void startServer() {
-            Console.WriteLine("initialize invoked!");
-            //inspired from here http://www.csharp-station.com/howto/processstart.aspx
-            hrServer = new Process();
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
 
-            hrServer.StartInfo.FileName = "bin\\startServer.bat";
-            hrServer.StartInfo.WorkingDirectory = "c:\\temp\\infinispan-5.2.0.ALPHA2-all";
-            hrServer.StartInfo.Arguments = "-r hotrod";
-
-            hrServer.Start();
-
-            bool hasExitedExited = hrServer.HasExited;
-           
-            Console.WriteLine("Has exited? " + hasExitedExited);
-            
+            if (!isServerStarted)
+            {
+                hrServer = new Process();
+                String nameOfBatchFile = "C:\\Users\\User\\GSOC\\infinispan-5.1.5.FINAL\\bin\\startServer.bat";
+                string parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
+                hrServer.StartInfo.FileName = "cmd";//"bin\\startServer.bat";
+                hrServer.StartInfo.Arguments = parameters;
+                hrServer.StartInfo.WorkingDirectory = "C:\\Users\\User\\GSOC\\infinispan-5.1.5.FINAL\\bin";
+                //hrServer.StartInfo.Arguments = "-r hotrod";
+                hrServer.Start();
+                isServerStarted = true;
+                Thread.Sleep(3000);
+            }
         }
 
-        [TestCleanup]
-        public void stopServerHere() {
-            //stop the server here
-            Console.WriteLine("before kill! Has exited?" + hrServer.HasExited);
-            hrServer.Kill();
-            Console.WriteLine("after kill! Has exited?" + hrServer.HasExited);
-        }
+
     }
 }

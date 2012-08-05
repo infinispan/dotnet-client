@@ -43,11 +43,12 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
-        //
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
+
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
         //public static void MyClassCleanup()
@@ -55,40 +56,33 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key7", "carbon0");
+            
+        }
+        
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+            SingleServerAbstractTest.r.getCache().clear();
+        }
+        
         #endregion
 
 
         /// <summary>
-        ///A test for executeOperation
+        ///A test for PutIfAbsentOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void putIfAbsentTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-            Serializer s = new DefaultSerializer();
-
-            //byte[] key = UTF8Encoding.UTF8.GetBytes("key11");
-            byte[] key = s.serialize("key50");
-            byte[] val = s.serialize("ozone");
-
-            PutIFAbsentOperation target = new PutIFAbsentOperation(codec, key, null, 0, null, val, 0, 0);
-            Transport transport = trans;
-            byte[] expected = null;
-            byte[] actual;
-            actual = target.executeOperation(transport);
-            Assert.AreEqual(expected, actual);
+            SingleServerAbstractTest.r.getCache().putIfAbsent<String, String>("key7", "carbon1");
+            SingleServerAbstractTest.r.getCache().putIfAbsent<String, String>("key8", "carbon2");
+            Assert.AreEqual("carbon0",SingleServerAbstractTest.r.getCache().get<String, String>("key7"));
+            Assert.AreEqual("carbon2", SingleServerAbstractTest.r.getCache().get<String, String>("key8"));
         }
     }
 }

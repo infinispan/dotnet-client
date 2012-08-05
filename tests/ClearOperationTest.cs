@@ -42,10 +42,11 @@ namespace tests
         //You can use the following additional attributes as you write your tests:
         //
         //Use ClassInitialize to run code before running the first test in the class
-        //[ClassInitialize()]
-        //public static void MyClassInitialize(TestContext testContext)
-        //{
-        //}
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            SingleServerAbstractTest.MyClassInitialize(testContext);
+        }
         //
         //Use ClassCleanup to run code after all tests in a class have run
         //[ClassCleanup()]
@@ -54,11 +55,13 @@ namespace tests
         //}
         //
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            SingleServerAbstractTest.r.getCache().put<String, String>("key1", "hydrogen");
+            SingleServerAbstractTest.r.getCache().put<String, String>("key2", "helium");
+        }
+        
         //Use TestCleanup to run code after each test has run
         //[TestCleanup()]
         //public void MyTestCleanup()
@@ -67,19 +70,16 @@ namespace tests
         //
         #endregion
 
-
         /// <summary>
         ///A test for executeOperation
         ///</summary>
         [TestMethod()]
-        public void executeOperationTest()
+        public void clearTest()
         {
-            TCPTransport trans = new TCPTransport(System.Net.IPAddress.Loopback, 11222);
-            Codec codec = new Codec();
-
-            ClearOperation target = new ClearOperation(codec, null, 0, null);
-            Transport transport = null;
-            target.executeOperation(transport);
+            SingleServerAbstractTest.r.getCache().clear();
+            ServerStatistics st= SingleServerAbstractTest.r.getCache().stats();
+            //Assert.AreEqual("0",st.getStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
+            //NOTE: There's a bug with Clear as the cache doesn't clear itself correctly.
         }
     }
 }

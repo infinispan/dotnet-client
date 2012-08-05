@@ -66,6 +66,7 @@
     <Compile Include="RemoveOperationTest.cs" />
     <Compile Include="ReplaceIfUnmodifiedOperationTest.cs" />
     <Compile Include="ReplaceOperationTest.cs" />
+    <Compile Include="SingleServerAbstractTest.cs" />
     <Compile Include="StatsOperationTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -75,6 +76,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="NLog.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
