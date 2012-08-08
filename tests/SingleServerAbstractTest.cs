@@ -24,21 +24,23 @@ namespace tests
         public static void MyClassInitialize(TestContext testContext)
         {
 
+
             if (!isServerStarted)
             {
+                string ispnHome = System.Environment.GetEnvironmentVariable("ISPN_HOME");
+                if (ispnHome == null)
+                    throw new Exception("you must set the ISPN_HOME variable pointing to the ISPN installation in order to be able to run the tests");
                 hrServer = new Process();
-                String nameOfBatchFile = "C:\\Users\\User\\GSOC\\infinispan-5.1.5.FINAL\\bin\\startServer.bat";
+                String nameOfBatchFile = ispnHome + "\\bin\\startServer.bat";
                 string parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
                 hrServer.StartInfo.FileName = "cmd";//"bin\\startServer.bat";
                 hrServer.StartInfo.Arguments = parameters;
-                hrServer.StartInfo.WorkingDirectory = "C:\\Users\\User\\GSOC\\infinispan-5.1.5.FINAL\\bin";
+                hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
                 //hrServer.StartInfo.Arguments = "-r hotrod";
                 hrServer.Start();
                 isServerStarted = true;
                 Thread.Sleep(3000);
             }
         }
-
-
     }
 }
