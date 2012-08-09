@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using System.IO;
+using Infinispan.DotNetClient.Trans.Impl.TCP;
 
-namespace Infinispan.DotNetClient.Trans.Impl
+namespace Infinispan.DotNetClient.Trans
 {
     /*
    * 
@@ -160,9 +161,6 @@ namespace Infinispan.DotNetClient.Trans.Impl
             throw new NotImplementedException();
         }
         
-        protected virtual void writeBytes(byte[] toAppend) { }
-
-
         public virtual void writeByte(byte toWrite)
         {
             throw new NotImplementedException();
@@ -178,18 +176,35 @@ namespace Infinispan.DotNetClient.Trans.Impl
             throw new NotImplementedException();
         }
 
-        void ITransport.writeBytes(byte[] toAppend)
+        public virtual void writeBytes(byte[] toAppend)
         {
             throw new NotImplementedException();
         }
 
 
-        public System.Net.IPAddress getIpAddress()
+        public virtual System.Net.IPAddress getIpAddress()
         {
             throw new NotImplementedException();
         }
 
-        public int getServerPort()
+        public virtual int getServerPort()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public virtual System.Net.IPEndPoint IpEndPoint()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public virtual void setTransportFactory(TCPTransportFactory tf)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual TCPTransportFactory getTransportFactory()
         {
             throw new NotImplementedException();
         }

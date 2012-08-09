@@ -59,8 +59,12 @@
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\AbstractTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\ConnectionPool.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RequestBalancer.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RoundRobinRequestBalancer.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransportFactory.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\ITransport.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\ConnectionPool.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\RequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\RoundRobinRequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransportFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyValueOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ClearOperation.cs" />
@@ -79,7 +83,6 @@
     <Compile Include="Infinispan\DotNetClient\Protocol\HotRodConstants.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\IllegalStateException.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransport.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\ITransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\ClientConfig.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\Impl\DefaultSerializer.cs" />
     <Compile Include="Infinispan\DotNetClient\ISerializer.cs" />
@@ -88,7 +91,9 @@
     <Compile Include="Infinispan\DotNetClient\Impl\RemoteCacheImpl.cs" />
     <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
     <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Flag.cs" />
+    <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

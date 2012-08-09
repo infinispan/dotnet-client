@@ -11,7 +11,6 @@ using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotNetClient.Impl;
 using Infinispan.DotnetClient;
 
-
 namespace Infinispan.DotNetClient
 {
     /// <summary>
@@ -32,8 +31,6 @@ namespace Infinispan.DotNetClient
         /// </summary>
         FAIL,
     }
-
-    
 
     /// <summary>
     /// Aggregates RemoteCaches and lets user to get hold of a remotecache.
@@ -80,8 +77,6 @@ namespace Infinispan.DotNetClient
             return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
         }
 
-        
-
         /// <summary>
         ///Cache with default settings and a given cacheName
         /// </summary>
@@ -89,7 +84,6 @@ namespace Infinispan.DotNetClient
         {
             return new RemoteCacheImpl<K, V>(this, this.config, cacheName, this.serializer, this.transportFactory);
         }
-
 
         /// <summary>
         /// Cache with specified forceRetunValue parameter

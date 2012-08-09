@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient.Trans;
 using System.IO;
 using NLog;
 

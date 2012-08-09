@@ -6,28 +6,12 @@ using System.Net;
 
 namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
-    public class RequestBalancer
+    interface RequestBalancer
     {
-         private static RequestBalancer instance=null;
-        private RequestBalancer()
-        { 
-        }
+        void setServers(List<IPEndPoint> serverList);
 
-        public static RequestBalancer getInstance()
-        {
-            if (instance == null)
-            {
-                instance = new RequestBalancer();
-            }
-            return instance;
-        }
+        IPEndPoint nextServer();
 
-        public void setServers()
-        { }
-
-        public IPEndPoint nextServer()
-        {
-            return new IPEndPoint(IPAddress.Loopback, 11222);
-        }
+        void releaseAddressToBalancer(IPEndPoint releasedServer);
     }
 }
