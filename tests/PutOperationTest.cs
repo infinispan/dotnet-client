@@ -9,78 +9,17 @@ using Infinispan.DotNetClient.Util;
 
 namespace tests
 {
-    
-    
-    /// <summary>
-    ///This is a test class for PutOperationTest and is intended
-    ///to contain all PutOperationTest Unit Tests
-    ///</summary>
+
     [TestClass()]
-    public class PutOperationTest
-    {
-
-
-        private TestContext testContextInstance;
-
-        /// <summary>
-        ///Gets or sets the test context which provides
-        ///information about and functionality for the current test run.
-        ///</summary>
-        public TestContext TestContext
-        {
-            get
-            {
-                return testContextInstance;
-            }
-            set
-            {
-                testContextInstance = value;
-            }
-        }
-
-        #region Additional test attributes
-        // 
-        //You can use the following additional attributes as you write your tests:
-        //
-        //Use ClassInitialize to run code before running the first test in the class
-        [ClassInitialize()]
-        public static void MyClassInitialize(TestContext testContext)
-        {
-            SingleServerAbstractTest.MyClassInitialize(testContext);
-        }
-        
-        //Use ClassCleanup to run code after all tests in a class have run
-        //[ClassCleanup()]
-        //public static void MyClassCleanup()
-        //{
-        //}
-        //
-        //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
-        //Use TestCleanup to run code after each test has run
-        [TestCleanup()]
-        public void MyTestCleanup()
-        {
-            SingleServerAbstractTest.r.getCache().clear();
-        }
-        
-        #endregion
-
-
-        /// <summary>
-        ///A test for executeOperation
-        ///</summary>
+    public class PutOperationTest : SingleServerAbstractTest
+    {   
         [TestMethod()]
         public void putTest()
         {
-            SingleServerAbstractTest.r.getCache().put<String, String>("key13", "boron");
-            Assert.AreEqual("boron", SingleServerAbstractTest.r.getCache().get<String, String>("key13"));
-            SingleServerAbstractTest.r.getCache().put<String, String>("key14", "chlorine");
-            Assert.AreEqual("chlorine", SingleServerAbstractTest.r.getCache().get<String, String>("key14"));
+            remoteManager.getCache().put<String, String>("key13", "boron");
+            Assert.AreEqual("boron", remoteManager.getCache().get<String, String>("key13"));
+            remoteManager.getCache().put<String, String>("key14", "chlorine");
+            Assert.AreEqual("chlorine", remoteManager.getCache().get<String, String>("key14"));
         }
     }
 }
