@@ -29,17 +29,16 @@ namespace tests
             string ispnHome = System.Environment.GetEnvironmentVariable("ISPN_HOME");
             if (ispnHome == null)
                 throw new Exception("you must set the ISPN_HOME variable pointing to the ISPN installation in order to be able to run the tests");
-
             hrServer = new Process();
             String nameOfBatchFile = ispnHome + "\\bin\\startServer.bat";
             string parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
-            hrServer.StartInfo.FileName = "cmd";//"bin\\startServer.bat";
+            hrServer.StartInfo.FileName = "cmd";
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
-            //hrServer.StartInfo.Arguments = "-r hotrod";
             hrServer.Start();
             Thread.Sleep(3000);
             remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
+
         }
 
         [TestCleanup()]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net;
+using Infinispan.DotNetClient.Trans.Impl.TCP;
 
 namespace Infinispan.DotNetClient.Trans
 {
@@ -67,5 +68,11 @@ namespace Infinispan.DotNetClient.Trans
         byte[] dumpStream();
 
         void writeBytes(byte[] toAppend);
+
+        IPEndPoint IpEndPoint();
+
+        void setTransportFactory(TCPTransportFactory tf);
+
+        TCPTransportFactory getTransportFactory();
     }
 }

@@ -10,7 +10,8 @@ using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
 using Infinispan.DotNetClient.Util.Impl;
-namespace Infinispan.DotNetClient.Trans.Impl.TCP
+using Infinispan.DotNetClient.Trans.Impl.TCP;
+namespace Infinispan.DotNetClient.Trans.Impl
 {
     /*
      * Handles all the communication between the server and client at the Transport layer level.
@@ -29,37 +30,46 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         private BinaryReader bReader;
         private static Logger logger;
 
-        public TCPTransport(IPAddress server, int serverPort)
+        private IPEndPoint ipEndPoint;
+        TCPTransportFactory transportFactory;
+
+        public TCPTransport(IPEndPoint endPoint)
         {
-            this.serverIP = server;
-            this.serverPort = serverPort;
+            ipEndPoint = endPoint;
             logger = LogManager.GetLogger("TCPTransport");
             try
             {
                 tcpClient = new TcpClient();
-                tcpClient.Connect(server, serverPort);
+                tcpClient.Connect(ipEndPoint.Address, ipEndPoint.Port);
+                // tcpClient.Connect(IPAddress.Loopback, 11222);
                 this.buff = new BufferedStream(tcpClient.GetStream());
                 this.bWriter = new BinaryWriter(buff);
                 this.bReader = new BinaryReader(tcpClient.GetStream());
-                String message = string.Format("Connected to server :" + server.ToString() + " : " + serverPort);
+                String message = string.Format("Connected to server :" + ipEndPoint.Address.ToString() + " : " + ipEndPoint.Port);
+
                 logger.Trace(message);
             }
             catch (Exception e)
             {
-                String message = string.Format("Could not connect to server :" + server.ToString() + " : " + serverPort);
+                String message = string.Format("Could not connect to server :" + ipEndPoint.Address.ToString() + " : " + ipEndPoint.Port);
                 logger.Warn("Infinispan.DotNetClient", message);
                 throw new TransportException(message, e);
             }
         }
 
-        public IPAddress getIpAddress()
+        public override TCPTransportFactory getTransportFactory()
         {
-            return ServerIP;
+            return transportFactory;
         }
 
-        public int getServerPort()
+        public override void setTransportFactory(TCPTransportFactory tf)
         {
-            return ServerPort;
+            this.transportFactory = tf;
+        }
+
+        public override IPEndPoint IpEndPoint()
+        {
+            return ipEndPoint;
         }
 
         public BinaryWriter BWriter
@@ -74,21 +84,10 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             set { bReader = value; }
         }
 
+
         public NetworkStream getNetworkOutStream()
         {
             return this.tcpClient.GetStream();
-        }
-
-        public IPAddress ServerIP
-        {
-            get { return serverIP; }
-            set { serverIP = value; }
-        }
-
-        public int ServerPort
-        {
-            get { return serverPort; }
-            set { serverPort = value; }
         }
 
         public override BinaryWriter getBinaryWriter()
@@ -99,6 +98,16 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         public override BinaryReader getBinaryReader()
         {
             return this.BReader;
+        }
+
+        public override IPAddress getIpAddress()
+        {
+            return this.ipEndPoint.Address;
+        }
+
+        public override int getServerPort()
+        {
+            return this.ipEndPoint.Port;
         }
 
         //Writing and reading Variable Length numerics are handed by UnsignedNumeric Class. 
@@ -142,6 +151,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             catch (IOException e)
             {
                 logger.Warn(e);
+
                 throw new TransportException(e);
             }
         }
@@ -156,12 +166,13 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             catch (IOException e)
             {
                 logger.Warn(e);
+
                 throw new TransportException(e);
             }
         }
 
         //Writes a byte array to the stream
-        protected override void writeBytes(byte[] toAppend)
+        public override void writeBytes(byte[] toAppend)
         {
             try
             {
@@ -202,6 +213,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                 {
                     logger.Trace(String.Format("Byte read : " + resultInt));
                 }
+
             }
             catch (IOException e)
             {
@@ -235,6 +247,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                     read = bReader.Read(result, offset, len);
                     if (logger.IsTraceEnabled)
                         logger.Trace(String.Format("Byte array read : " + read));
+
                 }
                 catch (IOException e)
                 {
@@ -245,6 +258,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                 {
                     if (logger.IsTraceEnabled)
                         logger.Warn("End of stream reached!");
+
                     throw new TransportException("End of stream reached!");
                 }
                 if (read + offset == size)
@@ -273,6 +287,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                 this.bWriter.Flush();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Binary Writer Flushed!!");
+
             }
             catch (IOException e)
             {
@@ -289,6 +304,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                 tcpClient.Close();
                 if (logger.IsTraceEnabled)
                     logger.Trace("TCPClient Closed!!!");
+
             }
             catch (IOException e)
             {

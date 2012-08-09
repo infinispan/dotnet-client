@@ -20,8 +20,8 @@ namespace tests
             PingResult actual = remoteManager.getCache().ping();
             Assert.AreEqual(expected, actual);
 
+            Assert.AreEqual(expected, actual);
             shutDownHotrodServer(); //this should make ping fail
-
             actual = remoteManager.getCache().ping();
             Assert.AreEqual(PingResult.FAIL, actual);
         }
