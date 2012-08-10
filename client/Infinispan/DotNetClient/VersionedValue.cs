@@ -6,7 +6,7 @@ using Infinispan.DotNetClient.Util;
 
 namespace Infinispan.DotNetClient
 {
-    public class VersionedValue
+    public class VersionedValue : IBinaryVersionedValue
     {
         private byte[] value;
         private Serializer serializer;
@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient
             
         }
 
-        public void Value(byte[] val)
+        public void setValue(byte[] val)
         {
             this.value = val;
         }
