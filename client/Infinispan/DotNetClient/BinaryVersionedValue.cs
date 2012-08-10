@@ -25,7 +25,7 @@ namespace Infinispan.DotNetClient
         }
 
 
-        public long Ver1
+        public long Ver
         {
             get { return ver; }
             set { ver = value; }

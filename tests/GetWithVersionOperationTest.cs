@@ -17,11 +17,11 @@ namespace tests
         {
             RemoteCache defaultRemote = remoteManager.getCache();
             defaultRemote.put<String, String>("key45", "uranium");
-            long eaelierVer = defaultRemote.getWithVersion<String, String>("key45").Ver1;
+            long eaelierVer = defaultRemote.getWithVersion<String, String>("key45").Ver;
             defaultRemote.put<String, String>("key45", "rubidium");
             
             BinaryVersionedValue actual = defaultRemote.getWithVersion<String, String>("key45");
-            Assert.AreNotEqual(eaelierVer, actual.Ver1);
+            Assert.AreNotEqual(eaelierVer, actual.Ver);
             Assert.AreEqual("rubidium", serializer.deserialize(actual.Value));
         }
     }
