@@ -403,7 +403,7 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public BinaryVersionedValue getWithVersion<K,V>(K key)
+        public BinaryVersionedValue getVersioned<K,V>(K key)
         {
             BinaryVersionedValue res = null;
             transport = transportFactory.getTransport();
