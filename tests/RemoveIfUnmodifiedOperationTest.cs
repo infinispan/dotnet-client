@@ -21,13 +21,13 @@ namespace tests
             long version = defaultCache.getVersioned("key8").Ver;
             defaultCache.put("key8", "hexane");
             VersionedOperationResponse response = defaultCache.removeIfUnmodified("key8", version);
-            Assert.AreEqual(response.getCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
+            Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
             Assert.AreEqual("hexane", defaultCache.get("key8"));
 
             long newVersion = defaultCache.getVersioned("key8").Ver;
             response = defaultCache.removeIfUnmodified("key8", newVersion);
 
-            Assert.AreEqual(response.getCode(), VersionedOperationResponse.RspCode.SUCCESS);
+            Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.SUCCESS);
             Assert.AreEqual(null, defaultCache.get("key8"));
         }
     }
