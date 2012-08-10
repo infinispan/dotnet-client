@@ -22,7 +22,7 @@ namespace tests
             
             VersionedValue actual = defaultRemote.getVersioned<String, String>("key45");
             Assert.AreNotEqual(eaelierVer, actual.Ver);
-            Assert.AreEqual("rubidium", serializer.deserialize(actual.Value));
+            Assert.AreEqual("rubidium", actual.getValue());
         }
     }
 }
