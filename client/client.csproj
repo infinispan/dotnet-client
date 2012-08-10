@@ -44,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infinispan\DotNetClient\BinaryVersionedValue.cs" />
+    <Compile Include="Infinispan\DotNetClient\VersionedValue.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\HotRodClientException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\InvalidResponseException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\TransportException.cs" />

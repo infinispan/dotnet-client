@@ -49,7 +49,7 @@ namespace Infinispan.DotNetClient
 
         PingOperation.PingResult ping();
 
-        BinaryVersionedValue getVersioned<K, V>(K key);
+        VersionedValue getVersioned<K, V>(K key);
 
         VersionedOperationResponse removeIfUnmodified<K>(K key, long version);
 
