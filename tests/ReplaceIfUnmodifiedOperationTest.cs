@@ -16,20 +16,20 @@ namespace tests
         [TestMethod()]
         public void replaceIfUnmodifiedTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key8", "bromine1");
-            long version = defaultCache.getVersioned<String, String>("key8").Ver;
-            defaultCache.put<String, String>("key8", "hexane");
-            VersionedOperationResponse response = defaultCache.replaceIfUnmodified<String, String>("key8", "barium", version);
+            RemoteCache<String,String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key8", "bromine1");
+            long version = defaultCache.getVersioned("key8").Ver;
+            defaultCache.put("key8", "hexane");
+            VersionedOperationResponse response = defaultCache.replaceIfUnmodified("key8", "barium", version);
             Assert.AreEqual(response.getCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
-            Assert.AreEqual("hexane", defaultCache.get<String, String>("key8"));
+            Assert.AreEqual("hexane", defaultCache.get("key8"));
             
-            defaultCache.put<String, String>("key8", "oxygen");
-            long newVersion = defaultCache.getVersioned<String, String>("key8").Ver;
+            defaultCache.put("key8", "oxygen");
+            long newVersion = defaultCache.getVersioned("key8").Ver;
             Assert.AreNotEqual(newVersion, version);
 
-            Assert.AreEqual(VersionedOperationResponse.RspCode.SUCCESS, defaultCache.replaceIfUnmodified<String, String>("key8", "barium", newVersion).getCode());
-            Assert.AreEqual("barium", defaultCache.get<String, String>("key8"));
+            Assert.AreEqual(VersionedOperationResponse.RspCode.SUCCESS, defaultCache.replaceIfUnmodified("key8", "barium", newVersion).getCode());
+            Assert.AreEqual("barium", defaultCache.get("key8"));
         }
     }
 }

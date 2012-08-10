@@ -7,7 +7,7 @@ using Infinispan.DotNetClient.Operations;
 
 namespace Infinispan.DotNetClient
 {
-    public interface RemoteCache
+    public interface RemoteCache<K,V>
     {
 
         /**
@@ -23,38 +23,38 @@ namespace Infinispan.DotNetClient
 
         ServerStatistics stats();
 
-        void put<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        void put<V, K>(K key, V val);
+        void put(K key, V val);
 
-        void putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        void putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        void putIfAbsent<V, K>(K key, V val);
+        void putIfAbsent(K key, V val);
 
-        V replace<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        V replace(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        V replace<V, K>(K key, V val);
+        V replace(K key, V val);
 
-        bool containsKey<K>(K key);
+        bool containsKey(K key);
         
-        V get<V,K>(K key);
+        V get(K key);
 
-        Dictionary<K, V> getBulk<K, V>(int size);
+        Dictionary<K,V> getBulk(int size);
 
-        Dictionary<K, V> getBulk<K, V>();
+        Dictionary<K, V> getBulk();
 
-        V remove<K, V>(K key);
+        V remove(K key);
         
         void clear();
 
         PingOperation.PingResult ping();
 
-        VersionedValue getVersioned<K, V>(K key);
+        VersionedValue getVersioned(K key);
 
-        VersionedOperationResponse removeIfUnmodified<K>(K key, long version);
+        VersionedOperationResponse removeIfUnmodified(K key, long version);
 
-        VersionedOperationResponse replaceWithVersion<K, V>(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis);
+        VersionedOperationResponse replaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis);
 
-        VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version);
+        VersionedOperationResponse replaceIfUnmodified(K key, V val, long version);
     }
 }

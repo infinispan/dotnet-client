@@ -20,7 +20,7 @@ namespace Infinispan.DotNetClient
          */
 
 
-    public class RemoteCacheImpl : RemoteCache
+    public class RemoteCacheImpl<K, V> : RemoteCache<K,V>
     {
         private ClientConfig config;
         private Serializer serializer;
@@ -28,6 +28,10 @@ namespace Infinispan.DotNetClient
         private TCPTransportFactory transportFactory;
         private Transport transport;
         private OperationsFactory operationsFactory;
+        private RemoteCacheManager<K, V> remoteCacheManager;
+        private ClientConfig clientConfig;
+        private bool forceRetunValue;
+        private TCPTransportFactory tCPTransportFactory;
 
         /// <summary>
         /// The constructor of RemoteCacheImpl which uses default config properties.
@@ -36,7 +40,7 @@ namespace Infinispan.DotNetClient
         /// <param name="configuration">Configuration of the client</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, Serializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, Serializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, "default", configuration.ForceReturnValue, s, trans)
         {
         }
@@ -49,7 +53,7 @@ namespace Infinispan.DotNetClient
         /// <param name="cacheName">Pass the cachename if it differs from the default cache name</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, String cacheName, Serializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, String cacheName, Serializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, cacheName, configuration.ForceReturnValue, s, trans)
         {
         }
@@ -62,7 +66,7 @@ namespace Infinispan.DotNetClient
         /// <param name="forceReturn">Pass ForceReturn value if it differs from the default falue</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, bool forceReturn, Serializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, bool forceReturn, Serializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, configuration.CacheName, forceReturn, s, trans)
         {
         }
@@ -76,7 +80,7 @@ namespace Infinispan.DotNetClient
         /// <param name="forceReturn">Pass ForceReturn value if it differs from the default falue</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, String cacheName, bool forceReturn, Serializer s, TCPTransportFactory trans)
+        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, String cacheName, bool forceReturn, Serializer s, TCPTransportFactory trans)
         {
             this.config = configuration;
             this.serializer = s;
@@ -86,6 +90,8 @@ namespace Infinispan.DotNetClient
             this.operationsFactory = new OperationsFactory(cacheName, config.TopologyId, forceReturn, this.codec);
             this.transportFactory = trans;
         }
+
+       
 
         /// <summary>
         /// Used to get the number of records of the cache
@@ -146,9 +152,9 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
-        public void put<V, K>(K key, V val)
+        public void put(K key, V val)
         {
-            put<V, K>(key, val, 0, 0);
+            put(key, val, 0, 0);
         }
 
         /// <summary>
@@ -160,7 +166,7 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        public void put<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
@@ -184,9 +190,9 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
-        public void putIfAbsent<V, K>(K key, V val)
+        public void putIfAbsent(K key, V val)
         {
-            putIfAbsent<V, K>(key, val, 0, 0);
+            putIfAbsent(key, val, 0, 0);
         }
 
         /// <summary>
@@ -198,7 +204,7 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        public void putIfAbsent<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public void putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             byte[] bytes = null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
@@ -223,9 +229,9 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
-        public V replace<V, K>(K key, V val)
+        public V replace(K key, V val)
         {
-            return replace<V, K>(key, val, 0, 0);
+            return replace(key, val, 0, 0);
         }
 
         /// <summary>
@@ -237,7 +243,7 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        public V replace<V, K>(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V replace(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
@@ -252,7 +258,7 @@ namespace Infinispan.DotNetClient
             {
                 transportFactory.releaseTransport(transport);
             }
-            
+
             return (V)serializer.deserialize(bytes);
         }
 
@@ -261,14 +267,14 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="key">Key</param>
         /// <returns>True if the passed key exixts. False if not exist.</returns>
-        public bool containsKey<K>(K key)
+        public bool containsKey(K key)
         {
             ContainsKeyOperation op = operationsFactory.newContainsKeyOperation(serializer.serialize(key));
-            bool res=false;
+            bool res = false;
             transport = transportFactory.getTransport();
             try
             {
-                res= (Boolean)op.executeOperation(transport);
+                res = (Boolean)op.executeOperation(transport);
             }
             finally
             {
@@ -283,10 +289,10 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="V">Value</typeparam>
         /// <param name="key">Key</param>
         /// <returns>Retrieved Value</returns>
-        public V get<V,K>(K key)
+        public V get(K key)
         {
             byte[] keyBytes = serializer.serialize(key);
-            byte[] bytes=null;
+            byte[] bytes = null;
             transport = transportFactory.getTransport();
             GetOperation op = operationsFactory.newGetKeyOperation(keyBytes);
             try
@@ -297,7 +303,7 @@ namespace Infinispan.DotNetClient
             {
                 transportFactory.releaseTransport(transport);
             }
-            
+
             V result = (V)serializer.deserialize(bytes);
             return result;
         }
@@ -309,7 +315,7 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="V">Value</typeparam>
         /// <param name="size">Number of records</param>
         /// <returns>Dictionary of retrieved data</returns>
-        public Dictionary<K, V> getBulk<K, V>(int size)
+        public Dictionary<K, V> getBulk(int size)
         {
             transport = transportFactory.getTransport();
             BulkGetOperation op = operationsFactory.newBulkGetOperation(size);
@@ -338,9 +344,9 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Key</typeparam>
         /// <typeparam name="V">Value</typeparam>
         /// <returns>Dictionary of retrieved data</returns>
-        public Dictionary<K, V> getBulk<K, V>()
+        public Dictionary<K, V> getBulk()
         {
-            return getBulk<K, V>(0);
+            return getBulk(0);
         }
 
         /// <summary>
@@ -349,7 +355,7 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Key Data Type</typeparam>
         /// <param name="key">Key</param>
         /// <returns>Removed value</returns>
-        public V remove<K,V>(K key)
+        public V remove(K key)
         {
             RemoveOperation removeOperation = operationsFactory.newRemoveOperation(serializer.serialize(key));
             transport = transportFactory.getTransport();
@@ -362,7 +368,7 @@ namespace Infinispan.DotNetClient
             {
                 transportFactory.releaseTransport(transport);
             }
-            
+
             return (V)serializer.deserialize(existingValue);
         }
 
@@ -381,7 +387,7 @@ namespace Infinispan.DotNetClient
             {
                 transportFactory.releaseTransport(transport);
             }
-            
+
         }
 
         /// <summary>
@@ -394,7 +400,7 @@ namespace Infinispan.DotNetClient
             transport = transportFactory.getTransport();
             try
             {
-                res=operationsFactory.newPingOperation(transport).execute();
+                res = operationsFactory.newPingOperation(transport).execute();
             }
             finally
             {
@@ -403,7 +409,7 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public VersionedValue getVersioned<K,V>(K key)
+        public VersionedValue getVersioned(K key)
         {
             VersionedValue res = null;
             transport = transportFactory.getTransport();
@@ -418,13 +424,13 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public VersionedOperationResponse removeIfUnmodified<K>(K key, long version)
+        public VersionedOperationResponse removeIfUnmodified(K key, long version)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
             try
             {
-                res = operationsFactory.newRemoveIfUnmodifiedOperation(serializer.serialize(key),version).executeOperation(transport);
+                res = operationsFactory.newRemoveIfUnmodifiedOperation(serializer.serialize(key), version).executeOperation(transport);
             }
             finally
             {
@@ -433,7 +439,7 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public VersionedOperationResponse replaceWithVersion<K,V>(K key,V val, long version , int lifespaninMillis, int maxIdleTimeinMillis)
+        public VersionedOperationResponse replaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
@@ -450,10 +456,11 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version)
+        public VersionedOperationResponse replaceIfUnmodified(K key, V val, long version)
         {
-            return replaceWithVersion<K, V>(key, val, version, 0, 0);
+            return replaceWithVersion(key, val, version, 0, 0);
         }
+
     }
 }
 
