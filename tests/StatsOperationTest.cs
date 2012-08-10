@@ -15,10 +15,10 @@ namespace tests
         [TestMethod()]
         public void statsOperationTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key7", "carbon0");
-            defaultCache.put<String, String>("key8", "carbon1");
-            defaultCache.put<String, String>("key9", "carbon2");
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key7", "carbon0");
+            defaultCache.put("key8", "carbon1");
+            defaultCache.put("key9", "carbon2");
             Assert.AreEqual("3", defaultCache.stats().getStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
         }
     }

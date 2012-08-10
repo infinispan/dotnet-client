@@ -17,7 +17,7 @@ namespace tests
         protected Process hrServer;
         protected ClientConfig conf= new ClientConfig();
         protected Serializer serializer= new DefaultSerializer();
-        protected RemoteCacheManager remoteManager;
+        protected RemoteCacheManager<String,String> remoteManager;
 
         [TestInitialize()]
         public void startHotrodServer()
@@ -37,7 +37,7 @@ namespace tests
             //hrServer.StartInfo.Arguments = "-r hotrod";
             hrServer.Start();
             Thread.Sleep(3000);
-            remoteManager = new RemoteCacheManager(conf, serializer);
+            remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
         }
 
         [TestCleanup()]

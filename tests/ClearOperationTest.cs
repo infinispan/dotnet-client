@@ -14,13 +14,13 @@ namespace tests
          [TestMethod()]
         public void clearTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key1", "hydrogen");
-            defaultCache.put<String, String>("key2", "helium");
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key1", "hydrogen");
+            defaultCache.put("key2", "helium");
             defaultCache.clear();
 
-            Assert.IsNull(defaultCache.get<String, String>("key1"));
-            Assert.IsNull(defaultCache.get<String, String>("key2"));
+            Assert.IsNull(defaultCache.get("key1"));
+            Assert.IsNull(defaultCache.get("key2"));
 
 
             ServerStatistics st= defaultCache.stats();

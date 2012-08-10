@@ -16,19 +16,19 @@ namespace tests
         [TestMethod()]
         public void removeIfUnmodifiedTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key8", "bromine1");
-            long version = defaultCache.getVersioned<String, String>("key8").Ver;
-            defaultCache.put<String, String>("key8", "hexane");
-            VersionedOperationResponse response = defaultCache.removeIfUnmodified<String>("key8", version);
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key8", "bromine1");
+            long version = defaultCache.getVersioned("key8").Ver;
+            defaultCache.put("key8", "hexane");
+            VersionedOperationResponse response = defaultCache.removeIfUnmodified("key8", version);
             Assert.AreEqual(response.getCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
-            Assert.AreEqual("hexane", defaultCache.get<String, String>("key8"));
+            Assert.AreEqual("hexane", defaultCache.get("key8"));
 
-            long newVersion = defaultCache.getVersioned<String, String>("key8").Ver;
-            response = defaultCache.removeIfUnmodified<String>("key8", newVersion);
+            long newVersion = defaultCache.getVersioned("key8").Ver;
+            response = defaultCache.removeIfUnmodified("key8", newVersion);
 
             Assert.AreEqual(response.getCode(), VersionedOperationResponse.RspCode.SUCCESS);
-            Assert.AreEqual(null, defaultCache.get<String, String>("key8"));
+            Assert.AreEqual(null, defaultCache.get("key8"));
         }
     }
 }
