@@ -20,7 +20,7 @@ namespace tests
             long eaelierVer = defaultRemote.getVersioned<String, String>("key45").Ver;
             defaultRemote.put<String, String>("key45", "rubidium");
             
-            BinaryVersionedValue actual = defaultRemote.getVersioned<String, String>("key45");
+            VersionedValue actual = defaultRemote.getVersioned<String, String>("key45");
             Assert.AreNotEqual(eaelierVer, actual.Ver);
             Assert.AreEqual("rubidium", serializer.deserialize(actual.Value));
         }
