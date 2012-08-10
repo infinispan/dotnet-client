@@ -15,14 +15,14 @@ namespace tests
         [TestMethod()]
         public void getWithVersionTest()
         {
-            RemoteCache defaultRemote = remoteManager.getCache();
-            defaultRemote.put<String, String>("key45", "uranium");
-            long eaelierVer = defaultRemote.getWithVersion<String, String>("key45").Ver1;
-            defaultRemote.put<String, String>("key45", "rubidium");
+            RemoteCache<String, String> defaultRemote = remoteManager.getCache();
+            defaultRemote.put("key45", "uranium");
+            long eaelierVer = defaultRemote.getVersioned("key45").Ver;
+            defaultRemote.put("key45", "rubidium");
             
-            BinaryVersionedValue actual = defaultRemote.getWithVersion<String, String>("key45");
-            Assert.AreNotEqual(eaelierVer, actual.Ver1);
-            Assert.AreEqual("rubidium", serializer.deserialize(actual.Value));
+            VersionedValue actual = defaultRemote.getVersioned("key45");
+            Assert.AreNotEqual(eaelierVer, actual.Ver);
+            Assert.AreEqual("rubidium", actual.getValue());
         }
     }
 }

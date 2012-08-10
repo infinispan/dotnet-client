@@ -42,7 +42,7 @@ namespace Infinispan.DotNetClient
             return value;
         }
 
-        public RspCode getCode()
+        public RspCode GetCode()
         {
             return code;
         }

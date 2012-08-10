@@ -16,11 +16,11 @@ namespace tests
         [TestMethod()]
         public void containsKeyTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            Assert.IsFalse(defaultCache.containsKey<String>("key4"));
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            Assert.IsFalse(defaultCache.containsKey("key4"));
             
-            defaultCache.put<String, String>("key4", "oxygen");
-            Assert.IsTrue(defaultCache.containsKey<String>("key4"));
+            defaultCache.put("key4", "oxygen");
+            Assert.IsTrue(defaultCache.containsKey("key4"));
         }
     }
 }

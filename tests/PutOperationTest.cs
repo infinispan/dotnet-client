@@ -16,10 +16,10 @@ namespace tests
         [TestMethod()]
         public void putTest()
         {
-            remoteManager.getCache().put<String, String>("key13", "boron");
-            Assert.AreEqual("boron", remoteManager.getCache().get<String, String>("key13"));
-            remoteManager.getCache().put<String, String>("key14", "chlorine");
-            Assert.AreEqual("chlorine", remoteManager.getCache().get<String, String>("key14"));
+            remoteManager.getCache().put("key13", "boron");
+            Assert.AreEqual("boron", remoteManager.getCache().get("key13"));
+            remoteManager.getCache().put("key14", "chlorine");
+            Assert.AreEqual("chlorine", remoteManager.getCache().get("key14"));
         }
     }
 }
