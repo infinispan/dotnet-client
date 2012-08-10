@@ -53,7 +53,7 @@ namespace Infinispan.DotNetClient
 
         VersionedOperationResponse removeIfUnmodified<K>(K key, long version);
 
-        VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis);
+        VersionedOperationResponse replaceWithVersion<K, V>(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis);
 
         VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version);
     }

@@ -433,7 +433,7 @@ namespace Infinispan.DotNetClient
             return res;
         }
 
-        public VersionedOperationResponse replaceIfUnmodified<K,V>(K key,V val, long version , int lifespaninMillis, int maxIdleTimeinMillis)
+        public VersionedOperationResponse replaceWithVersion<K,V>(K key,V val, long version , int lifespaninMillis, int maxIdleTimeinMillis)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
@@ -441,7 +441,7 @@ namespace Infinispan.DotNetClient
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             try
             {
-                res = operationsFactory.newReplaceIfUnmodifiedOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs, version).executeOperation(transport);
+                res = operationsFactory.newReplaceWithVersionOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs, version).executeOperation(transport);
             }
             finally
             {
@@ -452,7 +452,7 @@ namespace Infinispan.DotNetClient
 
         public VersionedOperationResponse replaceIfUnmodified<K, V>(K key, V val, long version)
         {
-            return replaceIfUnmodified<K, V>(key, val, version, 0, 0);
+            return replaceWithVersion<K, V>(key, val, version, 0, 0);
         }
     }
 }
