@@ -59,10 +59,10 @@ namespace Infinispan.DotNetClient.Operations
                   codec, key, cacheNameBytes, topologyId, flags(), version);
         }
 
-        public ReplaceIfUnmodifiedOperation newReplaceIfUnmodifiedOperation(byte[] key,
+        public ReplaceWithVersionOperation newReplaceWithVersionOperation(byte[] key,
                  byte[] value, int lifespanSeconds, int maxIdleTimeSeconds, long version)
         {
-            return new ReplaceIfUnmodifiedOperation(
+            return new ReplaceWithVersionOperation(
                   codec, key, cacheNameBytes, topologyId, flags(),
                   value, lifespanSeconds, maxIdleTimeSeconds, version);
         }

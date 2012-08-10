@@ -71,7 +71,7 @@
     <Compile Include="Infinispan\DotNetClient\Operations\PutOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveIfUnmodifiedOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\ReplaceIfUnmodifiedOperation.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\ReplaceWithVersionOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ReplaceOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Protocol\Codec.cs" />
     <Compile Include="Infinispan\DotNetClient\Protocol\HeaderParams.cs" />
