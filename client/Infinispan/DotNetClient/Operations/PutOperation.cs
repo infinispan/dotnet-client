@@ -7,7 +7,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -27,8 +27,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PutOperation");
         }
 
-        //Should return a byte[] after being passed to returnPossiblePrevValue(Transport t) in final implementation
-        public byte[] executeOperation(Transport transport)
+        public byte[] executeOperation(ITransport transport)
         {
             byte status = sendOperationRequest(transport, HotRodConstants.PUT_REQUEST, HotRodConstants.PUT_RESPONSE);
             if (status != HotRodConstants.NO_ERROR_STATUS)

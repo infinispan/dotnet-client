@@ -7,7 +7,7 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("Replace Operation");
         }
 
-        public byte[] executeOperation(Transport transport)
+        public byte[] executeOperation(ITransport transport)
         {
             byte[] result = null;
             short status = sendOperationRequest(transport, REPLACE_REQUEST, REPLACE_RESPONSE);

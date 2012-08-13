@@ -6,7 +6,7 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -28,7 +28,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("RemoveIfUnmodifiedOperation");
         }
 
-        public VersionedOperationResponse executeOperation(Transport transport)
+        public VersionedOperationResponse executeOperation(ITransport transport)
         {
             // 1) write header
             HeaderParams param = writeHeader(transport, REMOVE_IF_UNMODIFIED_REQUEST);

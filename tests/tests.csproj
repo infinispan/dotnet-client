@@ -61,6 +61,7 @@
     <Compile Include="ContainsKeyOperationTest.cs" />
     <Compile Include="GetOperationTest.cs" />
     <Compile Include="GetWithVersionOperationTest.cs" />
+    <Compile Include="HotRodStatisticsTest.cs" />
     <Compile Include="MultipleServerAbstractTest.cs" />
     <Compile Include="PingOperationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

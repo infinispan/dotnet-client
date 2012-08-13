@@ -8,6 +8,7 @@ using Infinispan.DotNetClient.Trans;
 using System.Net;
 using Infinispan.DotNetClient.Exceptions;
 using System.Threading;
+using Infinispan.DotNetClient.Util.Impl;
 
 namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
@@ -29,7 +30,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             //initializeTransportPool();
         }
 
-        public Transport getTransport()
+        public ITransport getTransport()
         {
             //IPEndPoint addr;
             //Monitor.Enter(this);
@@ -48,12 +49,12 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
         }
 
-        public void releaseTransport(Transport transport)
+        public void releaseTransport(ITransport transport)
         {
             ConnectionPool.getInstance().releaseTransport(transport);
         }
         
-        private Transport borrowTransportFromPool(IPEndPoint addr)
+        private ITransport borrowTransportFromPool(IPEndPoint addr)
         {
             connectionPool = ConnectionPool.getInstance();
             try

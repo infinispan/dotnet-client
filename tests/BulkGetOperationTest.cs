@@ -5,7 +5,6 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using System.Collections.Generic;
-using Infinispan.DotNetClient.Hotrod;
 
 namespace tests
 {

@@ -6,7 +6,7 @@ using Infinispan.DotNetClient.Trans;
 using System.Threading;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotNetClient;
 
 namespace tests
 {

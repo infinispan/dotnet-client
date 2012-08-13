@@ -5,7 +5,8 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotNetClient;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -15,8 +16,6 @@ namespace Infinispan.DotNetClient.Operations
     * Author: sunimalr@gmail.com
     * 
     */
-
-  
     public class PutIFAbsentOperation : AbstractKeyValueOperation<byte[]>
     {
         private static Logger logger;
@@ -27,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PutIfAbsentOperation");
         }
 
-        public bool executeOperation(Transport transport)
+        public bool executeOperation(ITransport transport)
         {
             byte status = sendOperationRequest(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
             if (logger.IsTraceEnabled)

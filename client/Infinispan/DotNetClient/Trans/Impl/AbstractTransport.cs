@@ -15,7 +15,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
    *      
    */
 
-    public abstract class AbstractTransport : Transport
+    public abstract class AbstractTransport : ITransport
     {
         //Reads an array of bytes
         public byte[] readArray()
@@ -178,7 +178,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
             throw new NotImplementedException();
         }
 
-        void Transport.writeBytes(byte[] toAppend)
+        void ITransport.writeBytes(byte[] toAppend)
         {
             throw new NotImplementedException();
         }
