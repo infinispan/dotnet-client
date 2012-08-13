@@ -1,0 +1,108 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Infinispan.DotNetClient.Util;
+using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient.Operations;
+using Infinispan.DotNetClient.Trans;
+using Infinispan.DotNetClient.Hotrod.Impl;
+using Infinispan.DotNetClient.Trans.Impl.TCP;
+
+
+namespace Infinispan.DotNetClient.Hotrod
+{
+    /// <summary>
+    /// Ping operation can give one of the three results defined in the PingResult enum.
+    /// </summary>
+    public enum PingResult
+    {
+        // Success if the ping request was responded correctly
+        SUCCESS,
+        // When the ping request fails due to non-existing cache
+        CACHE_DOES_NOT_EXIST,
+        // For any other type of failures
+        FAIL,
+    }
+
+    public enum Flag
+    {
+        FORCE_RETURN_VALUE = 0x0001,
+    }
+    
+    /// <summary>
+    /// Aggregates RemoteCaches and lets user to get hold of a remotecache.
+    /// Author: sunimalr@gmail.com
+    /// </summary>
+    public class RemoteCacheManager<K, V>
+    {
+        private ClientConfig config;
+        private Serializer serializer;
+        private Codec codec;
+        private TCPTransportFactory transportFactory;
+
+        /// <summary>
+        /// Constructor with specified serializer s
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="s"></param>
+        public RemoteCacheManager(ClientConfig configuration, Serializer s)
+        {
+            this.config = configuration;
+            this.serializer = s;
+            this.codec = new Codec();
+            this.transportFactory = new TCPTransportFactory(this.config);
+        }
+
+        /// <summary>
+        /// Constructor with default serializer
+        /// </summary>
+        /// <param name="configuration"></param>
+        public RemoteCacheManager(ClientConfig configuration)
+        {
+            this.config = configuration;
+            this.serializer = new DefaultSerializer();
+            this.codec = new Codec();
+            this.transportFactory = new TCPTransportFactory(this.config);
+        }
+
+
+        /// <summary>
+        /// Cache with default settings mentioned in App.config file
+        /// </summary>
+        public RemoteCache<K, V> getCache()
+        {
+            return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
+        }
+
+        /// <summary>
+        ///Cache with default settings and a given cacheName
+        /// </summary>
+        public RemoteCache<K, V> getCache(String cacheName)
+        {
+            return new RemoteCacheImpl<K, V>(this, this.config, cacheName, this.serializer, this.transportFactory);
+        }
+
+
+        /// <summary>
+        /// Cache with specified forceRetunValue parameter
+        /// </summary>
+        /// <param name="forceRetunValue"></param>
+        /// <returns></returns>
+        public RemoteCache<K, V> getCache(bool forceRetunValue)
+        {
+            return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
+        }
+
+        /// <summary>
+        ///Specified named cache with customized forceRetunValue option
+        /// </summary>
+        /// <param name="cacheName">If the user needs to give the cachename manually it can be passed here</param>
+        /// <param name="forceRetunValue">If forceRetunValue is true, cache returns the value existed before the operation</param>
+        /// <returns></returns>
+        public RemoteCache<K, V> getCache(String cacheName, bool forceRetunValue)
+        {
+            return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
+        }
+    }
+}

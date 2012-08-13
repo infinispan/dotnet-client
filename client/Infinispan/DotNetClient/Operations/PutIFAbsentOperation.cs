@@ -5,6 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -26,22 +27,19 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PutIfAbsentOperation");
         }
 
-        public byte[] executeOperation(Transport transport)
+        public bool executeOperation(Transport transport)
         {
-            byte status = sendPutOperation(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
+            byte status = sendOperationRequest(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("Status = " + status);
-            byte[] previousValue = null;
-            if ((status == NO_ERROR_STATUS) || (status == NOT_PUT_REMOVED_REPLACED_STATUS))
+            if (status == 0)
             {
-                previousValue = returnPossiblePrevValue(transport);
-                if (previousValue != null)
-                    return previousValue;
-                else
-                    return UTF8Encoding.UTF8.GetBytes("null");
+                return true;
             }
             else
-                return UTF8Encoding.UTF8.GetBytes("null");
+            {
+                return false;
+            }
         }
     }
 }

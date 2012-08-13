@@ -5,7 +5,6 @@ using System.Text;
 using System.Net.Sockets;
 using System.IO;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using NLog;
 
 namespace Infinispan.DotNetClient.Util

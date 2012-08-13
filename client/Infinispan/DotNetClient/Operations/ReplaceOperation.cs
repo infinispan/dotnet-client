@@ -7,6 +7,7 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -28,7 +29,7 @@ namespace Infinispan.DotNetClient.Operations
         public byte[] executeOperation(Transport transport)
         {
             byte[] result = null;
-            short status = sendPutOperation(transport, REPLACE_REQUEST, REPLACE_RESPONSE);
+            short status = sendOperationRequest(transport, REPLACE_REQUEST, REPLACE_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("ReplaceOperation status : " + status);
             if (status == NO_ERROR_STATUS || status == NOT_PUT_REMOVED_REPLACED_STATUS)

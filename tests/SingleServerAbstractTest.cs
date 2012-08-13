@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using System.Threading;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace tests
 {

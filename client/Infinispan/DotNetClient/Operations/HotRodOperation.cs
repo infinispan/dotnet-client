@@ -6,6 +6,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace Infinispan.DotNetClient.Operations
 {
