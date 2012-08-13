@@ -19,6 +19,9 @@ namespace tests
             Assert.AreEqual("boron", remoteManager.getCache().get("key13"));
             remoteManager.getCache().put("key14", "chlorine");
             Assert.AreEqual("chlorine", remoteManager.getCache().get("key14"));
+
+            //If Force return value is set to true, following assertion will be passed. Else follwing will fail.
+            Assert.AreEqual("chlorine", remoteManager.getCache().put("key14","Berilium"));
         }
     }
 }

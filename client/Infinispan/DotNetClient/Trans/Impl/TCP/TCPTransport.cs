@@ -228,6 +228,10 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
                 try
                 {
                     int len = size - offset;
+                    if (len == 0)
+                    {
+                        return null;
+                    }
                     read = bReader.Read(result, offset, len);
                     if (logger.IsTraceEnabled)
                         logger.Trace(String.Format("Byte array read : " + read));

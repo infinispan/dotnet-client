@@ -45,7 +45,7 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        V put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
         /// <summary>
         /// Used to insert a new entry to the cache. Lifespan and maxidle time is infinite
@@ -54,7 +54,7 @@ namespace Infinispan.DotNetClient
         /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
-        void put(K key, V val);
+        V put(K key, V val);
 
         /// <summary>
         /// Puts a new entry to cache only if the specified key is absent.

@@ -141,9 +141,9 @@ namespace Infinispan.DotNetClient.Impl
         /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
-        public void put(K key, V val)
+        public V put(K key, V val)
         {
-            put(key, val, 0, 0);
+            return put(key, val, 0, 0);
         }
 
         /// <summary>
@@ -155,20 +155,31 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        public void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
+            byte[] result=null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             PutOperation op = operationsFactory.newPutKeyValueOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                byte[] result = (byte[])op.executeOperation(transport);
+                result = (byte[])op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
+
+            if (result != null)
+            {
+                return (V)serializer.deserialize(result);
+            }
+            else
+            {
+                return default(V);
+            }
+
         }
 
 
