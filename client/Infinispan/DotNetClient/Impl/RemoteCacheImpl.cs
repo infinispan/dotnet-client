@@ -273,7 +273,7 @@ namespace Infinispan.DotNetClient.Impl
         }
 
         /// <summary>
-        /// Used to retrieve the method 
+        /// Used to retrieve a record from the cache with the specified key
         /// </summary>
         /// <typeparam name="V">Value</typeparam>
         /// <param name="key">Key</param>
@@ -298,7 +298,7 @@ namespace Infinispan.DotNetClient.Impl
         }
 
         /// <summary>
-        /// Gets bulk data from the cache
+        /// Gets more than one record at a time from the cache
         /// </summary>
         /// <typeparam name="K">Key</typeparam>
         /// <typeparam name="V">Value</typeparam>
@@ -381,7 +381,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <summary>
         /// Application level operation to check existance of the cache
         /// </summary>
-        /// <returns>PingRsult</returns>
+        /// <returns>PingResult</returns>
         public PingResult ping()
         {
             PingResult res = PingResult.FAIL;
@@ -397,6 +397,11 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
+        /// <summary>
+        /// Returns the VersionedValue associated to the supplied key param, or null if it doesn't exist.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns>VersionedValue associated to the supplied key param, or null if it doesn't exist.</returns>
         public VersionedValue getVersioned(K key)
         {
             VersionedValue res = null;
@@ -412,6 +417,14 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
+        /// <summary>
+        ///Removes the given value only if its version matches the supplied version.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
+        /// <param name="lifespaninMinMillis"></param>
+        /// <returns>Version details of the removed entry</returns>
         public VersionedOperationResponse removeIfUnmodified(K key, long version)
         {
             VersionedOperationResponse res = null;
@@ -427,6 +440,15 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
+        /// <summary>
+        ///Replaces the given value only if its version matches the supplied version.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
+        /// <param name="lifespaninMillis"></param>
+        /// <param name="maxIdleTimeinMillis"></param>
+        /// <returns>true if the value has been replaced</returns>
         public bool replaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             VersionedOperationResponse res = null;
@@ -452,6 +474,12 @@ namespace Infinispan.DotNetClient.Impl
             }
         }
 
+        /// <summary>
+        ///Replaces the given value only if its version matches the supplied version.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="val"></param>
+        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
         public bool replaceWithVersion(K key, V val, long version)
         {
             return replaceWithVersion(key, val, version, 0, 0);
