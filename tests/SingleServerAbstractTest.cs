@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using System.Threading;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotNetClient.Util.Impl;
 
 namespace tests
 {
@@ -17,7 +17,7 @@ namespace tests
     {
         protected Process hrServer;
         protected ClientConfig conf= new ClientConfig();
-        protected Serializer serializer= new DefaultSerializer();
+        protected ISerializer serializer= new DefaultSerializer();
         protected RemoteCacheManager<String,String> remoteManager;
 
         [TestInitialize()]

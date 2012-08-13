@@ -4,7 +4,7 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace tests
 {
@@ -22,8 +22,7 @@ namespace tests
             Assert.IsNull(defaultCache.get("key1"));
             Assert.IsNull(defaultCache.get("key2"));
 
-
-            ServerStatistics st= defaultCache.stats();
+            IServerStatistics st= defaultCache.stats();
             //Assert.AreEqual("0", st.getStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
             //NOTE: There's a bug with Clear as the cache doesn't clear itself correctly.
         }

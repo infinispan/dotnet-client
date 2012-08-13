@@ -5,7 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Util;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -23,7 +23,7 @@ namespace Infinispan.DotNetClient.Operations
         {
         }
 
-        public byte[] executeOperation(Transport transport)
+        public byte[] executeOperation(ITransport transport)
         {
             byte[] result = null;
             byte status = sendKeyOperation(key, transport, HotRodConstants.GET_REQUEST, HotRodConstants.GET_RESPONSE);

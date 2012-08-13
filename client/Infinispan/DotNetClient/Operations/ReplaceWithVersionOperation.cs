@@ -7,7 +7,7 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Protocol;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -26,10 +26,10 @@ namespace Infinispan.DotNetClient.Operations
             base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle)
         {
             this.version = version;
-            logger=LogManager.GetLogger("ReplaceIfUnmodifiedOperation");
+            logger = LogManager.GetLogger("ReplaceIfUnmodifiedOperation");
         }
 
-       public VersionedOperationResponse executeOperation(Transport transport)
+        public VersionedOperationResponse executeOperation(ITransport transport)
         {
             // 1) write header
             HeaderParams param = writeHeader(transport, REPLACE_IF_UNMODIFIED_REQUEST);
@@ -39,7 +39,8 @@ namespace Infinispan.DotNetClient.Operations
             transport.writeVInt(maxIdle);
             transport.writeLong(version);
             transport.writeArray(value);
-            logger.Trace("written : key = " + key + " version = " + version + "value = "+value); 
+            if (logger.IsTraceEnabled)
+                logger.Trace("written : key = " + key + " version = " + version + "value = " + value);
             transport.flush();
             return returnVersionedOperationResponse(transport, param);
         }

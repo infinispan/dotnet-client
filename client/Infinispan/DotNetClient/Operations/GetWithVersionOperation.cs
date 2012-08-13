@@ -7,8 +7,8 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Protocol;
 using NLog;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Hotrod;
-using Infinispan.DotNetClient.Hotrod.Impl;
+using Infinispan.DotNetClient.Impl;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -29,7 +29,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("GetWithVersionOperation");
         }
 
-        public VersionedValue executeOperation(Transport transport)
+        public VersionedValue executeOperation(ITransport transport)
         {
             short status = sendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
             VersionedValue result = null;

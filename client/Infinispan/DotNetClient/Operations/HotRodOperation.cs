@@ -6,7 +6,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -38,7 +38,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("Hot Rod Operation");
         }
 
-        protected HeaderParams writeHeader(Transport transport, byte operationCode)
+        protected HeaderParams writeHeader(ITransport transport, byte operationCode)
         {
             HeaderParams param = new HeaderParams().opCode(operationCode).cacheName(cacheName).flags(flags).clientIntel(HotRodConstants.CLIENT_INTELLIGENCE_BASIC).topologyId(topologyId).txMarker(NO_TX);
             if (logger.IsTraceEnabled)
@@ -55,7 +55,7 @@ namespace Infinispan.DotNetClient.Operations
         /**
          * Magic	| Message Id | Op code | Status | Topology Change Marker
          */
-        protected byte readHeaderAndValidate(Transport transport, HeaderParams param)
+        protected byte readHeaderAndValidate(ITransport transport, HeaderParams param)
         {
             return codec.readHeader(transport, param);
         }

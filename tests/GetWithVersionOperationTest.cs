@@ -5,8 +5,6 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using System.Text;
-using Infinispan.DotNetClient.Hotrod;
-using Infinispan.DotNetClient.Hotrod.Impl;
 
 namespace tests
 {
@@ -21,7 +19,7 @@ namespace tests
             long eaelierVer = defaultRemote.getVersioned("key45").getVersion();
             defaultRemote.put("key45", "rubidium");
             
-            VersionedValue actual = defaultRemote.getVersioned("key45");
+            IVersionedValue actual = defaultRemote.getVersioned("key45");
             Assert.AreNotEqual(eaelierVer, actual.getVersion());
             Assert.AreEqual("rubidium", actual.getValue());
         }

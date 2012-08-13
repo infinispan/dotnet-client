@@ -8,7 +8,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
-using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -41,7 +41,7 @@ namespace Infinispan.DotNetClient.Operations
         /// <param name="opCode">OPeration Code of the request</param>
         /// <param name="opRespCode">Expected response code</param>
         /// <returns>Status returned form the server</returns>
-        protected byte sendKeyOperation(byte[] key, Transport transport, byte opCode, byte opRespCode)
+        protected byte sendKeyOperation(byte[] key, ITransport transport, byte opCode, byte opRespCode)
         {
             // 1) write [header][key length][key]
             HeaderParams param = writeHeader(transport, opCode);
@@ -57,7 +57,7 @@ namespace Infinispan.DotNetClient.Operations
         /// <param name="transport"></param>
         /// <param name="param"></param>
         /// <returns>Version data on the entry picked</returns>
-        protected VersionedOperationResponse returnVersionedOperationResponse(Transport transport, HeaderParams param)
+        protected VersionedOperationResponse returnVersionedOperationResponse(ITransport transport, HeaderParams param)
         {
             byte respStatus = readHeaderAndValidate(transport, param);
             if (logger.IsTraceEnabled)
@@ -91,12 +91,13 @@ namespace Infinispan.DotNetClient.Operations
         /// </summary>
         /// <param name="transport"></param>
         /// <returns>Previous value of the queried entry</returns>
-        protected byte[] returnPossiblePrevValue(Transport transport)
+        protected byte[] returnPossiblePrevValue(ITransport transport)
         {
             if (hasForceReturn(flags))
             {
                 byte[] bytes = transport.readArray();
-                logger.Trace("Previous value bytes is: " + UTF8Encoding.UTF8.GetString(bytes));
+                if (logger.IsTraceEnabled)
+                    logger.Trace("Previous value bytes is: " + UTF8Encoding.UTF8.GetString(bytes));
                 //0-length response means null
                 if (bytes.Length == 0)
                     return null;
@@ -111,8 +112,19 @@ namespace Infinispan.DotNetClient.Operations
 
         private bool hasForceReturn(Flag[] flags)
         {
-            //NOT YET IMPLEMENTED
-            return false;
+            if (flags == null)
+            {
+                return false;
+            }
+
+            bool hasForceReturnFlag = false;
+            foreach (Flag f in flags)
+            {
+                if (f.getFlagInt() == Flag.FORCE_RETURN_VALUE)
+                    hasForceReturnFlag = true;
+            }
+
+            return hasForceReturnFlag;
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Threading;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
+using Infinispan.DotNetClient.Util.Impl;
 namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     /*
@@ -73,7 +74,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             set { bReader = value; }
         }
 
-public NetworkStream getNetworkOutStream()
+        public NetworkStream getNetworkOutStream()
         {
             return this.tcpClient.GetStream();
         }
@@ -141,7 +142,7 @@ public NetworkStream getNetworkOutStream()
             catch (IOException e)
             {
                 logger.Warn(e);
-throw new TransportException(e);
+                throw new TransportException(e);
             }
         }
 
@@ -155,7 +156,7 @@ throw new TransportException(e);
             catch (IOException e)
             {
                 logger.Warn(e);
-throw new TransportException(e);
+                throw new TransportException(e);
             }
         }
 
@@ -197,7 +198,10 @@ throw new TransportException(e);
             try
             {
                 resultInt = bReader.ReadByte();
-                logger.Trace(String.Format("Byte read : " + resultInt));
+                if (logger.IsTraceEnabled)
+                {
+                    logger.Trace(String.Format("Byte read : " + resultInt));
+                }
             }
             catch (IOException e)
             {
@@ -225,7 +229,8 @@ throw new TransportException(e);
                 {
                     int len = size - offset;
                     read = bReader.Read(result, offset, len);
-                    logger.Trace(String.Format("Byte array read : " + read));
+                    if (logger.IsTraceEnabled)
+                        logger.Trace(String.Format("Byte array read : " + read));
                 }
                 catch (IOException e)
                 {
@@ -234,7 +239,8 @@ throw new TransportException(e);
                 }
                 if (read == -1)
                 {
-                    logger.Warn("End of stream reached!");
+                    if (logger.IsTraceEnabled)
+                        logger.Warn("End of stream reached!");
                     throw new TransportException("End of stream reached!");
                 }
                 if (read + offset == size)
@@ -261,7 +267,8 @@ throw new TransportException(e);
             try
             {
                 this.bWriter.Flush();
-                logger.Trace("Binary Writer Flushed!!");
+                if (logger.IsTraceEnabled)
+                    logger.Trace("Binary Writer Flushed!!");
             }
             catch (IOException e)
             {
@@ -276,7 +283,8 @@ throw new TransportException(e);
             try
             {
                 tcpClient.Close();
-                logger.Trace("TCPClient Closed!!!");
+                if (logger.IsTraceEnabled)
+                    logger.Trace("TCPClient Closed!!!");
             }
             catch (IOException e)
             {

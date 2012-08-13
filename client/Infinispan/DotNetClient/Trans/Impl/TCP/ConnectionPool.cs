@@ -12,7 +12,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
     public class ConnectionPool
     {
         private static ConnectionPool instance=null;
-        private ConcurrentDictionary<String,Transport> transportCollection;
+        private ConcurrentDictionary<String,ITransport> transportCollection;
         private ConnectionPool()
         { 
         }
@@ -31,11 +31,11 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             transportCollection.TryAdd(addr.Address.ToString()+":"+addr.Port,new TCPTransport(addr.Address,addr.Port));
         }
 
-        public Transport borrowTransport(IPEndPoint addr)
+        public ITransport borrowTransport(IPEndPoint addr)
         {
             try
             {
-                Transport temp;
+                ITransport temp;
                 transportCollection.TryRemove(addr.Address.ToString() + ":" + addr.Port, out temp);
                 return temp;
             }
@@ -45,7 +45,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
         }
 
-        public void releaseTransport(Transport transport)
+        public void releaseTransport(ITransport transport)
         {
             //try
             //{

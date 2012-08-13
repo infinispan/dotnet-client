@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Protocol;
-using Infinispan.DotNetClient.Hotrod;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -22,7 +22,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("BulkGetOperation");
         }
 
-        public Dictionary<byte[], byte[]> executeOperation(Transport transport)
+        public Dictionary<byte[], byte[]> executeOperation(ITransport transport)
         {
             HeaderParams param = writeHeader(transport, BULK_GET_REQUEST);
             transport.writeVInt(entryCount);
