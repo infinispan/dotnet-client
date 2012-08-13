@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Infinispan.DotNetClient.Trans;
-
+using Infinispan.DotNetClient.Hotrod;
 using Infinispan.DotNetClient.Protocol;
 using System.IO;
 using NLog;
@@ -33,7 +33,6 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PingOperation");
             this.transport = transport;
         }
-
 
         public PingResult execute()
         {
@@ -64,14 +63,6 @@ namespace Infinispan.DotNetClient.Operations
             }
         }
 
-        public enum PingResult
-        {
-            // Success if the ping request was responded correctly
-            SUCCESS,
-            // When the ping request fails due to non-existing cache
-            CACHE_DOES_NOT_EXIST,
-            // For any other type of failures
-            FAIL,
-        }
+        
     }
 }

@@ -44,8 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Infinispan\DotNetClient\IBinaryVersionedValue.cs" />
-    <Compile Include="Infinispan\DotNetClient\VersionedValue.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\IVersionedValue.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\Impl\VersionedValue.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\HotRodClientException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\InvalidResponseException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\TransportException.cs" />
@@ -53,12 +53,12 @@
     <Compile Include="Infinispan\DotNetClient\Operations\GetWithVersionOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\OperationsFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\StatsOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\RemoteCacheManager.cs" />
-    <Compile Include="Infinispan\DotNetClient\ServerStatistics.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\AbstractTransport.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\TCP\ConnectionPool.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\TCP\RequestBalancer.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransportFactory.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\RemoteCacheManager.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\ServerStatistics.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\Impl\AbstractTransport.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\ConnectionPool.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransportFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Transport.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyValueOperation.cs" />
@@ -77,15 +77,14 @@
     <Compile Include="Infinispan\DotNetClient\Protocol\HeaderParams.cs" />
     <Compile Include="Infinispan\DotNetClient\Protocol\HotRodConstants.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\IllegalStateException.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransport.cs" />
-    <Compile Include="Infinispan\DotNetClient\Flag.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\ClientConfig.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\DefaultSerializer.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\Serializer.cs" />
-    <Compile Include="Infinispan\DotNetClient\VersionedOperationResponse.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\VersionedOperationResponse.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\UnsignedNumeric.cs" />
-    <Compile Include="Infinispan\DotNetClient\RemoteCacheImpl.cs" />
-    <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\Impl\RemoteCacheImpl.cs" />
+    <Compile Include="Infinispan\DotNetClient\Hotrod\RemoteCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

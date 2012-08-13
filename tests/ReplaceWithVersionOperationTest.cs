@@ -11,24 +11,24 @@ using Infinispan.DotNetClient.Hotrod;
 namespace tests
 {
     [TestClass()]
-    public class RemoveIfUnmodifiedOperationTest:SingleServerAbstractTest
+    public class ReplaceWithVersionOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void removeIfUnmodifiedTest()
+        public void replaceIfUnmodifiedTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            RemoteCache<String,String> defaultCache = remoteManager.getCache();
             defaultCache.put("key8", "bromine1");
             long version = defaultCache.getVersioned("key8").getVersion();
             defaultCache.put("key8", "hexane");
-            VersionedOperationResponse response = defaultCache.removeIfUnmodified("key8", version);
-            Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
+            bool response = defaultCache.replaceWithVersion("key8", "barium", version);
+            Assert.IsFalse(response);
             Assert.AreEqual("hexane", defaultCache.get("key8"));
-
+            
+            defaultCache.put("key8", "oxygen");
             long newVersion = defaultCache.getVersioned("key8").getVersion();
-            response = defaultCache.removeIfUnmodified("key8", newVersion);
-
-            Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.SUCCESS);
-            Assert.AreEqual(null, defaultCache.get("key8"));
+            Assert.AreNotEqual(newVersion, version);
+            Assert.IsTrue(defaultCache.replaceWithVersion("key8", "barium", newVersion));
+            Assert.AreEqual("barium", defaultCache.get("key8"));
         }
     }
 }

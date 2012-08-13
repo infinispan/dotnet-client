@@ -8,6 +8,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -80,6 +81,7 @@ namespace Infinispan.DotNetClient.Operations
                 logger.Warn(e);
                 throw e;
             }
+            logger.Trace("Response Status : " + code);
             byte[] prevValue = returnPossiblePrevValue(transport);
             return new VersionedOperationResponse(prevValue, code);
         }

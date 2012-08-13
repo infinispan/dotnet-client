@@ -4,9 +4,9 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
 using System.Text;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace tests
 {

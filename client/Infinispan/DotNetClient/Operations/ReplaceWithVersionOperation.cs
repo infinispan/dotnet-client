@@ -7,6 +7,7 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Protocol;
 using NLog;
+using Infinispan.DotNetClient.Hotrod;
 
 namespace Infinispan.DotNetClient.Operations
 {

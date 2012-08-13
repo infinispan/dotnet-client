@@ -5,6 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Util;
+using Infinispan.DotNetClient.Hotrod;
 
 
 namespace Infinispan.DotNetClient.Operations

@@ -4,8 +4,9 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using System.Text;
+using Infinispan.DotNetClient.Hotrod;
+using Infinispan.DotNetClient.Hotrod.Impl;
 
 namespace tests
 {
@@ -17,11 +18,11 @@ namespace tests
         {
             RemoteCache<String, String> defaultRemote = remoteManager.getCache();
             defaultRemote.put("key45", "uranium");
-            long eaelierVer = defaultRemote.getVersioned("key45").Ver;
+            long eaelierVer = defaultRemote.getVersioned("key45").getVersion();
             defaultRemote.put("key45", "rubidium");
             
             VersionedValue actual = defaultRemote.getVersioned("key45");
-            Assert.AreNotEqual(eaelierVer, actual.Ver);
+            Assert.AreNotEqual(eaelierVer, actual.getVersion());
             Assert.AreEqual("rubidium", actual.getValue());
         }
     }

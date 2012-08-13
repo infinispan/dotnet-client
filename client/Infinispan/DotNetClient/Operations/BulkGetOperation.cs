@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Protocol;
-using Infinispan.DotNetClient;
+using Infinispan.DotNetClient.Hotrod;
 using Infinispan.DotNetClient.Trans;
 using NLog;
 
