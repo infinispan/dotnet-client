@@ -17,7 +17,10 @@ namespace tests
             RemoteCache<String, String> defaultCache = remoteManager.getCache();
             defaultCache.put("key8", "bromine");
             Assert.AreEqual("bromine", defaultCache.get("key8"));
-            defaultCache.replace("key8", "neon");
+
+            //This Assertion will result in a "pass" only if the "forceRetrnValue" parameter of client configuration is set to true.
+            Assert.AreEqual("bromine",defaultCache.replace("key8", "neon"));
+            
             Assert.AreEqual("neon", defaultCache.get("key8"));
         }
     }

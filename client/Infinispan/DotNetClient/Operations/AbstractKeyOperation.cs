@@ -9,6 +9,7 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
 using Infinispan.DotnetClient;
+using Infinispan.DotNetClient.Util.Impl;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -97,9 +98,9 @@ namespace Infinispan.DotNetClient.Operations
             {
                 byte[] bytes = transport.readArray();
                 if (logger.IsTraceEnabled)
-                    logger.Trace("Previous value bytes is: " + UTF8Encoding.UTF8.GetString(bytes));
+                    logger.Trace("Previous value bytes received");
                 //0-length response means null
-                if (bytes.Length == 0)
+                if ((bytes == null) || (bytes.Length == 0))
                     return null;
                 else
                     return bytes;

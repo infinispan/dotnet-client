@@ -123,25 +123,36 @@ namespace Infinispan.DotNetClient.Impl
             return stats;
         }
 
-        public void put(K key, V val)
+        public V put(K key, V val)
         {
-            put(key, val, 0, 0);
+            return put(key, val, 0, 0);
         }
 
-        public void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
+            byte[] result=null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             PutOperation op = operationsFactory.newPutKeyValueOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                byte[] result = (byte[])op.executeOperation(transport);
+                result = (byte[])op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
+
+            if (result != null)
+            {
+                return (V)serializer.deserialize(result);
+            }
+            else
+            {
+                return default(V);
+            }
+
         }
 
         public bool putIfAbsent(K key, V val)

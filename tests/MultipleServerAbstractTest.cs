@@ -15,12 +15,12 @@ namespace tests
     public class MultipleServerAbstractTest
     {
         protected Process hrServer1;
-        protected ClientConfig conf1 = new ClientConfig("127.0.0.1", 11222, "cache1", false);
+        protected ClientConfig conf1 = new ClientConfig();//("127.0.0.1", 11222, "cache1", false);
         protected ISerializer serializer1 = new DefaultSerializer();
         protected RemoteCacheManager<String, String> remoteManager1;
 
         protected Process hrServer2;
-        protected ClientConfig conf2 = new ClientConfig("127.0.0.1", 11223, "cache2", false);
+        protected ClientConfig conf2 = new ClientConfig();//("127.0.0.1", 11223, "cache2", false);
         protected ISerializer serializer2 = new DefaultSerializer();
         protected RemoteCacheManager<String, String> remoteManager2;
 
@@ -36,11 +36,11 @@ namespace tests
             hrServer1 = new Process();
             String nameOfBatchFile1 = ispnHome + "\\bin\\startServer.bat";
             String nameOfBatchFile2 = ispnHome + "\\bin\\startServer.bat";
-            string parameters1 = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile1);
+            string parameters1 = String.Format("/k \"{0}\"" + " -r hotrod -p 11222", nameOfBatchFile1);
             hrServer1.StartInfo.FileName = "cmd";
             hrServer1.StartInfo.Arguments = parameters1;
             hrServer1.StartInfo.WorkingDirectory = ispnHome + "\\bin";
-            string parameters2 = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile2);
+            string parameters2 = String.Format("/k \"{0}\"" + " -r hotrod -p 11223", nameOfBatchFile2);
             hrServer2.StartInfo.FileName = "cmd";
             hrServer2.StartInfo.Arguments = parameters2;
             hrServer2.StartInfo.WorkingDirectory = ispnHome + "\\bin";
