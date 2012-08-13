@@ -105,7 +105,7 @@ namespace Infinispan.DotNetClient.Protocol
                 {
                     
                     logger.Warn(String.Format("Error Response Recieved : "+receivedOpCode));
-                    throw new NotImplementedException("Error Response Recieved");
+                    throw new  InvalidResponseException("Error Response Recieved");
                 }
                 
                 logger.Warn(String.Format("Invalid Response Recieved : Expected " + param.OpRespCode+" Recieved " +receivedOpCode));
