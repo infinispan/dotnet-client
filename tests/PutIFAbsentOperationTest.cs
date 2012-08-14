@@ -14,7 +14,7 @@ namespace tests
         [TestMethod()]
         public void putIfAbsentTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            RemoteCache<String, String> defaultCache = remoteManager.getCache(true);
             defaultCache.put("key7", "carbon0");
             defaultCache.putIfAbsent("key7", "carbon1");
             defaultCache.putIfAbsent("key8", "carbon2");

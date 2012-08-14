@@ -59,7 +59,7 @@ namespace Infinispan.DotNetClient
         /// <param name="val">value the value associated with the given key</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
-        bool putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
+        V putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
 
         /// <summary>
         /// Puts a new entry to cache only if the specified key is absent. Lifespan and maxidle time is infinite.
@@ -67,7 +67,7 @@ namespace Infinispan.DotNetClient
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         /// <returns>True of the operation was successful, else false</returns>
-        bool putIfAbsent(K key, V val);
+        V putIfAbsent(K key, V val);
 
         /// <summary>
         /// Replaces an existing value with a new value.

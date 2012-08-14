@@ -16,7 +16,7 @@ namespace tests
     public abstract class SingleServerAbstractTest
     {
         protected Process hrServer;
-       // protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
+        //protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
         protected ClientConfig conf = new ClientConfig();
         protected ISerializer serializer= new DefaultSerializer();
         protected RemoteCacheManager<String,String> remoteManager;

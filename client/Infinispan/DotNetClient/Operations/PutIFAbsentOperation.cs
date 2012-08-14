@@ -26,19 +26,13 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PutIfAbsentOperation");
         }
 
-        public bool executeOperation(ITransport transport)
+        public byte[] executeOperation(ITransport transport)
         {
             byte status = sendOperationRequest(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("Status = " + status);
-            if (status == 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            
+            return returnPossiblePrevValue(transport);
         }
     }
 }
