@@ -86,7 +86,7 @@
     <Compile Include="Infinispan\DotNetClient\VersionedOperationResponse.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\Impl\UnsignedNumeric.cs" />
     <Compile Include="Infinispan\DotNetClient\Impl\RemoteCacheImpl.cs" />
-    <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
+    <Compile Include="Infinispan\DotNetClient\IRemoteCache.cs" />
     <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
     <Compile Include="Infinispan\DotNetClient\Flag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

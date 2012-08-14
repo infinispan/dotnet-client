@@ -14,7 +14,7 @@ namespace tests
         [TestMethod()]
         public void replaceTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
             defaultCache.put("key8", "bromine");
             Assert.AreEqual("bromine", defaultCache.get("key8"));
 

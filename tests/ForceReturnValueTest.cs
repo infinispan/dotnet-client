@@ -17,11 +17,11 @@ namespace tests
         {
 
             //by default a cache doesn't have FORCE return value enabled
-            RemoteCache<String, String> defaultCache = remoteManager.getCache(false);
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache(false);
             Assert.IsNull(defaultCache.put("k", "v"));
             Assert.IsNull(defaultCache.put("k", "v2")); //this shouldn't return anything as force return value is off
 
-            RemoteCache<String, String> withReturnCache = remoteManager.getCache(true);
+            IRemoteCache<String, String> withReturnCache = remoteManager.getCache(true);
             Assert.AreEqual("v2", withReturnCache.put("k", "v3")); //this should return the previous existing value
 
             //test remove

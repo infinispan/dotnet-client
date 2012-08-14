@@ -14,7 +14,7 @@ namespace tests
         [TestMethod()]
         public void getTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
 
             Assert.IsNull(defaultCache.get("key7"));
 

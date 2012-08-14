@@ -15,7 +15,7 @@ namespace tests
         [TestMethod()]
         public void statsOperationTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
             defaultCache.put("key7", "carbon0");
             defaultCache.put("key8", "carbon1");
             defaultCache.put("key9", "carbon2");

@@ -15,7 +15,7 @@ namespace tests
         [TestMethod()]
         public void replaceIfUnmodifiedTest()
         {
-            RemoteCache<String,String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String,String> defaultCache = remoteManager.getCache();
             defaultCache.put("key8", "bromine1");
             long version = defaultCache.getVersioned("key8").GetVersion();
             defaultCache.put("key8", "hexane");

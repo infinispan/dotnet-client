@@ -9,7 +9,14 @@ using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient
 {
-    public interface RemoteCache<K, V>
+    /// <summary>
+    /// IRemoteCache is the interface (API) through which Infinispan .NET client library users should call HotRod Operations. 
+    /// 
+    /// Author: sunimalr@gmail.com
+    /// </summary>
+    /// <typeparam name="K">Data Tyepe of Key</typeparam>
+    /// <typeparam name="V">Data Type of Value</typeparam>
+    public interface IRemoteCache<K, V>
     {
 
         /**

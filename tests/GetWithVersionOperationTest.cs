@@ -14,7 +14,7 @@ namespace tests
         [TestMethod()]
         public void getWithVersionTest()
         {
-            RemoteCache<String, String> defaultRemote = remoteManager.getCache();
+            IRemoteCache<String, String> defaultRemote = remoteManager.getCache();
             defaultRemote.put("key45", "uranium");
             long eaelierVer = defaultRemote.getVersioned("key45").GetVersion();
             defaultRemote.put("key45", "rubidium");
