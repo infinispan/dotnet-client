@@ -14,12 +14,12 @@ namespace tests
         [TestMethod()]
         public void getWithVersionTest()
         {
-            IRemoteCache<String, String> defaultRemote = remoteManager.getCache();
-            defaultRemote.put("key45", "uranium");
-            long eaelierVer = defaultRemote.getVersioned("key45").GetVersion();
-            defaultRemote.put("key45", "rubidium");
+            IRemoteCache<String, String> defaultRemote = remoteManager.GetCache<String,String>();
+            defaultRemote.Put("key45", "uranium");
+            long eaelierVer = defaultRemote.GetVersioned("key45").GetVersion();
+            defaultRemote.Put("key45", "rubidium");
             
-            IVersionedValue actual = defaultRemote.getVersioned("key45");
+            IVersionedValue actual = defaultRemote.GetVersioned("key45");
             Assert.AreNotEqual(eaelierVer, actual.GetVersion());
             Assert.AreEqual("rubidium", actual.GetValue());
         }

@@ -14,15 +14,15 @@ namespace tests
          [TestMethod()]
         public void clearTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key1", "hydrogen");
-            defaultCache.put("key2", "helium");
-            defaultCache.clear();
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key1", "hydrogen");
+            defaultCache.Put("key2", "helium");
+            defaultCache.Clear();
 
-            Assert.IsNull(defaultCache.get("key1"));
-            Assert.IsNull(defaultCache.get("key2"));
+            Assert.IsNull(defaultCache.Get("key1"));
+            Assert.IsNull(defaultCache.Get("key2"));
 
-            IServerStatistics st= defaultCache.stats();
+            IServerStatistics st= defaultCache.Stats();
             //Assert.AreEqual("0", st.getStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
             //NOTE: There's a bug with Clear as the cache doesn't clear itself correctly.
         }

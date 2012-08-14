@@ -22,7 +22,7 @@ namespace Infinispan.DotNetClient.Impl
          
         public Object GetValue()
         {
-            return serializer.deserialize(this.value);
+            return serializer.Deserialize(this.value);
         }
 
         public void SetValue(byte[] val)

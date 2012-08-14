@@ -16,16 +16,16 @@ namespace tests
         [TestInitialize()]
         public void populateCache()
         {
-            defaultCache = remoteManager.getCache();
-            defaultCache.put("key1", "hydrogen");
-            defaultCache.put("key2", "helium");
-            defaultCache.put("key3", "lithium");
+            defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key1", "hydrogen");
+            defaultCache.Put("key2", "helium");
+            defaultCache.Put("key3", "lithium");
         }
 
         [TestMethod()]
         public void getBulkTest()
         {
-            Dictionary<String,String> actual = defaultCache.getBulk();
+            Dictionary<String,String> actual = defaultCache.GetBulk();
             Assert.AreEqual("hydrogen", actual["key1"]);
             Assert.AreEqual("helium", actual["key2"]);
             Assert.AreEqual("lithium", actual["key3"]);
@@ -34,7 +34,7 @@ namespace tests
         [TestMethod()]
         public void getBulkTestWithSize()
         {
-            Dictionary<String, String> actual = defaultCache.getBulk(2);
+            Dictionary<String, String> actual = defaultCache.GetBulk(2);
             Assert.AreEqual(actual.Count, 2);
         }
     }

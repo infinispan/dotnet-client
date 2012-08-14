@@ -14,14 +14,14 @@ namespace tests
         [TestMethod()]
         public void replaceTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key8", "bromine");
-            Assert.AreEqual("bromine", defaultCache.get("key8"));
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key8", "bromine");
+            Assert.AreEqual("bromine", defaultCache.Get("key8"));
 
             //This Assertion will result in a "pass" only if the "forceRetrnValue" parameter of client configuration is set to true.
-            Assert.AreEqual("bromine",defaultCache.replace("key8", "neon"));
+            Assert.AreEqual("bromine",defaultCache.Replace("key8", "neon"));
             
-            Assert.AreEqual("neon", defaultCache.get("key8"));
+            Assert.AreEqual("neon", defaultCache.Get("key8"));
         }
     }
 }

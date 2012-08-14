@@ -17,25 +17,25 @@ namespace tests
         {
 
             //by default a cache doesn't have FORCE return value enabled
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache(false);
-            Assert.IsNull(defaultCache.put("k", "v"));
-            Assert.IsNull(defaultCache.put("k", "v2")); //this shouldn't return anything as force return value is off
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(false);
+            Assert.IsNull(defaultCache.Put("k", "v"));
+            Assert.IsNull(defaultCache.Put("k", "v2")); //this shouldn't return anything as force return value is off
 
-            IRemoteCache<String, String> withReturnCache = remoteManager.getCache(true);
-            Assert.AreEqual("v2", withReturnCache.put("k", "v3")); //this should return the previous existing value
+            IRemoteCache<String, String> withReturnCache = remoteManager.GetCache<String,String>(true);
+            Assert.AreEqual("v2", withReturnCache.Put("k", "v3")); //this should return the previous existing value
 
             //test remove
-            Assert.IsNull(defaultCache.remove("k"));
-            withReturnCache.put("k", "v");
-            Assert.AreEqual("v", withReturnCache.remove("k"));
+            Assert.IsNull(defaultCache.Remove("k"));
+            withReturnCache.Put("k", "v");
+            Assert.AreEqual("v", withReturnCache.Remove("k"));
 
             //test putIfAbsent
-            Assert.IsNull(withReturnCache.putIfAbsent("k2","v4"));
-            Assert.AreEqual("v4", withReturnCache.putIfAbsent("k2", "v5"));
+            Assert.IsNull(withReturnCache.PutIfAbsent("k2","v4"));
+            Assert.AreEqual("v4", withReturnCache.PutIfAbsent("k2", "v5"));
 
             //test replace
-            Assert.AreEqual("v4", withReturnCache.replace("k2","v6"));
-            Assert.AreEqual("v6", withReturnCache.get("k2"));
+            Assert.AreEqual("v4", withReturnCache.Replace("k2","v6"));
+            Assert.AreEqual("v6", withReturnCache.Get("k2"));
         }
     }
 }

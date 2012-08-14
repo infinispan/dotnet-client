@@ -17,12 +17,12 @@ namespace tests
         protected Process hrServer1;
         protected ClientConfig conf1 = new ClientConfig();//("127.0.0.1", 11222, "cache1", false);
         protected ISerializer serializer1 = new DefaultSerializer();
-        protected RemoteCacheManager<String, String> remoteManager1;
+        protected RemoteCacheManager remoteManager1;
 
         protected Process hrServer2;
         protected ClientConfig conf2 = new ClientConfig();//("127.0.0.1", 11223, "cache2", false);
         protected ISerializer serializer2 = new DefaultSerializer();
-        protected RemoteCacheManager<String, String> remoteManager2;
+        protected RemoteCacheManager remoteManager2;
 
         [TestInitialize()]
         public void startHotrodServer()
@@ -46,8 +46,8 @@ namespace tests
             hrServer2.StartInfo.WorkingDirectory = ispnHome + "\\bin";
             hrServer2.Start();
             Thread.Sleep(3000);
-            remoteManager1 = new RemoteCacheManager<String, String>(conf1, serializer1);
-            remoteManager1 = new RemoteCacheManager<String, String>(conf2, serializer2);
+            remoteManager1 = new RemoteCacheManager(conf1, serializer1);
+            remoteManager1 = new RemoteCacheManager(conf2, serializer2);
         }
 
         [TestCleanup()]

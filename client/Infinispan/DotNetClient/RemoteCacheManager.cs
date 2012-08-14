@@ -36,7 +36,7 @@ namespace Infinispan.DotNetClient
     /// Aggregates RemoteCaches and lets user to get hold of a remotecache.
     /// Author: sunimalr@gmail.com
     /// </summary>
-    public class RemoteCacheManager<K, V>
+    public class RemoteCacheManager
     {
         private ClientConfig config;
         private ISerializer serializer;
@@ -72,7 +72,7 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Cache with default settings mentioned in App.config file
         /// </summary>
-        public IRemoteCache<K, V> getCache()
+        public IRemoteCache<K, V> GetCache<K,V>()
         {
             return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
         }
@@ -80,7 +80,7 @@ namespace Infinispan.DotNetClient
         /// <summary>
         ///Cache with default settings and a given cacheName
         /// </summary>
-        public IRemoteCache<K, V> getCache(String cacheName)
+        public IRemoteCache<K, V> GetCache<K,V>(String cacheName)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, cacheName, this.serializer, this.transportFactory);
         }
@@ -90,7 +90,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="forceRetunValue"></param>
         /// <returns></returns>
-        public IRemoteCache<K, V> getCache(bool forceRetunValue)
+        public IRemoteCache<K, V> GetCache<K,V>(bool forceRetunValue)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
@@ -101,7 +101,7 @@ namespace Infinispan.DotNetClient
         /// <param name="cacheName">If the user needs to give the cachename manually it can be passed here</param>
         /// <param name="forceRetunValue">If forceRetunValue is true, cache returns the value existed before the operation</param>
         /// <returns></returns>
-        public IRemoteCache<K, V> getCache(String cacheName, bool forceRetunValue)
+        public IRemoteCache<K, V> GetCache<K,V>(String cacheName, bool forceRetunValue)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
