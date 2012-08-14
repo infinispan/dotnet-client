@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BulkGetOperationTest.cs" />
+    <Compile Include="ForceReturnValueTest.cs" />
     <Compile Include="ClearOperationTest.cs" />
     <Compile Include="ContainsKeyOperationTest.cs" />
     <Compile Include="GetOperationTest.cs" />
