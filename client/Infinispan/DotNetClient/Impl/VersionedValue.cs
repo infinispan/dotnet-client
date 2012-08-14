@@ -13,11 +13,11 @@ namespace Infinispan.DotNetClient.Impl
         private ISerializer serializer;
         private long ver;
 
-        public VersionedValue(long ver, byte[] value)
+        public VersionedValue(long ver, byte[] value, ISerializer serializer)
         {
             this.ver = ver;
             this.value = value;
-            this.serializer = new DefaultSerializer();
+            this.serializer = serializer;
         }
          
         public Object getValue()

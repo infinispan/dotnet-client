@@ -45,8 +45,8 @@ namespace Infinispan.DotNetClient.Operations
 
                 byte[] value = transport.readArray();
                 if (logger.IsTraceEnabled)
-                    logger.Trace("Received value: " + UTF8Encoding.UTF8.GetString(value));
-                result = new VersionedValue(version, value);
+                    logger.Trace("Received value: " + transport.getTransportFactory().getSerializer().deserialize(value));
+                result = new VersionedValue(version, value,transport.getTransportFactory().getSerializer());
             }
             return result;
         }

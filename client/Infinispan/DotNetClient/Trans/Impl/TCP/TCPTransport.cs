@@ -29,7 +29,6 @@ namespace Infinispan.DotNetClient.Trans.Impl
         private BinaryWriter bWriter;//BinaryWriter and BinaryReader is used for passing and retrieving data to and from the Underlying Buffered TCP connection stream
         private BinaryReader bReader;
         private static Logger logger;
-
         private IPEndPoint ipEndPoint;
         TCPTransportFactory transportFactory;
 

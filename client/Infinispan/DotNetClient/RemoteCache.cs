@@ -5,6 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Impl;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient
 {
@@ -34,7 +35,7 @@ namespace Infinispan.DotNetClient
         /// Used to retreive statistical information about the remote cache defined in Infinispan.DotNetClient.Impl.ServerStatistics
         /// </summary>
         /// <returns>Server Statistics</returns>
-        ServerStatistics stats();
+        IServerStatistics stats();
 
         /// <summary>
         /// Used to insert a new entry to the cache
@@ -141,7 +142,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="key"></param>
         /// <returns>VersionedValue associated to the supplied key param, or null if it doesn't exist.</returns>
-        VersionedValue getVersioned(K key);
+        IVersionedValue getVersioned(K key);
 
         /// <summary>
         ///Removes the given value only if its version matches the supplied version.

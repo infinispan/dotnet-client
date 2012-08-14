@@ -27,8 +27,9 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         private int topologyId;
         private List<IPEndPoint> servers;
         private static Logger logger;
+        private ISerializer serializer;
 
-        public TCPTransportFactory(ClientConfig configuration)
+        public TCPTransportFactory(ClientConfig configuration, ISerializer serializer)
         {
             Console.WriteLine("TCP Transport Factory came");
             logger = LogManager.GetLogger("TCPTransportFactory");
@@ -38,6 +39,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             balancer = RoundRobinRequestBalancer.getInstance();
             this.topologyId = configuration.TopologyId;
             createAndPreparePool(configuration.getServerList());
+            this.serializer = serializer;
 
             if (logger.IsTraceEnabled)
             {
@@ -46,6 +48,11 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
 
             //initializeTransportPool();
+        }
+
+        public ISerializer getSerializer()
+        {
+            return this.serializer;
         }
 
         public ITransport getTransport()
