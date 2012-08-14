@@ -39,8 +39,6 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Used to insert a new entry to the cache
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
@@ -50,8 +48,6 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Used to insert a new entry to the cache. Lifespan and maxidle time is infinite
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         void put(K key, V val);
@@ -59,10 +55,8 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Puts a new entry to cache only if the specified key is absent.
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
+        /// <param name="key">key actual key to be added to the cache</param>
+        /// <param name="val">value the value associated with the given key</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
         /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         bool putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis);
@@ -70,8 +64,6 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Puts a new entry to cache only if the specified key is absent. Lifespan and maxidle time is infinite.
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         /// <returns>True of the operation was successful, else false</returns>
@@ -80,8 +72,6 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Replaces an existing value with a new value.
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
@@ -91,8 +81,6 @@ namespace Infinispan.DotNetClient
         /// <summary>
         /// Replaces an existing value with a new value. Lifespan and maxidle time is infinite.
         /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
         /// <param name="key">key</param>
         /// <param name="val">value</param>
         V replace(K key, V val);

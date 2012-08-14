@@ -83,10 +83,7 @@ namespace Infinispan.DotNetClient.Impl
             this.transportFactory = trans;
         }
 
-        /// <summary>
-        /// Used to get the number of records of the cache
-        /// </summary>
-        /// <returns>Current number of records in the cache</returns>
+
         public int size()
         {
             StatsOperation op = operationsFactory.newStatsOperation();
@@ -101,19 +98,11 @@ namespace Infinispan.DotNetClient.Impl
             return int.Parse(op.executeOperation(this.transport)[ServerStatistics.CURRENT_NR_OF_ENTRIES]);
         }
 
-        /// <summary>
-        /// Used to check whether the cache is empty or not
-        /// </summary>
-        /// <returns>True if number of entries of the cache is zero</returns>
         public bool isEmpty()
         {
             return size() == 0;
         }
 
-        /// <summary>
-        /// Used to retreive statistical information about the remote cache
-        /// </summary>
-        /// <returns>Server Statistics</returns>
         public ServerStatistics stats()
         {
             StatsOperation op = operationsFactory.newStatsOperation();
@@ -134,27 +123,11 @@ namespace Infinispan.DotNetClient.Impl
             return stats;
         }
 
-        /// <summary>
-        /// Used to insert a new entry to the cache. Lifespan and maxidle time is infinite
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
         public void put(K key, V val)
         {
             put(key, val, 0, 0);
         }
 
-        /// <summary>
-        /// Used to insert a new entry to the cache
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
-        /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
-        /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         public void put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
@@ -171,28 +144,11 @@ namespace Infinispan.DotNetClient.Impl
             }
         }
 
-
-        /// <summary>
-        /// Puts a new entry to cache only if the specified key is absent. Lifespan and maxidle time is infinite.
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
         public bool putIfAbsent(K key, V val)
         {
             return putIfAbsent(key, val, 0, 0);
         }
 
-        /// <summary>
-        /// Puts a new entry to cache only if the specified key is absent.
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
-        /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
-        /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         public bool putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             bool success = false;
@@ -211,27 +167,11 @@ namespace Infinispan.DotNetClient.Impl
             return success;
         }
 
-        /// <summary>
-        /// Replaces an existing value with a new value. Lifespan and maxidle time is infinite.
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
         public V replace(K key, V val)
         {
             return replace(key, val, 0, 0);
         }
 
-        /// <summary>
-        /// Replaces an existing value with a new value.
-        /// </summary>
-        /// <typeparam name="V">Data type of Value</typeparam>
-        /// <typeparam name="K">Data type of Key</typeparam>
-        /// <param name="key">key</param>
-        /// <param name="val">value</param>
-        /// <param name="lifespaninMillis">Lifespan in milliseconds</param>
-        /// <param name="maxIdleTimeinMillis">Maximum idle time in milliseconds</param>
         public V replace(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
@@ -251,11 +191,6 @@ namespace Infinispan.DotNetClient.Impl
             return (V)serializer.deserialize(bytes);
         }
 
-        /// <summary>
-        /// Checks whether the passes key exists in the cache
-        /// </summary>
-        /// <param name="key">Key</param>
-        /// <returns>True if the passed key exixts. False if not exist.</returns>
         public bool containsKey(K key)
         {
             ContainsKeyOperation op = operationsFactory.newContainsKeyOperation(serializer.serialize(key));
@@ -272,12 +207,6 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        /// <summary>
-        /// Used to retrieve a record from the cache with the specified key
-        /// </summary>
-        /// <typeparam name="V">Value</typeparam>
-        /// <param name="key">Key</param>
-        /// <returns>Retrieved Value</returns>
         public V get(K key)
         {
             byte[] keyBytes = serializer.serialize(key);
@@ -297,13 +226,6 @@ namespace Infinispan.DotNetClient.Impl
             return result;
         }
 
-        /// <summary>
-        /// Gets more than one record at a time from the cache
-        /// </summary>
-        /// <typeparam name="K">Key</typeparam>
-        /// <typeparam name="V">Value</typeparam>
-        /// <param name="size">Number of records</param>
-        /// <returns>Dictionary of retrieved data</returns>
         public Dictionary<K, V> getBulk(int size)
         {
             transport = transportFactory.getTransport();
@@ -327,23 +249,11 @@ namespace Infinispan.DotNetClient.Impl
             return toReturn;
         }
 
-        /// <summary>
-        /// Gets bulk data from the cache
-        /// </summary>
-        /// <typeparam name="K">Key</typeparam>
-        /// <typeparam name="V">Value</typeparam>
-        /// <returns>Dictionary of retrieved data</returns>
         public Dictionary<K, V> getBulk()
         {
             return getBulk(0);
         }
 
-        /// <summary>
-        /// Removes a record with given key
-        /// </summary>
-        /// <typeparam name="K">Key Data Type</typeparam>
-        /// <param name="key">Key</param>
-        /// <returns>Removed value</returns>
         public V remove(K key)
         {
             RemoveOperation removeOperation = operationsFactory.newRemoveOperation(serializer.serialize(key));
@@ -361,9 +271,6 @@ namespace Infinispan.DotNetClient.Impl
             return (V)serializer.deserialize(existingValue);
         }
 
-        /// <summary>
-        /// Clears the cache
-        /// </summary>
         public void clear()
         {
             ClearOperation op = operationsFactory.newClearOperation();
@@ -377,11 +284,7 @@ namespace Infinispan.DotNetClient.Impl
                 transportFactory.releaseTransport(transport);
             }
         }
-
-        /// <summary>
-        /// Application level operation to check existance of the cache
-        /// </summary>
-        /// <returns>PingResult</returns>
+     
         public PingResult ping()
         {
             PingResult res = PingResult.FAIL;
@@ -397,11 +300,6 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        /// <summary>
-        /// Returns the VersionedValue associated to the supplied key param, or null if it doesn't exist.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns>VersionedValue associated to the supplied key param, or null if it doesn't exist.</returns>
         public VersionedValue getVersioned(K key)
         {
             VersionedValue res = null;
@@ -417,14 +315,6 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        /// <summary>
-        ///Removes the given value only if its version matches the supplied version.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="val"></param>
-        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
-        /// <param name="lifespaninMinMillis"></param>
-        /// <returns>Version details of the removed entry</returns>
         public VersionedOperationResponse removeIfUnmodified(K key, long version)
         {
             VersionedOperationResponse res = null;
@@ -440,15 +330,6 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        /// <summary>
-        ///Replaces the given value only if its version matches the supplied version.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="val"></param>
-        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
-        /// <param name="lifespaninMillis"></param>
-        /// <param name="maxIdleTimeinMillis"></param>
-        /// <returns>true if the value has been replaced</returns>
         public bool replaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             VersionedOperationResponse res = null;
@@ -474,12 +355,6 @@ namespace Infinispan.DotNetClient.Impl
             }
         }
 
-        /// <summary>
-        ///Replaces the given value only if its version matches the supplied version.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="val"></param>
-        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
         public bool replaceWithVersion(K key, V val, long version)
         {
             return replaceWithVersion(key, val, version, 0, 0);
