@@ -14,6 +14,5 @@ namespace Infinispan.DotnetClient
         void addStats(String name, String value);
 
         int getIntStatistic(String statsName);
-
     }
 }

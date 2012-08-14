@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotNetClient.Hotrod
+namespace Infinispan.DotnetClient
 {
-    public class ServerStatistics
+    public abstract class ServerStatisticsTypes
     {
-
         /**
-        * Number of seconds since Hot Rod started.
+         * Number of seconds since Hot Rod started.
         */
         public const string TIME_SINCE_START = "timeSinceStart";
 
@@ -52,28 +51,5 @@ namespace Infinispan.DotNetClient.Hotrod
          * Number of removal misses.
          */
         public const string REMOVE_MISSES = "removeMisses";
-
-        private Dictionary<String, String> stats = new Dictionary<String, String>();
-
-        public Dictionary<String, String> getStatsMap()
-        {
-            return stats;
-        }
-
-        public String getStatistic(String statsName)
-        {
-            return stats[statsName];
-        }
-
-        public void addStats(String name, String value)
-        {
-            stats.Add(name, value);
-        }
-
-        public int getIntStatistic(String statsName)
-        {
-            String value = stats[statsName];
-            return value == null ? int.MinValue : int.Parse(value); //If null, MINVALUE will be returned
-        }
     }
 }
