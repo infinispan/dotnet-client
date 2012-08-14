@@ -16,12 +16,12 @@ namespace tests
         {
             RemoteCache<String, String> defaultRemote = remoteManager.getCache();
             defaultRemote.put("key45", "uranium");
-            long eaelierVer = defaultRemote.getVersioned("key45").getVersion();
+            long eaelierVer = defaultRemote.getVersioned("key45").GetVersion();
             defaultRemote.put("key45", "rubidium");
             
             IVersionedValue actual = defaultRemote.getVersioned("key45");
-            Assert.AreNotEqual(eaelierVer, actual.getVersion());
-            Assert.AreEqual("rubidium", actual.getValue());
+            Assert.AreNotEqual(eaelierVer, actual.GetVersion());
+            Assert.AreEqual("rubidium", actual.GetValue());
         }
     }
 }

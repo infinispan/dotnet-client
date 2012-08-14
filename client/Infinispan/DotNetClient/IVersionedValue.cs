@@ -12,14 +12,14 @@ namespace Infinispan.DotNetClient
     public interface IVersionedValue
     {
         /// <summary>
-        /// 
+        /// Get the value of the cache entry retrieved for the given key and version.
         /// </summary>
-        /// <returns></returns>
-        Object getValue();
+        /// <returns>Value of the cache entry retrieved</returns>
+        Object GetValue();
         /// <summary>
-        /// 
+        /// Cache entries have a version number which indicates the current version of the data of the cache entry.
         /// </summary>
-        /// <returns></returns>
-        long getVersion();
+        /// <returns>Version number of the cache entry retrieved</returns>
+        long GetVersion();
     }
 }

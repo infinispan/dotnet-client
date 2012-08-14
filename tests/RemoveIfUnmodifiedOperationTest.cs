@@ -17,13 +17,13 @@ namespace tests
         {
             RemoteCache<String, String> defaultCache = remoteManager.getCache();
             defaultCache.put("key8", "bromine1");
-            long version = defaultCache.getVersioned("key8").getVersion();
+            long version = defaultCache.getVersioned("key8").GetVersion();
             defaultCache.put("key8", "hexane");
             VersionedOperationResponse response = defaultCache.removeIfUnmodified("key8", version);
             Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
             Assert.AreEqual("hexane", defaultCache.get("key8"));
 
-            long newVersion = defaultCache.getVersioned("key8").getVersion();
+            long newVersion = defaultCache.getVersioned("key8").GetVersion();
             response = defaultCache.removeIfUnmodified("key8", newVersion);
 
             Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.SUCCESS);

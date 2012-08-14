@@ -20,17 +20,17 @@ namespace Infinispan.DotNetClient.Impl
             this.serializer = serializer;
         }
          
-        public Object getValue()
+        public Object GetValue()
         {
             return serializer.deserialize(this.value);
         }
 
-        public void setValue(byte[] val)
+        public void SetValue(byte[] val)
         {
             this.value = val;
         }
 
-        public long getVersion()
+        public long GetVersion()
         {
             return this.ver;
         }
