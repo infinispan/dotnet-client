@@ -11,7 +11,7 @@ namespace tests
     [TestClass()]
     public class BulkGetOperationTest:SingleServerAbstractTest
     {
-        private RemoteCache<String,String> defaultCache;
+        private IRemoteCache<String,String> defaultCache;
 
         [TestInitialize()]
         public void populateCache()

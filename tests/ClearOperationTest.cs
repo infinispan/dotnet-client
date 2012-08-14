@@ -14,7 +14,7 @@ namespace tests
          [TestMethod()]
         public void clearTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
             defaultCache.put("key1", "hydrogen");
             defaultCache.put("key2", "helium");
             defaultCache.clear();

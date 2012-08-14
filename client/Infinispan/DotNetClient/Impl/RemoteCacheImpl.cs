@@ -17,7 +17,7 @@ namespace Infinispan.DotNetClient.Impl
     ///Concrete implementation of RemoteCache inteface
     ///Author: sunimalr@gmail.com
     ///</summary>
-    public class RemoteCacheImpl<K, V> : RemoteCache<K,V>
+    public class RemoteCacheImpl<K, V> : IRemoteCache<K,V>
     {
         private ClientConfig config;
         private ISerializer serializer;

@@ -15,7 +15,7 @@ namespace tests
         [TestMethod()]
         public void containsKeyTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
             Assert.IsFalse(defaultCache.containsKey("key4"));
             
             defaultCache.put("key4", "oxygen");
