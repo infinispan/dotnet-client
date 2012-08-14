@@ -9,7 +9,7 @@ using System.IO;
 namespace Infinispan.DotNetClient
 {
     /// <summary>
-    /// This is the serializer interface.
+    /// Hotrod is a binary protocol so the object passed in by the user are being marshalled into a binary format using an implementation of ths interface.
     /// Users can implement this interface and develop their own serializer without using defualt serializer.
     ///  
     /// Author: sunimalr@gmail.com
