@@ -9,6 +9,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
 using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotNetClient.Impl;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient
@@ -78,6 +79,8 @@ namespace Infinispan.DotNetClient
         {
             return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
         }
+
+        
 
         /// <summary>
         ///Cache with default settings and a given cacheName

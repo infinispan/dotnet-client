@@ -1,0 +1,7 @@
+
+C:\Users\User\GSOC\Infinispan .NET Client\release>nant -buildfile:NAnt.build.xml - 
+NAnt 0.92 (Build 0.92.4543.0; release; 6/9/2012)
+Copyright (C) 2001-2012 Gerry Shaw
+http://nant.sourceforge.net
+
+Try 'nant -help' for more information
