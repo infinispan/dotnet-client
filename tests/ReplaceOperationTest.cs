@@ -4,7 +4,6 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
 
 namespace tests
@@ -15,11 +14,14 @@ namespace tests
         [TestMethod()]
         public void replaceTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key8", "bromine");
-            Assert.AreEqual("bromine", defaultCache.get<String,String>("key8"));
-            defaultCache.replace<String, String>("key8", "neon");
-            Assert.AreEqual("neon", defaultCache.get<String, String>("key8"));
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key8", "bromine");
+            Assert.AreEqual("bromine", defaultCache.get("key8"));
+
+            //This Assertion will result in a "pass" only if the "forceRetrnValue" parameter of client configuration is set to true.
+            Assert.AreEqual("bromine",defaultCache.replace("key8", "neon"));
+            
+            Assert.AreEqual("neon", defaultCache.get("key8"));
         }
     }
 }

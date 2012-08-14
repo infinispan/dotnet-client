@@ -8,6 +8,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using System.Threading;
+using Infinispan.DotNetClient.Util.Impl;
 
 namespace tests
 {
@@ -15,9 +16,10 @@ namespace tests
     public abstract class SingleServerAbstractTest
     {
         protected Process hrServer;
-        protected ClientConfig conf= new ClientConfig();
-        protected Serializer serializer= new DefaultSerializer();
-        protected RemoteCacheManager remoteManager;
+       // protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
+        protected ClientConfig conf = new ClientConfig();
+        protected ISerializer serializer= new DefaultSerializer();
+        protected RemoteCacheManager<String,String> remoteManager;
 
         [TestInitialize()]
         public void startHotrodServer()
@@ -37,7 +39,7 @@ namespace tests
             //hrServer.StartInfo.Arguments = "-r hotrod";
             hrServer.Start();
             Thread.Sleep(3000);
-            remoteManager = new RemoteCacheManager(conf, serializer);
+            remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
         }
 
         [TestCleanup()]

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 { 
@@ -20,7 +21,7 @@ namespace Infinispan.DotNetClient.Operations
         {
         }
 
-        public bool executeOperation(Transport transport)
+        public bool executeOperation(ITransport transport)
         {
             bool containsKey = false;
             short status = sendKeyOperation(key, transport, CONTAINS_KEY_REQUEST, CONTAINS_KEY_RESPONSE);

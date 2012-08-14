@@ -4,7 +4,7 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
+using Infinispan.DotnetClient;
 
 namespace tests
 {
@@ -14,16 +14,15 @@ namespace tests
          [TestMethod()]
         public void clearTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            defaultCache.put<String, String>("key1", "hydrogen");
-            defaultCache.put<String, String>("key2", "helium");
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            defaultCache.put("key1", "hydrogen");
+            defaultCache.put("key2", "helium");
             defaultCache.clear();
 
-            Assert.IsNull(defaultCache.get<String, String>("key1"));
-            Assert.IsNull(defaultCache.get<String, String>("key2"));
+            Assert.IsNull(defaultCache.get("key1"));
+            Assert.IsNull(defaultCache.get("key2"));
 
-
-            ServerStatistics st= defaultCache.stats();
+            IServerStatistics st= defaultCache.stats();
             //Assert.AreEqual("0", st.getStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
             //NOTE: There's a bug with Clear as the cache doesn't clear itself correctly.
         }

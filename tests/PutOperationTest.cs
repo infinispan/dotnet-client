@@ -4,7 +4,6 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Util;
 
 namespace tests
@@ -16,10 +15,13 @@ namespace tests
         [TestMethod()]
         public void putTest()
         {
-            remoteManager.getCache().put<String, String>("key13", "boron");
-            Assert.AreEqual("boron", remoteManager.getCache().get<String, String>("key13"));
-            remoteManager.getCache().put<String, String>("key14", "chlorine");
-            Assert.AreEqual("chlorine", remoteManager.getCache().get<String, String>("key14"));
+            remoteManager.getCache().put("key13", "boron");
+            Assert.AreEqual("boron", remoteManager.getCache().get("key13"));
+            remoteManager.getCache().put("key14", "chlorine");
+            Assert.AreEqual("chlorine", remoteManager.getCache().get("key14"));
+
+            //If Force return value is set to true, following assertion will be passed. Else follwing will fail.
+            Assert.AreEqual("chlorine", remoteManager.getCache().put("key14","Berilium"));
         }
     }
 }

@@ -7,6 +7,8 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Protocol;
 using NLog;
 using Infinispan.DotNetClient.Trans;
+using Infinispan.DotNetClient.Impl;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -18,7 +20,7 @@ namespace Infinispan.DotNetClient.Operations
     * 
     */
 
-    public class GetWithVersionOperation : AbstractKeyOperation<BinaryVersionedValue>
+    public class GetWithVersionOperation : AbstractKeyOperation<VersionedValue>
     {
         private static Logger logger;
         public GetWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags) :
@@ -27,10 +29,10 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("GetWithVersionOperation");
         }
 
-        public BinaryVersionedValue executeOperation(Transport transport)
+        public VersionedValue executeOperation(ITransport transport)
         {
             short status = sendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
-            BinaryVersionedValue result = null;
+            VersionedValue result = null;
             if (status == KEY_DOES_NOT_EXIST_STATUS)
             {
                 result = null;
@@ -44,7 +46,7 @@ namespace Infinispan.DotNetClient.Operations
                 byte[] value = transport.readArray();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Received value: " + UTF8Encoding.UTF8.GetString(value));
-                result = new BinaryVersionedValue(version, value);
+                result = new VersionedValue(version, value);
             }
             return result;
         }

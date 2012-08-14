@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 
-namespace Infinispan.DotNetClient.Trans.TCP
+namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class RequestBalancer
     {

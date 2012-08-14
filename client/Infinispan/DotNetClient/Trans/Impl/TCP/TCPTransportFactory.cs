@@ -5,13 +5,12 @@ using System.Collections.Concurrent;
 using System.Text;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using System.Net;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Exceptions;
 using System.Threading;
+using Infinispan.DotNetClient.Util.Impl;
 
-namespace Infinispan.DotNetClient.Trans.TCP
+namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class TCPTransportFactory
     {
@@ -31,7 +30,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             //initializeTransportPool();
         }
 
-        public Transport getTransport()
+        public ITransport getTransport()
         {
             //IPEndPoint addr;
             //Monitor.Enter(this);
@@ -50,12 +49,12 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
         }
 
-        public void releaseTransport(Transport transport)
+        public void releaseTransport(ITransport transport)
         {
             ConnectionPool.getInstance().releaseTransport(transport);
         }
         
-        private Transport borrowTransportFromPool(IPEndPoint addr)
+        private ITransport borrowTransportFromPool(IPEndPoint addr)
         {
             connectionPool = ConnectionPool.getInstance();
             try

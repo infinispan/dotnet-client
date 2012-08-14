@@ -6,6 +6,7 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Trans;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -15,7 +16,6 @@ namespace Infinispan.DotNetClient.Operations
      * Author: sunimalr@gmail.com
      *
      */
-
 
     public class OperationsFactory : HotRodConstants
     {
@@ -59,10 +59,10 @@ namespace Infinispan.DotNetClient.Operations
                   codec, key, cacheNameBytes, topologyId, flags(), version);
         }
 
-        public ReplaceIfUnmodifiedOperation newReplaceIfUnmodifiedOperation(byte[] key,
+        public ReplaceWithVersionOperation newReplaceWithVersionOperation(byte[] key,
                  byte[] value, int lifespanSeconds, int maxIdleTimeSeconds, long version)
         {
-            return new ReplaceIfUnmodifiedOperation(
+            return new ReplaceWithVersionOperation(
                   codec, key, cacheNameBytes, topologyId, flags(),
                   value, lifespanSeconds, maxIdleTimeSeconds, version);
         }
@@ -120,15 +120,26 @@ namespace Infinispan.DotNetClient.Operations
                   codec, cacheNameBytes, topologyId, flags(), size);
         }
 
-        public PingOperation newPingOperation(Transport transport)
+        public PingOperation newPingOperation(ITransport transport)
         {
             return new PingOperation(codec, topologyId, transport, cacheNameBytes);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>Flags specified, null if no flags specified</returns>
         private Flag[] flags()
         {
-            //null only for basic implementation
-            return null;
+            Flag[] flags=null;
+            
+            if (forceReturnValue)
+            {
+                flags = new Flag[1];
+                Flag f = new Flag(Flag.FORCE_RETURN_VALUE);
+                flags[0] = f;
+            }
+            return flags;
         }
 
     }

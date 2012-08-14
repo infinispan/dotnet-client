@@ -6,6 +6,7 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -25,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("ClearOperation");
         }
 
-        public void executeOperation(Transport transport)
+        public void executeOperation(ITransport transport)
         {
             HeaderParams param = writeHeader(transport, CLEAR_REQUEST);
             if (logger.IsTraceEnabled)

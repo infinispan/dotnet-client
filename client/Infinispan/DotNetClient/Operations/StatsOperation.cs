@@ -7,6 +7,7 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -25,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("StatsOoperation");
         }
 
-        public Dictionary<string, string> executeOperation(Transport transport)
+        public Dictionary<string, string> executeOperation(ITransport transport)
         {
             //Defines a new Dictonary which is capable of storing indexed string values with a string index.
             Dictionary<string, string> result;

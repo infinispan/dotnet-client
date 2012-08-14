@@ -5,6 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -25,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("RemoveOperation");
         }
 
-        public byte[] executeOperation(Transport transport)
+        public byte[] executeOperation(ITransport transport)
         {
             byte[] result = null;
             byte status = sendKeyOperation(key, transport, REMOVE_REQUEST, REMOVE_RESPONSE);

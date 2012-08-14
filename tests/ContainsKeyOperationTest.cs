@@ -4,7 +4,6 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using System.Text;
 
 namespace tests
@@ -16,11 +15,11 @@ namespace tests
         [TestMethod()]
         public void containsKeyTest()
         {
-            RemoteCache defaultCache = remoteManager.getCache();
-            Assert.IsFalse(defaultCache.containsKey<String>("key4"));
+            RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            Assert.IsFalse(defaultCache.containsKey("key4"));
             
-            defaultCache.put<String, String>("key4", "oxygen");
-            Assert.IsTrue(defaultCache.containsKey<String>("key4"));
+            defaultCache.put("key4", "oxygen");
+            Assert.IsTrue(defaultCache.containsKey("key4"));
         }
     }
 }

@@ -6,6 +6,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Protocol
 {
@@ -19,20 +20,20 @@ namespace Infinispan.DotNetClient.Protocol
     public class Codec
     {
 
-        private Logger logger;
+        private static Logger logger;
 
         public Codec()
         {
-            this.logger = LogManager.GetLogger("Codec");
+            logger = LogManager.GetLogger("Codec");
         }
 
-        public HeaderParams writeHeader(Transport trans, HeaderParams param, byte ver)
+        public HeaderParams writeHeader(ITransport trans, HeaderParams param, byte ver)
         {
 
             trans.writeByte(HotRodConstants.REQUEST_MAGIC);
 
 
-            //TODO: Implement a proper way to incremet message ID
+            //TODO: Implement a proper way to increment message ID
 
             Random r = new Random();
             StringBuilder sb = new StringBuilder();
@@ -42,24 +43,25 @@ namespace Infinispan.DotNetClient.Protocol
             trans.writeVLong(param.Messageid); //message id
             trans.writeByte(HotRodConstants.VERSION_11);//version
             trans.writeByte(param.OperCode);//opcode
-            trans.writeVInt(0); //default cache name. therefore cache name length is 0
-            //trans.writeArray(param.Cachename); // Cache name is not used for default cache
-
+            trans.writeVInt(param.Cachename.Length); //default cache name. therefore cache name length is 0
+            if (param.Cachename.Length != 0)
+            {
+                trans.writeArray(param.Cachename); // Cache name is not used for default cache
+            }
             int flagInt = 0x00; //0x00 Used here since intention is to use no flags
 
-            /*
+            
             if(param.Flag!=null)
             {
                 foreach(Flag f in param.Flag)
                 {
-                    flagInt=f.getFlagInt() | flagInt;
+                    flagInt = f.getFlagInt() | flagInt;
                 }
             }
-             */
-
-            trans.writeVInt(flagInt);//flag is 0
+             
+            trans.writeVInt(flagInt);//flag is 0 for base clients
             trans.writeByte(param.Clientintel);
-            trans.writeVInt(0);//for basic clients topology ID = 0 
+            trans.writeVInt(param.Topologyid);//for basic clients topology ID = 0 
             trans.writeByte(param.Txmarker);
            
 
@@ -69,7 +71,7 @@ namespace Infinispan.DotNetClient.Protocol
 
 
 
-        public byte readHeader(Transport trans, HeaderParams param)
+        public byte readHeader(ITransport trans, HeaderParams param)
         {
 
 
@@ -103,7 +105,7 @@ namespace Infinispan.DotNetClient.Protocol
                 {
                     
                     logger.Warn(String.Format("Error Response Recieved : "+receivedOpCode));
-                    throw new NotImplementedException("Error Response Recieved");
+                    throw new  InvalidResponseException("Error Response Recieved");
                 }
                 
                 logger.Warn(String.Format("Invalid Response Recieved : Expected " + param.OpRespCode+" Recieved " +receivedOpCode));

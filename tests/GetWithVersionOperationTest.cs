@@ -4,7 +4,6 @@ using System;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
 using System.Text;
 
 namespace tests
@@ -15,14 +14,14 @@ namespace tests
         [TestMethod()]
         public void getWithVersionTest()
         {
-            RemoteCache defaultRemote = remoteManager.getCache();
-            defaultRemote.put<String, String>("key45", "uranium");
-            long eaelierVer = defaultRemote.getWithVersion<String, String>("key45").Ver1;
-            defaultRemote.put<String, String>("key45", "rubidium");
+            RemoteCache<String, String> defaultRemote = remoteManager.getCache();
+            defaultRemote.put("key45", "uranium");
+            long eaelierVer = defaultRemote.getVersioned("key45").getVersion();
+            defaultRemote.put("key45", "rubidium");
             
-            BinaryVersionedValue actual = defaultRemote.getWithVersion<String, String>("key45");
-            Assert.AreNotEqual(eaelierVer, actual.Ver1);
-            Assert.AreEqual("rubidium", serializer.deserialize(actual.Value));
+            IVersionedValue actual = defaultRemote.getVersioned("key45");
+            Assert.AreNotEqual(eaelierVer, actual.getVersion());
+            Assert.AreEqual("rubidium", actual.getValue());
         }
     }
 }

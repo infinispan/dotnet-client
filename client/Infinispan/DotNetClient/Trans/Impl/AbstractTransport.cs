@@ -5,7 +5,7 @@ using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using System.IO;
 
-namespace Infinispan.DotNetClient.Trans
+namespace Infinispan.DotNetClient.Trans.Impl
 {
     /*
    * 
@@ -15,7 +15,7 @@ namespace Infinispan.DotNetClient.Trans
    *      
    */
 
-    public abstract class AbstractTransport : Transport
+    public abstract class AbstractTransport : ITransport
     {
         //Reads an array of bytes
         public byte[] readArray()
@@ -178,7 +178,7 @@ namespace Infinispan.DotNetClient.Trans
             throw new NotImplementedException();
         }
 
-        void Transport.writeBytes(byte[] toAppend)
+        void ITransport.writeBytes(byte[] toAppend)
         {
             throw new NotImplementedException();
         }

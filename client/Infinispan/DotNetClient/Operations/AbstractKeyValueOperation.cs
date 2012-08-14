@@ -6,6 +6,8 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
 using Infinispan.DotNetClient.Util;
+using Infinispan.DotNetClient;
+using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations
@@ -33,7 +35,7 @@ namespace Infinispan.DotNetClient.Operations
         }
 
         //[header][key length][key][lifespan][max idle][value length][value]
-        protected byte sendPutOperation(Transport transport, byte opCode, byte opRespCode)
+        protected byte sendOperationRequest(ITransport transport, byte opCode, byte opRespCode)
         {
             // 1) write header
             HeaderParams param = writeHeader(transport, opCode);

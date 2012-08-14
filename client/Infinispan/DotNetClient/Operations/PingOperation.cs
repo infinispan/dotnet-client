@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using Infinispan.DotNetClient.Trans;
-
 using Infinispan.DotNetClient.Protocol;
 using System.IO;
 using NLog;
@@ -19,21 +18,20 @@ namespace Infinispan.DotNetClient.Operations
     */
     public class PingOperation : HotRodOperation
     {
-        private readonly Transport transport;
+        private readonly ITransport transport;
         private static Logger logger;
 
-        public PingOperation(Codec codec, int topologyId, Transport trans) :
+        public PingOperation(Codec codec, int topologyId, ITransport trans) :
             this(codec, topologyId, trans, HotRodConstants.DEFAULT_CACHE_NAME_BYTES)
         {
         }
 
-        public PingOperation(Codec codec, int topologyId, Transport transport, byte[] cacheName) :
+        public PingOperation(Codec codec, int topologyId, ITransport transport, byte[] cacheName) :
             base(codec, null, cacheName, topologyId)
         {
             logger = LogManager.GetLogger("PingOperation");
             this.transport = transport;
         }
-
 
         public PingResult execute()
         {
@@ -62,16 +60,6 @@ namespace Infinispan.DotNetClient.Operations
                 else
                     return PingResult.FAIL;
             }
-        }
-
-        public enum PingResult
-        {
-            // Success if the ping request was responded correctly
-            SUCCESS,
-            // When the ping request fails due to non-existing cache
-            CACHE_DOES_NOT_EXIST,
-            // For any other type of failures
-            FAIL,
         }
     }
 }

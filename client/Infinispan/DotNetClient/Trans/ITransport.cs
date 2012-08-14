@@ -15,7 +15,7 @@ namespace Infinispan.DotNetClient.Trans
    *      
    */
 
-    public interface Transport
+    public interface ITransport
     {
 
         BinaryWriter getBinaryWriter();
