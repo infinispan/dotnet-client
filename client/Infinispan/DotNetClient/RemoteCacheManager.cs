@@ -53,7 +53,7 @@ namespace Infinispan.DotNetClient
             this.config = configuration;
             this.serializer = s;
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Infinispan.DotNetClient
             this.config = configuration;
             this.serializer = new DefaultSerializer();
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
         }
 
 

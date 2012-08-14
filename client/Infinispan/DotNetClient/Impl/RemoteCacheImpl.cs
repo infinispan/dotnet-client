@@ -9,6 +9,7 @@ using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
 using Infinispan.DotNetClient.Util.Impl;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Impl
 {
@@ -103,7 +104,7 @@ namespace Infinispan.DotNetClient.Impl
             return size() == 0;
         }
 
-        public ServerStatistics stats()
+        public IServerStatistics stats()
         {
             StatsOperation op = operationsFactory.newStatsOperation();
             transport = transportFactory.getTransport();
@@ -115,7 +116,7 @@ namespace Infinispan.DotNetClient.Impl
                 transportFactory.releaseTransport(transport);
             }
             Dictionary<String, String> statsMap = (Dictionary<String, String>)op.executeOperation(this.transport);
-            ServerStatistics stats = new ServerStatistics();
+            IServerStatistics stats = new ServerStatistics();
             for (int i = 0; i < statsMap.Count; i++)
             {
                 stats.addStats(statsMap.ElementAt(i).Key, statsMap.ElementAt(i).Value);
@@ -311,9 +312,9 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        public VersionedValue getVersioned(K key)
+        public IVersionedValue getVersioned(K key)
         {
-            VersionedValue res = null;
+            IVersionedValue res = null;
             transport = transportFactory.getTransport();
             try
             {
