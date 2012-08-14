@@ -15,6 +15,7 @@ namespace tests
         public void hotRodStatisticsTest()
         {
             RemoteCache<String, String> defaultCache = remoteManager.getCache();
+            Assert.AreEqual("0", defaultCache.stats().getStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
             defaultCache.put("key7", "carbon0");
             defaultCache.put("key8", "carbon1");
             defaultCache.put("key9", "carbon2");

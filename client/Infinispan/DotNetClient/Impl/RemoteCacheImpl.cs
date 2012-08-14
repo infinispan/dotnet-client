@@ -155,27 +155,27 @@ namespace Infinispan.DotNetClient.Impl
 
         }
 
-        public bool putIfAbsent(K key, V val)
+        public V putIfAbsent(K key, V val)
         {
             return putIfAbsent(key, val, 0, 0);
         }
 
-        public bool putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
-            bool success = false;
+            byte[] returnedValue = null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             PutIFAbsentOperation op = operationsFactory.newPutIfAbsentOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                success = op.executeOperation(transport);
+                returnedValue = op.executeOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return success;
+            return (V)serializer.deserialize(returnedValue);
         }
 
         public V replace(K key, V val)
