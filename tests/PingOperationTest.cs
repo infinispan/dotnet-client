@@ -17,12 +17,12 @@ namespace tests
         public void pingTest()
         {
             PingResult expected = PingResult.SUCCESS;
-            PingResult actual = remoteManager.getCache().ping();
+            PingResult actual = remoteManager.GetCache<String,String>().Ping();
             Assert.AreEqual(expected, actual);
 
             Assert.AreEqual(expected, actual);
             shutDownHotrodServer(); //this should make ping fail
-            actual = remoteManager.getCache().ping();
+            actual = remoteManager.GetCache<String,String>().Ping();
             Assert.AreEqual(PingResult.FAIL, actual);
         }
     }

@@ -36,7 +36,7 @@ namespace Infinispan.DotNetClient.Util.Impl
         }
 
 
-        private byte[] iternal_serialize(Object ob)
+        private byte[] Iternal_serialize(Object ob)
         {
             this.binaryFormatter.Serialize(memoryStreamIn, ob);
             if (logger.IsTraceEnabled)
@@ -51,9 +51,9 @@ namespace Infinispan.DotNetClient.Util.Impl
         /// </summary>
         /// <param name="ob"></param>
         /// <returns>Serialzed object as a byte array</returns>
-        public byte[] serialize(Object ob)
+        public byte[] Serialize(Object ob)
         {
-            return new DefaultSerializer().iternal_serialize(ob);
+            return new DefaultSerializer().Iternal_serialize(ob);
         }
 
 
@@ -62,7 +62,7 @@ namespace Infinispan.DotNetClient.Util.Impl
         /// </summary>
         /// <param name="dataArray"></param>
         /// <returns>Deserialized object from byte array if dataarray is not null, else null will be returned.</returns>
-        public Object deserialize(byte[] dataArray)
+        public Object Deserialize(byte[] dataArray)
         {
             if (dataArray == null)
             {

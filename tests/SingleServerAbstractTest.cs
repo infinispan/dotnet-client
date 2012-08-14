@@ -19,7 +19,7 @@ namespace tests
         //protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
         protected ClientConfig conf = new ClientConfig();
         protected ISerializer serializer= new DefaultSerializer();
-        protected RemoteCacheManager<String,String> remoteManager;
+        protected RemoteCacheManager remoteManager;
 
         [TestInitialize()]
         public void startHotrodServer()
@@ -37,7 +37,7 @@ namespace tests
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
             hrServer.Start();
             Thread.Sleep(3000);
-            remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
+            remoteManager = new RemoteCacheManager(conf, serializer);
 
         }
 

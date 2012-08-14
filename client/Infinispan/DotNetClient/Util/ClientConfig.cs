@@ -87,11 +87,11 @@ namespace Infinispan.DotNetClient.Util
         public ClientConfig()
         {
             logger = LogManager.GetLogger("ClientConfig");
-            this.serverIP = readAttr("serverIP");
-            this.serverPort = int.Parse(readAttr("serverPort"));
+            this.serverIP = ReadAttr("serverIP");
+            this.serverPort = int.Parse(ReadAttr("serverPort"));
             //this.topologyId = int.Parse(readAttr("topologyId"));
-            this.serverList = readAttr("serverList");
-            if (readAttr("forceReturnValue").Equals("true"))
+            this.serverList = ReadAttr("serverList");
+            if (ReadAttr("forceReturnValue").Equals("true"))
             {
                 this.forceReturnValue = true;
             }
@@ -104,12 +104,12 @@ namespace Infinispan.DotNetClient.Util
             this.topologyId = 0;
         }
 
-        public string readAttr(string key)
+        public string ReadAttr(string key)
         {
             return ConfigurationManager.AppSettings.Get(key);
         }
 
-        public List<IPEndPoint> getServerList()
+        public List<IPEndPoint> GetServerList()
         {
             List<IPEndPoint> tempList = new List<IPEndPoint>();
             string[] splittedlist=serverList.Split(';');

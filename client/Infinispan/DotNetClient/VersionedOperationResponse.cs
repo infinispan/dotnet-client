@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient
             isModified = modified;
         }
 
-        public bool isUpdated()
+        public bool IsUpdated()
         {
             return isModified;
         }
@@ -37,7 +37,7 @@ namespace Infinispan.DotNetClient
             this.code = code;
         }
 
-        public byte[] getValue()
+        public byte[] GetValue()
         {
             return value;
         }

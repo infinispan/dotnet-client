@@ -15,19 +15,19 @@ namespace tests
         [TestMethod()]
         public void removeIfUnmodifiedTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key8", "bromine1");
-            long version = defaultCache.getVersioned("key8").GetVersion();
-            defaultCache.put("key8", "hexane");
-            VersionedOperationResponse response = defaultCache.removeIfUnmodified("key8", version);
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key8", "bromine1");
+            long version = defaultCache.GetVersioned("key8").GetVersion();
+            defaultCache.Put("key8", "hexane");
+            VersionedOperationResponse response = defaultCache.RemoveIfUnmodified("key8", version);
             Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.MODIFIED_KEY);
-            Assert.AreEqual("hexane", defaultCache.get("key8"));
+            Assert.AreEqual("hexane", defaultCache.Get("key8"));
 
-            long newVersion = defaultCache.getVersioned("key8").GetVersion();
-            response = defaultCache.removeIfUnmodified("key8", newVersion);
+            long newVersion = defaultCache.GetVersioned("key8").GetVersion();
+            response = defaultCache.RemoveIfUnmodified("key8", newVersion);
 
             Assert.AreEqual(response.GetCode(), VersionedOperationResponse.RspCode.SUCCESS);
-            Assert.AreEqual(null, defaultCache.get("key8"));
+            Assert.AreEqual(null, defaultCache.Get("key8"));
         }
     }
 }

@@ -115,7 +115,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         {
             try
             {
-                UnsignedNumeric.writeUnsignedInt(this, vInt);
+                UnsignedNumeric.WriteUnsignedInt(this, vInt);
 
             }
             catch (IOException e)
@@ -130,7 +130,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         {
             try
             {
-                UnsignedNumeric.writeUnsignedLong(this, l);
+                UnsignedNumeric.WriteUnsignedLong(this, l);
             }
             catch (IOException e)
             {
@@ -145,7 +145,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
             try
             {
 
-                return UnsignedNumeric.readUnsignedLong(this);
+                return UnsignedNumeric.ReadUnsignedLong(this);
             }
             catch (IOException e)
             {
@@ -160,7 +160,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         {
             try
             {
-                return UnsignedNumeric.readUnsignedInt(this);
+                return UnsignedNumeric.ReadUnsignedInt(this);
             }
             catch (IOException e)
             {

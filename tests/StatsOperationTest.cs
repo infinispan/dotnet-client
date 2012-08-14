@@ -15,11 +15,11 @@ namespace tests
         [TestMethod()]
         public void statsOperationTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key7", "carbon0");
-            defaultCache.put("key8", "carbon1");
-            defaultCache.put("key9", "carbon2");
-            Assert.AreEqual("3", defaultCache.stats().getStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key7", "carbon0");
+            defaultCache.Put("key8", "carbon1");
+            defaultCache.Put("key9", "carbon2");
+            Assert.AreEqual("3", defaultCache.Stats().GetStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
         }
     }
 }

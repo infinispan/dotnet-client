@@ -10,22 +10,22 @@ namespace Infinispan.DotNetClient.Impl
     {
         private Dictionary<String, String> stats = new Dictionary<String, String>();
 
-        public Dictionary<String, String> getStatsMap()
+        public Dictionary<String, String> GetStatsMap()
         {
             return stats;
         }
 
-        public String getStatistic(String statsName)
+        public String GetStatistic(String statsName)
         {
             return stats[statsName];
         }
 
-        public void addStats(String name, String value)
+        public void AddStats(String name, String value)
         {
             stats.Add(name, value);
         }
 
-        public int getIntStatistic(String statsName)
+        public int GetIntStatistic(String statsName)
         {
             String value = stats[statsName];
             return value == null ? int.MinValue : int.Parse(value); //If null, MINVALUE will be returned

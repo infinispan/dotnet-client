@@ -14,12 +14,12 @@ namespace tests
         [TestMethod()]
         public void getTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.getCache();
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
 
-            Assert.IsNull(defaultCache.get("key7"));
+            Assert.IsNull(defaultCache.Get("key7"));
 
-            defaultCache.put("key7", "carbon");
-            Assert.AreEqual("carbon", defaultCache.get("key7"));
+            defaultCache.Put("key7", "carbon");
+            Assert.AreEqual("carbon", defaultCache.Get("key7"));
         }
     }
 }

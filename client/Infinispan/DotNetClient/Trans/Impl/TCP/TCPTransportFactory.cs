@@ -38,12 +38,12 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             serverPort = Convert.ToInt16(config.ServerPort);
             balancer = RoundRobinRequestBalancer.getInstance();
             this.topologyId = configuration.TopologyId;
-            createAndPreparePool(configuration.getServerList());
+            createAndPreparePool(configuration.GetServerList());
             this.serializer = serializer;
 
             if (logger.IsTraceEnabled)
             {
-                foreach (IPEndPoint ep in configuration.getServerList())
+                foreach (IPEndPoint ep in configuration.GetServerList())
                     logger.Trace("server list : " + ep.Address.ToString() + ":" + ep.Port);
             }
 
