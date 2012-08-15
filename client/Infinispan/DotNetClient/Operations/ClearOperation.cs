@@ -26,13 +26,13 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("ClearOperation");
         }
 
-        public void executeOperation(ITransport transport)
+        public void ExecuteOperation(ITransport transport)
         {
-            HeaderParams param = writeHeader(transport, CLEAR_REQUEST);
+            HeaderParams param = WriteHeader(transport, CLEAR_REQUEST);
             if (logger.IsTraceEnabled)
                 logger.Trace("Clear Request Sent");
             transport.flush();
-            readHeaderAndValidate(transport, param);
+            ReadHeaderAndValidate(transport, param);
         }
     }
 }

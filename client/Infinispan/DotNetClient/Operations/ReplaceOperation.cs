@@ -26,15 +26,15 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("Replace Operation");
         }
 
-        public byte[] executeOperation(ITransport transport)
+        public byte[] ExecuteOperation(ITransport transport)
         {
             byte[] result = null;
-            short status = sendOperationRequest(transport, REPLACE_REQUEST, REPLACE_RESPONSE);
+            short status = SendOperationRequest(transport, REPLACE_REQUEST, REPLACE_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("ReplaceOperation status : " + status);
             if (status == NO_ERROR_STATUS || status == NOT_PUT_REMOVED_REPLACED_STATUS)
             {
-                result = returnPossiblePrevValue(transport);
+                result = ReturnPossiblePrevValue(transport);
             }
             return result;
         }

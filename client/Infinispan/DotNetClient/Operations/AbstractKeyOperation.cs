@@ -42,14 +42,14 @@ namespace Infinispan.DotNetClient.Operations
         /// <param name="opCode">OPeration Code of the request</param>
         /// <param name="opRespCode">Expected response code</param>
         /// <returns>Status returned form the server</returns>
-        protected byte sendKeyOperation(byte[] key, ITransport transport, byte opCode, byte opRespCode)
+        protected byte SendKeyOperation(byte[] key, ITransport transport, byte opCode, byte opRespCode)
         {
             // 1) write [header][key length][key]
-            HeaderParams param = writeHeader(transport, opCode);
+            HeaderParams param = WriteHeader(transport, opCode);
             transport.writeArray(key);
             transport.getBinaryWriter().Flush(); //TODO: Hide Binary Writer here
             // 2) now read the header
-            return readHeaderAndValidate(transport, param);
+            return ReadHeaderAndValidate(transport, param);
         }
 
         /// <summary>
@@ -58,9 +58,9 @@ namespace Infinispan.DotNetClient.Operations
         /// <param name="transport"></param>
         /// <param name="param"></param>
         /// <returns>Version data on the entry picked</returns>
-        protected VersionedOperationResponse returnVersionedOperationResponse(ITransport transport, HeaderParams param)
+        protected VersionedOperationResponse ReturnVersionedOperationResponse(ITransport transport, HeaderParams param)
         {
-            byte respStatus = readHeaderAndValidate(transport, param);
+            byte respStatus = ReadHeaderAndValidate(transport, param);
             if (logger.IsTraceEnabled)
                 logger.Trace("Read response status : " + respStatus);
             VersionedOperationResponse.RspCode code;
@@ -83,7 +83,7 @@ namespace Infinispan.DotNetClient.Operations
                 throw e;
             }
             logger.Trace("Response Status : " + code);
-            byte[] prevValue = returnPossiblePrevValue(transport);
+            byte[] prevValue = ReturnPossiblePrevValue(transport);
             return new VersionedOperationResponse(prevValue, code);
         }
 
@@ -92,9 +92,9 @@ namespace Infinispan.DotNetClient.Operations
         /// </summary>
         /// <param name="transport"></param>
         /// <returns>Previous value of the queried entry</returns>
-        protected byte[] returnPossiblePrevValue(ITransport transport)
+        protected byte[] ReturnPossiblePrevValue(ITransport transport)
         {
-            if (hasForceReturn(flags))
+            if (HasForceReturn(flags))
             {
                 byte[] bytes = transport.readArray();
                 if (logger.IsTraceEnabled)
@@ -111,7 +111,7 @@ namespace Infinispan.DotNetClient.Operations
             }
         }
 
-        private bool hasForceReturn(Flag[] flags)
+        private bool HasForceReturn(Flag[] flags)
         {
             if (flags == null)
             {

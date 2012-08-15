@@ -23,10 +23,10 @@ namespace Infinispan.DotNetClient.Operations
         {
         }
 
-        public byte[] executeOperation(ITransport transport)
+        public byte[] ExecuteOperation(ITransport transport)
         {
             byte[] result = null;
-            byte status = sendKeyOperation(key, transport, HotRodConstants.GET_REQUEST, HotRodConstants.GET_RESPONSE);
+            byte status = SendKeyOperation(key, transport, HotRodConstants.GET_REQUEST, HotRodConstants.GET_RESPONSE);
             if (status == HotRodConstants.KEY_DOES_NOT_EXIST_STATUS)
             {
                    result = null;

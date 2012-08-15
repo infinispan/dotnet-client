@@ -26,10 +26,10 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("RemoveOperation");
         }
 
-        public byte[] executeOperation(ITransport transport)
+        public byte[] ExecuteOperation(ITransport transport)
         {
             byte[] result = null;
-            byte status = sendKeyOperation(key, transport, REMOVE_REQUEST, REMOVE_RESPONSE);
+            byte status = SendKeyOperation(key, transport, REMOVE_REQUEST, REMOVE_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("RemoveOperation status : " + status);
             if (status == KEY_DOES_NOT_EXIST_STATUS)
@@ -38,7 +38,7 @@ namespace Infinispan.DotNetClient.Operations
             }
             else if (status == NO_ERROR_STATUS)
             {
-                result = returnPossiblePrevValue(transport);
+                result = ReturnPossiblePrevValue(transport);
                 // result = 0;
             }
             return result;

@@ -29,10 +29,10 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("ReplaceIfUnmodifiedOperation");
         }
 
-        public VersionedOperationResponse executeOperation(ITransport transport)
+        public VersionedOperationResponse ExecuteOperation(ITransport transport)
         {
             // 1) write header
-            HeaderParams param = writeHeader(transport, REPLACE_IF_UNMODIFIED_REQUEST);
+            HeaderParams param = WriteHeader(transport, REPLACE_IF_UNMODIFIED_REQUEST);
             //2) write message body
             transport.writeArray(key);
             transport.writeVInt(lifespan);
@@ -42,7 +42,7 @@ namespace Infinispan.DotNetClient.Operations
             if (logger.IsTraceEnabled)
                 logger.Trace("written : key = " + key + " version = " + version + "value = " + value);
             transport.flush();
-            return returnVersionedOperationResponse(transport, param);
+            return ReturnVersionedOperationResponse(transport, param);
         }
     }
 }

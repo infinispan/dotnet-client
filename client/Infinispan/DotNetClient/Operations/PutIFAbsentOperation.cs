@@ -16,23 +16,23 @@ namespace Infinispan.DotNetClient.Operations
     * Author: sunimalr@gmail.com
     * 
     */
-    public class PutIFAbsentOperation : AbstractKeyValueOperation<byte[]>
+    public class PutIfAbsentOperation : AbstractKeyValueOperation<byte[]>
     {
         private static Logger logger;
         
-        public PutIFAbsentOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle) :
+        public PutIfAbsentOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle) :
             base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle)
         {
             logger = LogManager.GetLogger("PutIfAbsentOperation");
         }
 
-        public byte[] executeOperation(ITransport transport)
+        public byte[] ExecuteOperation(ITransport transport)
         {
-            byte status = sendOperationRequest(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
+            byte status = SendOperationRequest(transport, PUT_IF_ABSENT_REQUEST, PUT_IF_ABSENT_RESPONSE);
             if (logger.IsTraceEnabled)
                 logger.Trace("Status = " + status);
             
-            return returnPossiblePrevValue(transport);
+            return ReturnPossiblePrevValue(transport);
         }
     }
 }

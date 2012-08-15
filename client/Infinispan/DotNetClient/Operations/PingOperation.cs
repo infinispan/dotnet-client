@@ -33,13 +33,13 @@ namespace Infinispan.DotNetClient.Operations
             this.transport = transport;
         }
 
-        public PingResult execute()
+        public PingResult Execute()
         {
             try
             {
-                HeaderParams param = writeHeader(transport, HotRodConstants.PING_REQUEST);
+                HeaderParams param = WriteHeader(transport, HotRodConstants.PING_REQUEST);
                 transport.getBinaryWriter().Flush();
-                short respStatus = readHeaderAndValidate(transport, param);
+                short respStatus = ReadHeaderAndValidate(transport, param);
                 if (respStatus == HotRodConstants.NO_ERROR_STATUS)
                 {
                     if (logger.IsTraceEnabled)
