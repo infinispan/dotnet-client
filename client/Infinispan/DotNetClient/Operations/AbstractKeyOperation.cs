@@ -121,7 +121,7 @@ namespace Infinispan.DotNetClient.Operations
             bool hasForceReturnFlag = false;
             foreach (Flag f in flags)
             {
-                if (f.getFlagInt() == Flag.FORCE_RETURN_VALUE)
+                if (f.GetFlagInt() == Flag.FORCE_RETURN_VALUE)
                     hasForceReturnFlag = true;
             }
 
