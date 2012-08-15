@@ -5,6 +5,7 @@ TestResults
 *.testsettings
 *.suo
 *.zip
+*.bak
 *.dll
 bin
 obj
