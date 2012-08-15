@@ -27,16 +27,16 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("PutOperation");
         }
 
-        public byte[] executeOperation(ITransport transport)
+        public byte[] ExecuteOperation(ITransport transport)
         {
-            byte status = sendOperationRequest(transport, HotRodConstants.PUT_REQUEST, HotRodConstants.PUT_RESPONSE);
+            byte status = SendOperationRequest(transport, HotRodConstants.PUT_REQUEST, HotRodConstants.PUT_RESPONSE);
             if (status != HotRodConstants.NO_ERROR_STATUS)
             {
                 InvalidResponseException e = new InvalidResponseException("Unexpected response status: " + status);
                 logger.Warn(e);
                 throw e;
             }
-            return returnPossiblePrevValue(transport);
+            return ReturnPossiblePrevValue(transport);
         }
     }
 }

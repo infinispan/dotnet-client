@@ -26,14 +26,14 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("StatsOoperation");
         }
 
-        public Dictionary<string, string> executeOperation(ITransport transport)
+        public Dictionary<string, string> ExecuteOperation(ITransport transport)
         {
             //Defines a new Dictonary which is capable of storing indexed string values with a string index.
             Dictionary<string, string> result;
             //Writes the request header
-            HeaderParams param = writeHeader(transport, STATS_REQUEST);
+            HeaderParams param = WriteHeader(transport, STATS_REQUEST);
             transport.flush();
-            readHeaderAndValidate(transport, param);
+            ReadHeaderAndValidate(transport, param);
             //reads the number of statistic details sent from server
             int numberOfStats = transport.readVInt();
             if (logger.IsTraceEnabled)

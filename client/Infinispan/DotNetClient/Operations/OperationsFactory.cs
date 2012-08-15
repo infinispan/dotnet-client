@@ -42,85 +42,85 @@ namespace Infinispan.DotNetClient.Operations
             this.codec = codec;
         }
 
-        public GetOperation newGetKeyOperation(byte[] key)
+        public GetOperation NewGetKeyOperation(byte[] key)
         {
-            return new GetOperation(codec, key, cacheNameBytes, topologyId, flags());
+            return new GetOperation(codec, key, cacheNameBytes, topologyId, Flags());
         }
 
-        public RemoveOperation newRemoveOperation(byte[] key)
+        public RemoveOperation NewRemoveOperation(byte[] key)
         {
             return new RemoveOperation(
-                  codec, key, cacheNameBytes, topologyId, flags());
+                  codec, key, cacheNameBytes, topologyId, Flags());
         }
 
-        public RemoveIfUnmodifiedOperation newRemoveIfUnmodifiedOperation(byte[] key, long version)
+        public RemoveIfUnmodifiedOperation NewRemoveIfUnmodifiedOperation(byte[] key, long version)
         {
             return new RemoveIfUnmodifiedOperation(
-                  codec, key, cacheNameBytes, topologyId, flags(), version);
+                  codec, key, cacheNameBytes, topologyId, Flags(), version);
         }
 
-        public ReplaceWithVersionOperation newReplaceWithVersionOperation(byte[] key,
+        public ReplaceWithVersionOperation NewReplaceWithVersionOperation(byte[] key,
                  byte[] value, int lifespanSeconds, int maxIdleTimeSeconds, long version)
         {
             return new ReplaceWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, flags(),
+                  codec, key, cacheNameBytes, topologyId, Flags(),
                   value, lifespanSeconds, maxIdleTimeSeconds, version);
         }
 
-        public GetWithVersionOperation newGetWithVersionOperation(byte[] key)
+        public GetWithVersionOperation NewGetWithVersionOperation(byte[] key)
         {
             return new GetWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, flags());
+                  codec, key, cacheNameBytes, topologyId, Flags());
         }
 
-        public StatsOperation newStatsOperation()
+        public StatsOperation NewStatsOperation()
         {
-            return new StatsOperation(codec, cacheNameBytes, topologyId, flags());
+            return new StatsOperation(codec, cacheNameBytes, topologyId, Flags());
         }
 
-        public PutOperation newPutKeyValueOperation(byte[] key, byte[] value,
+        public PutOperation NewPutKeyValueOperation(byte[] key, byte[] value,
                  int lifespanSecs, int maxIdleSecs)
         {
             return new PutOperation(
-                  codec, key, cacheNameBytes, topologyId, flags(),
+                  codec, key, cacheNameBytes, topologyId, Flags(),
                   value, lifespanSecs, maxIdleSecs);
         }
 
-        public PutIFAbsentOperation newPutIfAbsentOperation(byte[] key, byte[] value,
+        public PutIfAbsentOperation NewPutIfAbsentOperation(byte[] key, byte[] value,
                  int lifespanSecs, int maxIdleSecs)
         {
-            return new PutIFAbsentOperation(
-                  codec, key, cacheNameBytes, topologyId, flags(),
+            return new PutIfAbsentOperation(
+                  codec, key, cacheNameBytes, topologyId, Flags(),
                   value, lifespanSecs, maxIdleSecs);
         }
 
-        public ReplaceOperation newReplaceOperation(byte[] key, byte[] values,
+        public ReplaceOperation NewReplaceOperation(byte[] key, byte[] values,
                  int lifespanSecs, int maxIdleSecs)
         {
             return new ReplaceOperation(
-                  codec, key, cacheNameBytes, topologyId, flags(),
+                  codec, key, cacheNameBytes, topologyId, Flags(),
                   values, lifespanSecs, maxIdleSecs);
         }
 
-        public ContainsKeyOperation newContainsKeyOperation(byte[] key)
+        public ContainsKeyOperation NewContainsKeyOperation(byte[] key)
         {
             return new ContainsKeyOperation(
-                  codec, key, cacheNameBytes, topologyId, flags());
+                  codec, key, cacheNameBytes, topologyId, Flags());
         }
 
-        public ClearOperation newClearOperation()
+        public ClearOperation NewClearOperation()
         {
             return new ClearOperation(
-                  codec, cacheNameBytes, topologyId, flags());
+                  codec, cacheNameBytes, topologyId, Flags());
         }
 
-        public BulkGetOperation newBulkGetOperation(int size)
+        public BulkGetOperation NewBulkGetOperation(int size)
         {
             return new BulkGetOperation(
-                  codec, cacheNameBytes, topologyId, flags(), size);
+                  codec, cacheNameBytes, topologyId, Flags(), size);
         }
 
-        public PingOperation newPingOperation(ITransport transport)
+        public PingOperation NewPingOperation(ITransport transport)
         {
             return new PingOperation(codec, topologyId, transport, cacheNameBytes);
         }
@@ -129,7 +129,7 @@ namespace Infinispan.DotNetClient.Operations
         /// 
         /// </summary>
         /// <returns>Flags specified, null if no flags specified</returns>
-        private Flag[] flags()
+        private Flag[] Flags()
         {
             Flag[] flags=null;
             

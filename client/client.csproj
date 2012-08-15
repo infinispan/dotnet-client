@@ -56,6 +56,7 @@
     <Compile Include="Infinispan\DotNetClient\Operations\StatsOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\RemoteCacheManager.cs" />
     <Compile Include="Infinispan\DotNetClient\Impl\ServerStatistics.cs" />
+    <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\AbstractTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\ConnectionPool.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RequestBalancer.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="Infinispan\DotNetClient\Operations\GetOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\HotRodOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PingOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\PutIFAbsentOperation.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\PutIfAbsentOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PutOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveIfUnmodifiedOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveOperation.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Infinispan\DotNetClient\Util\Impl\UnsignedNumeric.cs" />
     <Compile Include="Infinispan\DotNetClient\Impl\RemoteCacheImpl.cs" />
     <Compile Include="Infinispan\DotNetClient\IRemoteCache.cs" />
-    <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
     <Compile Include="Infinispan\DotNetClient\Flag.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

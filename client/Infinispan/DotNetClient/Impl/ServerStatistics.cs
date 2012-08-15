@@ -6,7 +6,7 @@ using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Impl
 {
-    public class ServerStatistics : ServerStatisticsTypes,IServerStatistics
+    public class ServerStatistics : IServerStatistics
     {
         private Dictionary<String, String> stats = new Dictionary<String, String>();
 

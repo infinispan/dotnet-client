@@ -29,10 +29,10 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("GetWithVersionOperation");
         }
 
-        public VersionedValue executeOperation(ITransport transport)
+        public IVersionedValue ExecuteOperation(ITransport transport)
         {
-            short status = sendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
-            VersionedValue result = null;
+            short status = SendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
+            IVersionedValue result = null;
             if (status == KEY_DOES_NOT_EXIST_STATUS)
             {
                 result = null;
