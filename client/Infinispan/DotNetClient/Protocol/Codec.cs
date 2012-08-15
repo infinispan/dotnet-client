@@ -56,7 +56,7 @@ namespace Infinispan.DotNetClient.Protocol
             {
                 foreach(Flag f in param.Flag)
                 {
-                    flagInt = f.getFlagInt() | flagInt;
+                    flagInt = f.GetFlagInt() | flagInt;
                 }
             }
              

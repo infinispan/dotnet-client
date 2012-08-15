@@ -8,7 +8,7 @@ namespace Infinispan.DotnetClient
     /// <summary>
     /// Defines all the flags available in the Hot Rod client that can influence the behavior of operations.
     /// </summary>
-    public class Flag
+    public sealed class Flag
     {
         /// <summary>
         /// By default, previously existing values for operations are not returned. E.g. RemoteCache.put(Object, Object)
@@ -24,7 +24,7 @@ namespace Infinispan.DotnetClient
             this.flagInt = flagInt;
         }
 
-        public int getFlagInt()
+        public int GetFlagInt()
         {
             return flagInt;
         }

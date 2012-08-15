@@ -13,9 +13,7 @@ namespace Infinispan.DotNetClient.Operations
 {
     /*
     * Retrieves detils of the remote cache
-    *  
     * Author: sunimalr@gmail.com
-    * 
     */
     public class StatsOperation : HotRodOperation
     {
