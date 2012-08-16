@@ -18,14 +18,6 @@ namespace Infinispan.DotNetClient
     /// <typeparam name="V">Data Type of Value</typeparam>
     public interface IRemoteCache<K, V>
     {
-
-        /**
-         * 
-         * Remote Cache Interface
-         * Author: sunimalr@gmail.com
-         * 
-         */
-
         /// <summary>
         /// Used to get the number of records of the cache
         /// </summary>
