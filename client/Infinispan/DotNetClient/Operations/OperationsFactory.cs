@@ -53,9 +53,9 @@ namespace Infinispan.DotNetClient.Operations
                   codec, key, cacheNameBytes, topologyId, Flags());
         }
 
-        public RemoveIfUnmodifiedOperation NewRemoveIfUnmodifiedOperation(byte[] key, long version)
+        public RemoveWithVersionOperation NewRemoveWithVersionOperation(byte[] key, long version)
         {
-            return new RemoveIfUnmodifiedOperation(
+            return new RemoveWithVersionOperation(
                   codec, key, cacheNameBytes, topologyId, Flags(), version);
         }
 

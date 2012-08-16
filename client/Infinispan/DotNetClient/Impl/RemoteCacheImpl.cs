@@ -327,19 +327,26 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        public VersionedOperationResponse RemoveIfUnmodified(K key, long version)
+        public bool RemoveWithVersion(K key, long version)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
             try
             {
-                res = operationsFactory.NewRemoveIfUnmodifiedOperation(serializer.Serialize(key), version).ExecuteOperation(transport);
+                res = operationsFactory.NewRemoveWithVersionOperation(serializer.Serialize(key), version).ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return res;
+            if (res != null)
+            {
+                return res.GetCode().Equals(VersionedOperationResponse.RspCode.SUCCESS);
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool ReplaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)

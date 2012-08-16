@@ -71,7 +71,7 @@
     <Compile Include="Infinispan\DotNetClient\Operations\PingOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PutIfAbsentOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PutOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\RemoveIfUnmodifiedOperation.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\RemoveWithVersionOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ReplaceWithVersionOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ReplaceOperation.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="Infinispan\DotNetClient\Util\ClientConfig.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\Impl\DefaultSerializer.cs" />
     <Compile Include="Infinispan\DotNetClient\ISerializer.cs" />
-    <Compile Include="Infinispan\DotNetClient\VersionedOperationResponse.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\VersionedOperationResponse.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\Impl\UnsignedNumeric.cs" />
     <Compile Include="Infinispan\DotNetClient\Impl\RemoteCacheImpl.cs" />
     <Compile Include="Infinispan\DotNetClient\IRemoteCache.cs" />

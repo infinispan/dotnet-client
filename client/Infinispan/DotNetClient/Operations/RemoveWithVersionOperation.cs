@@ -17,11 +17,11 @@ namespace Infinispan.DotNetClient.Operations
     * Author: sunimalr@gmail.com
     * 
     */
-    public class RemoveIfUnmodifiedOperation : AbstractKeyOperation<VersionedOperationResponse>
+    public class RemoveWithVersionOperation : AbstractKeyOperation<VersionedOperationResponse>
     {
         private readonly long version;
         private Logger logger;
-        public RemoveIfUnmodifiedOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version) :
+        public RemoveWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version) :
             base(codec, key, cacheName, topologyId, flags)
         {
             this.version = version;
