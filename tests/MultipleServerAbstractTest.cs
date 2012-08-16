@@ -7,7 +7,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient;
 using System.Threading;
-using Infinispan.DotNetClient.Util.Impl;
+using Infinispan.DotNetClient.Impl;
 
 namespace tests
 {

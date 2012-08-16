@@ -7,7 +7,6 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
-using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotNetClient.Impl;
 using Infinispan.DotnetClient;
 

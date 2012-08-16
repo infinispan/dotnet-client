@@ -7,7 +7,7 @@ using System.IO;
 using Infinispan.DotNetClient.Trans;
 using NLog;
 
-namespace Infinispan.DotNetClient.Util.Impl
+namespace Infinispan.DotNetClient.Util
 {
     public class UnsignedNumeric
     {

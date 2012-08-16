@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using NLog;
 
-namespace Infinispan.DotNetClient.Util.Impl
+namespace Infinispan.DotNetClient.Impl
 {
     /// <summary>
     /// This is the default serializer.

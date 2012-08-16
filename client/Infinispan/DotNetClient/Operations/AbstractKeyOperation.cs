@@ -9,7 +9,6 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
 using Infinispan.DotnetClient;
-using Infinispan.DotNetClient.Util.Impl;
 
 namespace Infinispan.DotNetClient.Operations
 {
