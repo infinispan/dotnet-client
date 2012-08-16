@@ -13,15 +13,14 @@ namespace Infinispan.DotNetClient
     ///Provides remote reference to a Hot Rod server/cluster.
     ///<b>Concurrency</b>: implementors of this interface will support multi-threaded access.
     ///<b>Return values</b>: previously existing values for certain operations are not returned, null
-    ///is returned instead. E.g. {@link java.util.Map#put(Object, Object)} returns the previous value associated to the
-    ///supplied key. In case of RemoteCache, this returns null.
+    ///is returned instead. 
     ///<b>Synthetic operations</b>: aggregate operations are being implemented based on other Hot Rod operations. E.g. 
     ///GetBulk is implemented through multiple individual gets. This means that the
-    ///these operations are not atomic and that they are costly sincethe number of network round-trips is not one
+    ///these operations are not atomic and that they are costly since the number of network round-trips is not one
     ///<b>changing default behavior through Flags</b>: it is possible to change the
     ///default cache behaviour by using flags.
-    ///RemoteCache cache = getRemoteCache(true); //passing true will enable Force Return Values
-    ///Object oldValue = cache.put(aKey, aValue);
+    ///IRemoteCache cache = getRemoteCache(true); //passing true will enable Force Return Values
+    ///Object oldValue = cache.Put(aKey, aValue);
     ///In the previous example, using ForceRetunValue will make the client to
     ///also return previously existing value associated with "aKey". If this flag would not be present, Infinispan
     ///would return (by default) null. This is in order to avoid fetching a possibly large object from the remote
