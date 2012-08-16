@@ -13,7 +13,7 @@ namespace tests
     public class RemoveOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void removeTest()
+        public void RemoveTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
             defaultCache.Put("key8", "bromine");

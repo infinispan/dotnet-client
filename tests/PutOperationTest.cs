@@ -13,7 +13,7 @@ namespace tests
     public class PutOperationTest : SingleServerAbstractTest
     {   
         [TestMethod()]
-        public void putTest()
+        public void PutTest()
         {
             remoteManager.GetCache<String,String>().Put("key13", "boron");
             Assert.AreEqual("boron", remoteManager.GetCache<String,String>().Get("key13"));

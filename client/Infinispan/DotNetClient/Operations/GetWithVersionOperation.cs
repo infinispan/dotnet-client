@@ -39,14 +39,14 @@ namespace Infinispan.DotNetClient.Operations
             }
             else if (status == NO_ERROR_STATUS)
             {
-                long version = transport.readLong();
+                long version = transport.ReadLong();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Received version: " + version);
 
-                byte[] value = transport.readArray();
+                byte[] value = transport.ReadArray();
                 if (logger.IsTraceEnabled)
-                    logger.Trace("Received value: " + transport.getTransportFactory().getSerializer().Deserialize(value));
-                result = new VersionedValueImpl(version, value,transport.getTransportFactory().getSerializer());
+                    logger.Trace("Received value: " + transport.GetTransportFactory().GetSerializer().Deserialize(value));
+                result = new VersionedValueImpl(version, value,transport.GetTransportFactory().GetSerializer());
             }
             return result;
         }

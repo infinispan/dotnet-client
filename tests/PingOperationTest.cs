@@ -14,14 +14,14 @@ namespace tests
     public class PingOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void pingTest()
+        public void PingTest()
         {
             PingResult expected = PingResult.SUCCESS;
             PingResult actual = remoteManager.GetCache<String,String>().Ping();
             Assert.AreEqual(expected, actual);
 
             Assert.AreEqual(expected, actual);
-            shutDownHotrodServer(); //this should make ping fail
+            ShutDownHotrodServer(); //this should make ping fail
             actual = remoteManager.GetCache<String,String>().Ping();
             Assert.AreEqual(PingResult.FAIL, actual);
         }

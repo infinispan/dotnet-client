@@ -25,13 +25,13 @@ namespace Infinispan.DotNetClient.Operations
         public Dictionary<byte[], byte[]> ExecuteOperation(ITransport transport)
         {
             HeaderParams param = WriteHeader(transport, BULK_GET_REQUEST);
-            transport.writeVInt(entryCount);
-            transport.flush();
+            transport.WriteVInt(entryCount);
+            transport.Flush();
             ReadHeaderAndValidate(transport, param);
             Dictionary<byte[], byte[]> result = new Dictionary<byte[], byte[]>();
-            while (transport.readByte() == 1)
+            while (transport.ReadByte() == 1)
             {
-                result.Add(transport.readArray(), transport.readArray());
+                result.Add(transport.ReadArray(), transport.ReadArray());
             }
             return result;
         }

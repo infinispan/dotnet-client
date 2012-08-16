@@ -13,7 +13,7 @@ namespace tests
     public class ContainsKeyOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void containsKeyTest()
+        public void ContainsKeyTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
             Assert.IsFalse(defaultCache.ContainsKey("key4"));

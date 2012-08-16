@@ -40,11 +40,11 @@ namespace Infinispan.DotNetClient.Operations
             // 1) write header
             HeaderParams param = WriteHeader(transport, opCode);
             // 2) write key and value
-            transport.writeArray(key);
-            transport.writeVInt(lifespan);
-            transport.writeVInt(maxIdle);
-            transport.writeArray(value);
-            transport.getBinaryWriter().Flush();
+            transport.WriteArray(key);
+            transport.WriteVInt(lifespan);
+            transport.WriteVInt(maxIdle);
+            transport.WriteArray(value);
+            transport.GetBinaryWriter().Flush();
             // 3) now read header
             return ReadHeaderAndValidate(transport, param);
         }

@@ -12,7 +12,7 @@ namespace tests
     public class PutIFAbsentOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void putIfAbsentTest()
+        public void PutIfAbsentTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(true);
             defaultCache.Put("key7", "carbon0");

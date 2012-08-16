@@ -38,7 +38,7 @@ namespace Infinispan.DotNetClient.Operations
             try
             {
                 HeaderParams param = WriteHeader(transport, HotRodConstants.PING_REQUEST);
-                transport.getBinaryWriter().Flush();
+                transport.GetBinaryWriter().Flush();
                 short respStatus = ReadHeaderAndValidate(transport, param);
                 if (respStatus == HotRodConstants.NO_ERROR_STATUS)
                 {

@@ -27,7 +27,7 @@ namespace Infinispan.DotNetClient.Util
         public static int ReadUnsignedInt(ITransport trans)
         {
 
-            byte b = trans.getBinaryReader().ReadByte();
+            byte b = trans.GetBinaryReader().ReadByte();
             int i = b & 0x7F;
             for (int shift = 7; (b & 0x80) != 0; shift += 7)
             {
@@ -47,7 +47,7 @@ namespace Infinispan.DotNetClient.Util
 
             while ((i & ~0x7F) != 0)
             {
-                trans.getBinaryWriter().Write((byte)((i & 0x7f) | 0x80));
+                trans.GetBinaryWriter().Write((byte)((i & 0x7f) | 0x80));
 
 
                 i = (int)((uint)i >> 7);
@@ -55,7 +55,7 @@ namespace Infinispan.DotNetClient.Util
             }
 
 
-            trans.getBinaryWriter().Write((byte)i);
+            trans.GetBinaryWriter().Write((byte)i);
 
             if (logger.IsTraceEnabled)
                 logger.Trace(String.Format("Unsigned byte written : " + i));
@@ -67,11 +67,11 @@ namespace Infinispan.DotNetClient.Util
 
         public static long ReadUnsignedLong(ITransport trans)
         {
-            byte b = trans.getBinaryReader().ReadByte();
+            byte b = trans.GetBinaryReader().ReadByte();
             long i = b & 0x7F;
             for (int shift = 7; (b & 0x80) != 0; shift += 7)
             {
-                b = trans.getBinaryReader().ReadByte();
+                b = trans.GetBinaryReader().ReadByte();
                 i |= (b & 0x7FL) << shift;
             }
             if (logger.IsTraceEnabled)
@@ -84,11 +84,11 @@ namespace Infinispan.DotNetClient.Util
         {
             while ((i & ~0x7F) != 0)
             {
-                trans.getBinaryWriter().Write((byte)((i & 0x7f) | 0x80));
+                trans.GetBinaryWriter().Write((byte)((i & 0x7f) | 0x80));
 
                 i = (int)((uint)i >> 7);
             }
-            trans.getBinaryWriter().Write((byte)i);
+            trans.GetBinaryWriter().Write((byte)i);
             if (logger.IsTraceEnabled)
                 logger.Trace(String.Format("Unsigned Int written : " + i));
         }

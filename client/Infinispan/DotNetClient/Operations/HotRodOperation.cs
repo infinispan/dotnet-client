@@ -40,7 +40,7 @@ namespace Infinispan.DotNetClient.Operations
 
         protected HeaderParams WriteHeader(ITransport transport, byte operationCode)
         {
-            HeaderParams param = new HeaderParams().opCode(operationCode).cacheName(cacheName).flags(flags).clientIntel(HotRodConstants.CLIENT_INTELLIGENCE_BASIC).topologyId(topologyId).txMarker(NO_TX);
+            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_BASIC).TopologyId(topologyId).TxMarker(NO_TX);
             if (logger.IsTraceEnabled)
             {
                 if (logger.IsTraceEnabled)
@@ -49,7 +49,7 @@ namespace Infinispan.DotNetClient.Operations
                     logger.Trace(msg);
                 }
             }
-            return codec.writeHeader(transport, param, HotRodConstants.VERSION_11);
+            return codec.WriteHeader(transport, param, HotRodConstants.VERSION_11);
         }
 
         /**
@@ -57,7 +57,7 @@ namespace Infinispan.DotNetClient.Operations
          */
         protected byte ReadHeaderAndValidate(ITransport transport, HeaderParams param)
         {
-            return codec.readHeader(transport, param);
+            return codec.ReadHeader(transport, param);
         }
     }
 }

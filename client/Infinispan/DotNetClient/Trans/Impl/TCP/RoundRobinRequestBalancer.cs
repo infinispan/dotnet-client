@@ -8,7 +8,7 @@ using Infinispan.DotNetClient.Trans.Impl.TCP;
 
 namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
-    public class RoundRobinRequestBalancer : RequestBalancer
+    public class RoundRobinRequestBalancer : IRequestBalancer
     {
         private static RoundRobinRequestBalancer instance = null;
         private ConcurrentQueue<IPEndPoint> addressQueue;
@@ -18,7 +18,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             //addressQueue.Enqueue(new IPEndPoint(IPAddress.Loopback, 11222));
         }
 
-        public static RoundRobinRequestBalancer getInstance()
+        public static RoundRobinRequestBalancer GetInstance()
         {
             if (instance == null)
             {
@@ -27,7 +27,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             return instance;
         }
 
-        public void setServers(List<IPEndPoint> serverList)
+        public void SetServers(List<IPEndPoint> serverList)
         {
             foreach (IPEndPoint addr in serverList)
             {
@@ -35,7 +35,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
         }
 
-        public IPEndPoint nextServer()
+        public IPEndPoint NextServer()
         {
             IPEndPoint next;
             addressQueue.TryDequeue(out next);
@@ -43,7 +43,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             //return new IPEndPoint(IPAddress.Loopback, 11222);
         }
 
-        public void releaseAddressToBalancer(IPEndPoint releasedServer)
+        public void ReleaseAddressToBalancer(IPEndPoint releasedServer)
         {
             addressQueue.Enqueue(releasedServer);
         }

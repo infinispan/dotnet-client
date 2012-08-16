@@ -14,7 +14,7 @@ namespace tests
         private IRemoteCache<String,String> defaultCache;
 
         [TestInitialize()]
-        public void populateCache()
+        public void PopulateCache()
         {
             defaultCache = remoteManager.GetCache<String,String>();
             defaultCache.Put("key1", "hydrogen");
@@ -23,7 +23,7 @@ namespace tests
         }
 
         [TestMethod()]
-        public void getBulkTest()
+        public void GetBulkTest()
         {
             Dictionary<String,String> actual = defaultCache.GetBulk();
             Assert.AreEqual("hydrogen", actual["key1"]);
@@ -32,7 +32,7 @@ namespace tests
         }
 
         [TestMethod()]
-        public void getBulkTestWithSize()
+        public void GetBulkTestWithSize()
         {
             Dictionary<String, String> actual = defaultCache.GetBulk(2);
             Assert.AreEqual(actual.Count, 2);

@@ -86,14 +86,14 @@ namespace Infinispan.DotNetClient.Protocol
             set { messageid = value; }
         }
 
-        public HeaderParams opCode(byte opCode)
+        public HeaderParams OpCode(byte opCode)
         {
             this.operCode = opCode;
-            this.opRespCode = toOpRespCode(opCode);
+            this.opRespCode = ToOpRespCode(opCode);
             return this;
         }
 
-        public HeaderParams cacheName(byte[] name)
+        public HeaderParams CacheName(byte[] name)
         {
             this.cachename = name;
             return this;
@@ -105,31 +105,31 @@ namespace Infinispan.DotNetClient.Protocol
             return this;
         }
 
-        public HeaderParams clientIntel(byte clientintel)
+        public HeaderParams ClientIntel(byte clientintel)
         {
             this.clientintel = clientintel;
             return this;
         }
 
-        public HeaderParams txMarker(byte txmarker)
+        public HeaderParams TxMarker(byte txmarker)
         {
             this.txmarker = txmarker;
             return this;
         }
 
-        public HeaderParams topologyId(int topologyid)
+        public HeaderParams TopologyId(int topologyid)
         {
             this.topologyid = topologyid;
             return this;
         }
 
-        public HeaderParams messageId(long messageid)
+        public HeaderParams MessageId(long messageid)
         {
             this.messageid = messageid;
             return this;
         }
 
-        private byte toOpRespCode(byte opCode)
+        private byte ToOpRespCode(byte opCode)
         {
             switch (opCode)
             {

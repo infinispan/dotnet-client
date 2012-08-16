@@ -34,10 +34,10 @@ namespace Infinispan.DotNetClient.Operations
             HeaderParams param = WriteHeader(transport, REMOVE_IF_UNMODIFIED_REQUEST);
 
             //2) write message body
-            transport.writeArray(key);
-            transport.writeLong(version);
+            transport.WriteArray(key);
+            transport.WriteLong(version);
             logger.Trace("written : key = " + key + " version = " + version); 
-            transport.flush();
+            transport.Flush();
             //process response and return
             return ReturnVersionedOperationResponse(transport, param);
         }

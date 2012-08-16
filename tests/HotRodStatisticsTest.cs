@@ -12,7 +12,7 @@ namespace tests
     public class HotRodStatisticsTest:SingleServerAbstractTest
     {
         [TestMethod]
-        public void hotRodStatisticsTest()
+        public void HotRodStatisticsOperationTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(false);
             Assert.AreEqual("0", defaultCache.Stats().GetStatistic(ServerStatisticsTypes.CURRENT_NR_OF_ENTRIES));

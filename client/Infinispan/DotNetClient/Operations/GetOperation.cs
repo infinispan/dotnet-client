@@ -35,7 +35,7 @@ namespace Infinispan.DotNetClient.Operations
             {
                 if (status == HotRodConstants.NO_ERROR_STATUS)
                 {
-                    result = transport.readArray();
+                    result = transport.ReadArray();
                 }
             }
             return result;

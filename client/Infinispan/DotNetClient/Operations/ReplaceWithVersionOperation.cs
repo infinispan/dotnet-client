@@ -34,14 +34,14 @@ namespace Infinispan.DotNetClient.Operations
             // 1) write header
             HeaderParams param = WriteHeader(transport, REPLACE_IF_UNMODIFIED_REQUEST);
             //2) write message body
-            transport.writeArray(key);
-            transport.writeVInt(lifespan);
-            transport.writeVInt(maxIdle);
-            transport.writeLong(version);
-            transport.writeArray(value);
+            transport.WriteArray(key);
+            transport.WriteVInt(lifespan);
+            transport.WriteVInt(maxIdle);
+            transport.WriteLong(version);
+            transport.WriteArray(value);
             if (logger.IsTraceEnabled)
                 logger.Trace("written : key = " + key + " version = " + version + "value = " + value);
-            transport.flush();
+            transport.Flush();
             return ReturnVersionedOperationResponse(transport, param);
         }
     }
