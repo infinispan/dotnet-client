@@ -74,6 +74,7 @@
     <Compile Include="ReplaceOperationTest.cs" />
     <Compile Include="SingleServerAbstractTest.cs" />
     <Compile Include="StatsOperationTest.cs" />
+    <Compile Include="NamedCacheTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\client\client.csproj">

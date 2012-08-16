@@ -20,6 +20,7 @@ namespace tests
         protected ClientConfig conf = new ClientConfig();
         protected ISerializer serializer= new DefaultSerializer();
         protected RemoteCacheManager remoteManager;
+        protected string configFile = null;
 
         [TestInitialize()]
         public void StartHotrodServer()
@@ -31,7 +32,14 @@ namespace tests
                 throw new Exception("you must set the ISPN_HOME variable pointing to the ISPN installation in order to be able to run the tests");
             hrServer = new Process();
             String nameOfBatchFile = ispnHome + "\\bin\\startServer.bat";
-            string parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
+            string parameters;
+            if (configFile == null)
+            {
+                 parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
+            } else {
+                parameters = String.Format("/k \"{0}\"" + " -r hotrod -c testconfigs\\\"{1}\"", nameOfBatchFile, configFile);
+            }
+
             hrServer.StartInfo.FileName = "cmd";
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
