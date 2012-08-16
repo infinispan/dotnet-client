@@ -159,7 +159,7 @@ namespace Infinispan.DotNetClient
         /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
         /// <param name="lifespaninMinMillis"></param>
         /// <returns>Version details of the removed entry</returns>
-        VersionedOperationResponse RemoveIfUnmodified(K key, long version);
+        bool RemoveWithVersion(K key, long version);
 
         /// <summary>
         ///Replaces the given value only if its version matches the supplied version.

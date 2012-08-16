@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotNetClient
+namespace Infinispan.DotNetClient.Operations
 {
     /// <summary>
     /// Keeps information on the version of the data present in the server.
