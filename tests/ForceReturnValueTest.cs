@@ -12,6 +12,15 @@ namespace tests
     [TestClass()]
     public class ForceReturnValueTest : SingleServerAbstractTest
     {
+
+        [TestMethod()]
+        public void TestDefaultValueForForceReturnValues()
+        {
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String, String>();
+            defaultCache.Put("K", "V");
+            Assert.IsNull(defaultCache.Put("K", "V2"));
+        }
+
         [TestMethod()]
         public void TestForceReturnValues()
         {
