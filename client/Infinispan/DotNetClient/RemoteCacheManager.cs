@@ -54,7 +54,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         public IRemoteCache<K, V> GetCache<K,V>()
         {
-            return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
+            return new RemoteCacheImpl<K, V>(this, this.config,false,this.serializer, this.transportFactory);
         }
 
         /// <summary>
