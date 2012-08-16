@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Infinispan\DotNetClient\IServerStatistics.cs" />
     <Compile Include="Infinispan\DotNetClient\IVersionedValue.cs" />
-    <Compile Include="Infinispan\DotNetClient\Impl\VersionedValue.cs" />
+    <Compile Include="Infinispan\DotNetClient\Impl\VersionedValueImpl.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\HotRodClientException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\InvalidResponseException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\TransportException.cs" />

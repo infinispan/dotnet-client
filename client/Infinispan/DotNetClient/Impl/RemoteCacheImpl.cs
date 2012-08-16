@@ -84,7 +84,6 @@ namespace Infinispan.DotNetClient.Impl
             this.transportFactory = trans;
         }
 
-
         public int Size()
         {
             StatsOperation op = operationsFactory.NewStatsOperation();

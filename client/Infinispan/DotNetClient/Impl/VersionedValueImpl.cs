@@ -7,13 +7,13 @@ using Infinispan.DotNetClient.Util.Impl;
 
 namespace Infinispan.DotNetClient.Impl
 {
-    public class VersionedValue : IVersionedValue
+    public class VersionedValueImpl : IVersionedValue
     {
         private byte[] value;
         private ISerializer serializer;
         private long ver;
 
-        public VersionedValue(long ver, byte[] value, ISerializer serializer)
+        public VersionedValueImpl(long ver, byte[] value, ISerializer serializer)
         {
             this.ver = ver;
             this.value = value;
