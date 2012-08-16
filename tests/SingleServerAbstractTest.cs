@@ -36,7 +36,7 @@ namespace tests
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
             hrServer.Start();
-            Thread.Sleep(3000);
+            Thread.Sleep(3000); //sleep in order to allow the hrServer to start
             remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
 
         }
