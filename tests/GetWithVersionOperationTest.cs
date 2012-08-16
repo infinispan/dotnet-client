@@ -12,7 +12,7 @@ namespace tests
     public class GetWithVersionOperationTest : SingleServerAbstractTest
     {
         [TestMethod()]
-        public void getWithVersionTest()
+        public void GetWithVersionTest()
         {
             IRemoteCache<String, String> defaultRemote = remoteManager.GetCache<String,String>();
             defaultRemote.Put("key45", "uranium");

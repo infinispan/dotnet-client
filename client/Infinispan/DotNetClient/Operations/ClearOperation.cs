@@ -31,7 +31,7 @@ namespace Infinispan.DotNetClient.Operations
             HeaderParams param = WriteHeader(transport, CLEAR_REQUEST);
             if (logger.IsTraceEnabled)
                 logger.Trace("Clear Request Sent");
-            transport.flush();
+            transport.Flush();
             ReadHeaderAndValidate(transport, param);
         }
     }

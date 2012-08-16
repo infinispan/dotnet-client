@@ -12,7 +12,7 @@ namespace tests
     public class ReplaceOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void replaceTest()
+        public void ReplaceTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
             defaultCache.Put("key8", "bromine");

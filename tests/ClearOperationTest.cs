@@ -12,7 +12,7 @@ namespace tests
     public class ClearOperationTest : SingleServerAbstractTest
     {
          [TestMethod()]
-        public void clearTest()
+        public void ClearTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
             defaultCache.Put("key1", "hydrogen");

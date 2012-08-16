@@ -55,12 +55,12 @@ namespace Infinispan.DotNetClient.Trans.Impl
             }
         }
 
-        public override TCPTransportFactory getTransportFactory()
+        public override TCPTransportFactory GetTransportFactory()
         {
             return transportFactory;
         }
 
-        public override void setTransportFactory(TCPTransportFactory tf)
+        public override void SetTransportFactory(TCPTransportFactory tf)
         {
             this.transportFactory = tf;
         }
@@ -88,29 +88,29 @@ namespace Infinispan.DotNetClient.Trans.Impl
             return this.tcpClient.GetStream();
         }
 
-        public override BinaryWriter getBinaryWriter()
+        public override BinaryWriter GetBinaryWriter()
         {
             return this.BWriter;
         }
 
-        public override BinaryReader getBinaryReader()
+        public override BinaryReader GetBinaryReader()
         {
             return this.BReader;
         }
 
-        public override IPAddress getIpAddress()
+        public override IPAddress GetIpAddress()
         {
             return this.ipEndPoint.Address;
         }
 
-        public override int getServerPort()
+        public override int GetServerPort()
         {
             return this.ipEndPoint.Port;
         }
 
         //Writing and reading Variable Length numerics are handed by UnsignedNumeric Class. 
         //Writes variable length integer varibale to the stream
-        public override void writeVInt(int vInt)
+        public override void WriteVInt(int vInt)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Writes variable length long varibale to the stream
-        public override void writeVLong(long l)
+        public override void WriteVLong(long l)
         {
             try
             {
@@ -139,7 +139,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Reads variable length long varibale from the stream
-        public override long readVLong()
+        public override long ReadVLong()
         {
             try
             {
@@ -155,7 +155,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Reads variable length long varibale to the stream
-        public override int readVInt()
+        public override int ReadVInt()
         {
             try
             {
@@ -170,7 +170,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Writes a byte array to the stream
-        public override void writeBytes(byte[] toAppend)
+        public override void WriteBytes(byte[] toAppend)
         {
             try
             {
@@ -185,7 +185,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Writes a single byte to the stream
-        public override void writeByte(byte toWrite)
+        public override void WriteByte(byte toWrite)
         {
             try
             {
@@ -201,7 +201,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Reads a single byte from the stream
-        public override byte readByte()
+        public override byte ReadByte()
         {
             int resultInt;
             try
@@ -227,7 +227,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Reads a byte array for size "size" from the stream
-        public override byte[] readByteArray(int size)
+        public override byte[] ReadByteArray(int size)
         {
             byte[] result = new byte[size];
             bool done = false;
@@ -278,7 +278,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Flushes the Binary Writer
-        public override void flush()
+        public override void Flush()
         {
             try
             {
@@ -295,7 +295,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //Closes the TCP Client and halts connection with the server
-        public override void release()
+        public override void Release()
         {
             try
             {
@@ -312,7 +312,7 @@ namespace Infinispan.DotNetClient.Trans.Impl
         }
 
         //cloases the current connection with the server
-        public void closeConnection()
+        public void CloseConnection()
         {
             tcpClient.Close();
         }

@@ -19,24 +19,24 @@ namespace Infinispan.DotNetClient.Trans
     public abstract class AbstractTransport : ITransport
     {
         //Reads an array of bytes
-        public byte[] readArray()
+        public byte[] ReadArray()
         {
-            int responseLength = readVInt();
-            return readByteArray(responseLength);
+            int responseLength = ReadVInt();
+            return ReadByteArray(responseLength);
         }
 
         //reads a string
-        public String readString()
+        public String ReadString()
         {
-            byte[] strContent = readArray();
+            byte[] strContent = ReadArray();
             string readString = UTF8Encoding.UTF8.GetString(strContent);
             return readString;
         }
 
         //
-        public long readLong()
+        public long ReadLong()
         {
-            byte[] longBytes = readByteArray(8);
+            byte[] longBytes = ReadByteArray(8);
             long result = 0;
             foreach (byte longByte in longBytes)
             {
@@ -47,7 +47,7 @@ namespace Infinispan.DotNetClient.Trans
             return result;
         }
 
-        public void writeLong(long longValue)
+        public void WriteLong(long longValue)
         {
             byte[] b = new byte[8];
             for (int i = 0; i < 8; i++)
@@ -55,13 +55,13 @@ namespace Infinispan.DotNetClient.Trans
                 long temp = (long)((ulong)longValue >> (i * 8));
                 b[7 - i] = (byte)(temp);
             }
-            writeBytes(b);
+            WriteBytes(b);
         }
 
 
-        public int readUnsignedShort()
+        public int ReadUnsignedShort()
         {
-            byte[] shortBytes = readByteArray(2);
+            byte[] shortBytes = ReadByteArray(2);
             int result = 0;
             foreach (byte longByte in shortBytes)
             {
@@ -72,9 +72,9 @@ namespace Infinispan.DotNetClient.Trans
         }
 
 
-        public int read4ByteInt()
+        public int Read4ByteInt()
         {
-            byte[] b = readByteArray(4);
+            byte[] b = ReadByteArray(4);
             int value = 0;
             for (int i = 0; i < 4; i++)
             {
@@ -85,109 +85,109 @@ namespace Infinispan.DotNetClient.Trans
         }
 
 
-        public void writeString(String str)
+        public void WriteString(String str)
         {
             if (str.Length > 0)
             {
-                writeArray(UTF8Encoding.UTF8.GetBytes(str));
+                WriteArray(UTF8Encoding.UTF8.GetBytes(str));
 
             }
             else
             {
-                writeVInt(0);
+                WriteVInt(0);
             }
         }
 
-        public void writeArray(byte[] toAppend)
+        public void WriteArray(byte[] toAppend)
         {
-            writeVInt(toAppend.Length);
-            writeBytes(toAppend);
+            WriteVInt(toAppend.Length);
+            WriteBytes(toAppend);
         }
 
 
         //Following metods are Implemented in TCPTransport Class which Inherits AbstractTransport
-        public virtual BinaryWriter getBinaryWriter()
+        public virtual BinaryWriter GetBinaryWriter()
         {
             throw new NotImplementedException();
         }
 
-        public virtual BinaryReader getBinaryReader()
+        public virtual BinaryReader GetBinaryReader()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void writeVInt(int vint)
+        public virtual void WriteVInt(int vint)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void writeVLong(long l)
+        public virtual void WriteVLong(long l)
         {
             throw new NotImplementedException();
         }
 
-        public virtual long readVLong()
+        public virtual long ReadVLong()
         {
             throw new NotImplementedException();
         }
 
-        public virtual int readVInt()
+        public virtual int ReadVInt()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void flush()
+        public virtual void Flush()
         {
             throw new NotImplementedException();
         }
 
-        public virtual byte readByte()
+        public virtual byte ReadByte()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void release()
+        public virtual void Release()
         {
             throw new NotImplementedException();
         }
 
-        public virtual byte[] readByteArray(int size)
+        public virtual byte[] ReadByteArray(int size)
         {
             throw new NotImplementedException();
         }
 
-        public virtual byte[] dumpStream()
+        public virtual byte[] DumpStream()
         {
             throw new NotImplementedException();
         }
         
-        public virtual void writeByte(byte toWrite)
+        public virtual void WriteByte(byte toWrite)
         {
             throw new NotImplementedException();
         }
 
-        public virtual bool connect()
+        public virtual bool Connect()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void initializeInputBinaryReader()
+        public virtual void InitializeInputBinaryReader()
         {
             throw new NotImplementedException();
         }
 
-        public virtual void writeBytes(byte[] toAppend)
+        public virtual void WriteBytes(byte[] toAppend)
         {
             throw new NotImplementedException();
         }
 
 
-        public virtual System.Net.IPAddress getIpAddress()
+        public virtual System.Net.IPAddress GetIpAddress()
         {
             throw new NotImplementedException();
         }
 
-        public virtual int getServerPort()
+        public virtual int GetServerPort()
         {
             throw new NotImplementedException();
         }
@@ -199,12 +199,12 @@ namespace Infinispan.DotNetClient.Trans
         }
 
 
-        public virtual void setTransportFactory(TCPTransportFactory tf)
+        public virtual void SetTransportFactory(TCPTransportFactory tf)
         {
             throw new NotImplementedException();
         }
 
-        public virtual TCPTransportFactory getTransportFactory()
+        public virtual TCPTransportFactory GetTransportFactory()
         {
             throw new NotImplementedException();
         }

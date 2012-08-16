@@ -12,7 +12,7 @@ namespace tests
     public class GetOperationTest : SingleServerAbstractTest
     {    
         [TestMethod()]
-        public void getTest()
+        public void GetTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
 

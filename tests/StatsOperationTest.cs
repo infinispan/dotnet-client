@@ -13,7 +13,7 @@ namespace tests
     public class StatsOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void statsOperationTest()
+        public void StatOperationTest()
         {
             IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
             defaultCache.Put("key7", "carbon0");

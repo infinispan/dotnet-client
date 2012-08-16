@@ -22,7 +22,7 @@ namespace tests
         protected RemoteCacheManager remoteManager;
 
         [TestInitialize()]
-        public void startHotrodServer()
+        public void StartHotrodServer()
         {
             //TODO - we might want to make this an actual process at some point so that the window is no longer displayed
             // http://stackoverflow.com/questions/1113000/how-do-start-stop-services-using-net-stop-command-in-c-sharp
@@ -42,7 +42,7 @@ namespace tests
         }
 
         [TestCleanup()]
-        public void shutDownHotrodServer()
+        public void ShutDownHotrodServer()
         {
             hrServer.CloseMainWindow();
         }

@@ -59,7 +59,7 @@
     <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\AbstractTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\ConnectionPool.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\IRequestBalancer.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RoundRobinRequestBalancer.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransportFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyOperation.cs" />

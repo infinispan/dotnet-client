@@ -20,7 +20,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             transportCollection = new ConcurrentDictionary<string, ConcurrentBag<ITransport>>();
         }
 
-        public static ConnectionPool getInstance()
+        public static ConnectionPool GetInstance()
         {
             if (instance == null)
             {
@@ -29,7 +29,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             return instance;
         }
 
-        public void prepareConnectionPool(IPEndPoint addr)
+        public void PrepareConnectionPool(IPEndPoint addr)
         {
             if (transportCollection.ContainsKey(addr.Address.ToString() + ":" + addr.Port))
             {
@@ -43,7 +43,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
         }
 
-        public ITransport borrowTransport(IPEndPoint addr)
+        public ITransport BorrowTransport(IPEndPoint addr)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
         }
 
-        public void releaseTransport(ITransport transport)
+        public void ReleaseTransport(ITransport transport)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
         }
 
-        public void clear()
+        public void Clear()
         { }
 
     }

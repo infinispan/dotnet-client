@@ -45,8 +45,8 @@ namespace Infinispan.DotNetClient.Operations
         {
             // 1) write [header][key length][key]
             HeaderParams param = WriteHeader(transport, opCode);
-            transport.writeArray(key);
-            transport.getBinaryWriter().Flush(); //TODO: Hide Binary Writer here
+            transport.WriteArray(key);
+            transport.GetBinaryWriter().Flush(); //TODO: Hide Binary Writer here
             // 2) now read the header
             return ReadHeaderAndValidate(transport, param);
         }
@@ -95,7 +95,7 @@ namespace Infinispan.DotNetClient.Operations
         {
             if (HasForceReturn(flags))
             {
-                byte[] bytes = transport.readArray();
+                byte[] bytes = transport.ReadArray();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Previous value bytes received");
                 //0-length response means null

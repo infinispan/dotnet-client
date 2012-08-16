@@ -30,20 +30,20 @@ namespace Infinispan.DotNetClient.Operations
             Dictionary<string, string> result;
             //Writes the request header
             HeaderParams param = WriteHeader(transport, STATS_REQUEST);
-            transport.flush();
+            transport.Flush();
             ReadHeaderAndValidate(transport, param);
             //reads the number of statistic details sent from server
-            int numberOfStats = transport.readVInt();
+            int numberOfStats = transport.ReadVInt();
             if (logger.IsTraceEnabled)
                 logger.Trace("Number of Stats : " + numberOfStats);
             result = new Dictionary<string, string>();
             //reads all statistics and add them to the 'result' dictionary
             for (int i = 0; i < numberOfStats; i++)
             {
-                String statName = transport.readString();
+                String statName = transport.ReadString();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Stat Name Recieved : " + statName);
-                String statValue = transport.readString();
+                String statValue = transport.ReadString();
                 if (logger.IsTraceEnabled)
                     logger.Trace("Stat ValueRecieved : " + statName);
                 result.Add(statName, statValue);

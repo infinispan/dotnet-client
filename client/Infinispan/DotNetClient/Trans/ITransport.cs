@@ -19,60 +19,60 @@ namespace Infinispan.DotNetClient.Trans
     public interface ITransport
     {
 
-        BinaryWriter getBinaryWriter();
+        BinaryWriter GetBinaryWriter();
 
-        BinaryReader getBinaryReader();
+        BinaryReader GetBinaryReader();
 
-        IPAddress getIpAddress();
+        IPAddress GetIpAddress();
 
-        int getServerPort();
+        int GetServerPort();
 
-        void writeArray(byte[] toAppend);
+        void WriteArray(byte[] toAppend);
 
-        void writeByte(byte toWrite);
+        void WriteByte(byte toWrite);
 
-        void writeVInt(int vint);
+        void WriteVInt(int vint);
 
-        void writeVLong(long l);
+        void WriteVLong(long l);
 
-        long readVLong();
+        long ReadVLong();
 
-        int readVInt();
+        int ReadVInt();
 
-        void flush();
+        void Flush();
 
-        bool connect();
+        bool Connect();
 
-        byte readByte();
+        byte ReadByte();
 
-        void initializeInputBinaryReader();
+        void InitializeInputBinaryReader();
 
-        void release();
+        void Release();
 
-        byte[] readArray();
+        byte[] ReadArray();
 
-        string readString();
+        string ReadString();
 
-        byte[] readByteArray(int size);
+        byte[] ReadByteArray(int size);
 
-        long readLong();
+        long ReadLong();
 
-        void writeLong(long longValue);
+        void WriteLong(long longValue);
 
-        int readUnsignedShort();
+        int ReadUnsignedShort();
 
-        int read4ByteInt();
+        int Read4ByteInt();
 
-        void writeString(string str);
+        void WriteString(string str);
 
-        byte[] dumpStream();
+        byte[] DumpStream();
 
-        void writeBytes(byte[] toAppend);
+        void WriteBytes(byte[] toAppend);
 
         IPEndPoint IpEndPoint();
 
-        void setTransportFactory(TCPTransportFactory tf);
+        void SetTransportFactory(TCPTransportFactory tf);
 
-        TCPTransportFactory getTransportFactory();
+        TCPTransportFactory GetTransportFactory();
     }
 }

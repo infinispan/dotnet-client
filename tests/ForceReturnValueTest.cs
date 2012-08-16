@@ -13,7 +13,7 @@ namespace tests
     public class ForceReturnValueTest : SingleServerAbstractTest
     {
         [TestMethod()]
-        public void testForceReturnValues()
+        public void TestForceReturnValues()
         {
 
             //by default a cache doesn't have FORCE return value enabled
