@@ -10,8 +10,31 @@ using Infinispan.DotnetClient;
 namespace Infinispan.DotNetClient
 {
     /// <summary>
-    /// IRemoteCache is the interface (API) through which Infinispan .NET client library users should call HotRod Operations. 
-    /// 
+    ///Provides remote reference to a Hot Rod server/cluster.
+    ///<b>Concurrency</b>: implementors of this interface will support multi-threaded access.
+    ///<b>Return values</b>: previously existing values for certain operations are not returned, null
+    ///is returned instead. E.g. {@link java.util.Map#put(Object, Object)} returns the previous value associated to the
+    ///supplied key. In case of RemoteCache, this returns null.
+    ///<b>Synthetic operations</b>: aggregate operations are being implemented based on other Hot Rod operations. E.g. 
+    ///GetBulk is implemented through multiple individual gets. This means that the
+    ///these operations are not atomic and that they are costly sincethe number of network round-trips is not one
+    ///<b>changing default behavior through Flags</b>: it is possible to change the
+    ///default cache behaviour by using flags.
+    ///RemoteCache cache = getRemoteCache(true); //passing true will enable Force Return Values
+    ///Object oldValue = cache.put(aKey, aValue);
+    ///In the previous example, using ForceRetunValue will make the client to
+    ///also return previously existing value associated with "aKey". If this flag would not be present, Infinispan
+    ///would return (by default) null. This is in order to avoid fetching a possibly large object from the remote
+    ///server, which might not be needed. 
+    ///<b><a href="http://community.jboss.org/wiki/Eviction">Eviction and expiration</a></b>: 
+    ///Unlike local cache, which allows specifying time values with any granularity ,
+    ///HotRod only supports seconds as time units. When using .NET Hotrod Client library, you can use milliseconds also.
+    ///result in loss of precision for values specified as nanos or milliseconds.
+    ///<br/> Another fundamental difference is in the case of lifespan (naturally does NOT apply for max idle): 
+    ///If number of seconds is bigger than 30 days, this number of seconds is treated as UNIX time and so, 
+    ///represents the number of seconds since 1/1/1970. Passing 0 as maxIdle and lifeSpan (which are also default values)
+    ///these values are set to infinity<br/>
+    ///
     /// Author: sunimalr@gmail.com
     /// </summary>
     /// <typeparam name="K">Data Tyepe of Key</typeparam>
