@@ -14,25 +14,6 @@ using Infinispan.DotnetClient;
 namespace Infinispan.DotNetClient
 {
     /// <summary>
-    /// Ping operation can give one of the three results defined in the PingResult enum.
-    /// </summary>
-    public enum PingResult
-    {
-        /// <summary>
-        ///Success if the ping request was responded correctly 
-        /// </summary>
-        SUCCESS,
-        /// <summary>
-        /// When the ping request fails due to non-existing cache
-        /// </summary>
-        CACHE_DOES_NOT_EXIST,
-        /// <summary>
-        ///For any other type of failures 
-        /// </summary>
-        FAIL,
-    }
-
-    /// <summary>
     /// Aggregates RemoteCaches and lets user to get hold of a remotecache.
     /// Author: sunimalr@gmail.com
     /// </summary>
@@ -105,5 +86,6 @@ namespace Infinispan.DotNetClient
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
+
     }
 }
