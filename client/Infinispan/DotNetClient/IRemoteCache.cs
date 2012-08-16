@@ -194,5 +194,24 @@ namespace Infinispan.DotNetClient
         /// <param name="val"></param>
         /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
         bool ReplaceWithVersion(K key, V val, long version);
+
+    }
+    /// <summary>
+    /// Ping operation can give one of the three results defined in the PingResult enum.
+    /// </summary>
+    public enum PingResult
+    {
+        /// <summary>
+        ///Success if the ping request was responded correctly 
+        /// </summary>
+        SUCCESS,
+        /// <summary>
+        /// When the ping request fails due to non-existing cache
+        /// </summary>
+        CACHE_DOES_NOT_EXIST,
+        /// <summary>
+        ///For any other type of failures 
+        /// </summary>
+        FAIL,
     }
 }
