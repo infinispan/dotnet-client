@@ -14,7 +14,7 @@ namespace tests
         [TestMethod()]
         public void ReplaceTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>();
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(true);
             defaultCache.Put("key8", "bromine");
             Assert.AreEqual("bromine", defaultCache.Get("key8"));
 

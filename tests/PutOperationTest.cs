@@ -21,7 +21,7 @@ namespace tests
             Assert.AreEqual("chlorine", remoteManager.GetCache<String,String>().Get("key14"));
 
             //If Force return value is set to true, following assertion will be passed. Else follwing will fail.
-            Assert.AreEqual("chlorine", remoteManager.GetCache<String,String>().Put("key14","Berilium"));
+            Assert.AreEqual("chlorine", remoteManager.GetCache<String,String>(true).Put("key14","Berilium"));
         }
     }
 }
