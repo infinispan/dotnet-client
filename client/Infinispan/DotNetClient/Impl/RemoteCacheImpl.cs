@@ -8,7 +8,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
-using Infinispan.DotNetClient.Util.Impl;
+using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Impl
 {
@@ -16,7 +16,7 @@ namespace Infinispan.DotNetClient.Impl
     ///Concrete implementation of RemoteCache inteface
     ///Author: sunimalr@gmail.com
     ///</summary>
-    public class RemoteCacheImpl<K, V> : RemoteCache<K,V>
+    public class RemoteCacheImpl<K, V> : IRemoteCache<K,V>
     {
         private ClientConfig config;
         private ISerializer serializer;
@@ -32,7 +32,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="configuration">Configuration of the client</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, ISerializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, ISerializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, configuration.CacheName, configuration.ForceReturnValue, s, trans)
         {
         }
@@ -45,7 +45,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="cacheName">Pass the cachename if it differs from the default cache name</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, String cacheName, ISerializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, String cacheName, ISerializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, cacheName, configuration.ForceReturnValue, s, trans)
         {
         }
@@ -58,7 +58,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="forceReturn">Pass ForceReturn value if it differs from the default falue</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, bool forceReturn, ISerializer s, TCPTransportFactory trans) :
+        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, bool forceReturn, ISerializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, configuration.CacheName, forceReturn, s, trans)
         {
         }
@@ -72,7 +72,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="forceReturn">Pass ForceReturn value if it differs from the default falue</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
-        public RemoteCacheImpl(RemoteCacheManager<K, V> cacheManager, ClientConfig configuration, String cacheName, bool forceReturn, ISerializer s, TCPTransportFactory trans)
+        public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, String cacheName, bool forceReturn, ISerializer s, TCPTransportFactory trans)
         {
             this.config = configuration;
             this.serializer = s;
@@ -83,10 +83,9 @@ namespace Infinispan.DotNetClient.Impl
             this.transportFactory = trans;
         }
 
-
-        public int size()
+        public int Size()
         {
-            StatsOperation op = operationsFactory.newStatsOperation();
+            StatsOperation op = operationsFactory.NewStatsOperation();
             transport = transportFactory.getTransport();
             try
             {
@@ -95,17 +94,17 @@ namespace Infinispan.DotNetClient.Impl
             {
                 transportFactory.releaseTransport(transport);
             }
-            return int.Parse(op.executeOperation(this.transport)[ServerStatistics.CURRENT_NR_OF_ENTRIES]);
+            return int.Parse(op.ExecuteOperation(this.transport)[ServerStatisticsTypes.CURRENT_NR_OF_ENTRIES]);
         }
 
-        public bool isEmpty()
+        public bool IsEmpty()
         {
-            return size() == 0;
+            return Size() == 0;
         }
 
-        public ServerStatistics stats()
+        public IServerStatistics Stats()
         {
-            StatsOperation op = operationsFactory.newStatsOperation();
+            StatsOperation op = operationsFactory.NewStatsOperation();
             transport = transportFactory.getTransport();
             try
             {
@@ -114,30 +113,30 @@ namespace Infinispan.DotNetClient.Impl
             {
                 transportFactory.releaseTransport(transport);
             }
-            Dictionary<String, String> statsMap = (Dictionary<String, String>)op.executeOperation(this.transport);
-            ServerStatistics stats = new ServerStatistics();
+            Dictionary<String, String> statsMap = (Dictionary<String, String>)op.ExecuteOperation(this.transport);
+            IServerStatistics stats = new ServerStatisticsImpl();
             for (int i = 0; i < statsMap.Count; i++)
             {
-                stats.addStats(statsMap.ElementAt(i).Key, statsMap.ElementAt(i).Value);
+                stats.AddStats(statsMap.ElementAt(i).Key, statsMap.ElementAt(i).Value);
             }
             return stats;
         }
 
-        public V put(K key, V val)
+        public V Put(K key, V val)
         {
-            return put(key, val, 0, 0);
+            return Put(key, val, 0, 0);
         }
 
-        public V put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V Put(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             byte[] result=null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
-            PutOperation op = operationsFactory.newPutKeyValueOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
+            PutOperation op = operationsFactory.NewPutKeyValueOperation(serializer.Serialize(key), serializer.Serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                result = (byte[])op.executeOperation(transport);
+                result = (byte[])op.ExecuteOperation(transport);
             }
             finally
             {
@@ -146,7 +145,7 @@ namespace Infinispan.DotNetClient.Impl
 
             if (result != null)
             {
-                return (V)serializer.deserialize(result);
+                return (V)serializer.Deserialize(result);
             }
             else
             {
@@ -155,61 +154,61 @@ namespace Infinispan.DotNetClient.Impl
 
         }
 
-        public bool putIfAbsent(K key, V val)
+        public V PutIfAbsent(K key, V val)
         {
-            return putIfAbsent(key, val, 0, 0);
+            return PutIfAbsent(key, val, 0, 0);
         }
 
-        public bool putIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V PutIfAbsent(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
-            bool success = false;
+            byte[] returnedValue = null;
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
-            PutIFAbsentOperation op = operationsFactory.newPutIfAbsentOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
+            PutIfAbsentOperation op = operationsFactory.NewPutIfAbsentOperation(serializer.Serialize(key), serializer.Serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                success = op.executeOperation(transport);
+                returnedValue = op.ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return success;
+            return (V)serializer.Deserialize(returnedValue);
         }
 
-        public V replace(K key, V val)
+        public V Replace(K key, V val)
         {
-            return replace(key, val, 0, 0);
+            return Replace(key, val, 0, 0);
         }
 
-        public V replace(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
+        public V Replace(K key, V val, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             int lifespanSecs = TimeSpan.FromMilliseconds(lifespaninMillis).Seconds;
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             byte[] bytes;
-            ReplaceOperation op = operationsFactory.newReplaceOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs);
+            ReplaceOperation op = operationsFactory.NewReplaceOperation(serializer.Serialize(key), serializer.Serialize(val), lifespanSecs, maxIdleSecs);
             transport = transportFactory.getTransport();
             try
             {
-                bytes = (byte[])op.executeOperation(transport);
+                bytes = (byte[])op.ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
 
-            return (V)serializer.deserialize(bytes);
+            return (V)serializer.Deserialize(bytes);
         }
 
-        public bool containsKey(K key)
+        public bool ContainsKey(K key)
         {
-            ContainsKeyOperation op = operationsFactory.newContainsKeyOperation(serializer.serialize(key));
+            ContainsKeyOperation op = operationsFactory.NewContainsKeyOperation(serializer.Serialize(key));
             bool res = false;
             transport = transportFactory.getTransport();
             try
             {
-                res = (Boolean)op.executeOperation(transport);
+                res = (Boolean)op.ExecuteOperation(transport);
             }
             finally
             {
@@ -218,33 +217,33 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        public V get(K key)
+        public V Get(K key)
         {
-            byte[] keyBytes = serializer.serialize(key);
+            byte[] keyBytes = serializer.Serialize(key);
             byte[] bytes = null;
             transport = transportFactory.getTransport();
-            GetOperation op = operationsFactory.newGetKeyOperation(keyBytes);
+            GetOperation op = operationsFactory.NewGetKeyOperation(keyBytes);
             try
             {
-                bytes = (byte[])op.executeOperation(transport);
+                bytes = (byte[])op.ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
 
-            V result = (V)serializer.deserialize(bytes);
+            V result = (V)serializer.Deserialize(bytes);
             return result;
         }
 
-        public Dictionary<K, V> getBulk(int size)
+        public Dictionary<K, V> GetBulk(int size)
         {
             transport = transportFactory.getTransport();
-            BulkGetOperation op = operationsFactory.newBulkGetOperation(size);
+            BulkGetOperation op = operationsFactory.NewBulkGetOperation(size);
             Dictionary<byte[], byte[]> result;
             try
             {
-                result = op.executeOperation(transport);
+                result = op.ExecuteOperation(transport);
             }
             finally
             {
@@ -253,42 +252,42 @@ namespace Infinispan.DotNetClient.Impl
             Dictionary<K, V> toReturn = new Dictionary<K, V>();
             for (int i = 0; i < result.Count; i++)
             {
-                V val = (V)serializer.deserialize(result.ElementAt(i).Value);
-                K key = (K)serializer.deserialize(result.ElementAt(i).Key);
+                V val = (V)serializer.Deserialize(result.ElementAt(i).Value);
+                K key = (K)serializer.Deserialize(result.ElementAt(i).Key);
                 toReturn.Add(key, val);
             }
             return toReturn;
         }
 
-        public Dictionary<K, V> getBulk()
+        public Dictionary<K, V> GetBulk()
         {
-            return getBulk(0);
+            return GetBulk(0);
         }
 
-        public V remove(K key)
+        public V Remove(K key)
         {
-            RemoveOperation removeOperation = operationsFactory.newRemoveOperation(serializer.serialize(key));
+            RemoveOperation removeOperation = operationsFactory.NewRemoveOperation(serializer.Serialize(key));
             transport = transportFactory.getTransport();
             byte[] existingValue;
             try
             {
-                existingValue = (byte[])removeOperation.executeOperation(transport);
+                existingValue = (byte[])removeOperation.ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
 
-            return (V)serializer.deserialize(existingValue);
+            return (V)serializer.Deserialize(existingValue);
         }
 
-        public void clear()
+        public void Clear()
         {
-            ClearOperation op = operationsFactory.newClearOperation();
+            ClearOperation op = operationsFactory.NewClearOperation();
             transport = transportFactory.getTransport();
             try
             {
-                op.executeOperation(transport);
+                op.ExecuteOperation(transport);
             }
             finally
             {
@@ -296,13 +295,13 @@ namespace Infinispan.DotNetClient.Impl
             }
         }
      
-        public PingResult ping()
+        public PingResult Ping()
         {
             PingResult res = PingResult.FAIL;
             transport = transportFactory.getTransport();
             try
             {
-                res = operationsFactory.newPingOperation(transport).execute();
+                res = operationsFactory.NewPingOperation(transport).Execute();
             }
             finally
             {
@@ -311,13 +310,13 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        public VersionedValue getVersioned(K key)
+        public IVersionedValue GetVersioned(K key)
         {
-            VersionedValue res = null;
+            IVersionedValue res = null;
             transport = transportFactory.getTransport();
             try
             {
-                res = operationsFactory.newGetWithVersionOperation(serializer.serialize(key)).executeOperation(transport);
+                res = operationsFactory.NewGetWithVersionOperation(serializer.Serialize(key)).ExecuteOperation(transport);
             }
             finally
             {
@@ -326,22 +325,29 @@ namespace Infinispan.DotNetClient.Impl
             return res;
         }
 
-        public VersionedOperationResponse removeIfUnmodified(K key, long version)
+        public bool RemoveWithVersion(K key, long version)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
             try
             {
-                res = operationsFactory.newRemoveIfUnmodifiedOperation(serializer.serialize(key), version).executeOperation(transport);
+                res = operationsFactory.NewRemoveWithVersionOperation(serializer.Serialize(key), version).ExecuteOperation(transport);
             }
             finally
             {
                 transportFactory.releaseTransport(transport);
             }
-            return res;
+            if (res != null)
+            {
+                return res.GetCode().Equals(VersionedOperationResponse.RspCode.SUCCESS);
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public bool replaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)
+        public bool ReplaceWithVersion(K key, V val, long version, int lifespaninMillis, int maxIdleTimeinMillis)
         {
             VersionedOperationResponse res = null;
             transport = transportFactory.getTransport();
@@ -349,7 +355,7 @@ namespace Infinispan.DotNetClient.Impl
             int maxIdleSecs = TimeSpan.FromMilliseconds(maxIdleTimeinMillis).Seconds;
             try
             {
-                res = operationsFactory.newReplaceWithVersionOperation(serializer.serialize(key), serializer.serialize(val), lifespanSecs, maxIdleSecs, version).executeOperation(transport);
+                res = operationsFactory.NewReplaceWithVersionOperation(serializer.Serialize(key), serializer.Serialize(val), lifespanSecs, maxIdleSecs, version).ExecuteOperation(transport);
             }
             finally
             {
@@ -366,9 +372,9 @@ namespace Infinispan.DotNetClient.Impl
             }
         }
 
-        public bool replaceWithVersion(K key, V val, long version)
+        public bool ReplaceWithVersion(K key, V val, long version)
         {
-            return replaceWithVersion(key, val, version, 0, 0);
+            return ReplaceWithVersion(key, val, version, 0, 0);
         }
 
     }

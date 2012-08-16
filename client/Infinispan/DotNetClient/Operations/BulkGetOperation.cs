@@ -22,12 +22,12 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("BulkGetOperation");
         }
 
-        public Dictionary<byte[], byte[]> executeOperation(ITransport transport)
+        public Dictionary<byte[], byte[]> ExecuteOperation(ITransport transport)
         {
-            HeaderParams param = writeHeader(transport, BULK_GET_REQUEST);
+            HeaderParams param = WriteHeader(transport, BULK_GET_REQUEST);
             transport.writeVInt(entryCount);
             transport.flush();
-            readHeaderAndValidate(transport, param);
+            ReadHeaderAndValidate(transport, param);
             Dictionary<byte[], byte[]> result = new Dictionary<byte[], byte[]>();
             while (transport.readByte() == 1)
             {

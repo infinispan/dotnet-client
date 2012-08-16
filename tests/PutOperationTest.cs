@@ -15,13 +15,13 @@ namespace tests
         [TestMethod()]
         public void putTest()
         {
-            remoteManager.getCache().put("key13", "boron");
-            Assert.AreEqual("boron", remoteManager.getCache().get("key13"));
-            remoteManager.getCache().put("key14", "chlorine");
-            Assert.AreEqual("chlorine", remoteManager.getCache().get("key14"));
+            remoteManager.GetCache<String,String>().Put("key13", "boron");
+            Assert.AreEqual("boron", remoteManager.GetCache<String,String>().Get("key13"));
+            remoteManager.GetCache<String,String>().Put("key14", "chlorine");
+            Assert.AreEqual("chlorine", remoteManager.GetCache<String,String>().Get("key14"));
 
             //If Force return value is set to true, following assertion will be passed. Else follwing will fail.
-            Assert.AreEqual("chlorine", remoteManager.getCache().put("key14","Berilium"));
+            Assert.AreEqual("chlorine", remoteManager.GetCache<String,String>().Put("key14","Berilium"));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="ob">Object which needs to be serialized (convert to byte array)</param>
         /// <returns>Serialized boject as a  byte array</returns>
-        byte[] serialize(Object ob);
+        byte[] Serialize(Object ob);
             
         //
         /// <summary>
@@ -30,6 +30,6 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="dataArray">byte array that needs to be Deserialized (convert to object)</param>
         /// <returns>Deserialized object</returns>
-        Object deserialize(byte[] dataArray);
+        Object Deserialize(byte[] dataArray);
     }
 }

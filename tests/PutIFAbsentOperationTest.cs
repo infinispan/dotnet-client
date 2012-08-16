@@ -14,12 +14,12 @@ namespace tests
         [TestMethod()]
         public void putIfAbsentTest()
         {
-            RemoteCache<String, String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key7", "carbon0");
-            defaultCache.putIfAbsent("key7", "carbon1");
-            defaultCache.putIfAbsent("key8", "carbon2");
-            Assert.AreEqual("carbon0",defaultCache.get("key7"));
-            Assert.AreEqual("carbon2", defaultCache.get("key8"));
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(true);
+            defaultCache.Put("key7", "carbon0");
+            defaultCache.PutIfAbsent("key7", "carbon1");
+            defaultCache.PutIfAbsent("key8", "carbon2");
+            Assert.AreEqual("carbon0",defaultCache.Get("key7"));
+            Assert.AreEqual("carbon2", defaultCache.Get("key8"));
         }
     }
 }

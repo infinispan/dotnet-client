@@ -5,14 +5,17 @@ using System.Text;
 
 namespace Infinispan.DotnetClient
 {
+    /// <summary>
+    /// Defines the interface which can be used to obtain Statistical data described in Infinispan.DotNetClient.ServerStatisticsTypes
+    /// </summary>
     public interface IServerStatistics
     {
-        Dictionary<String, String> getStatsMap();
+        Dictionary<String, String> GetStatsMap();
 
-        String getStatistic(String statsName);
+        String GetStatistic(String statsName);
 
-        void addStats(String name, String value);
+        void AddStats(String name, String value);
 
-        int getIntStatistic(String statsName);
+        int GetIntStatistic(String statsName);
     }
 }

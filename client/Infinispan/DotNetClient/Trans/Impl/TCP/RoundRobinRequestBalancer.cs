@@ -4,8 +4,9 @@ using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
 using System.Net;
+using Infinispan.DotNetClient.Trans.Impl.TCP;
 
-namespace Infinispan.DotNetClient.Trans.TCP
+namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class RoundRobinRequestBalancer : RequestBalancer
     {

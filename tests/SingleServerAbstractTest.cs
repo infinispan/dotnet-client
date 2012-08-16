@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using System.Threading;
-using Infinispan.DotNetClient.Util.Impl;
+using Infinispan.DotNetClient.Impl;
 
 namespace tests
 {
@@ -16,10 +16,10 @@ namespace tests
     public abstract class SingleServerAbstractTest
     {
         protected Process hrServer;
-       // protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
+        //protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
         protected ClientConfig conf = new ClientConfig();
         protected ISerializer serializer= new DefaultSerializer();
-        protected RemoteCacheManager<String,String> remoteManager;
+        protected RemoteCacheManager remoteManager;
 
         [TestInitialize()]
         public void startHotrodServer()
@@ -29,17 +29,16 @@ namespace tests
             string ispnHome = System.Environment.GetEnvironmentVariable("ISPN_HOME");
             if (ispnHome == null)
                 throw new Exception("you must set the ISPN_HOME variable pointing to the ISPN installation in order to be able to run the tests");
-
             hrServer = new Process();
             String nameOfBatchFile = ispnHome + "\\bin\\startServer.bat";
             string parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
-            hrServer.StartInfo.FileName = "cmd";//"bin\\startServer.bat";
+            hrServer.StartInfo.FileName = "cmd";
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
-            //hrServer.StartInfo.Arguments = "-r hotrod";
             hrServer.Start();
             Thread.Sleep(3000);
-            remoteManager = new RemoteCacheManager<String,String>(conf, serializer);
+            remoteManager = new RemoteCacheManager(conf, serializer);
+
         }
 
         [TestCleanup()]

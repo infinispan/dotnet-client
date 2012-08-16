@@ -3,53 +3,59 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotnetClient
+namespace Infinispan.DotNetClient
 {
-    public abstract class ServerStatisticsTypes
+    /// <summary>
+    /// Defines the possible list of statistics defined by the Hot Rod server.
+    ///Can be obtained through IRemoteCache.stats()
+    ///
+    /// Author: sunimalr@gmail.com
+    /// </summary>
+    public sealed class ServerStatisticsTypes
     {
-        /**
-         * Number of seconds since Hot Rod started.
-        */
-        public const string TIME_SINCE_START = "timeSinceStart";
+        ///<summary>
+        ///Number of seconds since Hot Rod started.
+        ///</summary>
+        public static readonly String TIME_SINCE_START = "timeSinceStart";
 
-        /**
-         * Number of entries currently in the Hot Rod server
-         */
-        public const string CURRENT_NR_OF_ENTRIES = "currentNumberOfEntries";
+        ///<summary>
+        ///Number of entries currently in the Hot Rod server
+        ///</summary>
+        public static readonly String CURRENT_NR_OF_ENTRIES = "currentNumberOfEntries";
 
-        /**
-         * Number of entries stored in Hot Rod server.
-         */
-        public const string TOTAL_NR_OF_ENTRIES = "totalNumberOfEntries";
+        ///<summary>
+        ///Total Number of entries stored in Hot Rod server.
+        ///</summary>
+        public static readonly String TOTAL_NR_OF_ENTRIES = "totalNumberOfEntries";
 
-        /**
-         * Number of put operations.
-         */
-        public const string STORES = "stores";
+        ///<summary>
+        ///Number of put operations.
+        ///</summary>
+        public static readonly String STORES = "stores";
 
-        /**
-         * Number of get operations.
-         */
-        public const string RETRIEVALS = "retrievals";
+        ///<summary>
+        ///Number of get operations.
+        ///</summary>
+        public static readonly String RETRIEVALS = "retrievals";
 
-        /**
-         * Number of get hits.
-         */
-        public const string HITS = "hits";
+        ///<summary>
+        ///Number of get hits.
+        ///</summary>
+        public static readonly String HITS = "hits";
 
-        /**
-         * Number of get misses.
-         */
-        public const string MISSES = "misses";
+        ///<summary>
+        ///Number of get misses.
+        ///</summary>
+        public static readonly String MISSES = "misses";
 
-        /**
-         * Number of removal hits.
-         */
-        public const string REMOVE_HITS = "removeHits";
+        ///<summary>
+        ///Number of removal hits.
+        ///</summary>
+        public static readonly String REMOVE_HITS = "removeHits";
 
-        /**
-         * Number of removal misses.
-         */
-        public const string REMOVE_MISSES = "removeMisses";
+        ///<summary>
+        ///Number of removal misses.
+        ///</summary>
+        public static readonly String REMOVE_MISSES = "removeMisses";
     }
 }

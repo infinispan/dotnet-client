@@ -13,21 +13,21 @@ namespace tests
     public class ReplaceWithVersionOperationTest:SingleServerAbstractTest
     {
         [TestMethod()]
-        public void replaceIfUnmodifiedTest()
+        public void replaceWithVersionTest()
         {
-            RemoteCache<String,String> defaultCache = remoteManager.getCache();
-            defaultCache.put("key8", "bromine1");
-            long version = defaultCache.getVersioned("key8").getVersion();
-            defaultCache.put("key8", "hexane");
-            bool response = defaultCache.replaceWithVersion("key8", "barium", version);
+            IRemoteCache<String,String> defaultCache = remoteManager.GetCache<String,String>();
+            defaultCache.Put("key8", "bromine1");
+            long version = defaultCache.GetVersioned("key8").GetVersion();
+            defaultCache.Put("key8", "hexane");
+            bool response = defaultCache.ReplaceWithVersion("key8", "barium", version);
             Assert.IsFalse(response);
-            Assert.AreEqual("hexane", defaultCache.get("key8"));
+            Assert.AreEqual("hexane", defaultCache.Get("key8"));
             
-            defaultCache.put("key8", "oxygen");
-            long newVersion = defaultCache.getVersioned("key8").getVersion();
+            defaultCache.Put("key8", "oxygen");
+            long newVersion = defaultCache.GetVersioned("key8").GetVersion();
             Assert.AreNotEqual(newVersion, version);
-            Assert.IsTrue(defaultCache.replaceWithVersion("key8", "barium", newVersion));
-            Assert.AreEqual("barium", defaultCache.get("key8"));
+            Assert.IsTrue(defaultCache.ReplaceWithVersion("key8", "barium", newVersion));
+            Assert.AreEqual("barium", defaultCache.Get("key8"));
         }
     }
 }

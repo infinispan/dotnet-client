@@ -35,10 +35,10 @@ namespace Infinispan.DotNetClient.Operations
         }
 
         //[header][key length][key][lifespan][max idle][value length][value]
-        protected byte sendOperationRequest(ITransport transport, byte opCode, byte opRespCode)
+        protected byte SendOperationRequest(ITransport transport, byte opCode, byte opRespCode)
         {
             // 1) write header
-            HeaderParams param = writeHeader(transport, opCode);
+            HeaderParams param = WriteHeader(transport, opCode);
             // 2) write key and value
             transport.writeArray(key);
             transport.writeVInt(lifespan);
@@ -46,7 +46,7 @@ namespace Infinispan.DotNetClient.Operations
             transport.writeArray(value);
             transport.getBinaryWriter().Flush();
             // 3) now read header
-            return readHeaderAndValidate(transport, param);
+            return ReadHeaderAndValidate(transport, param);
         }
     }
 }

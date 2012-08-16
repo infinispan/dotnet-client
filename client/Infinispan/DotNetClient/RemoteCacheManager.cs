@@ -7,39 +7,16 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
-using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotNetClient.Impl;
 using Infinispan.DotnetClient;
-
 
 namespace Infinispan.DotNetClient
 {
     /// <summary>
-    /// Ping operation can give one of the three results defined in the PingResult enum.
-    /// </summary>
-    public enum PingResult
-    {
-        /// <summary>
-        ///Success if the ping request was responded correctly 
-        /// </summary>
-        SUCCESS,
-        /// <summary>
-        /// When the ping request fails due to non-existing cache
-        /// </summary>
-        CACHE_DOES_NOT_EXIST,
-        /// <summary>
-        ///For any other type of failures 
-        /// </summary>
-        FAIL,
-    }
-
-    
-
-    /// <summary>
     /// Aggregates RemoteCaches and lets user to get hold of a remotecache.
     /// Author: sunimalr@gmail.com
     /// </summary>
-    public class RemoteCacheManager<K, V>
+    public class RemoteCacheManager
     {
         private ClientConfig config;
         private ISerializer serializer;
@@ -56,7 +33,7 @@ namespace Infinispan.DotNetClient
             this.config = configuration;
             this.serializer = s;
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
         }
 
         /// <summary>
@@ -68,35 +45,32 @@ namespace Infinispan.DotNetClient
             this.config = configuration;
             this.serializer = new DefaultSerializer();
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
         }
 
 
         /// <summary>
         /// Cache with default settings mentioned in App.config file
         /// </summary>
-        public RemoteCache<K, V> getCache()
+        public IRemoteCache<K, V> GetCache<K,V>()
         {
             return new RemoteCacheImpl<K, V>(this, this.config, this.serializer, this.transportFactory);
         }
 
-        
-
         /// <summary>
         ///Cache with default settings and a given cacheName
         /// </summary>
-        public RemoteCache<K, V> getCache(String cacheName)
+        public IRemoteCache<K, V> GetCache<K,V>(String cacheName)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, cacheName, this.serializer, this.transportFactory);
         }
-
 
         /// <summary>
         /// Cache with specified forceRetunValue parameter
         /// </summary>
         /// <param name="forceRetunValue"></param>
         /// <returns></returns>
-        public RemoteCache<K, V> getCache(bool forceRetunValue)
+        public IRemoteCache<K, V> GetCache<K,V>(bool forceRetunValue)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
@@ -107,9 +81,10 @@ namespace Infinispan.DotNetClient
         /// <param name="cacheName">If the user needs to give the cachename manually it can be passed here</param>
         /// <param name="forceRetunValue">If forceRetunValue is true, cache returns the value existed before the operation</param>
         /// <returns></returns>
-        public RemoteCache<K, V> getCache(String cacheName, bool forceRetunValue)
+        public IRemoteCache<K, V> GetCache<K,V>(String cacheName, bool forceRetunValue)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
+
     }
 }

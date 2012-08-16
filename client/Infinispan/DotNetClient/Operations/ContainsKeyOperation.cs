@@ -21,10 +21,10 @@ namespace Infinispan.DotNetClient.Operations
         {
         }
 
-        public bool executeOperation(ITransport transport)
+        public bool ExecuteOperation(ITransport transport)
         {
             bool containsKey = false;
-            short status = sendKeyOperation(key, transport, CONTAINS_KEY_REQUEST, CONTAINS_KEY_RESPONSE);
+            short status = SendKeyOperation(key, transport, CONTAINS_KEY_REQUEST, CONTAINS_KEY_RESPONSE);
             if (status == KEY_DOES_NOT_EXIST_STATUS)
             {
                 containsKey = false;

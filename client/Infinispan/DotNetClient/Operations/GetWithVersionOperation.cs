@@ -20,7 +20,7 @@ namespace Infinispan.DotNetClient.Operations
     * 
     */
 
-    public class GetWithVersionOperation : AbstractKeyOperation<VersionedValue>
+    public class GetWithVersionOperation : AbstractKeyOperation<VersionedValueImpl>
     {
         private static Logger logger;
         public GetWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags) :
@@ -29,10 +29,10 @@ namespace Infinispan.DotNetClient.Operations
             logger = LogManager.GetLogger("GetWithVersionOperation");
         }
 
-        public VersionedValue executeOperation(ITransport transport)
+        public IVersionedValue ExecuteOperation(ITransport transport)
         {
-            short status = sendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
-            VersionedValue result = null;
+            short status = SendKeyOperation(key, transport, GET_WITH_VERSION, GET_WITH_VERSION_RESPONSE);
+            IVersionedValue result = null;
             if (status == KEY_DOES_NOT_EXIST_STATUS)
             {
                 result = null;
@@ -45,8 +45,8 @@ namespace Infinispan.DotNetClient.Operations
 
                 byte[] value = transport.readArray();
                 if (logger.IsTraceEnabled)
-                    logger.Trace("Received value: " + UTF8Encoding.UTF8.GetString(value));
-                result = new VersionedValue(version, value);
+                    logger.Trace("Received value: " + transport.getTransportFactory().getSerializer().Deserialize(value));
+                result = new VersionedValueImpl(version, value,transport.getTransportFactory().getSerializer());
             }
             return result;
         }

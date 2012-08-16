@@ -7,6 +7,7 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
 using Infinispan.DotnetClient;
+using System.Net;
 
 namespace Infinispan.DotNetClient.Protocol
 {
@@ -55,7 +56,7 @@ namespace Infinispan.DotNetClient.Protocol
             {
                 foreach(Flag f in param.Flag)
                 {
-                    flagInt = f.getFlagInt() | flagInt;
+                    flagInt = f.GetFlagInt() | flagInt;
                 }
             }
              
@@ -121,9 +122,58 @@ namespace Infinispan.DotNetClient.Protocol
 
             logger.Trace(String.Format("Topology change indicator value : "+topchange));
           
+             if (topchange == 1)
+         readNewTopologyAndHash(trans, param.Topologyid);
 
             return status;
         }
+
+        public void readNewTopologyAndHash(ITransport transport, int topologyId) {
+      
+      int newTopologyId = transport.readVInt();
+      topologyId=newTopologyId;
+      int numKeyOwners = transport.readUnsignedShort();
+      short hashFunctionVersion = transport.readByte();
+      int hashSpace = transport.readVInt();
+      int clusterSize = transport.readVInt();
+
+            if(logger.IsTraceEnabled)
+            {
+                logger.Trace("Topology change request: newTopologyId= "+newTopologyId+" numKeyOwners= "+numKeyOwners+ " hashFunctionVersion= "+hashFunctionVersion+" hashSpaceSize= "+hashSpace+" clusterSize= "+clusterSize);
+            }
+      Dictionary<IPEndPoint, HashSet<int>> servers2Hash = new Dictionary<IPEndPoint, HashSet<int>>();
+
+      for (int i = 0; i < clusterSize; i++) {
+         String host = transport.readString();
+         int port = transport.readUnsignedShort();
+         int hashCode = transport.read4ByteInt();
+         if (logger.IsTraceEnabled)
+         {
+             logger.Trace("Server read : "+host+":"+port+" - hash code is "+hashCode);
+         }
+         IPEndPoint address = new IPEndPoint(IPAddress.Parse(host), port);
+         HashSet<int> hashes;
+         servers2Hash.TryGetValue(address,out hashes);
+         if (hashes == null) {
+            hashes = new HashSet<int>();
+            servers2Hash.Add(address,hashes);
+         }
+         hashes.Add(hashCode);
+         if (logger.IsTraceEnabled)
+         {
+             logger.Trace("Hash code is: "+ hashCode);
+         }
+         
+      }
+                  
+      transport .getTransportFactory().updateServers(servers2Hash);
+      if (hashFunctionVersion == 0) {
+         logger.Trace("Not using a consistent hash function");
+      } else {
+         transport.getTransportFactory().updateHashFunction(servers2Hash, numKeyOwners, hashFunctionVersion, hashSpace);
+      }
+            
+   }
 
 
     }

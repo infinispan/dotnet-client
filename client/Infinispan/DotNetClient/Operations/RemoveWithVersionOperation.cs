@@ -17,21 +17,21 @@ namespace Infinispan.DotNetClient.Operations
     * Author: sunimalr@gmail.com
     * 
     */
-    public class RemoveIfUnmodifiedOperation : AbstractKeyOperation<VersionedOperationResponse>
+    public class RemoveWithVersionOperation : AbstractKeyOperation<VersionedOperationResponse>
     {
         private readonly long version;
         private Logger logger;
-        public RemoveIfUnmodifiedOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version) :
+        public RemoveWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version) :
             base(codec, key, cacheName, topologyId, flags)
         {
             this.version = version;
             logger = LogManager.GetLogger("RemoveIfUnmodifiedOperation");
         }
 
-        public VersionedOperationResponse executeOperation(ITransport transport)
+        public VersionedOperationResponse ExecuteOperation(ITransport transport)
         {
             // 1) write header
-            HeaderParams param = writeHeader(transport, REMOVE_IF_UNMODIFIED_REQUEST);
+            HeaderParams param = WriteHeader(transport, REMOVE_IF_UNMODIFIED_REQUEST);
 
             //2) write message body
             transport.writeArray(key);
@@ -39,7 +39,7 @@ namespace Infinispan.DotNetClient.Operations
             logger.Trace("written : key = " + key + " version = " + version); 
             transport.flush();
             //process response and return
-            return returnVersionedOperationResponse(transport, param);
+            return ReturnVersionedOperationResponse(transport, param);
         }
     }
 }

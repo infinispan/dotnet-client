@@ -7,7 +7,7 @@ using System.IO;
 using Infinispan.DotNetClient.Trans;
 using NLog;
 
-namespace Infinispan.DotNetClient.Util.Impl
+namespace Infinispan.DotNetClient.Util
 {
     public class UnsignedNumeric
     {
@@ -24,7 +24,7 @@ namespace Infinispan.DotNetClient.Util.Impl
         private static Logger logger = LogManager.GetLogger("UnsignedNumeric");
 
 
-        public static int readUnsignedInt(ITransport trans)
+        public static int ReadUnsignedInt(ITransport trans)
         {
 
             byte b = trans.getBinaryReader().ReadByte();
@@ -42,7 +42,7 @@ namespace Infinispan.DotNetClient.Util.Impl
         }
 
 
-        public static void writeUnsignedInt(ITransport trans, int i)
+        public static void WriteUnsignedInt(ITransport trans, int i)
         {
 
             while ((i & ~0x7F) != 0)
@@ -57,14 +57,15 @@ namespace Infinispan.DotNetClient.Util.Impl
 
             trans.getBinaryWriter().Write((byte)i);
 
-            logger.Trace(String.Format("Unsigned byte written : " + i));
+            if (logger.IsTraceEnabled)
+                logger.Trace(String.Format("Unsigned byte written : " + i));
 
         }
 
 
 
 
-        public static long readUnsignedLong(ITransport trans)
+        public static long ReadUnsignedLong(ITransport trans)
         {
             byte b = trans.getBinaryReader().ReadByte();
             long i = b & 0x7F;
@@ -73,13 +74,13 @@ namespace Infinispan.DotNetClient.Util.Impl
                 b = trans.getBinaryReader().ReadByte();
                 i |= (b & 0x7FL) << shift;
             }
-
-            logger.Trace(String.Format("Unsigned long read : " + i));
+            if (logger.IsTraceEnabled)
+                logger.Trace(String.Format("Unsigned long read : " + i));
             return i;
         }
 
 
-        public static void writeUnsignedLong(ITransport trans, long i)
+        public static void WriteUnsignedLong(ITransport trans, long i)
         {
             while ((i & ~0x7F) != 0)
             {
@@ -88,8 +89,8 @@ namespace Infinispan.DotNetClient.Util.Impl
                 i = (int)((uint)i >> 7);
             }
             trans.getBinaryWriter().Write((byte)i);
-
-            logger.Trace(String.Format("Unsigned Int written : " + i));
+            if (logger.IsTraceEnabled)
+                logger.Trace(String.Format("Unsigned Int written : " + i));
         }
 
         /**
@@ -97,7 +98,7 @@ namespace Infinispan.DotNetClient.Util.Impl
        * bytes.  Negative numbers are not supported.
        */
 
-        public static int readUnsignedInt(byte[] bytes, int offset)
+        public static int ReadUnsignedInt(byte[] bytes, int offset)
         {
             byte b = bytes[offset++];
             int i = b & 0x7F;
@@ -106,8 +107,8 @@ namespace Infinispan.DotNetClient.Util.Impl
                 b = bytes[offset++];
                 i |= (int)((b & 0x7FL) << shift);
             }
-
-            logger.Trace(String.Format("Unsigned Int read : " + i));
+            if (logger.IsTraceEnabled)
+                logger.Trace(String.Format("Unsigned Int read : " + i));
             return i;
         }
 

@@ -5,14 +5,11 @@ using System.Text;
 using System.Configuration;
 using System.Collections.Specialized;
 using System.Xml;
-
+using NLog;
+using System.Net;
 
 namespace Infinispan.DotNetClient.Util
 {
-    /// <summary>
-    ///This class keeps configuration settings and also reads them from the app.config file 
-    ///Author: sunimalr@gmail.com
-    /// </summary>
     public class ClientConfig
     {
         private string serverIP;
@@ -20,6 +17,8 @@ namespace Infinispan.DotNetClient.Util
         private string cacheName;
         private int topologyId;
         private bool forceReturnValue;
+        private string serverList;
+        private static Logger logger;
 
         public bool ForceReturnValue
         {
@@ -30,6 +29,7 @@ namespace Infinispan.DotNetClient.Util
         public int TopologyId
         {
             get { return topologyId; }
+            set { topologyId = value; }
         }
 
         public string CacheName
@@ -58,13 +58,27 @@ namespace Infinispan.DotNetClient.Util
         /// <param name="CacheName"></param>
         /// <param name="TopologyID"></param>
         /// <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
-        public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue)
+        public ClientConfig(string ServerIP, int ServerPort, string CacheName, int TopologyID, bool ForceReturnValue)
         {
+            logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ServerIP;
             this.cacheName = CacheName;
             this.serverPort = ServerPort;
-            this.topologyId = 0;
+            this.topologyId = TopologyID;
             this.forceReturnValue = ForceReturnValue;
+            this.serverList = "127.0.0.1:11222;";
+        }
+
+        
+        public ClientConfig(string ServerIP, int ServerPort, string CacheName, int TopologyID, bool ForceReturnValue, string serverlist)
+        {
+            logger = LogManager.GetLogger("ClientConfig");
+            this.serverIP = ServerIP;
+            this.cacheName = CacheName;
+            this.serverPort = ServerPort;
+            this.topologyId = TopologyID;
+            this.forceReturnValue = ForceReturnValue;
+            this.serverList = serverlist;
         }
 
         /// <summary>
@@ -72,9 +86,12 @@ namespace Infinispan.DotNetClient.Util
         /// </summary>
         public ClientConfig()
         {
-            this.serverIP = readAttr("serverIP");
-            this.serverPort = int.Parse(readAttr("serverPort"));
-            if (readAttr("forceReturnValue").Equals("true"))
+            logger = LogManager.GetLogger("ClientConfig");
+            this.serverIP = ReadAttr("serverIP");
+            this.serverPort = int.Parse(ReadAttr("serverPort"));
+            //this.topologyId = int.Parse(readAttr("topologyId"));
+            this.serverList = ReadAttr("serverList");
+            if (ReadAttr("forceReturnValue").Equals("true"))
             {
                 this.forceReturnValue = true;
             }
@@ -82,14 +99,40 @@ namespace Infinispan.DotNetClient.Util
             {
                 this.forceReturnValue = false;
             }
+            this.serverList = "127.0.0.1:11222;";
             this.cacheName = "default";
             this.topologyId = 0;
         }
 
-        public string readAttr(string key)
+        public string ReadAttr(string key)
         {
             return ConfigurationManager.AppSettings.Get(key);
         }
 
+        public List<IPEndPoint> GetServerList()
+        {
+            List<IPEndPoint> tempList = new List<IPEndPoint>();
+            string[] splittedlist=serverList.Split(';');
+            foreach (string str in splittedlist)
+            {
+                if (str.Length > 0)
+                {
+                    logger.Trace("serverlist : " + str);
+                    //IPAddress ip = IPAddress.Loopback;
+                    IPAddress ip = IPAddress.Parse(str.Split(':')[0]);
+                    int port = int.Parse(str.Split(':')[1]);
+                    IPEndPoint ep = new IPEndPoint(ip, port);
+                    tempList.Add(ep);
+                }
+            }
+            if (tempList.Count > 0)
+            {
+                return tempList;
+            }
+            else
+            {
+                throw new Exception("No initial servers specified!!");
+            }
+        }
     }
 }

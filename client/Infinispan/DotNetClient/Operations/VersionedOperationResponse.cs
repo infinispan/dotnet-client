@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotNetClient
+namespace Infinispan.DotNetClient.Operations
 {
     /// <summary>
     /// Keeps information on the version of the data present in the server.
@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient
             isModified = modified;
         }
 
-        public bool isUpdated()
+        public bool IsUpdated()
         {
             return isModified;
         }
@@ -37,7 +37,7 @@ namespace Infinispan.DotNetClient
             this.code = code;
         }
 
-        public byte[] getValue()
+        public byte[] GetValue()
         {
             return value;
         }

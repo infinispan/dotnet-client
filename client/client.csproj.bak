@@ -46,7 +46,7 @@
   <ItemGroup>
     <Compile Include="Infinispan\DotNetClient\IServerStatistics.cs" />
     <Compile Include="Infinispan\DotNetClient\IVersionedValue.cs" />
-    <Compile Include="Infinispan\DotNetClient\Impl\VersionedValueImpl.cs" />
+    <Compile Include="Infinispan\DotNetClient\Impl\VersionedValue.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\HotRodClientException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\InvalidResponseException.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\TransportException.cs" />
@@ -55,13 +55,16 @@
     <Compile Include="Infinispan\DotNetClient\Operations\OperationsFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\StatsOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\RemoteCacheManager.cs" />
-    <Compile Include="Infinispan\DotNetClient\Impl\ServerStatisticsImpl.cs" />
-    <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
+    <Compile Include="Infinispan\DotNetClient\Impl\ServerStatistics.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\AbstractTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\ConnectionPool.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RequestBalancer.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\RoundRobinRequestBalancer.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransportFactory.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\ITransport.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\ConnectionPool.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\RequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\RoundRobinRequestBalancer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransportFactory.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\AbstractKeyValueOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ClearOperation.cs" />
@@ -69,9 +72,9 @@
     <Compile Include="Infinispan\DotNetClient\Operations\GetOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\HotRodOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PingOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\PutIfAbsentOperation.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\PutIFAbsentOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\PutOperation.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\RemoveWithVersionOperation.cs" />
+    <Compile Include="Infinispan\DotNetClient\Operations\RemoveIfUnmodifiedOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\RemoveOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ReplaceWithVersionOperation.cs" />
     <Compile Include="Infinispan\DotNetClient\Operations\ReplaceOperation.cs" />
@@ -80,15 +83,17 @@
     <Compile Include="Infinispan\DotNetClient\Protocol\HotRodConstants.cs" />
     <Compile Include="Infinispan\DotNetClient\Exceptions\IllegalStateException.cs" />
     <Compile Include="Infinispan\DotNetClient\Trans\Impl\TCP\TCPTransport.cs" />
-    <Compile Include="Infinispan\DotNetClient\Trans\ITransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Util\ClientConfig.cs" />
-    <Compile Include="Infinispan\DotNetClient\Impl\DefaultSerializer.cs" />
+    <Compile Include="Infinispan\DotNetClient\Util\Impl\DefaultSerializer.cs" />
     <Compile Include="Infinispan\DotNetClient\ISerializer.cs" />
-    <Compile Include="Infinispan\DotNetClient\Operations\VersionedOperationResponse.cs" />
-    <Compile Include="Infinispan\DotNetClient\Util\UnsignedNumeric.cs" />
+    <Compile Include="Infinispan\DotNetClient\VersionedOperationResponse.cs" />
+    <Compile Include="Infinispan\DotNetClient\Util\Impl\UnsignedNumeric.cs" />
     <Compile Include="Infinispan\DotNetClient\Impl\RemoteCacheImpl.cs" />
-    <Compile Include="Infinispan\DotNetClient\IRemoteCache.cs" />
+    <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
+    <Compile Include="Infinispan\DotNetClient\ServerStatisticsTypes.cs" />
+    <Compile Include="Infinispan\DotNetClient\Trans\TCP\TCPTransport.cs" />
     <Compile Include="Infinispan\DotNetClient\Flag.cs" />
+    <Compile Include="Infinispan\DotNetClient\RemoteCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,7 +107,6 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
