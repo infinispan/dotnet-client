@@ -5,6 +5,12 @@ using System.Text;
 
 namespace Infinispan.DotNetClient
 {
+    /// <summary>
+    /// Defines the possible list of statistics defined by the Hot Rod server.
+    ///Can be obtained through IRemoteCache.stats()
+    ///
+    /// Author: sunimalr@gmail.com
+    /// </summary>
     public sealed class ServerStatisticsTypes
     {
         ///<summary>

@@ -8,7 +8,6 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
-using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Impl
@@ -115,7 +114,7 @@ namespace Infinispan.DotNetClient.Impl
                 transportFactory.releaseTransport(transport);
             }
             Dictionary<String, String> statsMap = (Dictionary<String, String>)op.ExecuteOperation(this.transport);
-            IServerStatistics stats = new ServerStatistics();
+            IServerStatistics stats = new ServerStatisticsImpl();
             for (int i = 0; i < statsMap.Count; i++)
             {
                 stats.AddStats(statsMap.ElementAt(i).Key, statsMap.ElementAt(i).Value);

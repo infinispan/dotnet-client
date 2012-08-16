@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Util;
-using Infinispan.DotNetClient.Util.Impl;
 
 namespace Infinispan.DotNetClient.Impl
 {

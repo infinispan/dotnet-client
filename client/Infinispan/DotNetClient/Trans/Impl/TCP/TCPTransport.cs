@@ -9,7 +9,6 @@ using System.Threading;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
-using Infinispan.DotNetClient.Util.Impl;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
 namespace Infinispan.DotNetClient.Trans.Impl
 {

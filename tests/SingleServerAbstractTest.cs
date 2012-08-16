@@ -8,7 +8,7 @@ using System.Diagnostics;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using System.Threading;
-using Infinispan.DotNetClient.Util.Impl;
+using Infinispan.DotNetClient.Impl;
 
 namespace tests
 {
