@@ -11,18 +11,18 @@ using Infinispan.DotNetClient;
 namespace tests
 {
     [TestClass()]
-    public class PingOperationTest:SingleServerAbstractTest
+    public class PingOperationTest : SingleServerAbstractTest
     {
         [TestMethod()]
         public void PingTest()
         {
             PingResult expected = PingResult.SUCCESS;
-            PingResult actual = remoteManager.GetCache<String,String>().Ping();
+            PingResult actual = remoteManager.GetCache<String, String>().Ping();
             Assert.AreEqual(expected, actual);
 
             Assert.AreEqual(expected, actual);
             ShutDownHotrodServer(); //this should make ping fail
-            actual = remoteManager.GetCache<String,String>().Ping();
+            actual = remoteManager.GetCache<String, String>().Ping();
             Assert.AreEqual(PingResult.FAIL, actual);
         }
     }

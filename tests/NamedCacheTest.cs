@@ -15,19 +15,19 @@ namespace tests
             configFile = "local-named-cache.xml";
         }
 
-        [TestMethod]
-        public void TestWithName()
-        {
-            IRemoteCache<String, String> someCache = remoteManager.GetCache<String, String>("someCache");
-            someCache.Put("k2", "v2");
-            Assert.AreEqual("v2", someCache.Get("k2"));
+        //[TestMethod]
+        //public void TestWithName()
+        //{
+        //    IRemoteCache<String, String> someCache = remoteManager.GetCache<String, String>("someCache");
+        //    someCache.Put("k2", "v2");
+        //    Assert.AreEqual("v2", someCache.Get("k2"));
 
-            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String, String>();
-            defaultCache.Put("k1", "v1");
-            Assert.IsTrue(defaultCache.ContainsKey("k1"));
+        //    IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String, String>();
+        //    defaultCache.Put("k1", "v1");
+        //    Assert.IsTrue(defaultCache.ContainsKey("k1"));
 
-            Assert.IsFalse(someCache.ContainsKey("k1"));
+        //    Assert.IsFalse(someCache.ContainsKey("k1"));
            
-        }
+        //}
     }
 }

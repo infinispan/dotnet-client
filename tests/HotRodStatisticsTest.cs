@@ -9,12 +9,12 @@ using Infinispan.DotNetClient.Impl;
 namespace tests
 {
     [TestClass]
-    public class HotRodStatisticsTest:SingleServerAbstractTest
+    public class HotRodStatisticsTest : SingleServerAbstractTest
     {
         [TestMethod]
         public void HotRodStatisticsOperationTest()
         {
-            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String,String>(false);
+            IRemoteCache<String, String> defaultCache = remoteManager.GetCache<String, String>(false);
             Assert.AreEqual("0", defaultCache.Stats().GetStatistic(ServerStatisticsTypes.CURRENT_NR_OF_ENTRIES));
             defaultCache.Put("key7", "carbon0");
             defaultCache.Put("key8", "carbon1");
