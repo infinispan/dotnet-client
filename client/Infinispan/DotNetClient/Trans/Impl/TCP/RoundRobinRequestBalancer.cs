@@ -10,25 +10,17 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class RoundRobinRequestBalancer : IRequestBalancer
     {
-        private static RoundRobinRequestBalancer instance = null;
-        private ConcurrentQueue<IPEndPoint> addressQueue;
-        private RoundRobinRequestBalancer()
+        //private ConcurrentQueue<IPEndPoint> addressQueue;
+        private Queue<IPEndPoint> addressQueue;
+        public RoundRobinRequestBalancer()
         {
-            addressQueue = new ConcurrentQueue<IPEndPoint>();
+            addressQueue = new Queue<IPEndPoint>();
             //addressQueue.Enqueue(new IPEndPoint(IPAddress.Loopback, 11222));
-        }
-
-        public static RoundRobinRequestBalancer GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new RoundRobinRequestBalancer();
-            }
-            return instance;
         }
 
         public void SetServers(List<IPEndPoint> serverList)
         {
+            this.addressQueue.Clear();
             foreach (IPEndPoint addr in serverList)
             {
                 addressQueue.Enqueue(addr);
@@ -38,7 +30,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         public IPEndPoint NextServer()
         {
             IPEndPoint next;
-            addressQueue.TryDequeue(out next);
+            next=addressQueue.Dequeue();
             return next;
             //return new IPEndPoint(IPAddress.Loopback, 11222);
         }

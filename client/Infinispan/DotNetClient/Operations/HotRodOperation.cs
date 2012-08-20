@@ -40,7 +40,7 @@ namespace Infinispan.DotNetClient.Operations
 
         protected HeaderParams WriteHeader(ITransport transport, byte operationCode)
         {
-            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_BASIC).TopologyId(topologyId).TxMarker(NO_TX);
+            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE).TopologyId(topologyId).TxMarker(NO_TX);
             if (logger.IsTraceEnabled)
             {
                 if (logger.IsTraceEnabled)

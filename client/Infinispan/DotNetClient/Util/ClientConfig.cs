@@ -58,25 +58,25 @@ namespace Infinispan.DotNetClient.Util
         /// <param name="CacheName"></param>
         /// <param name="TopologyID"></param>
         /// <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
-        public ClientConfig(string ServerIP, int ServerPort, string CacheName, int TopologyID, bool ForceReturnValue)
+        public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue)
         {
             logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ServerIP;
             this.cacheName = CacheName;
             this.serverPort = ServerPort;
-            this.topologyId = TopologyID;
             this.forceReturnValue = ForceReturnValue;
+            this.topologyId = 0;
             this.serverList = "127.0.0.1:11222;";
         }
 
         
-        public ClientConfig(string ServerIP, int ServerPort, string CacheName, int TopologyID, bool ForceReturnValue, string serverlist)
+        public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue, string serverlist)
         {
             logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ServerIP;
             this.cacheName = CacheName;
             this.serverPort = ServerPort;
-            this.topologyId = TopologyID;
+            this.topologyId = 0;
             this.forceReturnValue = ForceReturnValue;
             this.serverList = serverlist;
         }

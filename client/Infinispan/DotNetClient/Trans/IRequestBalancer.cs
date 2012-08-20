@@ -6,7 +6,7 @@ using System.Net;
 
 namespace Infinispan.DotNetClient.Trans
 {
-    interface IRequestBalancer
+    public interface IRequestBalancer
     {
         void SetServers(List<IPEndPoint> serverList);
 

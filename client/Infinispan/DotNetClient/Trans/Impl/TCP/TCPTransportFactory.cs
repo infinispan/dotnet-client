@@ -29,14 +29,13 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         private static Logger logger;
         private ISerializer serializer;
 
-        public TCPTransportFactory(ClientConfig configuration, ISerializer serializer)
+        public TCPTransportFactory(ClientConfig configuration, ISerializer serializer, IRequestBalancer reqBalancer)
         {
-            Console.WriteLine("TCP Transport Factory came");
             logger = LogManager.GetLogger("TCPTransportFactory");
             this.config = configuration;
             serverIP = IPAddress.Parse(config.ServerIP);
             serverPort = Convert.ToInt16(config.ServerPort);
-            balancer = RoundRobinRequestBalancer.GetInstance();
+            balancer = reqBalancer;
             this.topologyId = configuration.TopologyId;
             CreateAndPreparePool(configuration.GetServerList());
             this.serializer = serializer;
@@ -64,7 +63,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 
         private void CreateAndPreparePool(List<IPEndPoint> staticConfiguredServers)
         {
-            connectionPool = ConnectionPool.GetInstance();
+            connectionPool = new ConnectionPool();
             foreach (IPEndPoint addr in staticConfiguredServers)
             {
                 logger.Trace("Adding static server " + addr.Address.ToString() + ":" + addr.Port + " to con. pool");
@@ -75,14 +74,13 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 
         public void ReleaseTransport(ITransport transport)
         {
-            ConnectionPool.GetInstance().ReleaseTransport(transport);
+            connectionPool.ReleaseTransport(transport);
             temp = new IPEndPoint(transport.GetIpAddress(), transport.GetServerPort());
             balancer.ReleaseAddressToBalancer(temp);
         }
 
         private ITransport BorrowTransportFromPool(IPEndPoint addr)
         {
-            connectionPool = ConnectionPool.GetInstance();
             try
             {
                 logger.Trace("Trying to borrow a transport to : "+ addr.Address.ToString() + ":" + addr.Port.ToString());
@@ -97,8 +95,18 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
         }
 
-        public void UpdateServers(Dictionary<IPEndPoint, HashSet<int>> newServers)
+        public void UpdateServers(List<Tuple<string,int>> newServerList)
         {
+            List<IPEndPoint> serversToBeAdded = new List<IPEndPoint>();
+            IPEndPoint ipEP;
+            foreach (Tuple<string,int> tuple in newServerList)
+            {
+                ipEP = new IPEndPoint(IPAddress.Parse(tuple.Item1), tuple.Item2);
+                logger.Trace("Adding server " + ipEP.Address.ToString() + ":" + ipEP.Port + " to con. pool");
+                serversToBeAdded.Add(ipEP);
+            }
+            this.balancer.SetServers(serversToBeAdded);
+            this.connectionPool.UpdateConnectionPool(serversToBeAdded);
         }
 
         public void Destroy()
