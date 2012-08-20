@@ -12,21 +12,10 @@ namespace Infinispan.DotNetClient.Trans.TCP
 {
     public class ConnectionPool
     {
-        private static ConnectionPool instance = null;
-        private ConcurrentDictionary<String, ConcurrentBag<ITransport>> transportCollection;
-
-        private ConnectionPool()
+        private Dictionary<String, HashSet<ITransport>> transportCollection;
+        public ConnectionPool()
         {
-            transportCollection = new ConcurrentDictionary<string, ConcurrentBag<ITransport>>();
-        }
-
-        public static ConnectionPool GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new ConnectionPool();
-            }
-            return instance;
+            transportCollection = new Dictionary<string, HashSet<ITransport>>();
         }
 
         public void PrepareConnectionPool(IPEndPoint addr)
@@ -37,9 +26,28 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
             else
             {
-                ConcurrentBag<ITransport> newBag = new ConcurrentBag<ITransport>();
-                newBag.Add(new TCPTransport(addr));
-                transportCollection.TryAdd(addr.Address.ToString() + ":" + addr.Port, newBag);
+                HashSet <ITransport> newSet= new HashSet<ITransport>();
+                newSet.Add(new TCPTransport(addr));
+                transportCollection.Add(addr.Address.ToString() + ":" + addr.Port, newSet);
+            }
+        }
+
+        public void UpdateConnectionPool(List<IPEndPoint> serversToBeAdded)
+        {
+            transportCollection.Clear();
+
+            foreach (IPEndPoint addr in serversToBeAdded)
+            {
+                if (transportCollection.ContainsKey(addr.Address.ToString() + ":" + addr.Port))
+                {
+                    transportCollection[addr.Address.ToString() + ":" + addr.Port].Add(new TCPTransport(addr));
+                }
+                else
+                {
+                    HashSet<ITransport> newSet = new HashSet<ITransport>();
+                    newSet.Add(new TCPTransport(addr));
+                    transportCollection.Add(addr.Address.ToString() + ":" + addr.Port, newSet);
+                }                   
             }
         }
 
@@ -50,13 +58,13 @@ namespace Infinispan.DotNetClient.Trans.TCP
                 ITransport temp;
                 if (transportCollection[addr.Address.ToString() + ":" + addr.Port].Count > 0)
                 {
-                    transportCollection[addr.Address.ToString() + ":" + addr.Port].TryTake(out temp);
+                    temp=transportCollection[addr.Address.ToString() + ":" + addr.Port].ElementAt(0);
+                    transportCollection[addr.Address.ToString() + ":" + addr.Port].Remove(temp);
                 }
                 else
                 {
                     temp = new TCPTransport(addr);
                 }
-                //temp = new TCPTransport(addr);
                 return temp;
             }
             catch (Exception e)
@@ -75,9 +83,9 @@ namespace Infinispan.DotNetClient.Trans.TCP
                 }
                 else
                 {
-                    ConcurrentBag<ITransport> newBag = new ConcurrentBag<ITransport>();
-                    newBag.Add(transport);
-                    transportCollection.TryAdd(transport.IpEndPoint().Address.ToString() + ":" + transport.IpEndPoint().Port, newBag);
+                    HashSet<ITransport> newSet = new HashSet<ITransport>();
+                    newSet.Add(transport);
+                    transportCollection.Add(transport.IpEndPoint().Address.ToString() + ":" + transport.IpEndPoint().Port, newSet);
                 }
             }
             catch (Exception e)

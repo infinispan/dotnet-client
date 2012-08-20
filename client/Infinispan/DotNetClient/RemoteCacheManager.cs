@@ -22,6 +22,7 @@ namespace Infinispan.DotNetClient
         private ISerializer serializer;
         private Codec codec;
         private TCPTransportFactory transportFactory;
+        private IRequestBalancer requestBalancer;
 
         /// <summary>
         /// Constructor with specified serializer s
@@ -30,10 +31,11 @@ namespace Infinispan.DotNetClient
         /// <param name="s"></param>
         public RemoteCacheManager(ClientConfig configuration, ISerializer s)
         {
+            this.requestBalancer = new RoundRobinRequestBalancer();
             this.config = configuration;
             this.serializer = s;
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer,this.requestBalancer);
         }
 
         /// <summary>
@@ -42,12 +44,39 @@ namespace Infinispan.DotNetClient
         /// <param name="configuration"></param>
         public RemoteCacheManager(ClientConfig configuration)
         {
+            this.requestBalancer = new RoundRobinRequestBalancer();
             this.config = configuration;
             this.serializer = new DefaultSerializer();
             this.codec = new Codec();
-            this.transportFactory = new TCPTransportFactory(this.config, this.serializer);
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
         }
 
+        /// <summary>
+        /// Constructor with specified serializer s
+        /// </summary>
+        /// <param name="configuration"></param>
+        /// <param name="s"></param>
+        public RemoteCacheManager(ClientConfig configuration, ISerializer s, IRequestBalancer reqBalancer)
+        {
+            this.requestBalancer = reqBalancer;
+            this.config = configuration;
+            this.serializer = s;
+            this.codec = new Codec();
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
+        }
+
+        /// <summary>
+        /// Constructor with default serializer
+        /// </summary>
+        /// <param name="configuration"></param>
+        public RemoteCacheManager(ClientConfig configuration, IRequestBalancer reqBalancer)
+        {
+            this.requestBalancer = reqBalancer;
+            this.config = configuration;
+            this.serializer = new DefaultSerializer();
+            this.codec = new Codec();
+            this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
+        }
 
         /// <summary>
         /// Cache with default settings mentioned in App.config file
@@ -85,6 +114,5 @@ namespace Infinispan.DotNetClient
         {
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
-
     }
 }

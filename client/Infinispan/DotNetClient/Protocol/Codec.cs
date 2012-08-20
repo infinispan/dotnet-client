@@ -130,57 +130,27 @@ namespace Infinispan.DotNetClient.Protocol
 
         public void ReadNewTopologyAndHash(ITransport transport, int topologyId)
         {
-
             int newTopologyId = transport.ReadVInt();
             topologyId = newTopologyId;
-            int numKeyOwners = transport.ReadUnsignedShort();
-            short hashFunctionVersion = transport.ReadByte();
-            int hashSpace = transport.ReadVInt();
-            int clusterSize = transport.ReadVInt();
+            int numOfServers = transport.ReadVInt();//transport.ReadUnsignedShort();
 
             if (logger.IsTraceEnabled)
             {
-                logger.Trace("Topology change request: newTopologyId= " + newTopologyId + " numKeyOwners= " + numKeyOwners + " hashFunctionVersion= " + hashFunctionVersion + " hashSpaceSize= " + hashSpace + " clusterSize= " + clusterSize);
+                logger.Trace("Topology change request: newTopologyId= " + newTopologyId + " numOfServers= " + numOfServers);
             }
-            Dictionary<IPEndPoint, HashSet<int>> servers2Hash = new Dictionary<IPEndPoint, HashSet<int>>();
-
-            for (int i = 0; i < clusterSize; i++)
+            List<Tuple<string, int>> newServerList = new List<Tuple<string, int>>();
+            for (int i = 0; i < numOfServers; i++)
             {
-                String host = transport.ReadString();
+                string host = transport.ReadString(); //int hostIPLength will be read inside the ReadString Method.
                 int port = transport.ReadUnsignedShort();
-                int hashCode = transport.Read4ByteInt();
                 if (logger.IsTraceEnabled)
                 {
-                    logger.Trace("Server read : " + host + ":" + port + " - hash code is " + hashCode);
+                    logger.Trace("Server read : " + host + ":" + port);
                 }
-                IPEndPoint address = new IPEndPoint(IPAddress.Parse(host), port);
-                HashSet<int> hashes;
-                servers2Hash.TryGetValue(address, out hashes);
-                if (hashes == null)
-                {
-                    hashes = new HashSet<int>();
-                    servers2Hash.Add(address, hashes);
-                }
-                hashes.Add(hashCode);
-                if (logger.IsTraceEnabled)
-                {
-                    logger.Trace("Hash code is: " + hashCode);
-                }
-
+                Tuple<string, int> newServer = new Tuple<string, int>(host, port);
+                newServerList.Add(newServer);
             }
-
-            transport.GetTransportFactory().UpdateServers(servers2Hash);
-            if (hashFunctionVersion == 0)
-            {
-                logger.Trace("Not using a consistent hash function");
-            }
-            else
-            {
-                transport.GetTransportFactory().UpdateHashFunction(servers2Hash, numKeyOwners, hashFunctionVersion, hashSpace);
-            }
-
+            transport.GetTransportFactory().UpdateServers(newServerList);            
         }
-
-
     }
 }
