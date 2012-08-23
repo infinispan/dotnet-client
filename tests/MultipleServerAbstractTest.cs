@@ -46,14 +46,15 @@ namespace tests
             hrServer2.Start();
             Thread.Sleep(3000);
             Thread.Sleep(50000);
+
             remoteManager1 = new RemoteCacheManager(conf1, serializer1);
         }
 
         [TestCleanup()]
         public void ShutDownHotrodServer()
         {
-            hrServer1.CloseMainWindow();
-            hrServer2.CloseMainWindow();
+            //hrServer1.CloseMainWindow();
+            //hrServer2.CloseMainWindow();
         }
     }
 }

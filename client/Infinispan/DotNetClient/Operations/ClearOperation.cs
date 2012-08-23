@@ -20,8 +20,8 @@ namespace Infinispan.DotNetClient.Operations
     public class ClearOperation : HotRodOperation
     {
         private static Logger logger;
-        public ClearOperation(Codec codec, byte[] cacheName, int topologyId, Flag[] flags) :
-            base(codec, flags, cacheName, topologyId)
+        public ClearOperation(Codec codec, byte[] cacheName, int topologyId, Flag[] flags, OperationsFactory opFac) :
+            base(codec, flags, cacheName, topologyId,opFac)
         {
             logger = LogManager.GetLogger("ClearOperation");
         }

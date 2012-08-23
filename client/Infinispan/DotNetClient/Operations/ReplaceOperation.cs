@@ -20,8 +20,8 @@ namespace Infinispan.DotNetClient.Operations
     public class ReplaceOperation : AbstractKeyValueOperation<byte[]>
     {
         private static Logger logger;
-        public ReplaceOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle) :
-            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle)
+        public ReplaceOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle, OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle,opFac)
         {
             logger = LogManager.GetLogger("Replace Operation");
         }

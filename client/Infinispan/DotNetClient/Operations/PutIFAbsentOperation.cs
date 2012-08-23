@@ -19,9 +19,9 @@ namespace Infinispan.DotNetClient.Operations
     public class PutIfAbsentOperation : AbstractKeyValueOperation<byte[]>
     {
         private static Logger logger;
-        
-        public PutIfAbsentOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle) :
-            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle)
+
+        public PutIfAbsentOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle, OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle,opFac)
         {
             logger = LogManager.GetLogger("PutIfAbsentOperation");
         }

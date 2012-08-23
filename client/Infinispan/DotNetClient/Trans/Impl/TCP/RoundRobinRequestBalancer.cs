@@ -5,39 +5,52 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
+using NLog;
 
 namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class RoundRobinRequestBalancer : IRequestBalancer
     {
-        //private ConcurrentQueue<IPEndPoint> addressQueue;
-        private Queue<IPEndPoint> addressQueue;
+        private int roundRobinCounter;
+        private static Logger logger;
+        private IPEndPoint[] addressArray;
         public RoundRobinRequestBalancer()
         {
-            addressQueue = new Queue<IPEndPoint>();
-            //addressQueue.Enqueue(new IPEndPoint(IPAddress.Loopback, 11222));
+            logger = LogManager.GetLogger("RoundRobinRequestBalancer");
         }
 
         public void SetServers(List<IPEndPoint> serverList)
         {
-            this.addressQueue.Clear();
-            foreach (IPEndPoint addr in serverList)
+            addressArray = serverList.ToArray();
+            if (roundRobinCounter >= addressArray.Length)
             {
-                addressQueue.Enqueue(addr);
+                roundRobinCounter = 0;
             }
         }
 
         public IPEndPoint NextServer()
         {
             IPEndPoint next;
-            next=addressQueue.Dequeue();
+
+            next = GetServerByIndex(roundRobinCounter++);
+            if (roundRobinCounter >= addressArray.Length)
+                roundRobinCounter = 0;
             return next;
-            //return new IPEndPoint(IPAddress.Loopback, 11222);
         }
 
-        public void ReleaseAddressToBalancer(IPEndPoint releasedServer)
+        public IPEndPoint dryRunNextServer()
         {
-            addressQueue.Enqueue(releasedServer);
+            return GetServerByIndex(roundRobinCounter);
+        }
+
+        private IPEndPoint GetServerByIndex(int pos)
+        {
+            IPEndPoint server = addressArray[pos];
+            if (logger.IsTraceEnabled)
+            {
+                logger.Trace("Returning server: " + server);
+            }
+            return server;
         }
     }
 }

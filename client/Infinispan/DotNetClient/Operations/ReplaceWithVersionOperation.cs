@@ -22,8 +22,8 @@ namespace Infinispan.DotNetClient.Operations
         private readonly long version;
         private static Logger logger;
 
-        public ReplaceWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle, long version) :
-            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle)
+        public ReplaceWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle, long version, OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle,opFac)
         {
             this.version = version;
             logger = LogManager.GetLogger("ReplaceIfUnmodifiedOperation");
