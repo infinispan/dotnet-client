@@ -49,7 +49,10 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 
         public ISerializer GetSerializer()
         {
-            return this.serializer;
+            lock (this)
+            {
+                return this.serializer;
+            }
         }
 
         public ITransport GetTransport()
@@ -64,34 +67,43 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 
         private void CreateAndPreparePool(List<IPEndPoint> staticConfiguredServers)
         {
-            connectionPool = new ConnectionPool();
-            foreach (IPEndPoint addr in staticConfiguredServers)
+            lock (this)
             {
-                logger.Trace("Adding static server " + addr.Address.ToString() + ":" + addr.Port + " to con. pool");
-                connectionPool.PrepareConnectionPool(addr);
+                connectionPool = new ConnectionPool();
+                foreach (IPEndPoint addr in staticConfiguredServers)
+                {
+                    logger.Trace("Adding static server " + addr.Address.ToString() + ":" + addr.Port + " to con. pool");
+                    connectionPool.PrepareConnectionPool(addr);
+                }
+                balancer.SetServers(staticConfiguredServers);
             }
-            balancer.SetServers(staticConfiguredServers);
         }
 
         public void ReleaseTransport(ITransport transport)
         {
-            connectionPool.ReleaseTransport(transport);
-            temp = new IPEndPoint(transport.GetIpAddress(), transport.GetServerPort());
+            lock (this)
+            {
+                connectionPool.ReleaseTransport(transport);
+                temp = new IPEndPoint(transport.GetIpAddress(), transport.GetServerPort());
+            }
         }
 
         private ITransport BorrowTransportFromPool(IPEndPoint addr)
         {
-            try
+            lock (this)
             {
-                logger.Trace("Trying to borrow a transport to : " + addr.Address.ToString() + ":" + addr.Port.ToString());
-                ITransport t;
-                t = connectionPool.BorrowTransport(addr);
-                t.SetTransportFactory(this);
-                return t;
-            }
-            catch (Exception e)
-            {
-                throw new TransportException("Failed to borrow transport from pool" + e);
+                try
+                {
+                    logger.Trace("Trying to borrow a transport to : " + addr.Address.ToString() + ":" + addr.Port.ToString());
+                    ITransport t;
+                    t = connectionPool.BorrowTransport(addr);
+                    t.SetTransportFactory(this);
+                    return t;
+                }
+                catch (Exception e)
+                {
+                    throw new TransportException("Failed to borrow transport from pool" + e);
+                }
             }
         }
 
@@ -114,9 +126,10 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
 
         public void Destroy()
         {
-            Monitor.Enter(this);
-            connectionPool.Clear();
-            Monitor.Exit(this);
+            lock (this)
+            {
+                connectionPool.Clear();
+            }
         }
 
         public void UpdateHashFunction(Dictionary<IPEndPoint, HashSet<int>> servers2Hash, int numKeyOwners, short hashFunctionVersion, int hashSpace)

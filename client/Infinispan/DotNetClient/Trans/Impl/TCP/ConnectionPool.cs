@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
             }
             else
             {
-                HashSet <ITransport> newSet= new HashSet<ITransport>();
+                HashSet<ITransport> newSet = new HashSet<ITransport>();
                 newSet.Add(new TCPTransport(addr));
                 transportCollection.Add(addr.Address.ToString() + ":" + addr.Port, newSet);
             }
@@ -47,7 +47,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
                     HashSet<ITransport> newSet = new HashSet<ITransport>();
                     newSet.Add(new TCPTransport(addr));
                     transportCollection.Add(addr.Address.ToString() + ":" + addr.Port, newSet);
-                }                   
+                }
             }
         }
 
@@ -58,7 +58,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
                 ITransport temp;
                 if (transportCollection[addr.Address.ToString() + ":" + addr.Port].Count > 0)
                 {
-                    temp=transportCollection[addr.Address.ToString() + ":" + addr.Port].ElementAt(0);
+                    temp = transportCollection[addr.Address.ToString() + ":" + addr.Port].ElementAt(0);
                     transportCollection[addr.Address.ToString() + ":" + addr.Port].Remove(temp);
                 }
                 else
@@ -95,7 +95,16 @@ namespace Infinispan.DotNetClient.Trans.TCP
         }
 
         public void Clear()
-        { }
+        {
+            foreach (var transportCollectionEntry in transportCollection)
+            {
+                foreach (var trans in transportCollectionEntry.Value)
+                {
+                    trans.Release();
+                }
+            }
+            transportCollection.Clear();
+        }
 
     }
 }
