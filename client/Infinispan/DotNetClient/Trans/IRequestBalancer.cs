@@ -11,7 +11,5 @@ namespace Infinispan.DotNetClient.Trans
         void SetServers(List<IPEndPoint> serverList);
 
         IPEndPoint NextServer();
-
-        void ReleaseAddressToBalancer(IPEndPoint releasedServer);
     }
 }

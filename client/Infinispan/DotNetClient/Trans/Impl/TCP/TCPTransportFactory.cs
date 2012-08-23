@@ -39,7 +39,7 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             this.topologyId = configuration.TopologyId;
             CreateAndPreparePool(configuration.GetServerList());
             this.serializer = serializer;
-            
+
             if (logger.IsTraceEnabled)
             {
                 foreach (IPEndPoint ep in configuration.GetServerList())
@@ -55,9 +55,10 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         public ITransport GetTransport()
         {
             IPEndPoint addr;
-            Monitor.Enter(this);
-            addr = balancer.NextServer();
-            Monitor.Exit(this);
+            lock (this)
+            {
+                addr = balancer.NextServer();
+            }
             return BorrowTransportFromPool(addr);
         }
 
@@ -76,14 +77,13 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
         {
             connectionPool.ReleaseTransport(transport);
             temp = new IPEndPoint(transport.GetIpAddress(), transport.GetServerPort());
-            balancer.ReleaseAddressToBalancer(temp);
         }
 
         private ITransport BorrowTransportFromPool(IPEndPoint addr)
         {
             try
             {
-                logger.Trace("Trying to borrow a transport to : "+ addr.Address.ToString() + ":" + addr.Port.ToString());
+                logger.Trace("Trying to borrow a transport to : " + addr.Address.ToString() + ":" + addr.Port.ToString());
                 ITransport t;
                 t = connectionPool.BorrowTransport(addr);
                 t.SetTransportFactory(this);
@@ -95,18 +95,21 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             }
         }
 
-        public void UpdateServers(List<Tuple<string,int>> newServerList)
+        public void UpdateServers(List<Tuple<string, int>> newServerList)
         {
-            List<IPEndPoint> serversToBeAdded = new List<IPEndPoint>();
-            IPEndPoint ipEP;
-            foreach (Tuple<string,int> tuple in newServerList)
+            lock (this)
             {
-                ipEP = new IPEndPoint(IPAddress.Parse(tuple.Item1), tuple.Item2);
-                logger.Trace("Adding server " + ipEP.Address.ToString() + ":" + ipEP.Port + " to con. pool");
-                serversToBeAdded.Add(ipEP);
+                List<IPEndPoint> serversToBeAdded = new List<IPEndPoint>();
+                IPEndPoint ipEP;
+                foreach (Tuple<string, int> tuple in newServerList)
+                {
+                    ipEP = new IPEndPoint(IPAddress.Parse(tuple.Item1), tuple.Item2);
+                    logger.Trace("Adding server " + ipEP.Address.ToString() + ":" + ipEP.Port + " to con. pool");
+                    serversToBeAdded.Add(ipEP);
+                }
+                this.balancer.SetServers(serversToBeAdded);
+                this.connectionPool.UpdateConnectionPool(serversToBeAdded);
             }
-            this.balancer.SetServers(serversToBeAdded);
-            this.connectionPool.UpdateConnectionPool(serversToBeAdded);
         }
 
         public void Destroy()

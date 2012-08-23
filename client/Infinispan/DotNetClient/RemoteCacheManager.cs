@@ -112,6 +112,7 @@ namespace Infinispan.DotNetClient
         /// <returns></returns>
         public IRemoteCache<K, V> GetCache<K,V>(String cacheName, bool forceRetunValue)
         {
+            //TODO : Fix this (cachename)
             return new RemoteCacheImpl<K, V>(this, this.config, forceRetunValue, this.serializer, this.transportFactory);
         }
     }

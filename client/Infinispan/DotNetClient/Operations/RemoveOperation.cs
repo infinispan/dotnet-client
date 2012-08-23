@@ -20,8 +20,8 @@ namespace Infinispan.DotNetClient.Operations
     {
         private static Logger logger;
 
-        public RemoveOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags) :
-            base(codec, key, cacheName, topologyId, flags)
+        public RemoveOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags,OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags, opFac)
         {
             logger = LogManager.GetLogger("RemoveOperation");
         }

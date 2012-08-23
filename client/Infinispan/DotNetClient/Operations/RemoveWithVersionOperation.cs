@@ -21,8 +21,8 @@ namespace Infinispan.DotNetClient.Operations
     {
         private readonly long version;
         private Logger logger;
-        public RemoveWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version) :
-            base(codec, key, cacheName, topologyId, flags)
+        public RemoveWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, long version,OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags,opFac)
         {
             this.version = version;
             logger = LogManager.GetLogger("RemoveIfUnmodifiedOperation");

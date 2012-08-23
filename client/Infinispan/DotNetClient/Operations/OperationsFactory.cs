@@ -44,19 +44,19 @@ namespace Infinispan.DotNetClient.Operations
 
         public GetOperation NewGetKeyOperation(byte[] key)
         {
-            return new GetOperation(codec, key, cacheNameBytes, topologyId, Flags());
+            return new GetOperation(codec, key, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public RemoveOperation NewRemoveOperation(byte[] key)
         {
             return new RemoveOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags());
+                  codec, key, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public RemoveWithVersionOperation NewRemoveWithVersionOperation(byte[] key, long version)
         {
             return new RemoveWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(), version);
+                  codec, key, cacheNameBytes, topologyId, Flags(), version,this);
         }
 
         public ReplaceWithVersionOperation NewReplaceWithVersionOperation(byte[] key,
@@ -64,18 +64,18 @@ namespace Infinispan.DotNetClient.Operations
         {
             return new ReplaceWithVersionOperation(
                   codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSeconds, maxIdleTimeSeconds, version);
+                  value, lifespanSeconds, maxIdleTimeSeconds, version,this);
         }
 
         public GetWithVersionOperation NewGetWithVersionOperation(byte[] key)
         {
             return new GetWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags());
+                  codec, key, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public StatsOperation NewStatsOperation()
         {
-            return new StatsOperation(codec, cacheNameBytes, topologyId, Flags());
+            return new StatsOperation(codec, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public PutOperation NewPutKeyValueOperation(byte[] key, byte[] value,
@@ -83,7 +83,7 @@ namespace Infinispan.DotNetClient.Operations
         {
             return new PutOperation(
                   codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSecs, maxIdleSecs);
+                  value, lifespanSecs, maxIdleSecs,this);
         }
 
         public PutIfAbsentOperation NewPutIfAbsentOperation(byte[] key, byte[] value,
@@ -91,7 +91,7 @@ namespace Infinispan.DotNetClient.Operations
         {
             return new PutIfAbsentOperation(
                   codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSecs, maxIdleSecs);
+                  value, lifespanSecs, maxIdleSecs,this);
         }
 
         public ReplaceOperation NewReplaceOperation(byte[] key, byte[] values,
@@ -99,30 +99,30 @@ namespace Infinispan.DotNetClient.Operations
         {
             return new ReplaceOperation(
                   codec, key, cacheNameBytes, topologyId, Flags(),
-                  values, lifespanSecs, maxIdleSecs);
+                  values, lifespanSecs, maxIdleSecs,this);
         }
 
         public ContainsKeyOperation NewContainsKeyOperation(byte[] key)
         {
             return new ContainsKeyOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags());
+                  codec, key, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public ClearOperation NewClearOperation()
         {
             return new ClearOperation(
-                  codec, cacheNameBytes, topologyId, Flags());
+                  codec, cacheNameBytes, topologyId, Flags(),this);
         }
 
         public BulkGetOperation NewBulkGetOperation(int size)
         {
             return new BulkGetOperation(
-                  codec, cacheNameBytes, topologyId, Flags(), size);
+                  codec, cacheNameBytes, topologyId, Flags(), size,this);
         }
 
         public PingOperation NewPingOperation(ITransport transport)
         {
-            return new PingOperation(codec, topologyId, transport, cacheNameBytes);
+            return new PingOperation(codec, topologyId, transport, cacheNameBytes,this);
         }
 
         /// <summary>
@@ -142,5 +142,14 @@ namespace Infinispan.DotNetClient.Operations
             return flags;
         }
 
+        public void SetTopologyId(int topId)
+        {
+            this.topologyId = topId;
+        }
+
+        public int GetTopologyId()
+        {
+            return this.topologyId;
+        }
     }
 }

@@ -16,8 +16,8 @@ namespace Infinispan.DotNetClient.Operations
      */
     public class ContainsKeyOperation : AbstractKeyOperation<bool>
     {
-        public ContainsKeyOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags) :
-            base(codec, key, cacheName, topologyId, flags)
+        public ContainsKeyOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, OperationsFactory opFac) :
+            base(codec, key, cacheName, topologyId, flags,opFac)
         {
         }
 

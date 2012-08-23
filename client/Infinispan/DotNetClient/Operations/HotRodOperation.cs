@@ -21,20 +21,22 @@ namespace Infinispan.DotNetClient.Operations
         private static Logger logger;
         protected readonly Flag[] flags;
         protected readonly byte[] cacheName;
-        protected readonly int topologyId;
+        public static int topologyId;
         private readonly Codec codec;
         private static readonly byte NO_TX = 0;
         private static readonly byte XA_TX = 1;
+        private OperationsFactory operationsFactory;
 
         protected HotRodOperation()
         { }
 
-        protected HotRodOperation(Codec codec, Flag[] flags, byte[] cacheName, int topologyId)
+        protected HotRodOperation(Codec codec, Flag[] flags, byte[] cacheName, int topologyId, OperationsFactory opFac)
         {
             this.flags = flags;
             this.cacheName = cacheName;
-            this.topologyId = topologyId;
+            topologyId = opFac.GetTopologyId();
             this.codec = codec;
+            this.operationsFactory = opFac;
             logger = LogManager.GetLogger("Hot Rod Operation");
         }
 
@@ -45,7 +47,7 @@ namespace Infinispan.DotNetClient.Operations
             {
                 if (logger.IsTraceEnabled)
                 {
-                    string msg = ("headerparams created " + operationCode + " " + cacheName + " " + flags + " " + HotRodConstants.CLIENT_INTELLIGENCE_BASIC + " " + topologyId + " " + NO_TX);
+                    string msg = ("headerparams created " + operationCode + " " + cacheName + " " + flags + " " + HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE + " " + this.operationsFactory.GetTopologyId() + " " + NO_TX);
                     logger.Trace(msg);
                 }
             }
@@ -57,7 +59,7 @@ namespace Infinispan.DotNetClient.Operations
          */
         protected byte ReadHeaderAndValidate(ITransport transport, HeaderParams param)
         {
-            return codec.ReadHeader(transport, param);
+            return codec.ReadHeader(transport, param,this.operationsFactory);
         }
     }
 }

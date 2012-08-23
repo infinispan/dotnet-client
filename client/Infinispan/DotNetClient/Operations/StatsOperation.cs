@@ -18,8 +18,8 @@ namespace Infinispan.DotNetClient.Operations
     public class StatsOperation : HotRodOperation
     {
         private static Logger logger;
-        public StatsOperation(Codec codec, byte[] cacheName, int topologyId, Flag[] flags) :
-            base(codec, flags, cacheName, topologyId)
+        public StatsOperation(Codec codec, byte[] cacheName, int topologyId, Flag[] flags, OperationsFactory opFac) :
+            base(codec, flags, cacheName, topologyId,opFac)
         {
             logger = LogManager.GetLogger("StatsOoperation");
         }
