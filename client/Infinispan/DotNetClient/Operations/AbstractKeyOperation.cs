@@ -26,8 +26,8 @@ namespace Infinispan.DotNetClient.Operations
         protected readonly byte[] key;
         private static Logger logger;
 
-        protected AbstractKeyOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, OperationsFactory opFac) :
-            base(codec, flags, cacheName, topologyId, opFac)
+        protected AbstractKeyOperation(Codec codec, byte[] key, byte[] cacheName, Flag[] flags) :
+            base(codec, flags, cacheName)
         {
             this.key = key;
             logger = LogManager.GetLogger("AbstractKeyOperation");

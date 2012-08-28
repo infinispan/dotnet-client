@@ -15,8 +15,8 @@ namespace Infinispan.DotNetClient.Operations
         private int entryCount;
         private static Logger logger;
 
-        public BulkGetOperation(Codec codec, byte[] cacheName, int topologyId, Flag[] flags, int entryCount,OperationsFactory opFac) :
-            base(codec, flags, cacheName, topologyId,opFac)
+        public BulkGetOperation(Codec codec, byte[] cacheName, Flag[] flags, int entryCount) :
+            base(codec, flags, cacheName)
         {
             this.entryCount = entryCount;
             logger = LogManager.GetLogger("BulkGetOperation");

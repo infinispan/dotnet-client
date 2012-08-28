@@ -21,8 +21,8 @@ namespace Infinispan.DotNetClient.Operations
     public class PutOperation : AbstractKeyValueOperation<byte[]>
     {
         private static Logger logger;
-        public PutOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle,OperationsFactory opFac) :
-            base(codec, key, cacheName, topologyId, flags, value, lifespan, maxIdle, opFac)
+        public PutOperation(Codec codec, byte[] key, byte[] cacheName,Flag[] flags, byte[] value, int lifespan, int maxIdle) :
+            base(codec, key, cacheName,flags, value, lifespan, maxIdle)
         {
             logger = LogManager.GetLogger("PutOperation");
         }

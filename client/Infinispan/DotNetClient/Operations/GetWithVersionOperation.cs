@@ -23,8 +23,8 @@ namespace Infinispan.DotNetClient.Operations
     public class GetWithVersionOperation : AbstractKeyOperation<VersionedValueImpl>
     {
         private static Logger logger;
-        public GetWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, OperationsFactory opFac) :
-            base(codec, key, cacheName, topologyId, flags,opFac)
+        public GetWithVersionOperation(Codec codec, byte[] key, byte[] cacheName, Flag[] flags) :
+            base(codec, key, cacheName,flags)
         {
             logger = LogManager.GetLogger("GetWithVersionOperation");
         }
