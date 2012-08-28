@@ -56,7 +56,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="cacheManager">The CacheManager which holds the RemoteCache</param>
         /// <param name="configuration">Configuration of the client</param>
         /// <param name="forceReturn">Pass ForceReturn value if it differs from the default falue</param>
-        /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
+        /// <param name="s">Serializer to be used to. Pass a custom serializer or DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
         public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, bool forceReturn, ISerializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, configuration.CacheName, forceReturn, s, trans)
@@ -76,7 +76,7 @@ namespace Infinispan.DotNetClient.Impl
         {
             this.config = configuration;
             this.serializer = s;
-            this.codec = new Codec();
+            this.codec = new Codec(cacheManager);
             this.config.ForceReturnValue = forceReturn;
             this.config.CacheName = cacheName;
             this.operationsFactory = new OperationsFactory(cacheName, config.TopologyId, forceReturn, this.codec);
@@ -86,9 +86,9 @@ namespace Infinispan.DotNetClient.Impl
         public int Size()
         {
             StatsOperation op = operationsFactory.NewStatsOperation();
-            transport = transportFactory.GetTransport();
             try
             {
+                transport = transportFactory.GetTransport();
             }
             finally
             {
@@ -105,9 +105,9 @@ namespace Infinispan.DotNetClient.Impl
         public IServerStatistics Stats()
         {
             StatsOperation op = operationsFactory.NewStatsOperation();
-            transport = transportFactory.GetTransport();
             try
             {
+                transport = transportFactory.GetTransport();
             }
             finally
             {

@@ -23,9 +23,12 @@ namespace Infinispan.DotNetClient.Protocol
     {
 
         private static Logger logger;
+        public int topologyId=0;
+        private RemoteCacheManager cacheManager;
 
-        public Codec()
+        public Codec(RemoteCacheManager rm)
         {
+            cacheManager = rm;
             logger = LogManager.GetLogger("Codec");
         }
 
@@ -43,7 +46,7 @@ namespace Infinispan.DotNetClient.Protocol
             trans.WriteVInt(param.Cachename.Length); //default cache name. therefore cache name length is 0
             if (param.Cachename.Length != 0)
             {
-               trans.WriteArray(param.Cachename); // Cache name is not used for default cache
+                trans.WriteArray(param.Cachename); // Cache name is not used for default cache
             }
             int flagInt = 0x00; //0x00 Used here since intention is to use no flags
 
@@ -57,17 +60,15 @@ namespace Infinispan.DotNetClient.Protocol
 
             trans.WriteVInt(flagInt);//flag is 0 for base clients
             trans.WriteByte(param.Clientintel);
-            trans.WriteVInt(param.Topologyid);//for basic clients topology ID = 0 
+            trans.WriteVInt(cacheManager.GetTopologyId());//for basic clients topology ID = 0 
             if (logger.IsTraceEnabled)
                 logger.Trace("topologyID Sent = " + param.Topologyid);
             trans.WriteByte(param.Txmarker);
             return param;
         }
 
-        public byte ReadHeader(ITransport trans, HeaderParams param, OperationsFactory opFac)
+        public Tuple<byte, int> ReadHeader(ITransport trans, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
         {
-
-
             byte magic = trans.ReadByte(); //Reads magic byte: indicates whether the header is a request or a response
 
             if (magic != HotRodConstants.RESPONSE_MAGIC)
@@ -79,8 +80,7 @@ namespace Infinispan.DotNetClient.Protocol
             }
 
             long receivedMessageId = trans.ReadVLong(); //Reads the message ID. Should be similar to the msg ID of the request
-
-
+            
             if (receivedMessageId != param.Messageid && receivedMessageId != 0)
             {
                 String message = "Invalid Message ID! Expected " + param.Messageid + "received " + receivedMessageId;
@@ -112,17 +112,21 @@ namespace Infinispan.DotNetClient.Protocol
 
             logger.Trace(String.Format("Topology change indicator value : " + topchange));
 
-            if (topchange == 1)
-                ReadNewTopologyAndHash(trans, param, opFac);
+            int newTopology = param.Topologyid;
 
-            return status;
+            if (topchange == 1)
+                newTopology = ReadNewTopologyAndHash(trans, param, opFac, op);
+
+            return new Tuple<byte, int>(status, newTopology);
         }
 
-        public void ReadNewTopologyAndHash(ITransport transport,HeaderParams param, OperationsFactory opFac)
+        public int ReadNewTopologyAndHash(ITransport transport, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
         {
             int newTopologyId = transport.ReadVInt();
-            HotRodOperation.topologyId = newTopologyId;
-            
+            //topologyId = newTopologyId;
+            cacheManager.SetTopologyId(newTopologyId);
+            //opFac.SetTopologyId(newTopologyId);
+            //op.SetTopologyId(newTopologyId);
             int numOfServers = transport.ReadVInt();//transport.ReadUnsignedShort();
 
             if (logger.IsTraceEnabled)
@@ -142,6 +146,7 @@ namespace Infinispan.DotNetClient.Protocol
                 newServerList.Add(newServer);
             }
             transport.GetTransportFactory().UpdateServers(newServerList);
+            return newTopologyId;
         }
     }
 }
