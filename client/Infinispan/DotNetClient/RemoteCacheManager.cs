@@ -23,6 +23,7 @@ namespace Infinispan.DotNetClient
         private Codec codec;
         private TCPTransportFactory transportFactory;
         private IRequestBalancer requestBalancer;
+        private int topologyId=0;
 
         /// <summary>
         /// Constructor with specified serializer s
@@ -34,7 +35,7 @@ namespace Infinispan.DotNetClient
             this.requestBalancer = new RoundRobinRequestBalancer();
             this.config = configuration;
             this.serializer = s;
-            this.codec = new Codec();
+            this.codec = new Codec(this);
             this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
         }
 
@@ -47,7 +48,7 @@ namespace Infinispan.DotNetClient
             this.requestBalancer = new RoundRobinRequestBalancer();
             this.config = configuration;
             this.serializer = new DefaultSerializer();
-            this.codec = new Codec();
+            this.codec = new Codec(this);
             this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
         }
 
@@ -61,7 +62,7 @@ namespace Infinispan.DotNetClient
             this.requestBalancer = reqBalancer;
             this.config = configuration;
             this.serializer = s;
-            this.codec = new Codec();
+            this.codec = new Codec(this);
             this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
         }
 
@@ -74,7 +75,7 @@ namespace Infinispan.DotNetClient
             this.requestBalancer = reqBalancer;
             this.config = configuration;
             this.serializer = new DefaultSerializer();
-            this.codec = new Codec();
+            this.codec = new Codec(this);
             this.transportFactory = new TCPTransportFactory(this.config, this.serializer, this.requestBalancer);
         }
 
@@ -113,6 +114,16 @@ namespace Infinispan.DotNetClient
         public IRemoteCache<K, V> GetCache<K, V>(String cacheName, bool forceRetunValue)
         {
             return new RemoteCacheImpl<K, V>(this, this.config, cacheName, forceRetunValue, this.serializer, this.transportFactory);
+        }
+
+        public int GetTopologyId()
+        {
+            return topologyId;
+        }
+
+        public void SetTopologyId(int topID)
+        {
+            topologyId = topID;
         }
     }
 }

@@ -7,7 +7,6 @@ using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.TCP;
 using System.Net;
-using Infinispan.DotNetClient.Trans.TCP;
 using Infinispan.DotNetClient.Exceptions;
 using System.Threading;
 using NLog;

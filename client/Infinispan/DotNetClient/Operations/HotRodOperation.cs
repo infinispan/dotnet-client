@@ -21,7 +21,7 @@ namespace Infinispan.DotNetClient.Operations
         private static Logger logger;
         protected readonly Flag[] flags;
         protected readonly byte[] cacheName;
-        public static int topologyId;
+        private int topologyId;
         private readonly Codec codec;
         private static readonly byte NO_TX = 0;
         private static readonly byte XA_TX = 1;
@@ -42,7 +42,7 @@ namespace Infinispan.DotNetClient.Operations
 
         protected HeaderParams WriteHeader(ITransport transport, byte operationCode)
         {
-            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE).TopologyId(topologyId).TxMarker(NO_TX);
+            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE).TopologyId(this.topologyId).TxMarker(NO_TX);
             if (logger.IsTraceEnabled)
             {
                 if (logger.IsTraceEnabled)
@@ -59,7 +59,15 @@ namespace Infinispan.DotNetClient.Operations
          */
         protected byte ReadHeaderAndValidate(ITransport transport, HeaderParams param)
         {
-            return codec.ReadHeader(transport, param,this.operationsFactory);
+                Tuple<byte,int> temp;
+                temp=codec.ReadHeader(transport, param,this.operationsFactory,this);
+                this.topologyId = temp.Item2;
+                return temp.Item1;
+        }
+
+        public void SetTopologyId(int topoId)
+        {
+            topologyId = topoId;
         }
     }
 }
