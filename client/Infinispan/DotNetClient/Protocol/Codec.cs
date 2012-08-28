@@ -42,7 +42,7 @@ namespace Infinispan.DotNetClient.Protocol
             trans.WriteVLong(param.Messageid); //message id
             trans.WriteByte(HotRodConstants.VERSION_11);//version
             trans.WriteByte(param.OperCode);//opcode
-            trans.WriteVInt(param.Cachename.Length); //default cache name. therefore cache name length is 0
+            trans.WriteVInt(param.Cachename.Length);//default cache name. therefore cache name length is 0
             if (param.Cachename.Length != 0)
             {
                 trans.WriteArray(param.Cachename); // Cache name is not used for default cache

@@ -79,7 +79,7 @@ namespace Infinispan.DotNetClient.Impl
             this.codec = new Codec(cacheManager);
             this.config.ForceReturnValue = forceReturn;
             this.config.CacheName = cacheName;
-            this.operationsFactory = new OperationsFactory(cacheName, config.TopologyId, forceReturn, this.codec);
+            this.operationsFactory = new OperationsFactory(cacheName,forceReturn, this.codec);
             this.transportFactory = trans;
         }
 

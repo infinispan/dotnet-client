@@ -21,10 +21,12 @@ namespace tests
         protected ISerializer serializer= new DefaultSerializer();
         protected RemoteCacheManager remoteManager;
         protected string configFile = null;
+        protected int sleepTime=3000;
 
         [TestInitialize()]
         public void StartHotrodServer()
         {
+            UpdateConfiguration();
             //TODO - we might want to make this an actual process at some point so that the window is no longer displayed
             // http://stackoverflow.com/questions/1113000/how-do-start-stop-services-using-net-stop-command-in-c-sharp
             string ispnHome = System.Environment.GetEnvironmentVariable("ISPN_HOME");
@@ -38,16 +40,21 @@ namespace tests
             {
                  parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
             } else {
-                 parameters = String.Format("/k \"{0}\"" + " -r hotrod -c testconfigs\\\"{1}\"", nameOfBatchFile, configFile);
+                 parameters = String.Format("/k \"{0}\"" + " -r hotrod -c testconfigs\\{1}", nameOfBatchFile, configFile);
             }
 
             hrServer.StartInfo.FileName = "cmd";
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
             hrServer.Start();
-            Thread.Sleep(3000); //sleep in order to allow the hrServer to start
+            Thread.Sleep(sleepTime); //sleep in order to allow the hrServer to start
             remoteManager = new RemoteCacheManager(conf, serializer);
 
+        }
+
+        protected virtual void UpdateConfiguration()
+        {
+            //Override in case of a non default cache configuration
         }
 
         [TestCleanup()]

@@ -22,11 +22,10 @@ namespace Infinispan.DotNetClient.Operations
         private UTF8Encoding e = new UTF8Encoding();
         private const Flag[] FORCE_RETURN_VALUE = null; //TODO
         private byte[] cacheNameBytes;
-        private int topologyId;
         private bool forceReturnValue;
         private Codec codec;
 
-        public OperationsFactory(string cacheName, int topologyId, bool forceReturnValue, Codec codec)
+        public OperationsFactory(string cacheName, bool forceReturnValue, Codec codec)
         {
             if (cacheName.Equals("default"))
             {
@@ -36,8 +35,6 @@ namespace Infinispan.DotNetClient.Operations
             {
                 this.cacheNameBytes = this.e.GetBytes(cacheName);
             }
-            
-            this.topologyId = topologyId;
             this.forceReturnValue = forceReturnValue;
             this.codec = codec;
         }
@@ -140,16 +137,6 @@ namespace Infinispan.DotNetClient.Operations
                 flags[0] = f;
             }
             return flags;
-        }
-
-        public void SetTopologyId(int topId)
-        {
-            this.topologyId = topId;
-        }
-
-        public int GetTopologyId()
-        {
-            return this.topologyId;
         }
     }
 }

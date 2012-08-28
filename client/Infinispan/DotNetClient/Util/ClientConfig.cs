@@ -15,7 +15,6 @@ namespace Infinispan.DotNetClient.Util
         private string serverIP;
         private int serverPort;
         private string cacheName;
-        private int topologyId;
         private bool forceReturnValue;
         private string serverList;
         private static Logger logger;
@@ -24,12 +23,6 @@ namespace Infinispan.DotNetClient.Util
         {
             get { return forceReturnValue; }
             set { forceReturnValue = value; }
-        }
-
-        public int TopologyId
-        {
-            get { return topologyId; }
-            set { topologyId = value; }
         }
 
         public string CacheName
@@ -56,7 +49,6 @@ namespace Infinispan.DotNetClient.Util
         /// <param name="ServerIP"></param>
         /// <param name="ServerPort"></param>
         /// <param name="CacheName"></param>
-        /// <param name="TopologyID"></param>
         /// <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
         public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue)
         {
@@ -65,7 +57,6 @@ namespace Infinispan.DotNetClient.Util
             this.cacheName = CacheName;
             this.serverPort = ServerPort;
             this.forceReturnValue = ForceReturnValue;
-            this.topologyId = 0;
             this.serverList = "127.0.0.1:11222;";
         }
 
@@ -76,7 +67,6 @@ namespace Infinispan.DotNetClient.Util
             this.serverIP = ServerIP;
             this.cacheName = CacheName;
             this.serverPort = ServerPort;
-            this.topologyId = 0;
             this.forceReturnValue = ForceReturnValue;
             this.serverList = serverlist;
         }
@@ -89,7 +79,6 @@ namespace Infinispan.DotNetClient.Util
             logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ReadAttr("serverIP");
             this.serverPort = int.Parse(ReadAttr("serverPort"));
-            //this.topologyId = int.Parse(readAttr("topologyId"));
             this.serverList = ReadAttr("serverList");
             if (ReadAttr("forceReturnValue").Equals("true"))
             {
@@ -101,7 +90,6 @@ namespace Infinispan.DotNetClient.Util
             }
             this.serverList = "127.0.0.1:11222;";
             this.cacheName = "default";
-            this.topologyId = 0;
         }
 
         public string ReadAttr(string key)
@@ -118,7 +106,6 @@ namespace Infinispan.DotNetClient.Util
                 if (str.Length > 0)
                 {
                     logger.Trace("serverlist : " + str);
-                    //IPAddress ip = IPAddress.Loopback;
                     IPAddress ip = IPAddress.Parse(str.Split(':')[0]);
                     int port = int.Parse(str.Split(':')[1]);
                     IPEndPoint ep = new IPEndPoint(ip, port);

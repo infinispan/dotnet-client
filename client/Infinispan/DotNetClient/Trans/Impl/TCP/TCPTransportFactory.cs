@@ -35,7 +35,6 @@ namespace Infinispan.DotNetClient.Trans.Impl.TCP
             serverIP = IPAddress.Parse(config.ServerIP);
             serverPort = Convert.ToInt16(config.ServerPort);
             balancer = reqBalancer;
-            this.topologyId = configuration.TopologyId;
             CreateAndPreparePool(configuration.GetServerList());
             this.serializer = serializer;
 
