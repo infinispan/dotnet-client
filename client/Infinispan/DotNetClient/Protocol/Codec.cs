@@ -23,7 +23,6 @@ namespace Infinispan.DotNetClient.Protocol
     {
 
         private static Logger logger;
-        public int topologyId=0;
         private RemoteCacheManager cacheManager;
 
         public Codec(RemoteCacheManager rm)
@@ -67,7 +66,7 @@ namespace Infinispan.DotNetClient.Protocol
             return param;
         }
 
-        public Tuple<byte, int> ReadHeader(ITransport trans, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
+        public byte ReadHeader(ITransport trans, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
         {
             byte magic = trans.ReadByte(); //Reads magic byte: indicates whether the header is a request or a response
 
@@ -115,19 +114,16 @@ namespace Infinispan.DotNetClient.Protocol
             int newTopology = param.Topologyid;
 
             if (topchange == 1)
-                newTopology = ReadNewTopologyAndHash(trans, param, opFac, op);
+                ReadNewTopologyAndHash(trans, param, opFac, op);
 
-            return new Tuple<byte, int>(status, newTopology);
+            return status;
         }
 
-        public int ReadNewTopologyAndHash(ITransport transport, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
+        public void ReadNewTopologyAndHash(ITransport transport, HeaderParams param, OperationsFactory opFac, HotRodOperation op)
         {
             int newTopologyId = transport.ReadVInt();
-            //topologyId = newTopologyId;
             cacheManager.SetTopologyId(newTopologyId);
-            //opFac.SetTopologyId(newTopologyId);
-            //op.SetTopologyId(newTopologyId);
-            int numOfServers = transport.ReadVInt();//transport.ReadUnsignedShort();
+            int numOfServers = transport.ReadVInt();
 
             if (logger.IsTraceEnabled)
             {
@@ -146,7 +142,6 @@ namespace Infinispan.DotNetClient.Protocol
                 newServerList.Add(newServer);
             }
             transport.GetTransportFactory().UpdateServers(newServerList);
-            return newTopologyId;
         }
     }
 }

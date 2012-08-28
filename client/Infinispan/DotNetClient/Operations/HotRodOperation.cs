@@ -21,7 +21,6 @@ namespace Infinispan.DotNetClient.Operations
         private static Logger logger;
         protected readonly Flag[] flags;
         protected readonly byte[] cacheName;
-        private int topologyId;
         private readonly Codec codec;
         private static readonly byte NO_TX = 0;
         private static readonly byte XA_TX = 1;
@@ -30,24 +29,22 @@ namespace Infinispan.DotNetClient.Operations
         protected HotRodOperation()
         { }
 
-        protected HotRodOperation(Codec codec, Flag[] flags, byte[] cacheName, int topologyId, OperationsFactory opFac)
+        protected HotRodOperation(Codec codec, Flag[] flags, byte[] cacheName)
         {
             this.flags = flags;
             this.cacheName = cacheName;
-            topologyId = opFac.GetTopologyId();
             this.codec = codec;
-            this.operationsFactory = opFac;
             logger = LogManager.GetLogger("Hot Rod Operation");
         }
 
         protected HeaderParams WriteHeader(ITransport transport, byte operationCode)
         {
-            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE).TopologyId(this.topologyId).TxMarker(NO_TX);
+            HeaderParams param = new HeaderParams().OpCode(operationCode).CacheName(cacheName).flags(flags).ClientIntel(HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE).TxMarker(NO_TX);
             if (logger.IsTraceEnabled)
             {
                 if (logger.IsTraceEnabled)
                 {
-                    string msg = ("headerparams created " + operationCode + " " + cacheName + " " + flags + " " + HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE + " " + this.operationsFactory.GetTopologyId() + " " + NO_TX);
+                    string msg = ("headerparams created " + operationCode + " " + cacheName + " " + flags + " " + HotRodConstants.CLIENT_INTELLIGENCE_TOPOLOGY_AWARE + " " + NO_TX);
                     logger.Trace(msg);
                 }
             }
@@ -59,15 +56,8 @@ namespace Infinispan.DotNetClient.Operations
          */
         protected byte ReadHeaderAndValidate(ITransport transport, HeaderParams param)
         {
-                Tuple<byte,int> temp;
-                temp=codec.ReadHeader(transport, param,this.operationsFactory,this);
-                this.topologyId = temp.Item2;
-                return temp.Item1;
-        }
-
-        public void SetTopologyId(int topoId)
-        {
-            topologyId = topoId;
+                
+                return codec.ReadHeader(transport, param,this.operationsFactory,this);
         }
     }
 }

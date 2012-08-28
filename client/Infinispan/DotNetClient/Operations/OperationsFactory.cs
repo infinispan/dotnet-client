@@ -44,85 +44,85 @@ namespace Infinispan.DotNetClient.Operations
 
         public GetOperation NewGetKeyOperation(byte[] key)
         {
-            return new GetOperation(codec, key, cacheNameBytes, topologyId, Flags(),this);
+            return new GetOperation(codec, key, cacheNameBytes,Flags());
         }
 
         public RemoveOperation NewRemoveOperation(byte[] key)
         {
             return new RemoveOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),this);
+                  codec, key, cacheNameBytes,Flags());
         }
 
         public RemoveWithVersionOperation NewRemoveWithVersionOperation(byte[] key, long version)
         {
             return new RemoveWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(), version,this);
+                  codec, key, cacheNameBytes,Flags(), version);
         }
 
         public ReplaceWithVersionOperation NewReplaceWithVersionOperation(byte[] key,
                  byte[] value, int lifespanSeconds, int maxIdleTimeSeconds, long version)
         {
             return new ReplaceWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSeconds, maxIdleTimeSeconds, version,this);
+                  codec, key, cacheNameBytes,Flags(),
+                  value, lifespanSeconds, maxIdleTimeSeconds, version);
         }
 
         public GetWithVersionOperation NewGetWithVersionOperation(byte[] key)
         {
             return new GetWithVersionOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),this);
+                  codec, key, cacheNameBytes,Flags());
         }
 
         public StatsOperation NewStatsOperation()
         {
-            return new StatsOperation(codec, cacheNameBytes, topologyId, Flags(),this);
+            return new StatsOperation(codec, cacheNameBytes,Flags());
         }
 
         public PutOperation NewPutKeyValueOperation(byte[] key, byte[] value,
                  int lifespanSecs, int maxIdleSecs)
         {
             return new PutOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSecs, maxIdleSecs,this);
+                  codec, key, cacheNameBytes,Flags(),
+                  value, lifespanSecs, maxIdleSecs);
         }
 
         public PutIfAbsentOperation NewPutIfAbsentOperation(byte[] key, byte[] value,
                  int lifespanSecs, int maxIdleSecs)
         {
             return new PutIfAbsentOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),
-                  value, lifespanSecs, maxIdleSecs,this);
+                  codec, key, cacheNameBytes, Flags(),
+                  value, lifespanSecs, maxIdleSecs);
         }
 
         public ReplaceOperation NewReplaceOperation(byte[] key, byte[] values,
                  int lifespanSecs, int maxIdleSecs)
         {
             return new ReplaceOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),
-                  values, lifespanSecs, maxIdleSecs,this);
+                  codec, key, cacheNameBytes, Flags(),
+                  values, lifespanSecs, maxIdleSecs);
         }
 
         public ContainsKeyOperation NewContainsKeyOperation(byte[] key)
         {
             return new ContainsKeyOperation(
-                  codec, key, cacheNameBytes, topologyId, Flags(),this);
+                  codec, key, cacheNameBytes, Flags());
         }
 
         public ClearOperation NewClearOperation()
         {
             return new ClearOperation(
-                  codec, cacheNameBytes, topologyId, Flags(),this);
+                  codec, cacheNameBytes, Flags());
         }
 
         public BulkGetOperation NewBulkGetOperation(int size)
         {
             return new BulkGetOperation(
-                  codec, cacheNameBytes, topologyId, Flags(), size,this);
+                  codec, cacheNameBytes, Flags(), size);
         }
 
         public PingOperation NewPingOperation(ITransport transport)
         {
-            return new PingOperation(codec, topologyId, transport, cacheNameBytes,this);
+            return new PingOperation(codec, transport, cacheNameBytes);
         }
 
         /// <summary>

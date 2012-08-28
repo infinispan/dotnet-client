@@ -22,12 +22,12 @@ namespace Infinispan.DotNetClient.Operations
         private static Logger logger;
 
         public PingOperation(Codec codec, int topologyId, ITransport trans, OperationsFactory opFac) :
-            this(codec, topologyId, trans, HotRodConstants.DEFAULT_CACHE_NAME_BYTES,opFac)
+            this(codec, trans, HotRodConstants.DEFAULT_CACHE_NAME_BYTES)
         {
         }
 
-        public PingOperation(Codec codec, int topologyId, ITransport transport, byte[] cacheName, OperationsFactory opFac) :
-            base(codec, null, cacheName, topologyId,opFac)
+        public PingOperation(Codec codec,ITransport transport, byte[] cacheName) :
+            base(codec, null, cacheName)
         {
             logger = LogManager.GetLogger("PingOperation");
             this.transport = transport;

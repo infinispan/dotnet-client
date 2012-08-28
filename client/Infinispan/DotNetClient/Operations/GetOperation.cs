@@ -18,8 +18,8 @@ namespace Infinispan.DotNetClient.Operations
     */
     public class GetOperation : AbstractKeyOperation<byte[]>
     {
-        public GetOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags,OperationsFactory opFac) :
-            base(codec, key, cacheName, topologyId, flags,opFac)
+        public GetOperation(Codec codec, byte[] key, byte[] cacheName, Flag[] flags) :
+            base(codec, key, cacheName, flags)
         {
         }
 

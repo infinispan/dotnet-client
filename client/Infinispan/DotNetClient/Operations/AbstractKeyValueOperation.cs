@@ -25,8 +25,8 @@ namespace Infinispan.DotNetClient.Operations
         protected readonly int maxIdle;
         private static Logger logger;
 
-        protected AbstractKeyValueOperation(Codec codec, byte[] key, byte[] cacheName, int topologyId, Flag[] flags, byte[] value, int lifespan, int maxIdle, OperationsFactory opFac) :
-            base(codec, key, cacheName, topologyId, flags, opFac)
+        protected AbstractKeyValueOperation(Codec codec, byte[] key, byte[] cacheName,Flag[] flags, byte[] value, int lifespan, int maxIdle) :
+            base(codec, key, cacheName,flags)
         {
             this.value = value;
             this.lifespan = lifespan;
