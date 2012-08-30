@@ -5,7 +5,7 @@ using System.Collections.Concurrent;
 using System.Text;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotNetClient.Trans.TCP;
+using Infinispan.DotNetClient.Trans.Impl.TCP;
 using System.Net;
 using Infinispan.DotNetClient.Exceptions;
 using System.Threading;

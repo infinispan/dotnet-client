@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotnetClient
+namespace Infinispan.DotNetClient
 {
     /// <summary>
     /// Defines all the flags available in the Hot Rod client that can influence the behavior of operations.

@@ -8,7 +8,6 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Exceptions;
 using NLog;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
