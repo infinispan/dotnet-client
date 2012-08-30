@@ -4,6 +4,7 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Util;
 using Infinispan.DotNetClient.Protocol;
+using Infinispan.DotNetClient.Impl;
 using System;
 
 
@@ -19,41 +20,41 @@ namespace InfinispanDotnetClientSample
         {
             //Important! Make sure that the hotrod server is started before running the line below.
             //Create new Configuration, overriding the setting in the App.config file.
-            ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "default", 0, false);
+            ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "default", false);
 
             //Here we are using a custom Serializer
-            Serializer s = new StringSerializer();
+            ISerializer s = new StringSerializer();
 
             //Create a new RemoteCacheManager
             RemoteCacheManager manager = new RemoteCacheManager(conf, s);
 
             //Get hold of a cache from the remote cache manager
-            RemoteCache cache = manager.getCache();
+            IRemoteCache<String, String> cache = manager.GetCache<String, String>();
 
             //First Check Whether the cache exists
-            Console.WriteLine("Ping Result : " + cache.ping());
+            Console.WriteLine("Ping Result : " + cache.Ping());
 
             //Put a new value "germanium" with key "key 1" into cache
-            cache.put<String, String>("key 1", "germanium", 0, 0);
+            cache.Put("key 1", "germanium", 0, 0);
 
             //Get the value of entry with key "key 1"
-            Console.WriteLine("key 1 value : " + cache.get<String, String>("key 1"));
+            Console.WriteLine("key 1 value : " + cache.Get("key 1"));
 
             //Put if absent is used to add entries if they are not existing in the cache
-            cache.putIfAbsent<String, String>("key 1", "trinitrotoluene", 0, 0);
-            cache.putIfAbsent<String, String>("key 2", "formaldehyde", 0, 0);
-            Console.WriteLine("key 1 value after PutIfAbsent: " + cache.get<String, String>("key 1"));
-            Console.WriteLine("Key 2 value after PutIfAbsent: " + cache.get<String, String>("key 2"));
+            cache.PutIfAbsent("key 1", "trinitrotoluene", 0, 0);
+            cache.PutIfAbsent("key 2", "formaldehyde", 0, 0);
+            Console.WriteLine("key 1 value after PutIfAbsent: " + cache.Get("key 1"));
+            Console.WriteLine("Key 2 value after PutIfAbsent: " + cache.Get("key 2"));
 
-            cache.replace<String, String>("key 1", "fluoride", 0, 0);
-            Console.WriteLine("key 1 value after replace: " + cache.get<String, String>("key 1"));  
+            cache.Replace("key 1", "fluoride", 0, 0);
+            Console.WriteLine("key 1 value after replace: " + cache.Get("key 1"));  
 
             //Check whether a particular key exists
-            Console.WriteLine("key 1 is exist ?: " + cache.containsKey("key 1"));
+            Console.WriteLine("key 1 is exist ?: " + cache.ContainsKey("key 1"));
 
             //Remove a particular entry from the cache
-            cache.remove<String>("key 1");
-            Console.WriteLine("key 1 is exist after remove?: " + cache.containsKey("key 1"));
+            cache.Remove("key 1");
+            Console.WriteLine("key 1 is exist after remove?: " + cache.ContainsKey("key 1"));
 
             Console.WriteLine("Hit enter to exit!");
             Console.ReadLine();

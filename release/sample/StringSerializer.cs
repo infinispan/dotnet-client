@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Util;
+using Infinispan.DotNetClient;
 
 namespace InfinispanDotnetClientSample
 {
-    class StringSerializer : Serializer
+    class StringSerializer : ISerializer
     {
-        public object deserialize(byte[] dataArray)
+        public object Deserialize(byte[] dataArray)
         {
             try
             {
@@ -21,7 +22,7 @@ namespace InfinispanDotnetClientSample
 
         }
 
-        public byte[] serialize(object ob)
+        public byte[] Serialize(object ob)
         {
             return UTF8Encoding.UTF8.GetBytes((string)ob);
         }

@@ -34,8 +34,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="dotnetclient">
-      <HintPath>..\..\client\bin\Debug\dotnetclient.dll</HintPath>
+    <Reference Include="infinispanclient">
+      <HintPath>..\bin\infinispanclient.dll</HintPath>
     </Reference>
     <Reference Include="NLog">
       <HintPath>..\bin\NLog.dll</HintPath>
