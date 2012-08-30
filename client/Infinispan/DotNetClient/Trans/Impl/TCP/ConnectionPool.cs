@@ -34,7 +34,7 @@ namespace Infinispan.DotNetClient.Trans.TCP
 
         public void UpdateConnectionPool(List<IPEndPoint> serversToBeAdded)
         {
-            transportCollection.Clear();
+            Clear();
 
             foreach (IPEndPoint addr in serversToBeAdded)
             {
