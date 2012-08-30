@@ -26,7 +26,7 @@ namespace Infinispan.DotNetClient
         private int topologyId=0;
 
         /// <summary>
-        /// Constructor with specified serializer s
+        /// Constructor with specified serializer s. RoundRobinRequestBalancer would be used for request balancing.
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="s"></param>
@@ -40,7 +40,8 @@ namespace Infinispan.DotNetClient
         }
 
         /// <summary>
-        /// Constructor with default serializer
+        /// Constructor with default serializer. RoundRobinRequestBalancer would be used for request balancing.
+        /// DefaultSerializer would be used as the Serializer.
         /// </summary>
         /// <param name="configuration"></param>
         public RemoteCacheManager(ClientConfig configuration)
@@ -57,6 +58,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="s"></param>
+        /// <param name="reqBalancer"></param> 
         public RemoteCacheManager(ClientConfig configuration, ISerializer s, IRequestBalancer reqBalancer)
         {
             this.requestBalancer = reqBalancer;
@@ -67,7 +69,7 @@ namespace Infinispan.DotNetClient
         }
 
         /// <summary>
-        /// Constructor with default serializer
+        /// Constructor with default serializer. DefaultSerializer would be used as the Serializer.
         /// </summary>
         /// <param name="configuration"></param>
         public RemoteCacheManager(ClientConfig configuration, IRequestBalancer reqBalancer)
