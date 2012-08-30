@@ -6,7 +6,6 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
 using NLog;
-using Infinispan.DotnetClient;
 
 
 namespace Infinispan.DotNetClient.Operations

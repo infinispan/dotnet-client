@@ -89,7 +89,7 @@ namespace Infinispan.DotNetClient.Util
                 this.forceReturnValue = false;
             }
             this.serverList = "127.0.0.1:11222;";
-            this.cacheName = "default";
+            this.cacheName = null;
         }
 
         public string ReadAttr(string key)

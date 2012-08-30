@@ -6,7 +6,6 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 {
@@ -27,7 +26,7 @@ namespace Infinispan.DotNetClient.Operations
 
         public OperationsFactory(string cacheName, bool forceReturnValue, Codec codec)
         {
-            if (cacheName.Equals("default"))
+            if (cacheName==null)
             {
                 this.cacheNameBytes = DEFAULT_CACHE_NAME_BYTES; //For base client using the default cache
             }

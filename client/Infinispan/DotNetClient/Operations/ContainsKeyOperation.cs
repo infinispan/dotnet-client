@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient.Trans;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Operations
 { 

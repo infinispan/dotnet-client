@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infinispan.DotnetClient
+namespace Infinispan.DotNetClient
 {
     /// <summary>
     /// Defines the interface which can be used to obtain Statistical data described in Infinispan.DotNetClient.ServerStatisticsTypes

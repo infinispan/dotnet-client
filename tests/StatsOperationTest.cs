@@ -6,7 +6,6 @@ using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using System.Collections.Generic;
 using Infinispan.DotNetClient.Impl;
-using Infinispan.DotnetClient;
 
 namespace tests
 {
