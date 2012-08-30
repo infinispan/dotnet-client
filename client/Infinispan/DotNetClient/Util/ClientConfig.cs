@@ -80,7 +80,7 @@ namespace Infinispan.DotNetClient.Util
             this.serverIP = ReadAttr("serverIP");
             this.serverPort = int.Parse(ReadAttr("serverPort"));
             this.serverList = ReadAttr("serverList");
-            if (ReadAttr("forceReturnValue").Equals("true"))
+            if (ReadAttr("defaultForceReturnValue").Equals("true"))
             {
                 this.forceReturnValue = true;
             }
