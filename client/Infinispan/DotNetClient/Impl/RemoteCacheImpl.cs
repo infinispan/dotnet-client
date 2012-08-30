@@ -8,7 +8,6 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient.Impl
 {
@@ -31,7 +30,6 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="cacheManager">The CacheManager which holds the RemoteCache</param>
         /// <param name="configuration">Configuration of the client</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
-        /// <param name="start">Boolean start</param>
         public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, ISerializer s, TCPTransportFactory trans) :
             this(cacheManager, configuration, configuration.CacheName, configuration.ForceReturnValue, s, trans)
         {

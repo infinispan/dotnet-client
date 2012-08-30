@@ -5,7 +5,6 @@ using Infinispan.DotNetClient.Protocol;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Util;
-using Infinispan.DotnetClient;
 
 namespace tests
 {

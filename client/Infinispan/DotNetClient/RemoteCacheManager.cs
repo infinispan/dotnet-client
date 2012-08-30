@@ -8,7 +8,6 @@ using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Trans.Impl.TCP;
 using Infinispan.DotNetClient.Impl;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient
 {
@@ -86,7 +85,7 @@ namespace Infinispan.DotNetClient
         /// </summary>
         public IRemoteCache<K, V> GetCache<K, V>()
         {
-            return GetCache<K, V>("default");
+            return GetCache<K, V>(null);
         }
 
         /// <summary>

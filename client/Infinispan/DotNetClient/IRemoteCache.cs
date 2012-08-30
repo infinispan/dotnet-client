@@ -5,7 +5,6 @@ using System.Text;
 using Infinispan.DotNetClient;
 using Infinispan.DotNetClient.Operations;
 using Infinispan.DotNetClient.Impl;
-using Infinispan.DotnetClient;
 
 namespace Infinispan.DotNetClient
 {

@@ -8,7 +8,7 @@ using Infinispan.DotNetClient.Trans;
 using Infinispan.DotNetClient.Exceptions;
 using Infinispan.DotNetClient.Trans.Impl;
 
-namespace Infinispan.DotNetClient.Trans.TCP
+namespace Infinispan.DotNetClient.Trans.Impl.TCP
 {
     public class ConnectionPool
     {
