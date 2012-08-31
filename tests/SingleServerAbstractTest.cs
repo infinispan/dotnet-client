@@ -18,10 +18,10 @@ namespace tests
         protected Process hrServer;
         //protected ClientConfig conf = new ClientConfig("127.0.0.1", 11222, "cache1", false);
         protected ClientConfig conf = new ClientConfig();
-        protected ISerializer serializer= new DefaultSerializer();
+        protected ISerializer serializer = new DefaultSerializer();
         protected RemoteCacheManager remoteManager;
         protected string configFile = null;
-        protected int sleepTime=3000;
+        protected int sleepTime = 3000;
 
         [TestInitialize()]
         public void StartHotrodServer()
@@ -38,14 +38,17 @@ namespace tests
             string parameters;
             if (configFile == null)
             {
-                 parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
-            } else {
-                 parameters = String.Format("/k \"{0}\"" + " -r hotrod -c testconfigs\\{1}", nameOfBatchFile, configFile);
+                parameters = String.Format("/k \"{0}\"" + " -r hotrod", nameOfBatchFile);
+            }
+            else
+            {
+                parameters = String.Format("/k \"{0}\"" + " -r hotrod -c testconfigs\\{1}", nameOfBatchFile, configFile);
             }
 
             hrServer.StartInfo.FileName = "cmd";
             hrServer.StartInfo.Arguments = parameters;
             hrServer.StartInfo.WorkingDirectory = ispnHome + "\\bin";
+            hrServer.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             hrServer.Start();
             Thread.Sleep(sleepTime); //sleep in order to allow the hrServer to start
             remoteManager = new RemoteCacheManager(conf, serializer);
