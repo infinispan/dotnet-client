@@ -14,7 +14,6 @@ namespace Infinispan.DotNetClient.Util
     {
         private string serverIP;
         private int serverPort;
-        private string cacheName;
         private bool forceReturnValue;
         private string serverList;
         private static Logger logger;
@@ -23,12 +22,6 @@ namespace Infinispan.DotNetClient.Util
         {
             get { return forceReturnValue; }
             set { forceReturnValue = value; }
-        }
-
-        public string CacheName
-        {
-            get { return cacheName; }
-            set { cacheName = value; }
         }
 
         public string ServerIP
@@ -48,24 +41,21 @@ namespace Infinispan.DotNetClient.Util
         /// </summary>
         /// <param name="ServerIP"></param>
         /// <param name="ServerPort"></param>
-        /// <param name="CacheName"></param>
         /// <param name="ForceReturnValue">If this parameter is true the server sends the previous value which existed before manipulation.</param>
-        public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue)
+        public ClientConfig(string ServerIP, int ServerPort, bool ForceReturnValue)
         {
             logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ServerIP;
-            this.cacheName = CacheName;
             this.serverPort = ServerPort;
             this.forceReturnValue = ForceReturnValue;
             this.serverList = "127.0.0.1:11222;";
         }
 
         
-        public ClientConfig(string ServerIP, int ServerPort, string CacheName, bool ForceReturnValue, string serverlist)
+        public ClientConfig(string ServerIP, int ServerPort, bool ForceReturnValue, string serverlist)
         {
             logger = LogManager.GetLogger("ClientConfig");
             this.serverIP = ServerIP;
-            this.cacheName = CacheName;
             this.serverPort = ServerPort;
             this.forceReturnValue = ForceReturnValue;
             this.serverList = serverlist;
@@ -89,7 +79,6 @@ namespace Infinispan.DotNetClient.Util
                 this.forceReturnValue = false;
             }
             this.serverList = "127.0.0.1:11222;";
-            this.cacheName = null;
         }
 
         public string ReadAttr(string key)

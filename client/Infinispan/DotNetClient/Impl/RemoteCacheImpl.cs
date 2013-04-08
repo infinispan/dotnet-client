@@ -23,6 +23,7 @@ namespace Infinispan.DotNetClient.Impl
         private TCPTransportFactory transportFactory;
         private ITransport transport;
         private OperationsFactory operationsFactory;
+        private string cacheName;
 
         /// <summary>
         /// The constructor of RemoteCacheImpl which uses default config properties.
@@ -31,7 +32,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="configuration">Configuration of the client</param>
         /// <param name="s">Serializer to be used to. Pass a custom serializer of DefaultSerializer</param>
         public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, ISerializer s, TCPTransportFactory trans) :
-            this(cacheManager, configuration, configuration.CacheName, configuration.ForceReturnValue, s, trans)
+            this(cacheManager, configuration, null, configuration.ForceReturnValue, s, trans)
         {
         }
 
@@ -57,7 +58,7 @@ namespace Infinispan.DotNetClient.Impl
         /// <param name="s">Serializer to be used to. Pass a custom serializer or DefaultSerializer</param>
         /// <param name="start">Boolean start</param>
         public RemoteCacheImpl(RemoteCacheManager cacheManager, ClientConfig configuration, bool forceReturn, ISerializer s, TCPTransportFactory trans) :
-            this(cacheManager, configuration, configuration.CacheName, forceReturn, s, trans)
+            this(cacheManager, configuration, null, forceReturn, s, trans)
         {
         }
 
@@ -76,7 +77,7 @@ namespace Infinispan.DotNetClient.Impl
             this.serializer = s;
             this.codec = new Codec(cacheManager);
             this.config.ForceReturnValue = forceReturn;
-            this.config.CacheName = cacheName;
+            this.cacheName = cacheName;
             this.operationsFactory = new OperationsFactory(cacheName,forceReturn, this.codec);
             this.transportFactory = trans;
         }

@@ -16,7 +16,7 @@ namespace tests
     {
         protected Process hrServer1;
         protected Process hrServer2;
-        protected ClientConfig conf1 = new ClientConfig("127.0.0.1", 11222, "default",false);
+        protected ClientConfig conf1 = new ClientConfig("127.0.0.1", 11222, false);
         protected ISerializer serializer1 = new DefaultSerializer();
         protected RemoteCacheManager remoteManager1;
         
