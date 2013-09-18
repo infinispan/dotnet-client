@@ -1,4 +1,3 @@
-dotnet-client
-=============
+# Infinispan's Native .NET Client
 
-.NET client for Infinispan, over the Hot Rod wire protocol
+For more information, please refer to [the documentation of this client library](documentation/index.adoc).
