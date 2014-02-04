@@ -37,12 +37,14 @@ namespace tests
             hrServer1.StartInfo.FileName = "cmd";
             hrServer1.StartInfo.Arguments = parameters1;
             hrServer1.StartInfo.WorkingDirectory = ispnHome;
+            hrServer1.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             hrServer1.Start();
             Thread.Sleep(3000);
             string parameters2 = String.Format("/k \"{0}\"" + " -r hotrod -p 11223 -c etc/config-samples/distributed-udp.xml", nameOfBatchFile2);
             hrServer2.StartInfo.FileName = "cmd";
             hrServer2.StartInfo.Arguments = parameters2;
             hrServer2.StartInfo.WorkingDirectory = ispnHome;
+            hrServer2.StartInfo.WindowStyle = ProcessWindowStyle.Minimized;
             hrServer2.Start();
             Thread.Sleep(3000);
             Thread.Sleep(50000);
