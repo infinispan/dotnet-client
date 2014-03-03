@@ -67,15 +67,15 @@ namespace Infinispan.HotRod.Tests
                           "Server not listening on the expected ip/port.");
             
             remoteManager = new RemoteCacheManager(conf, serializer);
-            remoteManager.start();
+            remoteManager.Start();
         }
 
         [TestFixtureTearDown]
         public void ShutDownHotrodServer()
         {
-            if (remoteManager != null && remoteManager.isStarted()) {
-                remoteManager.stop();
-                Assert.IsFalse(remoteManager.isStarted());
+            if (remoteManager != null && remoteManager.IsStarted()) {
+                remoteManager.Stop();
+                Assert.IsFalse(remoteManager.IsStarted());
             }
 
             if (hrServer != null) {
