@@ -74,7 +74,7 @@ namespace Infinispan.HotRod
         /// <summary>
         ///   Starts the manager.
         /// </summary>
-        public void start()
+        public void Start()
         {
             manager.Start();
         }
@@ -82,7 +82,7 @@ namespace Infinispan.HotRod
         /// <summary>
         ///   Stops the manager.
         /// </summary>
-        public void stop()
+        public void Stop()
         {
             manager.Stop();
         }
@@ -92,7 +92,7 @@ namespace Infinispan.HotRod
         /// </summary>
         ///     
         /// <returns>true if the cache manager is started and false otherwise</returns>
-        public bool isStarted()
+        public bool IsStarted()
         {
             return manager.IsStarted();
         }
