@@ -1,0 +1,147 @@
+= .NET Hot Rod Client
+The Infinispan Community
+:toc2:
+:icons: font
+:toclevels: 3
+:numbered:
+
+== Introduction
+Since HotRod is a binary, language neutral, protocol an Infinispan client can
+use any programming language to interact with Java based Infinispan HotRod
+server as long as client APIs exist for that particular client runtime. C#
+HotRod client allows .NET applications to connect and interact with an
+Infinispan Hot Rod server.
+
+The client is built as a wrapper over the native C++ HotRod client which
+comes bundled in the install package (both 32 and 64 bit versions) and it
+supports L1, L2 and L3 intelligence levels.
+
+== Installation
+=== Pre-requisites
+The .NET Framework 4.0 is required for using the client.
+
+=== Download
+You can find the MSI package on the HotRod Clients
+link:http://infinispan.org/hotrod-clients[download] page.
+
+== Usage
+=== Configuration
+The client configuration is done programmatically using the ConfigurationBuilder.
+
+The main thing you need to configure is the host and port to which the client
+should connect. In the example below the builder uses the values passed as
+command line arguments if they are present.
+
+There are many more things which can be configured using the builder. Please
+refer to the API documentation of ConfigurationBuilder for details (the API
+documentation is bundled with the client).
+
+.Example.cs
+----
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Infinispan.HotRod;
+using Infinispan.HotRod.Config;
+
+namespace simpleapp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddServer()
+                .Host(args.Length > 1 ? args[0] : "127.0.0.1")
+                .Port(args.Length > 2 ? int.Parse(args[1]) : 11222);
+
+            Configuration config = builder.Build();
+
+            RemoteCacheManager cacheManager = new RemoteCacheManager(config);
+
+            [...]
+        }
+    }
+}
+----
+
+
+=== API
+Once the cache manager is configured you can used it to retrive references
+to the caches available on the server. In the example below the default
+cache is retrived from the server and a few basic operations are performed
+on it.
+
+For more details please have a look at the RemoteCacheManager and IRemoteCache
+API documentation.
+
+.Example.cs
+----
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Infinispan.HotRod;
+using Infinispan.HotRod.Config;
+
+namespace simpleapp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            builder.AddServer()
+                .Host(args.Length > 1 ? args[0] : "127.0.0.1")
+                .Port(args.Length > 2 ? int.Parse(args[1]) : 11222);
+
+            Configuration config = builder.Build();
+
+            RemoteCacheManager cacheManager = new RemoteCacheManager(config);
+            cacheManager.Start();
+
+            // Retrieve a reference to the default cache.
+            IRemoteCache<String, String> cache = cacheManager.GetCache<String, String>();
+
+            // Add entries.
+            cache.Put("key1", "value1");
+
+            cache.PutIfAbsent("key1", "anotherValue1");
+            cache.PutIfAbsent("key2", "value2");
+            cache.PutIfAbsent("key3", "value3");
+
+            // Retrive entries.
+            Console.WriteLine("key1 -> " + cache.Get("key1"));
+
+            // Bulk retrieve key/value pairs.
+            int limit = 10;
+            IDictionary<String, String> result = cache.GetBulk(limit);
+            foreach (KeyValuePair<String, String> kv in result)
+            {
+                Console.WriteLine(kv.Key + " -> " + kv.Value);
+            }
+
+            // Remove entries.
+            cache.Remove("key2");
+            Console.WriteLine("key2 -> " + cache.Get("key2"));
+
+            cacheManager.Stop();
+        }
+    }
+}
+----
+
+== Contributing back
+Contributions, as always, are welcome be it in the form of code, tests
+or documentation.
+
+=== Source code
+This client, along with tests and documentation, are in GitHub, located under
+link:https://github.com/infinispan/dotnet-client[].
+Feel free to fork and issue pull requests on changes.
+For more information on working with this repository and GitHub, refer to the
+link:http://infinispan.org/docs/6.0.x/contributing/contributing.html#_source_control[Contributing Guide]
+for Infinispan.
