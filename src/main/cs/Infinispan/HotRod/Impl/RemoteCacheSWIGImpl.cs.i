@@ -150,7 +150,7 @@ namespace Infinispan.HotRod.Impl
         public IVersionedValue<V> GetVersioned(K key)
         {
             ValueVersionPair pair = cache.getWithVersion(wrap(key));
-            if (pair == null) {
+            if (pair == null || pair.first == null) {
                 return null;
             }
             return new VersionedValueImpl<V>((V) unwrap(pair.first),
@@ -160,7 +160,7 @@ namespace Infinispan.HotRod.Impl
         public IMetadataValue<V> GetWithMetadata(K key)
         {
             ValueMetadataPair pair = cache.getWithMetadata(wrap(key));
-            if (pair == null) {
+            if (pair == null || pair.first == null) {
                 return null;
             }
             return new MetadataValueImpl<V>((V) unwrap(pair.first),

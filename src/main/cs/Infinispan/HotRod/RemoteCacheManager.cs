@@ -29,8 +29,6 @@ namespace Infinispan.HotRod
     public class RemoteCacheManager
     {
         private Infinispan.HotRod.SWIG.RemoteCacheManager manager;
-
-        private Configuration configuration;
         private ISerializer serializer;
 
         /// <summary>
@@ -38,15 +36,15 @@ namespace Infinispan.HotRod
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="serializer"></param>
-        public RemoteCacheManager(Configuration configuration, ISerializer serializer)
+        /// <param name="start"></param>
+        public RemoteCacheManager(Configuration configuration, ISerializer serializer, bool start = true)
         {
-            this.configuration = configuration;
             this.serializer = serializer;
 
             if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager((Infinispan.HotRod.SWIG64.Configuration) configuration.Config());
+                manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager((Infinispan.HotRod.SWIG64.Configuration) configuration.Config(), start);
             } else {
-                manager = new Infinispan.HotRod.SWIG32.RemoteCacheManager((Infinispan.HotRod.SWIG32.Configuration) configuration.Config());
+                manager = new Infinispan.HotRod.SWIG32.RemoteCacheManager((Infinispan.HotRod.SWIG32.Configuration) configuration.Config(), start);
             }
             
         }
@@ -55,20 +53,32 @@ namespace Infinispan.HotRod
         /// Construct an instance with specific configuration and default serializer.
         /// </summary>
         /// <param name="configuration"></param>
-        public RemoteCacheManager(Configuration configuration) : this(configuration, new DefaultSerializer())
+        /// <param name="start"></param>
+        public RemoteCacheManager(Configuration configuration, bool start = true) : this (configuration, new DefaultSerializer(), start)
         {
+        }
+
+        /// <summary>
+        /// Construct an instance with default configuration and specific serializer.
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <param name="start"></param>
+        public RemoteCacheManager(ISerializer serializer, bool start = true)
+        {
+            this.serializer = serializer;
+            if (Infinispan.HotRod.SWIG.Util.Use64()) {
+                manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager(start);
+            } else {
+                manager = new Infinispan.HotRod.SWIG32.RemoteCacheManager(start);
+            }
         }
 
         /// <summary>
         /// Construct an instance with default configuration and serializer.
         /// </summary>
-        public RemoteCacheManager()
+        /// <param name="start"></param>
+        public RemoteCacheManager(bool start = true) : this (new DefaultSerializer(), start)
         {
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager();
-            } else {
-                manager = new Infinispan.HotRod.SWIG32.RemoteCacheManager();
-            }
         }
 
         /// <summary>
