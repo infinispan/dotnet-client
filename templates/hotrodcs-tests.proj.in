@@ -68,6 +68,7 @@
 
   <ItemGroup>
     <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\*.cs"/>
+    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
 
     <Reference Include="hotrodcs.dll"/>
     <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c"/>
@@ -75,6 +76,7 @@
 
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
+    <Reference Include="System.Management"/>
 
     <!-- <None Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\resources\App.config"/> -->
   </ItemGroup>
