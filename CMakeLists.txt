@@ -6,6 +6,10 @@ set (HOTROD_VERSION_MINOR "0")
 set (HOTROD_VERSION_PATCH "0")
 set (HOTROD_VERSION_LABEL "Alpha1")
 
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  message (FATAL_ERROR "You are calling cmake from the source directory. Please create a separate build directory and call cmake from there. See README.md for details.")
+endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+
 # Map from version label to assembly revision.
 set (REVISION_Alpha1 "0")
 set (REVISION_Beta1 "10")
