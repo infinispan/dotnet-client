@@ -76,29 +76,30 @@
         $action
     } catch (const infinispan::hotrod::TransportException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_TransportException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::InvalidResponseException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_InvalidResponseException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::RemoteNodeSuspectException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_RemoteNodeSuspectException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::InternalException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_InternalException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::RemoteCacheManagerNotStartedException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_RemoteCacheManagerNotStartedException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::UnsupportedOperationException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_UnsupportedOperationException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::HotRodClientException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientException, e.what());
-
+        return $null;
     } catch (const infinispan::hotrod::Exception& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_Exception, e.what());
-
+        return $null;
     } catch (const std::exception& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_Exception, e.what());
+        return $null;
     }
  };
