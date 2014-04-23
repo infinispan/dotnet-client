@@ -11,6 +11,9 @@ if %errorlevel% neq 0 goto fail
 ctest -V
 if %errorlevel% neq 0 goto fail
 
+cpack -G ZIP --config CPackSourceConfig.cmake
+if %errorlevel% neq 0 goto fail
+
 cpack -G WIX -C RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
