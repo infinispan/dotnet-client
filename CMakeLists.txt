@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(infinispan-hotrod-cs)
+project(infinispan-hotrod-dotnet)
 set (HOTROD_VERSION_MAJOR "7")
 set (HOTROD_VERSION_MINOR "0")
 set (HOTROD_VERSION_PATCH "0")
@@ -214,6 +214,8 @@ endif (WIN32)
 ### Packaging. ###
 set (CPACK_PACKAGE_VENDOR "Infinispan")
 set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set (CPACK_GENERATOR "WIX")
+set (CPACK_SOURCE_GENERATOR "ZIP")
 
 foreach (arch 32 64)
   # Native client.
@@ -244,6 +246,8 @@ install (FILES "License.txt" DESTINATION .)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix.xml.in" wix.xml)
 set (CPACK_WIX_TEMPLATE "wix.xml")
 set (CPACK_WIX_UPGRADE_GUID "7cc17657-80b5-417f-9209-710682f852f4") # This value should not change.
+
+set (CPACK_SOURCE_IGNORE_FILES "/build.*/;/\\\\.git/")
 
 include (CPack)
 
