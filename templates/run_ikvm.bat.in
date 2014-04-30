@@ -1,0 +1,22 @@
+echo off
+set dep=
+for %%A in (%JAVA_TESTS_DIR%\target\dependency\*.jar) do call :concat %%A
+
+set ORIG_PATH=%PATH%
+set PATH=${UT_PATH}
+
+echo on
+"${IKVM_NATIVE_BINARY}" -cp %dep%;hotrodcs.jar;%JAVA_TESTS_DIR%\target\hotrod-ikvm.jar;%JAVA_TESTS_DIR%\target\test-classes %*
+if %ERRORLEVEL% neq 0 goto FAIL
+goto SUCCESS
+
+:concat
+set dep=%dep%;%1
+goto :eof
+
+:FAIL
+set PATH=%ORIG_PATH%
+exit /B 1
+
+:SUCCESS
+set PATH=%ORIG_PATH%

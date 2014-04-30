@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Management;
 
 namespace Infinispan.HotRod.Tests
 {
@@ -28,13 +29,63 @@ namespace Infinispan.HotRod.Tests
                 killProcess.Start();
                 killProcess.WaitForExit();
             } else {
-                process.CloseMainWindow();
+                if (!killJavaSubprocesses(process.Id) && !killAllStandaloneServerProcesses()) {
+                    Console.WriteLine("Could not find any server subprocess.");
+                }
             }
+            kill(process);
+        }
+
+        private static void kill(Process process)
+        {
+            process.CloseMainWindow();
             if (!process.HasExited) {
                 process.Kill();        
             }
             process.WaitForExit();
             process.Close();
+        }
+
+        private static bool killJavaSubprocesses(int pid)
+        {
+            bool found = false;
+
+            foreach (var process in Process.GetProcesses()) {
+                int ppid = (int) (new PerformanceCounter("Process", "Creating Process ID", process.ProcessName)).RawValue;
+                if (ppid == pid) {
+                    if ("java".Equals(process.ProcessName)) {
+                        process.CloseMainWindow();
+                        if (!process.HasExited) {
+                            process.Kill();        
+                        }
+                        process.WaitForExit();
+                        process.Close();
+                        found = true;
+                    } else {
+                        killJavaSubprocesses(process.Id);
+                    }
+                }
+            }
+
+            return found;
+        }
+
+        private static bool killAllStandaloneServerProcesses()
+        {
+            bool found = false;
+
+            // Look for all processes which look like standalone server instances and kill them.
+            ManagementObjectCollection objs = (new ManagementObjectSearcher("select CommandLine,ProcessId from Win32_Process")).Get();
+            foreach (ManagementObject obj in objs) {
+                String cmdline = (String) obj["CommandLine"];
+                if ((cmdline != null) && cmdline.Contains("org.jboss.as.standalone")) {
+                    UInt32 pid = (UInt32) obj["ProcessId"];
+                    kill(Process.GetProcessById((int) pid));
+                    found = true;
+                }
+            }
+
+            return found;
         }
     }
 }

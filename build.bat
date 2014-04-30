@@ -2,13 +2,13 @@ rmdir /s /q build_windows
 mkdir build_windows
 cd build_windows
 
-cmake ..
+cmake %* ..
 if %errorlevel% neq 0 goto fail
 
 cmake --build . --config RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
-ctest -V
+ctest -V -C RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
 cpack -G ZIP --config CPackSourceConfig.cmake

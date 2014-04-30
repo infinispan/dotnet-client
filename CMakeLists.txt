@@ -125,13 +125,13 @@ if (WIN32)
   endif (NOT MSBUILD_BINARY)
 
   add_custom_target(hotrodcs-bin ALL
-    COMMAND ${MSBUILD_BINARY} "/toolsversion:4.0" "hotrodcs.proj"
+    COMMAND ${MSBUILD_BINARY} "/toolsversion:4.0" "hotrodcs.proj" "/p:NoWarn=1668"
     DEPENDS swig32 swig64)
 
   foreach (platform "AnyCPU" "x86" "x64")
     foreach (configuration "Release" "Debug")
       add_custom_target(hotrodcs-tests-bin-${configuration}-${platform} ALL
-        COMMAND ${MSBUILD_BINARY} "/toolsversion:4.0" "hotrodcs-tests.proj" "/p:Platform=${platform}" "/p:Configuration=${configuration}"
+        COMMAND ${MSBUILD_BINARY} "/toolsversion:4.0" "hotrodcs-tests.proj" "/p:Platform=${platform}" "/p:Configuration=${configuration}" "/p:NoWarn=1668"
         DEPENDS hotrodcs-bin)
     endforeach (configuration)
   endforeach (platform)
@@ -188,28 +188,99 @@ if (WIN32)
     file (TO_NATIVE_PATH "${SWIG64_BUILD}/${loop_var}" native_dir64)
 	set (UT_PATH "${native_dir32};${native_dir64};${UT_PATH}")
   endforeach (loop_var)
+endif (WIN32)
+
+if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
+  # Add target for building the java sources.
+  find_program(MAVEN_BINARY mvn mvn.bat)
+  if (NOT MAVEN_BINARY)
+    message (FATAL_ERROR "Failed to find Maven.")
+  endif (NOT MAVEN_BINARY)
+
+  find_program(IKVM_BINARY ikvm ikvm.exe)
+  if (NOT IKVM_BINARY)
+    message (FATAL_ERROR "Failed to find IKVM.")
+  endif (NOT IKVM_BINARY)
+
+  find_program(IKVMSTUB_BINARY ikvmstub ikvmstub.exe)
+  if (NOT IKVMSTUB_BINARY)
+    message (FATAL_ERROR "Failed to find IKVMSTUB.")
+  endif (NOT IKVMSTUB_BINARY)
+
+  set(java_tests_dir ${CMAKE_CURRENT_BINARY_DIR}/java_tests)
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/java_tests DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
   # Pass the updated path using an external script.
-  file (TO_NATIVE_PATH "${NUNIT_BINARY}" NUNIT_NATIVE_BINARY)
-  configure_file(templates/nunit.bat.in nunit64.bat)
-  file (TO_NATIVE_PATH "${NUNIT_BINARY_X86}" NUNIT_NATIVE_BINARY)
-  configure_file(templates/nunit.bat.in nunit32.bat)
+  file (TO_NATIVE_PATH "${IKVM_BINARY}" IKVM_NATIVE_BINARY)
+  configure_file(templates/run_ikvm.bat.in ${java_tests_dir}/run_ikvm.bat)
 
-  foreach (platform "AnyCPU" "x64")
-    foreach (configuration "Release" "Debug")
-      add_test(csharp_unittests_${platform}_${configuration} nunit64.bat "bin/${platform}/${configuration}/")
-    endforeach (configuration)
-  endforeach (platform)
+  add_custom_target (hotrod-ikvm-jar ALL
+    COMMAND ${IKVMSTUB_BINARY}
+    -out:${java_tests_dir}/hotrodcs.jar
+    -nostdlib
+    "-lib:%windir%/microsoft.net/framework/v4.0.30319"
+    "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll"
 
-  foreach (platform "x86")
-    foreach (configuration "Release" "Debug")
-      add_test(csharp_unittests_${platform}_${configuration} nunit32.bat "bin/${platform}/${configuration}/")
-    endforeach (configuration)
-  endforeach (platform)
-else (WIN32)
-  add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
-  set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
-endif (WIN32)
+    COMMAND ${IKVMSTUB_BINARY}
+    -out:${java_tests_dir}/hotrodcs-tests.jar
+    -nostdlib
+    "-lib:%windir%/microsoft.net/framework/v4.0.30319"
+    "${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll"
+
+    COMMAND ${IKVMSTUB_BINARY}
+    -out:${java_tests_dir}/mscorlib.jar
+    -nostdlib
+    "-lib:%windir%/microsoft.net/framework/v4.0.30319"
+    mscorlib
+
+    COMMAND ${MAVEN_BINARY}
+    -DhotrodVersion=${HOTROD_VERSION}
+    -DhotrodIKVMStubJar=${java_tests_dir}/hotrodcs.jar
+    -DhotrodTestsIKVMStubJar=${java_tests_dir}/hotrodcs-tests.jar
+    -DmscorlibIKVMStubJar=${java_tests_dir}/mscorlib.jar
+    "clean" "package"
+
+    WORKING_DIRECTORY ${java_tests_dir}
+    DEPENDS hotrodcs-tests-bin-Debug-AnyCPU hotrodcs-bin)
+
+  add_test(NAME java_tests
+    WORKING_DIRECTORY ${java_tests_dir}
+    COMMAND ${java_tests_dir}/run_ikvm.bat
+    -enableassertions
+    -Dorg.jboss.logging.provider=jdk
+    # -DVERBOSE_HOTROD_JAVA_TESTS=true
+    -Djava.net.preferIPv4Stack=true
+    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll
+    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll
+    "org.infinispan.client.hotrod.JavaClientTests")
+  set_tests_properties(java_tests PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
+    
+endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
+
+if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
+  if (WIN32)
+    # Pass the updated path using an external script.
+    file (TO_NATIVE_PATH "${NUNIT_BINARY}" NUNIT_NATIVE_BINARY)
+    configure_file(templates/nunit.bat.in nunit64.bat)
+    file (TO_NATIVE_PATH "${NUNIT_BINARY_X86}" NUNIT_NATIVE_BINARY)
+    configure_file(templates/nunit.bat.in nunit32.bat)
+
+    foreach (platform "AnyCPU" "x64")
+      foreach (configuration "Release" "Debug")
+        add_test(csharp_unittests_${platform}_${configuration} nunit64.bat "bin/${platform}/${configuration}/")
+      endforeach (configuration)
+    endforeach (platform)
+
+    foreach (platform "x86")
+      foreach (configuration "Release" "Debug")
+        add_test(csharp_unittests_${platform}_${configuration} nunit32.bat "bin/${platform}/${configuration}/")
+      endforeach (configuration)
+    endforeach (platform)
+  else (WIN32)
+    add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
+    set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
+  endif (WIN32)
+endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
 
 ### Packaging. ###
 set (CPACK_PACKAGE_VENDOR "Infinispan")
