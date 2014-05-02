@@ -311,8 +311,13 @@ foreach (arch 32 64)
   install (FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
   install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
 endforeach (arch)
-install (FILES "README.md" DESTINATION .)
-install (FILES "License.txt" DESTINATION .)
+
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
+configure_file("${CMAKE_CURRENT_SOURCE_DIR}/License.txt" License.txt NEWLINE_STYLE CRLF)
+install (FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/License.txt"
+  "${CMAKE_CURRENT_BINARY_DIR}/README.txt"
+  DESTINATION .)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix.xml.in" wix.xml)
 set (CPACK_WIX_TEMPLATE "wix.xml")
