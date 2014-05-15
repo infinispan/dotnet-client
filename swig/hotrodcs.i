@@ -110,50 +110,53 @@
 
 #include <exception>
 #include <string>
+#include "infinispan/hotrod/defs.h"
 
 namespace infinispan {
 namespace hotrod {
 
+    template<typename T> class ArrayDeleter {
+    public:
+        void operator()(T *array) const { delete[] array; }
+    };
+
     class ByteArray {
     public:
-        ByteArray() {
+        ByteArray(): bytes(), size(0) {
             /* Required if ByteArray is used as key in std::map. */
         }
 
         ByteArray(unsigned char* _bytes, int _size):
-            bytes(new unsigned char[_size]), size(_size) {            
-            memcpy(bytes, _bytes, _size);
-        }
-
-        ~ByteArray() {
-            delete[] bytes;
+            bytes(new unsigned char[_size], ArrayDeleter<unsigned char>()), size(_size) {
+            memcpy(bytes.get(), _bytes, _size);
         }
 
         unsigned char* getBytes() const {
-            return bytes;
+            return bytes.get();
         }
 
         void copyBytesTo(unsigned char* dest_bytes) {
-            memcpy(dest_bytes, bytes, size);
+            memcpy(dest_bytes, bytes.get(), size);
         }
 
         int getSize() const {
             return size;
         }
 
-        friend bool operator<(const ByteArray b1, const ByteArray b2);
+        friend bool operator<(const ByteArray &b1, const ByteArray &b2);
         
     private:
-        unsigned char* bytes;
+        HR_SHARED_PTR<unsigned char> bytes;
         int size;
     };
 
-    bool operator<(const ByteArray b1, const ByteArray b2) {
+    bool operator<(const ByteArray &b1, const ByteArray &b2) {
         /* Required if ByteArray is used as key in std::map. */
         int minlength = std::min(b1.getSize(), b2.getSize());
+        unsigned char *bb1 = b1.bytes.get(), *bb2 = b2.bytes.get();
         for (int i = 0; i < minlength; i++) {
-            if (b1.bytes[i] != b2.bytes[i]) {
-                return b1.bytes[i] < b2.bytes[i];
+            if (bb1[i] != bb2[i]) {
+                return bb1[i] < bb2[i];
             }
         }
         return b1.getSize() < b2.getSize();
