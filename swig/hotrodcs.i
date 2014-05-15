@@ -120,7 +120,13 @@ namespace hotrod {
             /* Required if ByteArray is used as key in std::map. */
         }
 
-        ByteArray(unsigned char* _bytes, int _size) : bytes(_bytes), size(_size) {
+        ByteArray(unsigned char* _bytes, int _size):
+            bytes(new unsigned char[_size]), size(_size) {            
+            memcpy(bytes, _bytes, _size);
+        }
+
+        ~ByteArray() {
+            delete[] bytes;
         }
 
         unsigned char* getBytes() const {
