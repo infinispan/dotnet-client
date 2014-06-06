@@ -258,6 +258,21 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll
     "org.infinispan.client.hotrod.JavaClientTests")
   set_tests_properties(java_tests PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
+  
+  add_test(NAME cross_language_test
+    WORKING_DIRECTORY ${java_tests_dir}
+    COMMAND ${java_tests_dir}/run_ikvm.bat
+    -enableassertions
+    -Dorg.jboss.logging.provider=jdk
+    # -DVERBOSE_HOTROD_JAVA_TESTS=true
+    -Djava.net.preferIPv4Stack=true
+    -Dinfinispan.client.hotrod.java=${java_tests_dir}/target/infinispan-client-hotrod
+    -Dinfinispan.client.hotrod.dotnet=${java_tests_dir}/hotrodcs.jar
+    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll
+    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll
+    "org.infinispan.client.hotrod.CrossLanguageHotRodTest")
+  set_tests_properties(cross_language_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
+  
     
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
