@@ -20,10 +20,12 @@ namespace Infinispan.HotRod.Wrappers
 
         public byte[] Serialize(Object obj)
         {
-            if (obj is byte[]) {
+            if (obj == null) {
+                throw new NullReferenceException("Cannot serialize null");
+            } else if (obj is byte[]) {
                 return (byte[]) obj;
             }
-            throw new Exception("Expecting a byte[] as input");
+            throw new Exception("Expecting a byte[] as input, but it is: " + obj.ToString());
         }
 
         public Object Deserialize(byte[] dataArray)

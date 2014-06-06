@@ -495,9 +495,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
     }
 
     private byte[] marshal(Object obj) {
-        if (obj == null) {
-            return null;
-        }
         try {
             return marshaller.objectToByteBuffer(obj);
         } catch (Exception ex) {
@@ -546,6 +543,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
     }
 
     private cli.System.UInt64 convert(long val) {
+        if (val < 0) val = 0;
         return cli.System.UInt64.Parse(Long.toString(val));
     }
 

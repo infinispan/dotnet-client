@@ -38,6 +38,24 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.infinispan</groupId>
+                                    <artifactId>infinispan-client-hotrod</artifactId>
+                                    <version>${version.org.infinispan}</version>
+                                    <type>jar</type>
+                                    <outputDirectory>${project.build.directory}/infinispan-client-hotrod</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>
