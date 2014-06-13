@@ -208,7 +208,7 @@
 
 %typemap(csinterfaces) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> "IDisposable, Infinispan.HotRod.SWIG.RemoteByteArrayCache"
 
-%typemap(csinterfaces_derived) infinispan::hotrod::RemoteCacheManager "IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
+%typemap(csinterfaces) infinispan::hotrod::RemoteCacheManager "IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
 %typemap(cscode) infinispan::hotrod::RemoteCacheManager %{
     public void Start() {
         start();
