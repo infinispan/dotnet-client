@@ -2,6 +2,9 @@
 
 <?include "cpack_variables.wxi"?>
 
+<!-- Force 32bit installer. -->
+<?define Win64 = "no" ?>
+
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Product Id="$(var.CPACK_WIX_PRODUCT_GUID)"
            Name="$(var.CPACK_PACKAGE_NAME)"
