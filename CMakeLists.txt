@@ -1,10 +1,19 @@
 cmake_minimum_required(VERSION 2.8)
 
 project(infinispan-hotrod-dotnet)
-set (HOTROD_VERSION_MAJOR "7")
-set (HOTROD_VERSION_MINOR "0")
-set (HOTROD_VERSION_PATCH "0")
-set (HOTROD_VERSION_LABEL "Alpha1")
+
+if (NOT DEFINED HOTROD_VERSION_MAJOR) 
+  set (HOTROD_VERSION_MAJOR "7")
+endif (NOT DEFINED HOTROD_VERSION_MAJOR)
+if (NOT DEFINED HOTROD_VERSION_MINOR)
+  set (HOTROD_VERSION_MINOR "0")
+endif (NOT DEFINED HOTROD_VERSION_MINOR)
+if (NOT DEFINED HOTROD_VERSION_PATCH)
+  set (HOTROD_VERSION_PATCH "0")
+endif (NOT DEFINED HOTROD_VERSION_PATCH)
+if (NOT DEFINED HOTROD_VERSION_LABEL)
+  set (HOTROD_VERSION_LABEL "Alpha1")
+endif (NOT DEFINED HOTROD_VERSION_LABEL)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   message (FATAL_ERROR "You are calling cmake from the source directory. Please create a separate build directory and call cmake from there. See README.md for details.")
