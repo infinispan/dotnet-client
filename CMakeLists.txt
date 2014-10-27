@@ -238,6 +238,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -out:${java_tests_dir}/hotrodcs-tests.jar
     -nostdlib
     "-lib:%windir%/microsoft.net/framework/v4.0.30319"
+    "-lib:${CMAKE_CURRENT_BINARY_DIR}/"
     "${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll"
 
     COMMAND ${IKVMSTUB_BINARY}
