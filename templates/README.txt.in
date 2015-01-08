@@ -3,6 +3,11 @@
   C# client for Infinispan, over the Hot Rod [1] wire protocol.
   Released under Apache License, Version 2.0.
 
+* Pre-requisites
+
+  The .NET Framework 4.0 is required for using the client and the Microsoft Visual
+  C++ 2010 Redistributable Package specific to the platform you are using (x86/x64).
+
 * Package structure
 
   The lib/ directory contains the .NET client DLL (hotrodcs.dll) and
