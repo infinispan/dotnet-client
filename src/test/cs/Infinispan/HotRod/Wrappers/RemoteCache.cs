@@ -8,9 +8,9 @@ namespace Infinispan.HotRod.Wrappers
 {
     public class RemoteCache
     {
-        private Infinispan.HotRod.IRemoteCache<byte[], byte[]> cache;
+        private Infinispan.HotRod.IRemoteCache<object, object> cache;
 
-        internal RemoteCache(Infinispan.HotRod.IRemoteCache<byte[], byte[]> cache)
+        internal RemoteCache(Infinispan.HotRod.IRemoteCache<object, object> cache)
         {
             this.cache = cache;
         }
@@ -55,32 +55,32 @@ namespace Infinispan.HotRod.Wrappers
             return result;
         }
 
-        public byte[] Put(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit)
+        public object Put(object key, object val, ulong lifespan, TimeUnit lifespanUnit)
         {
             return cache.Put(key, val, lifespan, lifespanUnit);
         }
 
-        public byte[] Put(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
+        public object Put(object key, object val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
             return cache.Put(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit);
         }
 
-        public byte[] Put(byte[] key, byte[] val)
+        public object Put(object key, object val)
         {
             return cache.Put(key, val);
         }
 
-        public byte[] PutIfAbsent(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
+        public object PutIfAbsent(object key, object val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
             return cache.PutIfAbsent(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit);
         }
 
-        public byte[] PutIfAbsent(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit)
+        public object PutIfAbsent(object key, object val, ulong lifespan, TimeUnit lifespanUnit)
         {
             return cache.PutIfAbsent(key, val, lifespan, lifespanUnit);
         }
 
-        public byte[] PutIfAbsent(byte[] key, byte[] val)
+        public object PutIfAbsent(object key, object val)
         {
             return cache.PutIfAbsent(key, val);
         }
@@ -97,48 +97,48 @@ namespace Infinispan.HotRod.Wrappers
         // {
         // }
 
-        public byte[] Replace(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
+        public object Replace(object key, object val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
             return cache.Replace(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit);
         }
 
-        public byte[] Replace(byte[] key, byte[] val, ulong lifespan, TimeUnit lifespanUnit)
+        public object Replace(object key, object val, ulong lifespan, TimeUnit lifespanUnit)
         {
             return cache.Replace(key, val, lifespan, lifespanUnit);
         }
 
-        public byte[] Replace(byte[] key, byte[] val)
+        public object Replace(object key, object val)
         {
             return cache.Replace(key, val);
         }
 
-        public bool ContainsKey(byte[] key)
+        public bool ContainsKey(object key)
         {
             return cache.ContainsKey(key);
         }
 
-        public bool ContainsValue(byte[] val)
+        public bool ContainsValue(object val)
         {
             return cache.ContainsValue(val);
         }
 
-        public byte[] Get(byte[] key)
+        public object Get(object key)
         {
             return cache.Get(key);
         }
 
-        public byte[][][] GetBulk(int size)
+        public object[][] GetBulk(int size)
         {
-            return toByteArray(cache.GetBulk(size));
+            return toObjectArray(cache.GetBulk(size));
 
         }
 
-        public byte[][][] GetBulk()
+        public object[][] GetBulk()
         {
-            return toByteArray(cache.GetBulk());
+            return toObjectArray(cache.GetBulk());
         }
 
-        public byte[] Remove(byte[] key)
+        public object Remove(object key)
         {
             return cache.Remove(key);
         }
@@ -148,40 +148,40 @@ namespace Infinispan.HotRod.Wrappers
             cache.Clear();
         }
 
-        public VersionedValue GetVersioned(byte[] key)
+        public VersionedValue GetVersioned(object key)
         {
-            IVersionedValue<byte[]> result = cache.GetVersioned(key);
+            IVersionedValue<object> result = cache.GetVersioned(key);
             if (result == null) {
                 return null;
             }
             return new VersionedValue(result);
         }
 
-        public MetadataValue GetWithMetadata(byte[] key)
+        public MetadataValue GetWithMetadata(object key)
         {
-            IMetadataValue<byte[]> result = cache.GetWithMetadata(key);
+            IMetadataValue<object> result = cache.GetWithMetadata(key);
             if (result == null) {
                 return null;
             }
             return new MetadataValue(result);
         }
 
-        public bool RemoveWithVersion(byte[] key, ulong version)
+        public bool RemoveWithVersion(object key, ulong version)
         {
             return cache.RemoveWithVersion(key, version);
         }
 
-        public bool ReplaceWithVersion(byte[] key, byte[] val, ulong version, ulong lifespan, ulong maxIdleTime)
+        public bool ReplaceWithVersion(object key, object val, ulong version, ulong lifespan, ulong maxIdleTime)
         {
             return cache.ReplaceWithVersion(key, val, version, lifespan, maxIdleTime);
         }
 
-        public bool ReplaceWithVersion(byte[] key, byte[] val, ulong version, ulong lifespan)
+        public bool ReplaceWithVersion(object key, object val, ulong version, ulong lifespan)
         {
             return cache.ReplaceWithVersion(key, val, version, lifespan);
         }
 
-        public bool ReplaceWithVersion(byte[] key, byte[] val, ulong version)
+        public bool ReplaceWithVersion(object key, object val, ulong version)
         {
             return cache.ReplaceWithVersion(key, val, version);
         }
@@ -190,9 +190,9 @@ namespace Infinispan.HotRod.Wrappers
         // {
         // }
 
-        public byte[][] KeySet()
+        public object[] KeySet()
         {
-            return toByteArray(cache.KeySet());
+            return toObjectArray(cache.KeySet());
         }
 
         // public IList<V> Values()
@@ -204,27 +204,27 @@ namespace Infinispan.HotRod.Wrappers
             return new RemoteCache(cache.WithFlags(flags));
         }
 
-        private byte[][] toByteArray(ISet<byte[]> data)
+        private object[] toObjectArray(ISet<object> data)
         {
-            byte[][] result = null;
+            object[] result = null;
             if (data != null) {
                 result = new byte[data.Count()][];
                 int count = 0;
-                foreach (byte[] item in data) {
+                foreach (object item in data) {
                     result[count++] = item;
                 }
             }
             return result;
         }
 
-        private byte[][][] toByteArray(IDictionary<byte[], byte[]> data)
+        private object[][] toObjectArray(IDictionary<object, object> data)
         {
-            byte[][][] result = null;
+            object[][] result = null;
             if (data != null) {
-                result = new byte[data.Count()][][];
+                result = new object[data.Count()][];
                 int count = 0;
-                foreach (KeyValuePair<byte[], byte[]> kvp in data) {
-                    result[count] = new byte[2][];
+                foreach (KeyValuePair<object, object> kvp in data) {
+                    result[count] = new object[2];
                     result[count][0] = kvp.Key;
                     result[count][1] = kvp.Value;
                     count++;

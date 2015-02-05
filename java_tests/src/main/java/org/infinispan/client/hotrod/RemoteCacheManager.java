@@ -72,8 +72,12 @@ public class RemoteCacheManager /* implements BasicCacheContainer */{
         this(asConfiguration(servers), true);
     }
 
+    public RemoteCacheManager(String servers, boolean start, boolean useCompatibilityStringMarshaller) {
+        this(asConfiguration(servers), start, useCompatibilityStringMarshaller);
+    }
+    
     public RemoteCacheManager(String servers, boolean start) {
-        this(asConfiguration(servers), start);
+        this(asConfiguration(servers), start, false);
     }
 
     public RemoteCacheManager(URL config, boolean start) throws IOException {

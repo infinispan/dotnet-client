@@ -7,14 +7,14 @@ namespace Infinispan.HotRod.Wrappers
 {
     public class VersionedValue
     {
-        private Infinispan.HotRod.IVersionedValue<byte[]> value;
+        private Infinispan.HotRod.IVersionedValue<object> value;
 
-        internal VersionedValue(Infinispan.HotRod.IVersionedValue<byte[]> value)
+        internal VersionedValue(Infinispan.HotRod.IVersionedValue<object> value)
         {
             this.value = value;
         }
 
-        public byte[] GetValue()
+        public object GetValue()
         {
             return value.GetValue();
         }
