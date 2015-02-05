@@ -27,6 +27,15 @@ namespace Infinispan.HotRod.Wrappers
             manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new IdentitySerializer(), start);
         }
 
+        public RemoteCacheManager(Configuration configuration, bool start, bool useCompatibilityMarshaller)
+        {
+            if (useCompatibilityMarshaller)
+                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new CompatibilitySerializer(), start);
+            else
+                // Don't serialize, use the already serialized data.
+                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new IdentitySerializer(), start);
+        }
+
         public RemoteCacheManager(Configuration configuration)
         {
             // Don't serialize, use the already serialized data.
@@ -62,22 +71,22 @@ namespace Infinispan.HotRod.Wrappers
 
         public RemoteCache GetCache()
         {
-            return new RemoteCache(manager.GetCache<byte[], byte[]>());
+            return new RemoteCache(manager.GetCache<object, object>());
         }
 
         public RemoteCache GetCache(String cacheName)
         {
-            return new RemoteCache(manager.GetCache<byte[], byte[]>(cacheName));
+            return new RemoteCache(manager.GetCache<object, object>(cacheName));
         }
 
         public RemoteCache GetCache(bool forceReturnValue)
         {
-            return new RemoteCache(manager.GetCache<byte[], byte[]>(forceReturnValue));
+            return new RemoteCache(manager.GetCache<object, object>(forceReturnValue));
         }
 
         public RemoteCache GetCache(String cacheName, bool forceReturnValue)
         {
-            return new RemoteCache(manager.GetCache<byte[], byte[]>(cacheName, forceReturnValue));
+            return new RemoteCache(manager.GetCache<object, object>(cacheName, forceReturnValue));
         }
     }
 }
