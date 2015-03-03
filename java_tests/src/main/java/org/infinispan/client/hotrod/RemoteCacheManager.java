@@ -52,6 +52,13 @@ public class RemoteCacheManager /* implements BasicCacheContainer */{
     public RemoteCacheManager(Configuration config, boolean start) {
         jniRemoteCacheManager = new cli.Infinispan.HotRod.Wrappers.RemoteCacheManager(config.getJniConfiguration(), start);
     }
+    
+    public RemoteCacheManager(Configuration config, boolean start, boolean useCompatibilityStringMarshaller) {
+        if (useCompatibilityStringMarshaller) {
+            this.marshaller = null;
+        }
+        jniRemoteCacheManager = new cli.Infinispan.HotRod.Wrappers.RemoteCacheManager(config.getJniConfiguration(), start, useCompatibilityStringMarshaller);
+    }
 
     public RemoteCacheManager(String server, int port) {
         this(asConfiguration(server, port), true);
