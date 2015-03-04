@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import static org.testng.Assert.assertEquals;
 
@@ -15,6 +16,7 @@ import org.infinispan.client.hotrod.BulkGetReplTest;
 import org.infinispan.client.hotrod.BulkGetSimpleTest;
 import org.infinispan.client.hotrod.ClientAsymmetricClusterTest;
 import org.infinispan.client.hotrod.CacheManagerStoppedTest;
+import org.infinispan.client.hotrod.CacheManagerNotStartedTest;
 import org.infinispan.client.hotrod.DefaultExpirationTest;
 import org.infinispan.client.hotrod.ForceReturnValuesTest;
 import org.infinispan.client.hotrod.HotRodIntegrationTest;
@@ -25,7 +27,6 @@ import org.infinispan.client.hotrod.ServerErrorTest;
 import org.infinispan.client.hotrod.ServerRestartTest;
 import org.infinispan.client.hotrod.ServerShutdownTest;
 import org.infinispan.client.hotrod.SocketTimeoutErrorTest;
-import org.infinispan.client.hotrod.retry.ServerFailureRetryTest;
 
 import org.testng.IMethodSelector;
 import org.testng.IMethodSelectorContext;
@@ -45,7 +46,8 @@ public class JavaClientTests implements IMethodSelector {
 	"CacheManagerStoppedTest.testPutAllAsync",
 	"CacheManagerStoppedTest.testPutAsync",
 	"CacheManagerStoppedTest.testReplaceAsync",
-	"CacheManagerStoppedTest.testVersionedRemoveAsync"
+	"CacheManagerStoppedTest.testVersionedRemoveAsync",
+        "HotRodIntegrationTest.testReplaceWithVersionWithLifespanAsync"
 	};
 	
    private final static HashSet<String> passOverTestSet = new HashSet<String>(Arrays.asList(passOverTestList));
@@ -64,10 +66,8 @@ public class JavaClientTests implements IMethodSelector {
       }
 
       testng.setTestClasses(new Class[] {
-//            RemoteCacheManagerTest.class,
-//            ClientAsymmetricClusterTest.class,
-              // ServerFailureRetryTest.class,
-
+            CacheManagerNotStartedTest.class,
+            
             //Known to work
             BulkGetKeysDistTest.class, 
             BulkGetKeysReplTest.class, 
@@ -80,26 +80,85 @@ public class JavaClientTests implements IMethodSelector {
             HotRodIntegrationTest.class,
             HotRodServerStartStopTest.class, 
             HotRodStatisticsTest.class, 
+            RemoteCacheManagerTest.class,
             ServerErrorTest.class,
             ServerRestartTest.class,
-            ServerShutdownTest.class,
-            SocketTimeoutErrorTest.class,
+            //ServerShutdownTest.class,
       });
 
       testng.addListener(tr);
+      testng.setGroups("unit,functional");
       testng.run();
 
-      String[] expectedTestFailures = { 
+      Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
             // Async operations are not supported currently
-            "HotRodIntegrationTest.testReplaceWithVersionWithLifespanAsync",
-            "CacheManagerStoppedTest.testPutAllAsync",
-            "CacheManagerStoppedTest.testPutAsync",
-            "CacheManagerStoppedTest.testReplaceAsync",
-            "CacheManagerStoppedTest.testVersionedRemoveAsync",
-      };
+			// ISPN-4017
+            //deprecated in the Java client, and not available in C# client  
+            "RemoteCacheManagerTest.testUrlAndBooleanConstructor",
+            //see HRCPP-190
+            "RemoteCacheManagerTest.testMarshallerInstance",
+            //see HRCPP-189
+            "RemoteCacheManagerTest.testGetUndefinedCache",
+	    "ForceReturnValuesTest.testDifferentInstancesForDifferentForceReturnValues",
+ 	    "ForceReturnValuesTest.testSameInstanceForSameForceReturnValues"
+      ));
+      Set<String> expectedSkips = Collections.emptySet();
 
-      assertEquals(tr.getFailedTests().size(), expectedTestFailures.length);
-      System.exit(0);
+      Set<String> failures = new TreeSet<String>();
+      for (ITestResult failed : tr.getFailedTests()) {
+         failures.add(failed.getTestClass().getRealClass().getSimpleName() + "." + failed.getMethod().getMethodName());
+      }
+      Set<String> skips = new TreeSet<String>();
+      for (ITestResult skipped : tr.getSkippedTests()) {
+         failures.add(skipped.getTestClass().getRealClass().getSimpleName() + "." + skipped.getMethod().getMethodName());
+      }
+
+      int exitCode = 0;
+      
+      Set<String> unexpectedFails = new TreeSet<String>(failures);
+      unexpectedFails.removeAll(expectedTestFailures);
+      if (!unexpectedFails.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test fail (but should not!):");
+	 for (String testName : unexpectedFails) {
+            System.err.println("\t" + testName);
+         } 
+      }
+      Set<String> notFailing = new TreeSet<String>(expectedTestFailures);
+      notFailing.removeAll(failures);
+      if (!notFailing.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test should fail (but don't!):");
+	 for (String testName : notFailing) {
+            System.err.println("\t" + testName);
+         }
+      }
+      Set<String> unexpectedSkips = new TreeSet<String>(skips);
+      unexpectedSkips.removeAll(expectedSkips);
+      if (!unexpectedSkips.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test have been skipped (but should not!):");
+	 for (String testName : unexpectedSkips) {
+            System.err.println("\t" + testName);
+         } 
+      }
+      Set<String> notSkipped = new TreeSet<String>(expectedSkips);
+      notSkipped.removeAll(skips);
+      if (!notSkipped.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test should have been skipped (but haven't!):");
+	 for (String testName : notSkipped) {
+            System.err.println("\t" + testName);
+         }
+      }
+
+      /* Force exit when tests pass also as some of the tests expected to fail
+         might not properly clean-up and as a result the process will not terminate
+         when main() returns. */
+      System.exit(exitCode);
+      
+
+
    }
 
 @Override
