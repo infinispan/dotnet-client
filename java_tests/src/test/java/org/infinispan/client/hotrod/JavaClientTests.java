@@ -28,7 +28,6 @@ import org.infinispan.client.hotrod.ServerRestartTest;
 import org.infinispan.client.hotrod.ServerShutdownTest;
 import org.infinispan.client.hotrod.SizeTest;
 import org.infinispan.client.hotrod.SocketTimeoutErrorTest;
-
 import org.testng.IMethodSelector;
 import org.testng.IMethodSelectorContext;
 import org.testng.ITestNGMethod;
@@ -68,6 +67,7 @@ public class JavaClientTests implements IMethodSelector {
 
       testng.setTestClasses(new Class[] {
             CacheManagerNotStartedTest.class,
+            RemoteCacheManagerTest.class,
             
             //Known to work
             BulkGetKeysDistTest.class, 
@@ -95,7 +95,17 @@ public class JavaClientTests implements IMethodSelector {
 
       Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
             // Async operations are not supported currently
+            "HotRodIntegrationTest.testReplaceWithVersionWithLifespanAsync",
+            "CacheManagerStoppedTest.testPutAllAsync",
+            "CacheManagerStoppedTest.testPutAsync",
+            "CacheManagerStoppedTest.testReplaceAsync",
+            "CacheManagerStoppedTest.testVersionedRemoveAsync",
+            "CacheManagerNotStartedTest.testPutAllAsync",
+            "CacheManagerNotStartedTest.testPutAsync",
+            "CacheManagerNotStartedTest.testReplaceAsync",
+            "CacheManagerNotStartedTest.testVersionedRemoveAsync",
 			// ISPN-4017
+            "BaseBulkGetKeysTest.testBulkGetAfterLifespanExpire",
             //deprecated in the Java client, and not available in C# client  
             "RemoteCacheManagerTest.testUrlAndBooleanConstructor",
             //see HRCPP-190
@@ -160,7 +170,6 @@ public class JavaClientTests implements IMethodSelector {
          when main() returns. */
       System.exit(exitCode);
       
-
 
    }
 
