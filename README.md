@@ -49,6 +49,21 @@ during the build script generation phase.
 After the script completes successfully you can find the .msi installer in
 the build_windows/ subdirectory.
 
+Optionally you can build a bundle to include the .NET and C++ runtimes which are
+project dependencies.
+
+Important: Make sure the runtimes to be bundled match the ones used for the actual build!
+
+To build the bundle define:
+
+    set HOTROD_VCREDIST_x86=<path to vcredist_x86.exe>
+    set HOTROD_VCREDIST_x64=<path to vcredist_x64.exe>
+    set HOTROD_DOTNET=<path to the .NET runtime standalone installer>
+
+and then pass -DHOTROD_BUILD_BUNDLE=true on the command line as argument to build.bat. After
+the build is complete you cand find the package in build_windows/ with a name ending in
+"-bundle.exe".
+
 Support for building the client using Mono (http://www.mono-project.com) will
 be coming soon.
 

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(infinispan-hotrod-dotnet)
 
-if (NOT DEFINED HOTROD_VERSION_MAJOR) 
+if (NOT DEFINED HOTROD_VERSION_MAJOR)
   set (HOTROD_VERSION_MAJOR "7")
 endif (NOT DEFINED HOTROD_VERSION_MAJOR)
 if (NOT DEFINED HOTROD_VERSION_MINOR)
@@ -42,6 +42,11 @@ set (HOTROD_ASSEMBLY_PRODUCT_NAME "${CMAKE_PROJECT_NAME}")
 set (HOTROD_ASSEMBLY_DESCRIPTION ".NET Hot Rod Client")
 set (HOTROD_ASSEMBLY_TITLE "${HOTROD_ASSEMBLY_DESCRIPTION}")
 set (HOTROD_ASSEMBLY_COPYRIGHT "Copyright 2009 - 2014, Red Hat Inc. and/or its affiliates.")
+
+set (CPACK_PACKAGE_VENDOR "Infinispan")
+set (CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
+set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+set (CPACK_WIX_UPGRADE_GUID "7cc17657-80b5-417f-9209-710682f852f4") # This value should not change.
 
 ### Generated and build the SWIG wrapper ###
 if (NOT DEFINED HOTRODCPP32_HOME AND DEFINED ENV{HOTRODCPP32_HOME})
@@ -313,9 +318,6 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
 endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
 
 ### Packaging. ###
-set (CPACK_PACKAGE_VENDOR "Infinispan")
-set (CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-set (CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
 set (CPACK_GENERATOR "WIX")
 set (CPACK_SOURCE_GENERATOR "ZIP")
 
@@ -345,6 +347,8 @@ endforeach (arch)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/License.txt" License.txt NEWLINE_STYLE CRLF)
+file (COPY "${CMAKE_CURRENT_SOURCE_DIR}/License.rtf" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+
 install (FILES
   "${CMAKE_CURRENT_BINARY_DIR}/License.txt"
   "${CMAKE_CURRENT_BINARY_DIR}/README.txt"
@@ -352,9 +356,37 @@ install (FILES
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix.xml.in" wix.xml)
 set (CPACK_WIX_TEMPLATE "wix.xml")
-set (CPACK_WIX_UPGRADE_GUID "7cc17657-80b5-417f-9209-710682f852f4") # This value should not change.
 
 set (CPACK_SOURCE_IGNORE_FILES "/build.*/;/\\\\.git/")
+
+#Bundle-specific properties (see wix-bundle.cmake).
+if (DEFINED HOTROD_BUILD_BUNDLE OR DEFINED ENV{HOTROD_BUILD_BUNDLE})
+  if (NOT DEFINED HOTROD_VCREDIST_x86)
+    if (DEFINED ENV{HOTROD_VCREDIST_x86})
+      set (HOTROD_VCREDIST_x86 "$ENV{HOTROD_VCREDIST_x86}")
+    else ()
+      message (FATAL_ERROR "When building a bundle you need to point HOTROD_VCREDIST_x86 to the corresponding VC++ x86 runtime to be included in the bundle.")
+    endif()
+  endif ()
+
+  if (NOT DEFINED HOTROD_VCREDIST_x64)
+    if (DEFINED ENV{HOTROD_VCREDIST_x64})
+      set (HOTROD_VCREDIST_x64 "$ENV{HOTROD_VCREDIST_x64}")
+    else ()
+      message (FATAL_ERROR "When building a bundle you need to point HOTROD_VCREDIST_x64 to the corresponding VC++ x64 runtime to be included in the bundle.")
+    endif ()
+  endif ()
+
+  if (NOT DEFINED HOTROD_DOTNET)
+    if (DEFINED ENV{HOTROD_DOTNET})
+      set (HOTROD_DOTNET "$ENV{HOTROD_DOTNET}")
+    else ()
+      message (FATAL_ERROR "When building a bundle you need to point HOTROD_DOTNET to the corresponding .NET runtime to be included in the bundle.")
+    endif ()
+  endif ()
+
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix-bundle.xml.in" wix-bundle.xml)
+endif()
 
 include (CPack)
 

@@ -17,6 +17,9 @@ if %errorlevel% neq 0 goto fail
 cpack -G WIX -C RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
+cmake %* -P ../wix-bundle.cmake
+if %errorlevel% neq 0 goto fail
+
 cd ..
 goto eof
 

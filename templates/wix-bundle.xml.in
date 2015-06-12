@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Force 32bit installer. -->
+<?define Win64 = "no" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
+   <Bundle Name="${CMAKE_PROJECT_NAME}-${HOTROD_VERSION}"
+           Manufacturer="${CPACK_PACKAGE_VENDOR}"
+           Version="${HOTROD_ASSEMBLY_VERSION}"
+           UpgradeCode="${CPACK_WIX_UPGRADE_GUID}">
+      <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLargeLicense">
+         <bal:WixStandardBootstrapperApplication
+             LicenseFile="License.rtf"
+             ShowVersion="yes"
+             />
+      </BootstrapperApplicationRef>
+      <Chain>
+         <MsiPackage SourceFile="${CPACK_PACKAGE_FILE_NAME}.msi" ForcePerMachine="yes"/>
+         <ExePackage SourceFile="${HOTROD_VCREDIST_x86}" InstallCommand="/passive /norestart"/>
+         <ExePackage SourceFile="${HOTROD_VCREDIST_x64}" InstallCommand="/passive /norestart"/>
+         <ExePackage SourceFile="${HOTROD_DOTNET}" InstallCommand="/passive /norestart"/>
+      </Chain>
+   </Bundle>
+</Wix>
