@@ -18,7 +18,6 @@ namespace Infinispan.HotRod.Tests
         private Process hrServer;
 
         protected Configuration conf;
-        protected ISerializer serializer= new DefaultSerializer();
 
         protected RemoteCacheManager remoteManager;
 
@@ -65,8 +64,8 @@ namespace Infinispan.HotRod.Tests
             Assert.IsTrue(PortProbe.IsPortOpen(conf.Servers()[0].Host(),
                                                conf.Servers()[0].Port()),
                           "Server not listening on the expected ip/port.");
-            
-            remoteManager = new RemoteCacheManager(conf, serializer);
+
+            remoteManager = new RemoteCacheManager(conf);
             remoteManager.Start();
         }
 
@@ -80,7 +79,7 @@ namespace Infinispan.HotRod.Tests
 
             if (hrServer != null) {
                 PlatformUtils.killServer(hrServer);
-                
+
                 Assert.IsTrue(PortProbe.IsPortClosed(conf.Servers()[0].Host(),
                                                      conf.Servers()[0].Port(),
                                                      millisTimeout:10000),

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(infinispan-hotrod-dotnet)
 
-if (NOT DEFINED HOTROD_VERSION_MAJOR) 
+if (NOT DEFINED HOTROD_VERSION_MAJOR)
   set (HOTROD_VERSION_MAJOR "7")
 endif (NOT DEFINED HOTROD_VERSION_MAJOR)
 if (NOT DEFINED HOTROD_VERSION_MINOR)
@@ -12,7 +12,7 @@ if (NOT DEFINED HOTROD_VERSION_PATCH)
   set (HOTROD_VERSION_PATCH "0")
 endif (NOT DEFINED HOTROD_VERSION_PATCH)
 if (NOT DEFINED HOTROD_VERSION_LABEL)
-  set (HOTROD_VERSION_LABEL "Alpha1")
+  set (HOTROD_VERSION_LABEL "SNAPSHOT")
 endif (NOT DEFINED HOTROD_VERSION_LABEL)
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -25,6 +25,7 @@ set (REVISION_Beta1 "10")
 set (REVISION_CR1 "20")
 set (REVISION_CR2 "21")
 set (REVISION_Final "30")
+string(TIMESTAMP REVISION_SNAPSHOT "%y%j" UTC)
 
 # CPack version.
 set (CPACK_PACKAGE_VERSION_MAJOR "${HOTROD_VERSION_MAJOR}")
@@ -42,6 +43,9 @@ set (HOTROD_ASSEMBLY_PRODUCT_NAME "${CMAKE_PROJECT_NAME}")
 set (HOTROD_ASSEMBLY_DESCRIPTION ".NET Hot Rod Client")
 set (HOTROD_ASSEMBLY_TITLE "${HOTROD_ASSEMBLY_DESCRIPTION}")
 set (HOTROD_ASSEMBLY_COPYRIGHT "Copyright 2009 - 2014, Red Hat Inc. and/or its affiliates.")
+
+message ("HotRod Version: ${HOTROD_VERSION}")
+message ("HotRod Assembly Version: ${HOTROD_ASSEMBLY_VERSION}")
 
 ### Generated and build the SWIG wrapper ###
 if (NOT DEFINED HOTRODCPP32_HOME AND DEFINED ENV{HOTRODCPP32_HOME})
@@ -86,7 +90,7 @@ if (WIN32)
     )
 else (WIN32)
 #TODO: mono
-endif (WIN32) 
+endif (WIN32)
 
 ### Compile the C# code ###
 if (NOT DEFINED NLOG_DLL AND DEFINED ENV{NLOG_DLL})
@@ -96,21 +100,28 @@ if (NOT DEFINED NLOG_DLL)
   message (FATAL_ERROR "Please define NLOG_DLL.")
 endif (NOT DEFINED NLOG_DLL)
 
+if (NOT DEFINED NUNIT_DLL AND DEFINED ENV{NUNIT_DLL})
+  set (NUNIT_DLL $ENV{NUNIT_DLL})
+endif (NOT DEFINED NUNIT_DLL AND DEFINED ENV{NUNIT_DLL})
+if (NOT DEFINED NUNIT_DLL)
+  message (FATAL_ERROR "Please define NUNIT_DLL.")
+endif (NOT DEFINED NUNIT_DLL)
+
 if (NOT DEFINED NLOG_LICENSE AND DEFINED ENV{NLOG_LICENSE})
   set (NLOG_LICENSE $ENV{NLOG_LICENSE})
+  set (NLOG_LICENSE_LOCAL "${CMAKE_CURRENT_BINARY_DIR}/NLog_License.txt")
+  file (COPY "${NLOG_LICENSE}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  get_filename_component (NLOG_LICENSE_NAME "${NLOG_LICENSE}" NAME)
+  file (RENAME "${CMAKE_CURRENT_BINARY_DIR}/${NLOG_LICENSE_NAME}" "${NLOG_LICENSE_LOCAL}")
 endif (NOT DEFINED NLOG_LICENSE AND DEFINED ENV{NLOG_LICENSE})
 if (NOT DEFINED NLOG_LICENSE)
   message (WARNING "Please define NLOG_LICENSE if you plan to distribute the package.")
 endif (NOT DEFINED NLOG_LICENSE)
 
 file (COPY "${NLOG_DLL}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-file (COPY "${NLOG_LICENSE}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 get_filename_component (NLOG_DLL_NAME "${NLOG_DLL}" NAME)
-get_filename_component (NLOG_LICENSE_NAME "${NLOG_LICENSE}" NAME)
 set (NLOG_DLL_LOCAL "${CMAKE_CURRENT_BINARY_DIR}/NLog.dll")
-set (NLOG_LICENSE_LOCAL "${CMAKE_CURRENT_BINARY_DIR}/NLog_License.txt")
 file (RENAME "${CMAKE_CURRENT_BINARY_DIR}/${NLOG_DLL_NAME}" "${NLOG_DLL_LOCAL}")
-file (RENAME "${CMAKE_CURRENT_BINARY_DIR}/${NLOG_LICENSE_NAME}" "${NLOG_LICENSE_LOCAL}")
 
 # GAC requires strong names
 if (NOT DEFINED HOTROD_SNK AND DEFINED ENV{HOTROD_SNK})
@@ -163,7 +174,7 @@ else (WIN32)
   add_custom_target(hotrodcs-bin ALL
     COMMAND ${XBUILD_BINARY} "/tv:4.0" "hotrodcs.proj"
     DEPENDS hotrodcs_wrap)
-  
+
   add_custom_target(hotrodcs-tests-bin ALL
     COMMAND ${XBUILD_BINARY} "/tv:4.0" "hotrodcs-tests.proj"
     DEPENDS hotrodcs-bin)
@@ -200,7 +211,7 @@ if (WIN32)
   foreach (loop_var ${CMAKE_CONFIGURATION_TYPES})
     file (TO_NATIVE_PATH "${SWIG32_BUILD}/${loop_var}" native_dir32)
     file (TO_NATIVE_PATH "${SWIG64_BUILD}/${loop_var}" native_dir64)
-	set (UT_PATH "${native_dir32};${native_dir64};${UT_PATH}")
+    set (UT_PATH "${native_dir32};${native_dir64};${UT_PATH}")
   endforeach (loop_var)
 endif (WIN32)
 
@@ -269,7 +280,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll
     "org.infinispan.client.hotrod.JavaClientTests")
   set_tests_properties(java_tests PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
-  
+
   add_test(NAME cross_language_test
     WORKING_DIRECTORY ${java_tests_dir}
     COMMAND ${java_tests_dir}/run_ikvm.bat
@@ -283,8 +294,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/AnyCPU/Debug/hotrodcs-tests.dll
     "org.infinispan.client.hotrod.CrossLanguageHotRodTest")
   set_tests_properties(cross_language_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
-  
-    
+
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
@@ -340,7 +350,9 @@ foreach (arch 32 64)
   install (FILES "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.xml" DESTINATION lib/)
   # Dependencies.
   install (FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
-  install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
+  if (DEFINED NLOG_LICENSE_LOCAL)
+    install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
+  endif(DEFINED NLOG_LICENSE_LOCAL)
 endforeach (arch)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
