@@ -28,6 +28,7 @@ variable to include the bin/ directories of CMake, SWIG, Maven, NUnit, IKVM.
 Build steps:
 
     set NLOG_DLL=/path/to/nlog/2.1.0/dll
+    set NUNIT_DLL=/path/to/nunit.framework.dll
     
     set HOTRODCPP32_HOME=/path/to/native/32bit/client
     set HOTRODCPP64_HOME=/path/to/native/64bit/client

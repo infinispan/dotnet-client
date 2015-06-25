@@ -69,8 +69,8 @@
     <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
 
     <Reference Include="hotrodcs.dll"/>
-    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c"/>
-    <Reference Include="nunit.framework, Version=2.6.3.13283, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77"/>
+    <Reference Include="${NLOG_DLL}"/>
+    <Reference Include="${NUNIT_DLL}"/>
 
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
