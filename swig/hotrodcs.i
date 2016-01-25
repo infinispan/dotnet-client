@@ -44,7 +44,6 @@
 %include "std_map.i"
 %include "std_vector.i"
 
-#define SWIG_SHARED_PTR_SUBNAMESPACE tr1
 %include "std_shared_ptr.i"
 %shared_ptr(infinispan::hotrod::ByteArray)
 
@@ -137,7 +136,7 @@ namespace hotrod {
         friend bool operator<(const ByteArray &b1, const ByteArray &b2);
         
     private:
-        HR_SHARED_PTR<unsigned char> bytes;
+        std::shared_ptr<unsigned char> bytes;
         int size;
     };
 
@@ -177,9 +176,9 @@ namespace hotrod {
 %inline{
     namespace infinispan {
         namespace hotrod {
-            std::vector<HR_SHARED_PTR<ByteArray> > as_vector(std::set<HR_SHARED_PTR<ByteArray> > input) {
-                std::vector<HR_SHARED_PTR<ByteArray> > result;
-                for (std::set<HR_SHARED_PTR<ByteArray> >::iterator it = input.begin(); it != input.end(); ++it) {
+            std::vector<std::shared_ptr<ByteArray> > as_vector(std::set<std::shared_ptr<ByteArray> > input) {
+                std::vector<std::shared_ptr<ByteArray> > result;
+                for (std::set<std::shared_ptr<ByteArray> >::iterator it = input.begin(); it != input.end(); ++it) {
                     result.push_back(*it);
                 }
                 return result;
@@ -190,17 +189,17 @@ namespace hotrod {
 
 %template(RemoteByteArrayCache) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 
-%template(ValueMetadataPair) std::pair<HR_SHARED_PTR<infinispan::hotrod::ByteArray>, infinispan::hotrod::MetadataValue>;
-%template(ValueVersionPair) std::pair<HR_SHARED_PTR<infinispan::hotrod::ByteArray>, infinispan::hotrod::VersionedValue>;
+%template(ValueMetadataPair) std::pair<std::shared_ptr<infinispan::hotrod::ByteArray>, infinispan::hotrod::MetadataValue>;
+%template(ValueVersionPair) std::pair<std::shared_ptr<infinispan::hotrod::ByteArray>, infinispan::hotrod::VersionedValue>;
 /* %template(ByteArrayPair) std::pair<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>; */
 
-%template(ByteArrayMap) std::map<HR_SHARED_PTR<infinispan::hotrod::ByteArray>, HR_SHARED_PTR<infinispan::hotrod::ByteArray> >;
+%template(ByteArrayMap) std::map<std::shared_ptr<infinispan::hotrod::ByteArray>, std::shared_ptr<infinispan::hotrod::ByteArray> >;
 
 %template(ByteArrayMapInput) std::map<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 /* %template(ByteArrayPairSet) std::set<ByteArrayPair>; */
 
 %template(StringMap) std::map<std::string, std::string>;
-%template(ByteArrayVector) std::vector<HR_SHARED_PTR<infinispan::hotrod::ByteArray> >;
+%template(ByteArrayVector) std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >;
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
