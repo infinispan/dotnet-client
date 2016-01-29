@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
+<Project DefaultTargets="Build" ToolsVersion="4.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
     <AssemblyName>hotrodcs</AssemblyName>
     <OutputType>Library</OutputType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     ${KEYFILE}
 
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <OutputPath>.</OutputPath>
     <OutDir>.</OutDir>
@@ -17,16 +17,16 @@
 
   <ItemGroup>
     <!-- Generated SWIG source files. -->
-    <Compile Include="${CMAKE_CURRENT_BINARY_DIR}\*.cs"/>
-    <Compile Include="${SWIG32_BUILD}\*.cs"/>
-    <Compile Include="${SWIG64_BUILD}\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_BINARY_DIR}\*.cs"/>
+    <Compile Include="${W_SWIG32_BUILD}\*.cs"/>
+    <Compile Include="${W_SWIG64_BUILD}\*.cs"/>
     
     <!-- API source files. -->
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\cs\Infinispan\HotRod\*.cs"/>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\cs\Infinispan\HotRod\Impl\*.cs"/>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\cs\Infinispan\HotRod\Exceptions\*.cs"/>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\cs\Infinispan\HotRod\Config\*.cs"/>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\cs\Infinispan\HotRod\SWIG\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Impl\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Exceptions\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Config\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\SWIG\*.cs"/>
   </ItemGroup>
 
   <ItemGroup>
