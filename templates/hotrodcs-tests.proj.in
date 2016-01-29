@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build"  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build"  ToolsVersion="4.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <AssemblyName>hotrodcs-tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Platform>${PLATFORM}</Platform>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -65,8 +67,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\*.cs"/>
-    <Compile Include="${CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
 
     <Reference Include="hotrodcs.dll"/>
     <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c"/>
