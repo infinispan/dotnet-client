@@ -10,12 +10,12 @@ namespace Infinispan.HotRod.Impl
     internal class RemoteCacheSWIG${ARCH}Impl<K, V> : IRemoteCache<K, V>
     {
         private RemoteByteArrayCache cache;
-        private ISerializer serializer;
+        private IMarshaller marshaller;
 
-        public RemoteCacheSWIG${ARCH}Impl(Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, ISerializer serializer)
+        public RemoteCacheSWIG${ARCH}Impl(Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
         {
             this.cache = (RemoteByteArrayCache) cache;
-            this.serializer = serializer;
+            this.marshaller = marshaller;
         }
 
         public string GetName()
@@ -222,7 +222,7 @@ namespace Infinispan.HotRod.Impl
 
         private ByteArray wrap(Object input)
         {
-            byte[] barray = serializer.Serialize(input);
+            byte[] barray = marshaller.ObjectToByteBuffer(input);
             return new ByteArray(barray, barray.Length);
         }
 
@@ -233,7 +233,7 @@ namespace Infinispan.HotRod.Impl
             }
             byte[] barray = new byte[input.getSize()];
             input.copyBytesTo(barray);
-            return serializer.Deserialize(barray);
+            return marshaller.ObjectFromByteBuffer(barray);
         }
 
         private ByteArrayMapInput wrap(IDictionary<K, V> map)

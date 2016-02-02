@@ -10,12 +10,14 @@ namespace Infinispan.HotRod.Config
     public class Configuration
     {
         private Infinispan.HotRod.SWIG.Configuration config;
+        private IMarshaller marshaller;
 
-        internal Configuration(Infinispan.HotRod.SWIG.Configuration config)
+        internal Configuration(Infinispan.HotRod.SWIG.Configuration config, IMarshaller marshaller)
         {
             this.config = config;
+            this.marshaller = marshaller;
         }
-        
+
         internal Infinispan.HotRod.SWIG.Configuration Config()
         {
             return config;
@@ -24,7 +26,7 @@ namespace Infinispan.HotRod.Config
         /// <summary>
         ///   Retrieve the protocol version.
         /// </summary>
-        ///     
+        ///
         /// <returns>a protocol version string</returns>
         public string ProtocolVersion()
         {
@@ -34,7 +36,7 @@ namespace Infinispan.HotRod.Config
         /// <summary>
         ///   Retrieve the configuration pool configuration.
         /// </summary>
-        ///     
+        ///
         /// <returns>an object holding the connection pool configurations</returns>
         public ConnectionPoolConfiguration ConnectionPool()
         {
@@ -115,6 +117,14 @@ namespace Infinispan.HotRod.Config
         public int ValueSizeEstimate()
         {
             return config.getValueSizeEstimate();
+        }
+
+        /// <summary>
+        ///   Retrieves the the configured marshaller.
+        /// </summary>
+        public IMarshaller Marshaller()
+        {
+            return marshaller;
         }
     }
 }

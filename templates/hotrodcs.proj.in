@@ -34,7 +34,7 @@
     <Reference Include="System.Core"/>
     <Reference Include="System.Configuration"/>
     <Reference Include="System.Xml"/>
-    <Reference Include="NLog, Version=2.1.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c"/>
+    <Reference Include="${NLOG_DLL}"/>
 
     <!-- <None Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\resources\App.config"/> -->
   </ItemGroup>

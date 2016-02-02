@@ -14,11 +14,9 @@ namespace Infinispan.HotRod
     ///  
     /// Author: sunimalr@gmail.com
     /// </summary>
+    [Obsolete("Use IMarshaller instread.")]
     public interface ISerializer
     {
-
-        //TODO: This should match the Marshaller interface.
-        
         /// <summary>
         /// converts an object ob to a byte array. 
         /// </summary>

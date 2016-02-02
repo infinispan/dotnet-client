@@ -1,4 +1,5 @@
 using System;
+using Infinispan.HotRod.Impl;
 using Infinispan.HotRod.SWIG;
 
 namespace Infinispan.HotRod.Config
@@ -7,6 +8,7 @@ namespace Infinispan.HotRod.Config
     public class ConfigurationBuilder : IBuilder<Configuration>, ConfigurationChildBuilder
     {
         private Infinispan.HotRod.SWIG.ConfigurationBuilder builder;
+        private IMarshaller marshaller = new DefaultMarshaller();
 
         public ConfigurationBuilder()
         {
@@ -24,12 +26,13 @@ namespace Infinispan.HotRod.Config
 
         public Configuration Create()
         {
-            return new Configuration(builder.Create());
+            return new Configuration(builder.Create(), marshaller);
         }
 
         public IBuilder<Configuration> Read(Configuration bean)
         {
             builder.Read(bean.Config());
+            this.marshaller = bean.Marshaller();
             return this;
         }
 
@@ -106,6 +109,13 @@ namespace Infinispan.HotRod.Config
             builder.ValueSizeEstimate(valueSizeEstimate);
             return this;
         }
+
+        public ConfigurationBuilder Marshaller(IMarshaller marshaller)
+        {
+            this.marshaller = marshaller;
+            return this;
+        }
+ 
     }
 #pragma warning restore 1591
 }
