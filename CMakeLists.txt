@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.8)
 project(infinispan-hotrod-dotnet)
 
 if (NOT DEFINED HOTROD_VERSION_MAJOR)
-  set (HOTROD_VERSION_MAJOR "7")
+  set (HOTROD_VERSION_MAJOR "8")
 endif (NOT DEFINED HOTROD_VERSION_MAJOR)
 if (NOT DEFINED HOTROD_VERSION_MINOR)
   set (HOTROD_VERSION_MINOR "0")
