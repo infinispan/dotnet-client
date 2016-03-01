@@ -33,7 +33,11 @@ else (WIN32)
   set (HOTROD_WRAP_LIB "${HOTROD_SWIG_MODULE}.so")
 endif (WIN32)
 
-set_source_files_properties(${HOTROD_SWIG_MODULE_SOURCE} PROPERTIES SWIG_FLAGS "-v;-namespace;Infinispan.HotRod.SWIG${ARCH};")
+if (CMAKE_MAJOR_VERSION LESS 3)
+  set_source_files_properties(${HOTROD_SWIG_MODULE_SOURCE} PROPERTIES SWIG_FLAGS "-v;-namespace;Infinispan.HotRod.SWIG${ARCH};-dllimport;${HOTROD_WRAP_LIB}")
+else (CMAKE_MAJOR_VERSION LESS 3)
+  set_source_files_properties(${HOTROD_SWIG_MODULE_SOURCE} PROPERTIES SWIG_FLAGS "-v;-namespace;Infinispan.HotRod.SWIG${ARCH};")
+endif (CMAKE_MAJOR_VERSION LESS 3)
 
 include_directories(${HOTRODCPP_INCLUDE_DIR})
 swig_add_module(${HOTROD_SWIG_MODULE} csharp ${HOTROD_SWIG_MODULE_SOURCE})

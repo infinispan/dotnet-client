@@ -55,6 +55,7 @@
     public Infinispan.HotRod.SWIG.ConfigurationBuilder ValueSizeEstimate(int _valueSizeEstimate) {
         return valueSizeEstimate(_valueSizeEstimate);
     }
+    
     %}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
