@@ -279,7 +279,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -nostdlib
     "-lib:%windir%/microsoft.net/framework/v4.0.30319"
     "-lib:${CMAKE_CURRENT_BINARY_DIR}/"
-    "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/Debug/hotrodcs-tests.dll"
+    "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/$<CONFIG>/hotrodcs-tests.dll"
 
     COMMAND ${IKVMSTUB_BINARY}
     -out:${java_tests_dir}/mscorlib.jar
@@ -305,7 +305,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     # -DVERBOSE_HOTROD_JAVA_TESTS=true
     -Djava.net.preferIPv4Stack=true
     -Xreference:${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll
-    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/Debug/hotrodcs-tests.dll
+    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/obj/${PLATFORM}/$<CONFIG>/hotrodcs-tests.dll
     "org.infinispan.client.hotrod.JavaClientTests")
   set_tests_properties(java_tests PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
 

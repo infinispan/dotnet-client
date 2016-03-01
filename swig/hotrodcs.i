@@ -3,6 +3,8 @@
 %{
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/Builder.h>
+#include <infinispan/hotrod/ServerNameId.h>
+#include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
 #include <infinispan/hotrod/ConfigurationChildBuilder.h>
@@ -44,6 +46,9 @@
 %include "std_map.i"
 %include "std_vector.i"
 
+%template (VectorChar) std::vector<char>;
+%template (ServerNameIdVector) std::vector<infinispan::hotrod::ServerNameId>;
+
 %include "std_shared_ptr.i"
 %shared_ptr(infinispan::hotrod::ByteArray)
 
@@ -71,9 +76,12 @@
 
 %include "infinispan/hotrod/Builder.h"
 
+
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
 %include "infinispan/hotrod/ServerConfiguration.h"
 %include "infinispan/hotrod/SslConfiguration.h"
+%include "infinispan/hotrod/ServerNameId.h"
+%include "infinispan/hotrod/FailOverRequestBalancingStrategy.h"
 %include "infinispan/hotrod/Configuration.h"
 
 %template(BuilderConf) infinispan::hotrod::Builder<infinispan::hotrod::Configuration>;
@@ -90,7 +98,6 @@
 %include "infinispan/hotrod/RemoteCacheBase.h"
 %include "infinispan/hotrod/RemoteCache.h"
 %include "infinispan/hotrod/RemoteCacheManager.h"
-
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}
 %apply unsigned char OUTPUT[] {unsigned char* dest_bytes}
@@ -117,16 +124,15 @@ namespace hotrod {
         }
 
         ByteArray(unsigned char* _bytes, int _size):
-            bytes(new unsigned char[_size], ArrayDeleter<unsigned char>()), size(_size) {
-            memcpy(bytes.get(), _bytes, _size);
+            bytes(_bytes, _bytes+_size), size(_size) {
         }
 
-        unsigned char* getBytes() const {
-            return bytes.get();
+        const unsigned char* getBytes() const {
+            return bytes.data();
         }
 
         void copyBytesTo(unsigned char* dest_bytes) {
-            memcpy(dest_bytes, bytes.get(), size);
+            memcpy(dest_bytes, bytes.data(), size);
         }
 
         int getSize() const {
@@ -136,14 +142,14 @@ namespace hotrod {
         friend bool operator<(const ByteArray &b1, const ByteArray &b2);
         
     private:
-        std::shared_ptr<unsigned char> bytes;
+        std::vector<unsigned char> bytes;
         int size;
     };
 
     bool operator<(const ByteArray &b1, const ByteArray &b2) {
         /* Required if ByteArray is used as key in std::map. */
         int minlength = std::min(b1.getSize(), b2.getSize());
-        unsigned char *bb1 = b1.bytes.get(), *bb2 = b2.bytes.get();
+        const unsigned char *bb1 = b1.getBytes(), *bb2 = b2.getBytes();
         for (int i = 0; i < minlength; i++) {
             if (bb1[i] != bb2[i]) {
                 return bb1[i] < bb2[i];
@@ -159,13 +165,13 @@ namespace hotrod {
             if (barray.getSize() == 0) {
                 return;
             }
-            sbuf.set((char *) barray.getBytes(), barray.getSize(), &infinispan::hotrod::noRelease);
+            sbuf.assign(barray.getBytes(), barray.getBytes()+barray.getSize());
         }
 
-        ByteArray* unmarshall(const infinispan::hotrod::ScopedBuffer& sbuf) {
-            int size = sbuf.getLength();
+        ByteArray* unmarshall(const std::vector<char>& sbuf) {
+            int size = sbuf.size();
             unsigned char *bytes = new unsigned char[size];
-            memcpy(bytes, sbuf.getBytes(), size);
+            memcpy(bytes, sbuf.data(), size);
 
             return new ByteArray(bytes, size);
         }

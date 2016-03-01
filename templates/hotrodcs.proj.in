@@ -8,7 +8,7 @@
 
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <OutputPath>.</OutputPath>
+    <OutputPath>obj\$(Platform)\$(Configuration)\</OutputPath>
     <OutDir>.</OutDir>
 
     <DebugSymbols>true</DebugSymbols>
