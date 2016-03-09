@@ -30,7 +30,13 @@ endif (ISWIN64)
 
 # Map from version label to assembly revision.
 set (REVISION_Alpha1 "0")
+set (REVISION_Alpha2 "1")
+set (REVISION_Alpha3 "2")
+set (REVISION_Alpha4 "3")
 set (REVISION_Beta1 "10")
+set (REVISION_Beta2 "11")
+set (REVISION_Beta3 "12")
+set (REVISION_Beta4 "13")
 set (REVISION_CR1 "20")
 set (REVISION_CR2 "21")
 set (REVISION_Final "30")
