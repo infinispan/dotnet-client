@@ -75,12 +75,6 @@ namespace Infinispan.HotRod.Config
             return this;
         }
     
-        public ConfigurationBuilder PingOnStartup(bool pingOnStartup)
-        {
-            builder.PingOnStartup(pingOnStartup);
-            return this;
-        }
-    
         public ConfigurationBuilder ProtocolVersion(String protocolVersion)
         {
             builder.ProtocolVersion(protocolVersion);
