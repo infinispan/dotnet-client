@@ -36,10 +36,6 @@
         return keySizeEstimate(_keySizeEstimate);
     }
     
-    public Infinispan.HotRod.SWIG.ConfigurationBuilder PingOnStartup(bool _pingOnStartup) {
-        return pingOnStartup(_pingOnStartup);
-    }
-    
     public Infinispan.HotRod.SWIG.ConfigurationBuilder ProtocolVersion(string _protocolVersion) {
         return protocolVersion(_protocolVersion);
     }

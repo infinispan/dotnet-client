@@ -84,18 +84,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void PingOnStartupTest()
-        {
-            Configuration configuration;
-
-            configuration = builder.PingOnStartup(true).Build();
-            Assert.AreEqual(true, configuration.PingOnStartup());
-
-            configuration = builder.PingOnStartup(false).Build();
-            Assert.AreEqual(false, configuration.PingOnStartup());
-        }
-
-        [Test]
         public void SocketTimeoutTest()
         {
             Configuration configuration;

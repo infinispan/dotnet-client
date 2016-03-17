@@ -7,7 +7,6 @@ namespace Infinispan.HotRod.SWIG
     internal interface Configuration
     {
         bool isForceReturnValue();
-        bool isPingOnStartup();
         bool isTcpNoDelay();
 
         string getProtocolVersion();
