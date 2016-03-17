@@ -68,14 +68,6 @@ namespace Infinispan.HotRod.Config
         }
 
         /// <summary>
-        ///   Retrieves the state of the ping on startup flag.
-        /// </summary>
-        public bool PingOnStartup()
-        {
-            return config.isPingOnStartup();
-        }
-
-        /// <summary>
         ///   Retrieves a list of objects holding the server configurations.
         /// </summary>
         public IList<ServerConfiguration> Servers()

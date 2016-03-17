@@ -17,8 +17,6 @@ namespace Infinispan.HotRod.Config
 
         ConfigurationBuilder KeySizeEstimate(int keySizeEstimate);
 
-        ConfigurationBuilder PingOnStartup(bool pingOnStartup);
-
         ConfigurationBuilder ProtocolVersion(String protocolVersion);
 
         ConfigurationBuilder SocketTimeout(int socketTimeout);

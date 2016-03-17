@@ -41,11 +41,6 @@ namespace Infinispan.HotRod.Config
             return parent.KeySizeEstimate(keySizeEstimate);
         }
     
-        public ConfigurationBuilder PingOnStartup(bool pingOnStartup)
-        {
-            return parent.PingOnStartup(pingOnStartup);
-        }
-    
         public ConfigurationBuilder ProtocolVersion(String protocolVersion)
         {
             return parent.ProtocolVersion(protocolVersion);

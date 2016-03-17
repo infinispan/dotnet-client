@@ -180,7 +180,6 @@ public class ConfigurationBuilder implements ConfigurationChildBuilder, Builder<
 
    @Override
    public ConfigurationBuilder pingOnStartup(boolean pingOnStartup) {
-      this.jniConfigurationBuilder.PingOnStartup(pingOnStartup);
       this.pingOnStartup = pingOnStartup;
       return this;
    }
