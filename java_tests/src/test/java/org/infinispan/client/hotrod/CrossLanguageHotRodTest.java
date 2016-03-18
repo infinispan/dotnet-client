@@ -1,6 +1,7 @@
 package org.infinispan.client.hotrod;
 
 import static org.infinispan.client.hotrod.test.HotRodClientTestingUtil.killServers;
+import static org.infinispan.client.hotrod.test.HotRodClientTestingUtil.startHotRodServer;
 import static org.infinispan.server.hotrod.test.HotRodTestingUtil.hotRodCacheConfiguration;
 import static org.infinispan.test.TestingUtil.killCacheManagers;
 import static org.testng.Assert.*;
@@ -13,7 +14,6 @@ import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
-import org.infinispan.client.hotrod.TestHelper;
 import org.infinispan.client.hotrod.logging.Log;
 import org.infinispan.client.hotrod.logging.LogFactory;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
@@ -121,7 +121,7 @@ public class CrossLanguageHotRodTest extends SingleCacheManagerTest {
       cacheManager = TestCacheManagerFactory.createCacheManager((ConfigurationBuilder) config);
       cacheManager.defineConfiguration(DEFAULT_CACHE, ((ConfigurationBuilder) config).build());
 
-      hotrodServer = TestHelper.startHotRodServer(cacheManager);
+      hotrodServer = startHotRodServer(cacheManager);
 
       // this is a safer way to load the java hotrod client, without relying on the classpath
       dotnetClassLoader = new InvertedURLClassLoader(getClientURL("infinispan.client.hotrod.dotnet"));
@@ -639,7 +639,12 @@ public class CrossLanguageHotRodTest extends SingleCacheManagerTest {
 
       testng.addListener(tr);
       testng.run();
+            String[] expectedTestFailures = { 
+            // Async operations are not supported currently
+      };
 
-      System.exit(tr.getFailedTests().size());
+      assertEquals(tr.getFailedTests().size(), expectedTestFailures.length);
+      System.exit(0);
+
    }
 }

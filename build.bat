@@ -4,8 +4,12 @@ set HOTRODCPP32_HOME=%checkoutDir%/cpp-client/build_win32/_CPack_Packages/WIN-i6
 set HOTRODCPP64_HOME=%checkoutDir%/cpp-client/build_win64/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%cppTag%-WIN-x86_64
 
 
-call:do_build %generator% 64
-call:do_build %generator% 32 
+if  not "%build64%"=="skip" ( 
+call:do_build %generator% 64 %test64%
+)
+if  not "%build32%"=="skip" ( 
+call:do_build %generator% 32 %test32%
+)
 
 goto eof
 
@@ -14,6 +18,7 @@ goto eof
 setlocal
 set "arch=%~2"
 set "build_dir=build_win%arch%"
+set "buildTest=%~3"
 
 if "%arch%" == "32" (
   set "JAVA_HOME=%JAVA_HOME_32%"
