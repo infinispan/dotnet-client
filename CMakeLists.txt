@@ -371,11 +371,17 @@ else (ISWIN64)
   set (arch "32")
 endif (ISWIN64)
 
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig${arch}/native_client/lib/hotrod${native_lib_suffix}.dll" DESTINATION lib/)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig${arch}/native_client/lib/hotrod${native_lib_suffix}.lib" DESTINATION lib/)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/native_client/lib/hotrod.dll" DESTINATION lib/)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/native_client/lib/hotrod.lib" DESTINATION lib/)
+
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/native_client/lib/hotrod32.dll" DESTINATION lib/)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/native_client/lib/hotrod32.lib" DESTINATION lib/)
 # Native wrapper.
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig${arch}/$<CONFIG>/hotrod_wrap${arch}.dll" DESTINATION lib/ OPTIONAL)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig${arch}/$<CONFIG>/hotrod_wrap${arch}.lib" DESTINATION lib/ OPTIONAL)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/$<CONFIG>/hotrod_wrap64.dll" DESTINATION lib/ OPTIONAL)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/$<CONFIG>/hotrod_wrap64.lib" DESTINATION lib/ OPTIONAL)
+# Native wrapper.
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/$<CONFIG>/hotrod_wrap32.dll" DESTINATION lib/ OPTIONAL)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/$<CONFIG>/hotrod_wrap32.lib" DESTINATION lib/ OPTIONAL)
 # Managed wrapper.
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll" DESTINATION lib/)
 # Managed wrapper API doc for IDE.
