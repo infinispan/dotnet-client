@@ -52,6 +52,10 @@
         return valueSizeEstimate(_valueSizeEstimate);
     }
     
+    public Infinispan.HotRod.SWIG.ConfigurationBuilder MaxRetries(int _maxRetries) {
+        return maxRetries(_maxRetries);
+    }
+    
     %}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"

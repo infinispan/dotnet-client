@@ -43,6 +43,7 @@ public class ConfigurationBuilder implements ConfigurationChildBuilder, Builder<
    private boolean tcpNoDelay = true;
    private Class<? extends TransportFactory> transportFactory;
    private int valueSizeEstimate = ConfigurationProperties.DEFAULT_VALUE_SIZE;
+   private int maxRetries = ConfigurationProperties.DEFAULT_MAX_RETRIES;
 
    private cli.Infinispan.HotRod.Config.ConfigurationBuilder jniConfigurationBuilder;
 
@@ -59,6 +60,7 @@ public class ConfigurationBuilder implements ConfigurationChildBuilder, Builder<
       this.socketTimeout(socketTimeout);
       this.tcpNoDelay(tcpNoDelay);
       this.valueSizeEstimate(valueSizeEstimate);
+      this.maxRetries(maxRetries);
    }
    
    public cli.Infinispan.HotRod.Config.ConfigurationBuilder getJniConfigurationBuilder() {
@@ -230,6 +232,13 @@ public class ConfigurationBuilder implements ConfigurationChildBuilder, Builder<
       this.valueSizeEstimate = valueSizeEstimate;
       return this;
    }
+   
+   @Override
+   public ConfigurationBuilder maxRetries(int maxRetries) {
+	  this.jniConfigurationBuilder.MaxRetries(maxRetries);
+      this.maxRetries = maxRetries;
+      return this;
+   }
 
    @Override
    public ConfigurationBuilder withProperties(Properties properties) {
@@ -261,6 +270,7 @@ public class ConfigurationBuilder implements ConfigurationChildBuilder, Builder<
 //         this.transportFactory(typed.getProperty(ConfigurationProperties.TRANSPORT_FACTORY));
 //      }
       this.valueSizeEstimate(typed.getIntProperty(ConfigurationProperties.VALUE_SIZE_ESTIMATE, valueSizeEstimate));
+      this.maxRetries(typed.getIntProperty(ConfigurationProperties.MAX_RETRIES, maxRetries));
       return this;
    }
 
