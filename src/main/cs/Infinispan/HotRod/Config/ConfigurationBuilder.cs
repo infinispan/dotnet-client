@@ -103,6 +103,12 @@ namespace Infinispan.HotRod.Config
             builder.ValueSizeEstimate(valueSizeEstimate);
             return this;
         }
+    
+        public ConfigurationBuilder MaxRetries(int maxRetries)
+        {
+            builder.MaxRetries(maxRetries);
+            return this;
+        }
 
         public ConfigurationBuilder Marshaller(IMarshaller marshaller)
         {

@@ -66,6 +66,11 @@ namespace Infinispan.HotRod.Config
             return parent.ValueSizeEstimate(valueSizeEstimate);
         }
     
+        public ConfigurationBuilder MaxRetries(int maxRetries)
+        {
+            return parent.MaxRetries(maxRetries);
+        }
+    
         public Configuration Build()
         {
             return parent.Build();

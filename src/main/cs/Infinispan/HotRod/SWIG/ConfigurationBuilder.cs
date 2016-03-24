@@ -19,5 +19,6 @@ namespace Infinispan.HotRod.SWIG
         ConfigurationBuilder SocketTimeout(int socketTimeout);
         ConfigurationBuilder TcpNoDelay(bool tcpNoDelay);
         ConfigurationBuilder ValueSizeEstimate(int valueSizeEstimate);
+        ConfigurationBuilder MaxRetries(int maxRetries);
     }
 }

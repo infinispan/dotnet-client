@@ -112,6 +112,14 @@ namespace Infinispan.HotRod.Config
         }
 
         /// <summary>
+        ///   Retrieves the configured max retries value
+        /// </summary>
+        public int MaxRetries()
+        {
+            return config.getMaxRetries();
+        }
+
+        /// <summary>
         ///   Retrieves the the configured marshaller.
         /// </summary>
         public IMarshaller Marshaller()
