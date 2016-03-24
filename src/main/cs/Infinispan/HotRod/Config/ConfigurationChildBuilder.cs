@@ -27,6 +27,8 @@ namespace Infinispan.HotRod.Config
 
         ConfigurationBuilder ValueSizeEstimate(int valueSizeEstimate);
 
+        ConfigurationBuilder MaxRetries(int maxRetries);
+
         Configuration Build();
     }
 #pragma warning restore 1591

@@ -166,6 +166,11 @@ public class Configuration {
       // return this.jniConfiguration.ValueSizeEstimate();
    }
 
+   public int maxRetries() {
+       throw new UnsupportedOperationException();
+      //return this.jniConfiguration.getMaxRetries();
+   }
+
    @Override
    public String toString() {
       return "Configuration [asyncExecutorFactory=" + asyncExecutorFactory + ", balancingStrategy=" + balancingStrategy + ", classLoader=" + classLoader + ", connectionPool="

@@ -14,6 +14,7 @@ namespace Infinispan.HotRod.SWIG
         int getKeySizeEstimate();
         int getSocketTimeout();
         int getValueSizeEstimate();
+        int getMaxRetries();
 
         ConnectionPoolConfiguration ConnectionPool();
         SslConfiguration Ssl();
