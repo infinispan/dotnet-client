@@ -22,6 +22,10 @@ import org.infinispan.server.hotrod.HotRodServer;
 import org.infinispan.test.SingleCacheManagerTest;
 import org.infinispan.test.fwk.TestCacheManagerFactory;
 import org.infinispan.client.hotrod.AnyServerEquivalence;
+import org.testng.IMethodSelector;
+import org.testng.IMethodSelectorContext;
+import org.testng.ITestNGMethod;
+import org.testng.ITestResult;
 import org.testng.TestNG;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -34,7 +38,7 @@ import org.testng.reporters.TextReporter;
  * 
  * @author Martin Gencur
   */
-public class StringSerializerHotRodTest extends SingleCacheManagerTest {
+public class StringSerializerHotRodTest extends SingleCacheManagerTest implements IMethodSelector {
    final String DEFAULT_CACHE_MANAGER = "local";
    final String DEFAULT_CACHE = "testcache";
 
@@ -200,8 +204,13 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest {
       clearCaches();
    }
 
+   private final static String [] passOverTestList = {
+	};
+   private final static HashSet<String> passOverTestSet = new HashSet<String>(Arrays.asList(passOverTestList));
+
    public static void main(String[] args) {
       TestNG testng = new TestNG();
+     testng.addMethodSelector("org.infinispan.client.hotrod.StringSerializerHotRodTest", 1);
       TextReporter tr = new TextReporter("StringSerializer Test", 2);
       testng.setTestClasses(new Class[] {
          StringSerializerHotRodTest.class
@@ -209,7 +218,83 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest {
 
       testng.addListener(tr);
       testng.run();
+      Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
+			      "StringSerializerHotRodTest.testDotNetGet"
+      ));
+      Set<String> expectedSkips = Collections.emptySet();
 
-      System.exit(tr.getFailedTests().size());
+      Set<String> failures = new TreeSet<String>();
+      for (ITestResult failed : tr.getFailedTests()) {
+         failures.add(failed.getTestClass().getRealClass().getSimpleName() + "." + failed.getMethod().getMethodName());
+      }
+      Set<String> skips = new TreeSet<String>();
+      for (ITestResult skipped : tr.getSkippedTests()) {
+         failures.add(skipped.getTestClass().getRealClass().getSimpleName() + "." + skipped.getMethod().getMethodName());
+      }
+
+      int exitCode = 0;
+      
+      Set<String> unexpectedFails = new TreeSet<String>(failures);
+      unexpectedFails.removeAll(expectedTestFailures);
+      if (!unexpectedFails.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test fail (but should not!):");
+	 for (String testName : unexpectedFails) {
+            System.err.println("\t" + testName);
+         } 
+      }
+      Set<String> notFailing = new TreeSet<String>(expectedTestFailures);
+      notFailing.removeAll(failures);
+      if (!notFailing.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test should fail (but don't!):");
+	 for (String testName : notFailing) {
+            System.err.println("\t" + testName);
+         }
+      }
+      Set<String> unexpectedSkips = new TreeSet<String>(skips);
+      unexpectedSkips.removeAll(expectedSkips);
+      if (!unexpectedSkips.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test have been skipped (but should not!):");
+	 for (String testName : unexpectedSkips) {
+            System.err.println("\t" + testName);
+         } 
+      }
+      Set<String> notSkipped = new TreeSet<String>(expectedSkips);
+      notSkipped.removeAll(skips);
+      if (!notSkipped.isEmpty()) {
+         exitCode = 1;
+         System.err.println("These test should have been skipped (but haven't!):");
+	 for (String testName : notSkipped) {
+            System.err.println("\t" + testName);
+         }
+      }
+
+      /* Force exit when tests pass also as some of the tests expected to fail
+         might not properly clean-up and as a result the process will not terminate
+         when main() returns. */
+      System.exit(exitCode);
+      
+
    }
+
+@Override
+public boolean includeMethod(IMethodSelectorContext context, ITestNGMethod method, boolean isTestMethod) {
+	String testName = method.getRealClass().getSimpleName()+"."+method.getMethodName();
+	if (passOverTestSet.contains(testName))
+	{
+		context.setStopped(true);
+		return false;
+	}
+	return true;
 }
+
+@Override
+public void setTestMethods(List<ITestNGMethod> testMethods) {
+	// TODO Auto-generated method stub
+	
+}
+}
+
+
