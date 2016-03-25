@@ -94,18 +94,6 @@ public class JavaClientTests implements IMethodSelector {
       testng.run();
 
       Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
-            // Async operations are not supported currently
-            "HotRodIntegrationTest.testReplaceWithVersionWithLifespanAsync",
-            "CacheManagerStoppedTest.testPutAllAsync",
-            "CacheManagerStoppedTest.testPutAsync",
-            "CacheManagerStoppedTest.testReplaceAsync",
-            "CacheManagerStoppedTest.testVersionedRemoveAsync",
-            "CacheManagerNotStartedTest.testPutAllAsync",
-            "CacheManagerNotStartedTest.testPutAsync",
-            "CacheManagerNotStartedTest.testReplaceAsync",
-            "CacheManagerNotStartedTest.testVersionedRemoveAsync",
-			// ISPN-4017
-            "BaseBulkGetKeysTest.testBulkGetAfterLifespanExpire",
             //deprecated in the Java client, and not available in C# client  
             "RemoteCacheManagerTest.testUrlAndBooleanConstructor",
             //see HRCPP-190
