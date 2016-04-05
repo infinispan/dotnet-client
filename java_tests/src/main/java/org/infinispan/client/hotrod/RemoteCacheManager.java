@@ -52,6 +52,13 @@ public class RemoteCacheManager /* implements BasicCacheContainer */{
     public RemoteCacheManager(Configuration config, boolean start) {
         jniRemoteCacheManager = new cli.Infinispan.HotRod.Wrappers.RemoteCacheManager(config.getJniConfiguration(), start);
     }
+    
+    public RemoteCacheManager(Configuration config, boolean start, boolean useCompatibilityStringMarshaller) {
+        if (useCompatibilityStringMarshaller) {
+            this.marshaller = null;
+        }
+        jniRemoteCacheManager = new cli.Infinispan.HotRod.Wrappers.RemoteCacheManager(config.getJniConfiguration(), start, useCompatibilityStringMarshaller);
+    }
 
     public RemoteCacheManager(String server, int port) {
         this(asConfiguration(server, port), true);
@@ -65,8 +72,12 @@ public class RemoteCacheManager /* implements BasicCacheContainer */{
         this(asConfiguration(servers), true);
     }
 
+    public RemoteCacheManager(String servers, boolean start, boolean useCompatibilityStringMarshaller) {
+        this(asConfiguration(servers), start, useCompatibilityStringMarshaller);
+    }
+    
     public RemoteCacheManager(String servers, boolean start) {
-        this(asConfiguration(servers), start);
+        this(asConfiguration(servers), start, false);
     }
 
     public RemoteCacheManager(URL config, boolean start) throws IOException {

@@ -7,9 +7,9 @@ namespace Infinispan.HotRod.Wrappers
 {
     public class MetadataValue : VersionedValue
     {
-        private Infinispan.HotRod.IMetadataValue<byte[]> value;
+        private Infinispan.HotRod.IMetadataValue<object> value;
 
-        internal MetadataValue(Infinispan.HotRod.IMetadataValue<byte[]> value) : base(value)
+        internal MetadataValue(Infinispan.HotRod.IMetadataValue<object> value) : base(value)
         {
             this.value = value;
         }

@@ -494,23 +494,32 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
     
     }
 
-    private byte[] marshal(Object obj) {
-        try {
-            return marshaller.objectToByteBuffer(obj);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(String.format("Failed to marshall %s", obj), ex);
+    private Object marshal(Object obj) {
+        if (this.marshaller != null) {
+            try {
+                return marshaller.objectToByteBuffer(obj);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(String.format("Failed to marshall %s", obj), ex);
+            }
+        } else {
+            return obj;
         }
+        
     }
 
-    private Object unmarshal(byte[] buf) {
-        if (buf == null) {
-            return null;
-        }
-        try {
-            return marshaller.objectFromByteBuffer(buf);
-        } catch (Exception ex) {
-            throw new IllegalArgumentException(String.format("Failed to unmarshall %s", Arrays.toString(buf)), ex);
-        }
+    private Object unmarshal(Object buf) {
+        if (this.marshaller != null && buf instanceof byte[]) {
+            if (buf == null) {
+                return null;
+            }
+            try {
+                return marshaller.objectFromByteBuffer((byte[])buf);
+            } catch (Exception ex) {
+                throw new IllegalArgumentException(String.format("Failed to unmarshall %s", Arrays.toString((byte[])buf)), ex);
+            }
+        } else {
+            return buf;
+        }    
     }
 
     private cli.Infinispan.HotRod.TimeUnit convert(TimeUnit timeUnit) {
@@ -551,7 +560,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         return Integer.parseInt(val.ToString());
     }
 
-    private Set<K> toKSet(byte[][] data) {
+    private Set<K> toKSet(Object[] data) {
         if (data == null) {
             return null;
         }
@@ -562,7 +571,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         return result;
     }
 
-    private Map<K, V> toKVMap(byte[][][] data) {
+    private Map<K, V> toKVMap(Object[][] data) {
         if (data == null) {
             return null;
         }
