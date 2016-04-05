@@ -4,16 +4,16 @@
 Build prerequisites:
 
 * C++ HotRod Client (www.infinispan.org/hotrod-clients/)
-* CMake 2.8 (3.x if VS 2015 is needed) (www.cmake.org)
-* C++03 plus shared_ptr TR1 support.
+* CMake 3.x (www.cmake.org)
+* C++11
 * SWIG 2.0.x (http://www.swig.org)
 * .NET Framework 4.5
 * NLog 2.1.0 (http://nlog-project.org/)
 * NUnit 2.6.3 (https://launchpad.net/nunitv2)
-* IKVM.NET 7.2.4630.5 (http://www.ikvm.net/)
+* IKVM.NET 8.1.5717.0 (http://www.ikvm.net/)
 
 Note: after unpacking IKVM please edit the .exe.config files in <ikvm-root>/bin
-and comment-out the "<supportedRuntime version="v2.0.50727"/>" element from all
+and comment-out the "\<supportedRuntime version="v2.0.50727"/\>" element from all
 of them.
 
 Documentation building requirements:
