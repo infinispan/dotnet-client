@@ -66,15 +66,12 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
    protected EmbeddedCacheManager createCacheManager() throws Exception {
       // Enable statistics in the global configuration
       Object config = hotRodCacheConfiguration();
-      ((ConfigurationBuilder) config).jmxStatistics().enable()
-        .compatibility().enable()
-        .dataContainer().keyEquivalence(EQUIVALENCE).valueEquivalence(EQUIVALENCE);
+      ((ConfigurationBuilder) config).jmxStatistics().enable();
 
       cacheManager = TestCacheManagerFactory.createCacheManager((ConfigurationBuilder) config);
       cacheManager.defineConfiguration(DEFAULT_CACHE, ((ConfigurationBuilder) config).build());
 
       hotrodServer = startHotRodServer(cacheManager);
-
       // this is a safer way to load the java hotrod client, without relying on the classpath
       dotnetClassLoader = new InvertedURLClassLoader(getClientURL("infinispan.client.hotrod.dotnet"));
       boolean useCompatibilityStringSerializer = true;
@@ -191,13 +188,13 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
    public void testDotNetGet() throws Exception {
       log.info("doDotNetGet()");
       initEmptyCaches();
-
+     
       for (int i = 0; i < valueArray.length; i++) {
          javaCache.put("k" + i, valueArray[i]);
       }
       
       assertEquals(dotnetCache.size(), valueArray.length);
-      
+
       for (int i = 0; i < valueArray.length; i++) {
          assertEquals(dotnetCache.get("k" + i), valueArray[i]);
       }
@@ -210,7 +207,7 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
 
    public static void main(String[] args) {
       TestNG testng = new TestNG();
-     testng.addMethodSelector("org.infinispan.client.hotrod.StringSerializerHotRodTest", 1);
+      testng.addMethodSelector("org.infinispan.client.hotrod.StringSerializerHotRodTest", 1);
       TextReporter tr = new TextReporter("StringSerializer Test", 2);
       testng.setTestClasses(new Class[] {
          StringSerializerHotRodTest.class
@@ -218,9 +215,7 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
 
       testng.addListener(tr);
       testng.run();
-      Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
-			      "StringSerializerHotRodTest.testDotNetGet"
-      ));
+      Set<String> expectedTestFailures = new TreeSet<String>();
       Set<String> expectedSkips = Collections.emptySet();
 
       Set<String> failures = new TreeSet<String>();
