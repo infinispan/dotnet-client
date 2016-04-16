@@ -19,7 +19,7 @@
     <properties>
         <version.org.infinispan>9.0.0.Alpha1</version.org.infinispan>
         <version.org.jboss.logging.processor>1.1.0.Final</version.org.jboss.logging.processor>
-        <version.org.jboss.jbossts>4.17.32.Final</version.org.jboss.jbossts>
+        <version.org.jboss.narayana.jta>5.2.16.Final</version.org.jboss.narayana.jta>
         <version.org.testng>6.8</version.org.testng>
         <version.io.netty>4.0.25.Final</version.io.netty>
         <version.jcipannotations>1.0</version.jcipannotations>
@@ -113,16 +113,16 @@
             <classifier>tests</classifier>
             <scope>test</scope>
         </dependency>
-          <dependency>
-         <groupId>org.infinispan</groupId>
-         <artifactId>infinispan-query-dsl</artifactId>
-         <version>${version.org.infinispan}</version>
-         <scope>test</scope>
-      </dependency>
-    <dependency>
-            <groupId>org.jboss.jbossts.jta</groupId>
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query-dsl</artifactId>
+            <version>${version.org.infinispan}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.narayana.jta</groupId>
             <artifactId>narayana-jta</artifactId>
-            <version>${version.org.jboss.jbossts}</version>
+            <version>${version.org.jboss.narayana.jta}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
