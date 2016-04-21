@@ -14,9 +14,9 @@
 #include <infinispan/hotrod/ImportExport.h>
 #include <infinispan/hotrod/Marshaller.h>
 #include <infinispan/hotrod/MetadataValue.h>
-#include <infinispan/hotrod/RemoteCache.h>
-#include <infinispan/hotrod/RemoteCacheBase.h>
-#include <infinispan/hotrod/RemoteCacheManager.h>
+#include <swig/RemoteCache.h>
+#include <swig/RemoteCacheBase.h>
+#include <swig/RemoteCacheManager.h>
 #include <infinispan/hotrod/ServerConfiguration.h>
 #include <infinispan/hotrod/ServerConfigurationBuilder.h>
 #include <infinispan/hotrod/SslConfiguration.h>
@@ -98,9 +98,9 @@
 %include "infinispan/hotrod/SslConfigurationBuilder.h"
 %include "infinispan/hotrod/ConfigurationBuilder.h"
 
-%include "infinispan/hotrod/RemoteCacheBase.h"
-%include "infinispan/hotrod/RemoteCache.h"
-%include "infinispan/hotrod/RemoteCacheManager.h"
+%include "swig/RemoteCacheBase.h"
+%include "swig/RemoteCache.h"
+%include "swig/RemoteCacheManager.h"
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}
 %apply unsigned char OUTPUT[] {unsigned char* dest_bytes}
