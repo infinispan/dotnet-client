@@ -48,6 +48,7 @@
 %include "std_vector.i"
 
 %template (VectorChar) std::vector<char>;
+%template (VectorByte) std::vector<unsigned char>;
 %template (ServerNameIdVector) std::vector<infinispan::hotrod::ServerNameId>;
 
 %include "std_shared_ptr.i"

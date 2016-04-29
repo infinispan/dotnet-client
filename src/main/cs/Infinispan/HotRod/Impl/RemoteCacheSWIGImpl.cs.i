@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Infinispan.HotRod.SWIG${ARCH};
 using Infinispan.HotRod.Exceptions;
+using Org.Infinispan.Query.Remote.Client;
+using System.IO;
+using Google.Protobuf;
 
 namespace Infinispan.HotRod.Impl
 {
@@ -218,6 +221,23 @@ namespace Infinispan.HotRod.Impl
         {
             cache.withFlags((Infinispan.HotRod.SWIG${ARCH}.Flag) flags);
             return this;
+        }
+
+
+        public QueryResponse Query(QueryRequest qr)
+        {
+            uint size = (uint) qr.CalculateSize();
+            byte[] bytes = new byte[size];
+            CodedOutputStream cos = new CodedOutputStream(bytes);
+            qr.WriteTo(cos);
+            cos.Flush();
+            string s2 = System.Text.Encoding.ASCII.GetString(bytes);
+            VectorByte vb = new VectorByte(bytes);
+            VectorByte resp= cache.query(vb, size);
+            byte[] respBytes = new byte[resp.Count];
+            resp.CopyTo(respBytes);
+            QueryResponse queryResp = new QueryResponse();
+            return QueryResponse.Parser.ParseFrom(respBytes);
         }
 
         private ByteArray wrap(Object input)

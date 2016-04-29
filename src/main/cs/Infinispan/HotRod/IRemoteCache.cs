@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Org.Infinispan.Query.Remote.Client;
 
 namespace Infinispan.HotRod
 {
@@ -363,5 +364,20 @@ namespace Infinispan.HotRod
         ///   remoteCache.WithFlags(Flags.FORCE_RETURN_VALUE | Flags.DEFAULT_LIFETIME).put("hello", "world");
         /// </example>
         IRemoteCache<K, V> WithFlags(Flags flags);
+
+        /// <summary>
+        ///   Query the cache
+        /// </summary>
+        ///
+        /// <param name="query">the query sring</param>
+        ///
+        /// <returns>A query response containing the result set</returns>
+        ///
+        /// <example>
+        ///   QueryRequest qReq = new QueryResponse();
+        ///   qReq.JpqlString="from sample_bank_account.User";
+        ///   QueryResponse qRes= remoteCache.query(qReq);
+        /// </example>
+        QueryResponse Query(QueryRequest query);
     }
 }
