@@ -70,6 +70,64 @@ message ("HotRod Assembly Version: ${HOTROD_ASSEMBLY_VERSION}")
 message (STATUS "HOTRODCPP32_HOME value is :" ${HOTRODCPP32_HOME} )
 message (STATUS "HOTRODCPP64_HOME value is :" ${HOTRODCPP64_HOME} )
 
+find_package(Protobuf REQUIRED)
+
+function(HR_PROTOBUF_GENERATE_CSHARP SRCS)
+  if(NOT ARGN)
+	  message(SEND_ERROR "Error: PROTOBUF_GENERATE_CSHARP() called without any proto files")
+    return()
+  endif()
+
+  if(PROTOBUF_GENERATE_CPP_APPEND_PATH)
+    # Create an include path for each file specified
+    foreach(FIL ${ARGN})
+      get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
+      get_filename_component(ABS_PATH ${ABS_FIL} PATH)
+      list(FIND _protobuf_include_path ${ABS_PATH} _contains_already)
+      if(${_contains_already} EQUAL -1)
+          list(APPEND _protobuf_include_path -I ${ABS_PATH})
+      endif()
+    endforeach()
+  else()
+    set(_protobuf_include_path -I ${CMAKE_CURRENT_SOURCE_DIR})
+  endif()
+
+  if(DEFINED PROTOBUF_IMPORT_DIRS)
+    foreach(DIR ${PROTOBUF_IMPORT_DIRS})
+      get_filename_component(ABS_PATH ${DIR} ABSOLUTE)
+      list(FIND _protobuf_include_path ${ABS_PATH} _contains_already)
+      if(${_contains_already} EQUAL -1)
+          list(APPEND _protobuf_include_path -I ${ABS_PATH})
+      endif()
+    endforeach()
+  endif()
+
+  set(${SRCS})
+  foreach(FIL ${ARGN})
+    get_filename_component(ABS_FIL ${FIL} ABSOLUTE)
+    get_filename_component(FIL_WE ${FIL} NAME_WE)
+
+    list(APPEND ${SRCS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.pb.cc")
+    list(APPEND ${HDRS} "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.pb.h")
+
+    add_custom_command(
+      OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.pb.cc"
+             "${CMAKE_CURRENT_BINARY_DIR}/${FIL_WE}.pb.h"
+	     COMMAND  ${PROTOBUF_PROTOC_EXECUTABLE_CS}
+      ARGS --csharp_out ${CMAKE_CURRENT_BINARY_DIR} ${_protobuf_include_path} ${ABS_FIL}
+      DEPENDS ${ABS_FIL}
+      COMMENT "Running C# protocol buffer compiler on ${FIL}"
+      VERBATIM )
+
+  endforeach()
+
+  set_source_files_properties(${${SRCS}} PROPERTIES GENERATED TRUE)
+  set(${SRCS} ${${SRCS}} PARENT_SCOPE)
+endfunction()
+
+
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+
 ### Generated and build the SWIG wrapper ###
 if (NOT DEFINED HOTRODCPP32_HOME AND DEFINED ENV{HOTRODCPP32_HOME})
   set (HOTRODCPP32_HOME $ENV{HOTRODCPP32_HOME})
@@ -102,6 +160,18 @@ file (COPY "${CMAKE_CPP64_HOME}/lib/" DESTINATION "${NATIVE64_LIB_DIR}" PATTERN 
 file (COPY "${CMAKE_CPP32_HOME}/include/" DESTINATION "${NATIVE32_DIR}/include" PATTERN "*")
 file (COPY "${CMAKE_CPP64_HOME}/include/" DESTINATION "${NATIVE64_DIR}/include" PATTERN "*")
 
+hr_protobuf_generate_csharp(PROTO_SRCS  
+  proto/infinispan/hotrod/protobuf/base_types.proto
+  proto/org/infinispan/protostream/message-wrapping.proto
+  proto/org/infinispan/query/remote/client/query.proto
+)
+
+hr_protobuf_generate_csharp(TEST_PROTO_SRCS  
+  test/query_proto/addressbook.proto
+  test/query_proto/bank.proto
+)
+
+
 if (WIN32)
   string(REPLACE " Win64" "" GENERATOR "${CMAKE_GENERATOR}")
   add_custom_target(
@@ -109,17 +179,19 @@ if (WIN32)
     COMMAND cmake -G "${GENERATOR}" "-DARCH=32" "-DHOTRODCPP_HOME=${NATIVE32_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
     COMMAND cmake --build . --config "${CMAKE_CFG_INTDIR}"
     WORKING_DIRECTORY "${SWIG32_BUILD}"
+    DEPENDS ${PROTO_SRCS} ${TEST_PROTO_SRCS}
     )
+
   add_custom_target(
     swig64 ALL
     COMMAND cmake -G "${GENERATOR} Win64" "-DARCH=64" "-DHOTRODCPP_HOME=${NATIVE64_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
     COMMAND cmake --build . --config "${CMAKE_CFG_INTDIR}"
     WORKING_DIRECTORY "${SWIG64_BUILD}"
     )
+
 else (WIN32)
 #TODO: mono
 endif (WIN32)
-
 ### Compile the C# code ###
 if (NOT DEFINED NLOG_DLL AND DEFINED ENV{NLOG_DLL})
   set (NLOG_DLL $ENV{NLOG_DLL})
@@ -171,6 +243,7 @@ string(REPLACE "/" "\\" W_SWIG64_BUILD "${SWIG64_BUILD}")
 configure_file(templates/hotrodcs.proj.in hotrodcs.csproj)
 configure_file(templates/hotrodcs-tests.proj.in hotrodcs-tests.csproj)
 configure_file(templates/AssemblyInfo.cs.in AssemblyInfo.cs)
+configure_file(templates/nativeTestSuite.csproj.in nativeTestSuite.csproj)
 
 set (ARCH 32)
 configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG32_BUILD}/RemoteCacheSWIG32Impl.cs")
@@ -187,6 +260,11 @@ if (WIN32)
 	                       TYPE AA8E36D7-FD51-4D63-A68E-227F5C4871C6
 			       GUID AA8E36D7-FD51-4D63-A68E-227F5C4871C6
 			       swig32 )
+		       include_external_msproject(nativeTestSuite nativeTestSuite.csproj
+		                TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
+				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
+				PLATFORM x64
+				vs-hotrodcs-bin)
   add_custom_target(hotrodcs-bin DEPENDS swig32 swig64 vs-hotrodcs-bin)
   if (ISWIN64)
 	  include_external_msproject(vs-hotrodcs-test-bin hotrodcs-tests.csproj
@@ -265,15 +343,15 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
   endif (NOT MAVEN_BINARY)
 
   if (NOT IKVM_CUSTOM_BIN_PATH)
-  find_program(IKVM_BINARY ikvm ikvm.exe)
-  if (NOT IKVM_BINARY)
-    message (FATAL_ERROR "Failed to find IKVM.")
-  endif (NOT IKVM_BINARY)
-
-  find_program(IKVMSTUB_BINARY ikvmstub ikvmstub.exe)
-  if (NOT IKVMSTUB_BINARY)
-    message (FATAL_ERROR "Failed to find IKVMSTUB.")
-  endif (NOT IKVMSTUB_BINARY)
+    find_program(IKVM_BINARY ikvm ikvm.exe)
+    if (NOT IKVM_BINARY)
+      message (FATAL_ERROR "Failed to find IKVM.")
+    endif (NOT IKVM_BINARY)
+  
+    find_program(IKVMSTUB_BINARY ikvmstub ikvmstub.exe)
+    if (NOT IKVMSTUB_BINARY)
+      message (FATAL_ERROR "Failed to find IKVMSTUB.")
+    endif (NOT IKVMSTUB_BINARY)
   else (NOT IKVM_CUSTOM_BIN_PATH)
 	  set (IKVM_BINARY ${IKVM_CUSTOM_BIN_PATH}/ikvm.exe) 
 	  set (IKVMSTUB_BINARY ${IKVM_CUSTOM_BIN_PATH}/ikvmstub.exe) 
@@ -285,6 +363,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
   # Pass the updated path using an external script.
   file (TO_NATIVE_PATH "${IKVM_BINARY}" IKVM_NATIVE_BINARY)
   configure_file(templates/run_ikvm.bat.in ${java_tests_dir}/run_ikvm.bat)
+  configure_file(templates/run_ispn.bat.in ${CMAKE_CURRENT_BINARY_DIR}/run_ispn.bat)
 
   add_custom_target (hotrod-ikvm-jar ALL
     COMMAND ${IKVMSTUB_BINARY}
@@ -355,7 +434,6 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/$<CONFIG>/hotrodcs-tests.dll
     "org.infinispan.client.hotrod.StringSerializerHotRodTest")
   set_tests_properties(compatibility_serializer_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
-  
     
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
@@ -377,6 +455,22 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
     set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
   endif (WIN32)
 endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
+
+#add_test(NAME start_jboss
+#WORKING_DIRECTORY ${JBOSS_HOME}/bin
+#COMMAND ${CMAKE_CURRENT_BINARY_DIR}/run_ispn.bat
+#)
+#
+#add_test(NAME nativeTestSuite
+#WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin/$<CONFIG>
+#COMMAND nativeTestSuite.exe "${CMAKE_CURRENT_SOURCE_DIR}/nativeTestSuite"
+#)
+#
+#add_test(NAME stop_jboss
+#WORKING_DIRECTORY ${JBOSS_HOME}/bin
+#COMMAND ispn-cli.bat --connect command=:shutdown
+#)
+  
 
 ### Packaging. ###
 set (CPACK_GENERATOR "WIX")

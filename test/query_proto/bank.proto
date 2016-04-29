@@ -1,0 +1,151 @@
+syntax = "proto3";
+package sample_bank_account;
+
+option java_package = "com.example.generated_by_protoc";
+option java_outer_classname = "BankProtos";
+
+/**
+ * @Indexed(true)
+ * @TypeId(42)
+ */
+message User {
+
+   /**
+    * @IndexedField(index=true, store=true)
+    */
+   int32 id = 1;
+
+   /**
+    * @IndexedField()
+    */
+   int32 accountIds = 2;
+
+   /**
+    * @IndexedField
+    */
+   string name = 3;
+
+   /**
+    * @IndexedField
+    */
+   string surname = 4;
+
+   message Address {
+      string street = 1;
+      string postCode = 2;
+      int32 number = 3;
+   }
+
+   /**
+    * @IndexedField
+    */
+   repeated Address addresses = 5;     //a repeated field cannot be marked required
+
+   /**
+    * @IndexedField
+    */
+   int32 age = 6;   // persisting age instead of birth date is not ideal but is ok for our sample code
+
+   /* @TypeId(41) */
+   enum Gender {
+      MALE = 0;    //NOTE: It seems negative values are accepted too!
+      FEMALE = 1;
+   }
+
+   /**
+    * @IndexedField
+    */
+   Gender gender = 7;
+
+   string notes = 8;
+}
+
+/**
+ * @Indexed
+ */
+message Account {
+
+   /**
+    * @IndexedField
+    */
+   int32 id = 1;
+
+   /**
+    * @IndexedField
+    */
+   string description = 2; 
+
+   /**
+    * @IndexedField
+    */
+   fixed64 creationDate = 3;
+
+   message Limits {
+       double maxDailyLimit = 1;
+       double maxTransactionLimit = 2; 
+   }
+
+   /**
+    * @IndexedField
+    */
+   Limits limits = 4;
+
+   /**
+    * @IndexedField
+    */
+   repeated bytes blurb = 5;
+}
+
+/**
+ * @Indexed
+ */
+message Transaction {
+
+   /**
+    * @IndexedField
+    */
+   int32 id = 1;
+
+   /**
+    * @IndexedField(store = false)
+    */
+   string description = 2;
+
+   /**
+    * @IndexedField
+    */
+   int32 accountId = 3;
+
+   /**
+    * @IndexedField
+    */
+   fixed64 date = 4;  // there is no native Date type in protobuf so we have to store it as a long
+
+   /**
+    * @IndexedField
+    */
+   double amount = 5; // how do I store a BigDecimal? maybe as a byte array ..
+
+   /**
+    * @IndexedField
+    */
+   bool isDebit = 6;
+
+   bool isValid = 7;
+}
+
+/**
+ *
+ */
+message int_array {
+   repeated int32 theArray = 1;
+}
+
+/**
+ *
+ */
+message user_list {
+   repeated User theList = 1;
+}
+
+//todo demonstrate collection of 'any'
