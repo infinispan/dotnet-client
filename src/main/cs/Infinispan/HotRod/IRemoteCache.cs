@@ -379,5 +379,14 @@ namespace Infinispan.HotRod
         ///   QueryResponse qRes= remoteCache.query(qReq);
         /// </example>
         QueryResponse Query(QueryRequest query);
+
+        /// <summary>
+        ///   Execute a script on the server
+        /// </summary>
+        /// <param name="scriptName">script name</param>
+        /// <param name="dict">map of the arguments</param>
+        /// <returns>a stream of byte containing the result</returns>
+        byte[] Execute(String scriptName, IDictionary<String, String> dict);
     }
+
 }

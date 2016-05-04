@@ -49,6 +49,9 @@
     <Compile Include="${W_S}\nativeTestSuite\QueryTest.cs" />
     <Compile Include="${W_S}\nativeTestSuite\Properties\AssemblyInfo.cs" />
     <Compile Include="${W_S}\nativeTestSuite\BasicTypesProtoStreamMarshaller.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\JBasicMarshaller.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\RemoteExecTest.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\NativeTestSuite.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="${W_S}\nativeTestSuite\App.config" />

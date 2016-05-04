@@ -609,7 +609,7 @@ template <class K, class V> class RemoteCache : private RemoteCacheBase
     {
     	return base_execute(name,args);
     }
-    
+
     /**
      * Execute a query on server
      * \param cmdName name of the script
