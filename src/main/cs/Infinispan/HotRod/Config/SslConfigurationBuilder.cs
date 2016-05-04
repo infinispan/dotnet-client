@@ -19,6 +19,24 @@ namespace Infinispan.HotRod.Config
             return new SslConfiguration(builder.Create());
         }
 
+        public SslConfigurationBuilder Enable()
+        {
+            builder.Enable();
+            return this;
+        }
+
+        public SslConfigurationBuilder ServerCAFile(string filename)
+        {
+            builder.ServerCAFile(filename);
+            return this;
+        }
+
+        public SslConfigurationBuilder ClientCertificateFile(string filename)
+        {
+            builder.ClientCertificateFile(filename);
+            return this;
+        }
+
         public IBuilder<SslConfiguration> Read(SslConfiguration bean)
         {
             builder.Read(bean.Config());

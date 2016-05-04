@@ -52,6 +52,7 @@
     <Compile Include="${W_S}\nativeTestSuite\JBasicMarshaller.cs" />
     <Compile Include="${W_S}\nativeTestSuite\RemoteExecTest.cs" />
     <Compile Include="${W_S}\nativeTestSuite\NativeTestSuite.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\SSLTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="${W_S}\nativeTestSuite\App.config" />
