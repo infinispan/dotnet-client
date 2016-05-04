@@ -174,6 +174,18 @@
     public Infinispan.HotRod.SWIG.SslConfiguration Create() {
         return create();
     }
+
+    public Infinispan.HotRod.SWIG.SslConfigurationBuilder Enable() {
+        return enable();
+    }
+
+    public Infinispan.HotRod.SWIG.SslConfigurationBuilder ServerCAFile(string filename) {
+        return serverCAFile(filename);
+    }
+
+    public Infinispan.HotRod.SWIG.SslConfigurationBuilder ClientCertificateFile(string filename) {
+        return clientCertificateFile(filename);
+    }
     %}
 
 %typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"

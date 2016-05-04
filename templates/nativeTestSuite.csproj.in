@@ -52,9 +52,13 @@
     <Compile Include="${W_S}\nativeTestSuite\JBasicMarshaller.cs" />
     <Compile Include="${W_S}\nativeTestSuite\RemoteExecTest.cs" />
     <Compile Include="${W_S}\nativeTestSuite\NativeTestSuite.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\SSLTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="${W_S}\nativeTestSuite\App.config" />
+    <None Include="${W_S}\nativeTestSuite\infinispan-ca.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\build_windows_64\hotrodcs.csproj">

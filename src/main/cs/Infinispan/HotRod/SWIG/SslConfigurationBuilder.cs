@@ -4,5 +4,9 @@ namespace Infinispan.HotRod.SWIG
     {
         SslConfiguration Create();
         void Read(SslConfiguration bean);
+        SslConfigurationBuilder Enable();
+        SslConfigurationBuilder ClientCertificateFile(string filename);
+        SslConfigurationBuilder ServerCAFile(string filename);
+
     }
 }
