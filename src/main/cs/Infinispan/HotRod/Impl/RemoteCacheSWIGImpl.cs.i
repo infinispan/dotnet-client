@@ -239,6 +239,19 @@ namespace Infinispan.HotRod.Impl
             QueryResponse queryResp = new QueryResponse();
             return QueryResponse.Parser.ParseFrom(respBytes);
         }
+        
+        public byte[] Execute(string scriptName, IDictionary<string, string> dict)
+        {
+            StringMap sm = new StringMap();
+            foreach (KeyValuePair<string, string> p in dict)
+            {
+                sm.Add(p.Key, p.Value);
+            }
+            VectorByte vb = cache.execute(scriptName, sm);
+            byte[] ret = new byte[vb.Count];
+            vb.CopyTo(ret);
+            return ret;
+        }
 
         private ByteArray wrap(Object input)
         {
