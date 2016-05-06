@@ -605,9 +605,20 @@ template <class K, class V> class RemoteCache : private RemoteCacheBase
      * \param args maps of (name,value) arguments
      * \return byte[] result in dark matter shape
      */
-    char* execute(const std::string& name, const std::map<std::string,std::string>& args)
+    std::vector<unsigned char> execute(const std::string& name, const std::map<std::string,std::string>& args)
     {
-    	return base_execute(*this,name,args);
+    	return base_execute(name,args);
+    }
+    
+    /**
+     * Execute a query on server
+     * \param cmdName name of the script
+     * \param args maps of (name,value) arguments
+     * \return byte[] result in dark matter shape
+     */
+    std::vector<unsigned char> query(std::vector<unsigned char> str, size_t size)
+    {
+    	return base_query_char(str, size);
     }
 
     /**

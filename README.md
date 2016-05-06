@@ -11,6 +11,7 @@ Build prerequisites:
 * NLog 2.1.0 (http://nlog-project.org/)
 * NUnit 2.6.3 (https://launchpad.net/nunitv2)
 * IKVM.NET 8.1.5717.0 (http://www.ikvm.net/)
+* Google.Protobuf 3.x .net assembly with protoc (nupkg is fine)
 
 Note: after unpacking IKVM please edit the .exe.config files in <ikvm-root>/bin
 and comment-out the "\<supportedRuntime version="v2.0.50727"/\>" element from all

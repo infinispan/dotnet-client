@@ -1,7 +1,6 @@
+set HOTRODCPP32_HOME=%checkoutDir%/cpp-client/build_win32/_CPack_Packages/WIN-i686/ZIP/infinispan-hotrod-cpp-%cppTag%-WIN-i686
 
-if [%HOTRODCPP32_HOME%] == [] set HOTRODCPP32_HOME=%checkoutDir%/cpp-client/build_win32/_CPack_Packages/WIN-i686/ZIP/infinispan-hotrod-cpp-%cppTag%-WIN-i686
-
-if [%HOTRODCPP64_HOME%] == [] set HOTRODCPP64_HOME=%checkoutDir%/cpp-client/build_win64/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%cppTag%-WIN-x86_64
+set HOTRODCPP64_HOME=%checkoutDir%/cpp-client/build_win64/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%cppTag%-WIN-x86_64
 
 if [%JAVA_HOME_32%] == [] set JAVA_HOME_32=%JAVA_HOME%
 if [%JAVA_HOME_64%] == [] set JAVA_HOME_64=%JAVA_HOME%
@@ -40,7 +39,7 @@ cd build_windows_64
 )
 
 
-cmake -G "%full_generator%" -DHOTRODCPP32_HOME=%HOTRODCPP32_HOME% -DHOTRODCPP64_HOME=%HOTRODCPP64_HOME%  -DPROTOBUF_INCLUDE_DIR=%PROTOBUF_INCLUDE_DIR% %~4 ..
+cmake -G "%full_generator%" -DHOTRODCPP32_HOME=%HOTRODCPP32_HOME% -DHOTRODCPP64_HOME=%HOTRODCPP64_HOME%  -DPROTOBUF_INCLUDE_DIR=%PROTOBUF_INCLUDE_DIR% -DPROTOBUF_PROTOC_EXECUTABLE_CS=%PROTOBUF_PROTOC_EXECUTABLE_CS% -DGOOGLE_PROTOBUF_NUPKG=%GOOGLE_PROTOBUF_NUPKG% -DJBOSS_HOME=%JBOSS_HOME% -DIKVM_CUSTOM_BIN_PATH=%IKVM_CUSTOM_BIN_PATH% %~4 ..
 if %errorlevel% neq 0 goto fail
 
 cmake --build . --config RelWithDebInfo
