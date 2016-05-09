@@ -53,6 +53,7 @@
     <Compile Include="${W_S}\nativeTestSuite\RemoteExecTest.cs" />
     <Compile Include="${W_S}\nativeTestSuite\NativeTestSuite.cs" />
     <Compile Include="${W_S}\nativeTestSuite\SSLTest.cs" />
+    <Compile Include="${W_S}\nativeTestSuite\AsyncTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="${W_S}\nativeTestSuite\App.config" />
