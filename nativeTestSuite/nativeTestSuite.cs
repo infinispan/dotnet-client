@@ -10,7 +10,7 @@ namespace nativeTestSuite
     {
         public static void Main(string[] args)
         {
-            RemoteExecTest.testMain(args);
+            AsyncTest.testMain(args);
         }
     }
 }
