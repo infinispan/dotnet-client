@@ -3,7 +3,6 @@
 %{
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/Builder.h>
-#include <infinispan/hotrod/ServerNameId.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
@@ -49,7 +48,6 @@
 
 %template (VectorChar) std::vector<char>;
 %template (VectorByte) std::vector<unsigned char>;
-%template (ServerNameIdVector) std::vector<infinispan::hotrod::ServerNameId>;
 
 %include "std_shared_ptr.i"
 %shared_ptr(infinispan::hotrod::ByteArray)
@@ -84,7 +82,6 @@
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
 %include "infinispan/hotrod/ServerConfiguration.h"
 %include "infinispan/hotrod/SslConfiguration.h"
-%include "infinispan/hotrod/ServerNameId.h"
 %include "infinispan/hotrod/FailOverRequestBalancingStrategy.h"
 %include "infinispan/hotrod/Configuration.h"
 

@@ -67,8 +67,7 @@ set (CPACK_WIX_UPGRADE_GUID "7cc17657-80b5-417f-9209-710682f852f4") # This value
 message ("HotRod Version: ${HOTROD_VERSION}")
 message ("HotRod Assembly Version: ${HOTROD_ASSEMBLY_VERSION}")
 
-message (STATUS "HOTRODCPP32_HOME value is :" ${HOTRODCPP32_HOME} )
-message (STATUS "HOTRODCPP64_HOME value is :" ${HOTRODCPP64_HOME} )
+message (STATUS "HOTRODCPP_HOME value is :" ${HOTRODCPP_HOME} )
 
 find_package(Protobuf REQUIRED)
 
@@ -129,36 +128,24 @@ endfunction()
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 ### Generated and build the SWIG wrapper ###
-if (NOT DEFINED HOTRODCPP32_HOME AND DEFINED ENV{HOTRODCPP32_HOME})
-  set (HOTRODCPP32_HOME $ENV{HOTRODCPP32_HOME})
-endif (NOT DEFINED HOTRODCPP32_HOME AND DEFINED ENV{HOTRODCPP32_HOME})
-if (NOT DEFINED HOTRODCPP64_HOME AND DEFINED ENV{HOTRODCPP64_HOME})
-  set (HOTRODCPP64_HOME $ENV{HOTRODCPP64_HOME})
-endif (NOT DEFINED HOTRODCPP64_HOME AND DEFINED ENV{HOTRODCPP64_HOME})
-if (NOT DEFINED HOTRODCPP32_HOME)
-  message (FATAL_ERROR "Please define HOTRODCPP32_HOME.")
-endif (NOT DEFINED HOTRODCPP32_HOME)
-if (NOT DEFINED HOTRODCPP64_HOME)
-  message (FATAL_ERROR "Please define HOTRODCPP64_HOME.")
-endif (NOT DEFINED HOTRODCPP64_HOME)
+if (NOT DEFINED HOTRODCPP_HOME AND DEFINED ENV{HOTRODCPP_HOME})
+  set (HOTRODCPP_HOME $ENV{HOTRODCPP_HOME})
+endif (NOT DEFINED HOTRODCPP_HOME AND DEFINED ENV{HOTRODCPP_HOME})
 
-message (STATUS "HOTRODCPP32_HOME value is :" ${HOTRODCPP32_HOME} )
-message (STATUS "HOTRODCPP64_HOME value is :" ${HOTRODCPP64_HOME} )
+if (NOT DEFINED HOTRODCPP_HOME)
+  message (FATAL_ERROR "Please define HOTRODCPP_HOME.")
+endif (NOT DEFINED HOTRODCPP_HOME)
 
-set (SWIG32_BUILD "${CMAKE_CURRENT_BINARY_DIR}/swig32")
-set (SWIG64_BUILD "${CMAKE_CURRENT_BINARY_DIR}/swig64")
-set (NATIVE32_DIR "${SWIG32_BUILD}/native_client")
-set (NATIVE64_DIR "${SWIG64_BUILD}/native_client")
-set (NATIVE32_LIB_DIR "${NATIVE32_DIR}/lib")
-set (NATIVE64_LIB_DIR "${NATIVE64_DIR}/lib")
+message (STATUS "HOTRODCPP_HOME value is :" ${HOTRODCPP_HOME} )
 
-file (MAKE_DIRECTORY "${SWIG32_BUILD}" "${SWIG64_BUILD}" "${NATIVE32_DIR}" "${NATIVE64_DIR}")
-file (TO_CMAKE_PATH "${HOTRODCPP64_HOME}" CMAKE_CPP64_HOME)
-file (TO_CMAKE_PATH "${HOTRODCPP32_HOME}" CMAKE_CPP32_HOME)
-file (COPY "${CMAKE_CPP32_HOME}/lib/" DESTINATION "${NATIVE32_LIB_DIR}" PATTERN "*")
-file (COPY "${CMAKE_CPP64_HOME}/lib/" DESTINATION "${NATIVE64_LIB_DIR}" PATTERN "*")
-file (COPY "${CMAKE_CPP32_HOME}/include/" DESTINATION "${NATIVE32_DIR}/include" PATTERN "*")
-file (COPY "${CMAKE_CPP64_HOME}/include/" DESTINATION "${NATIVE64_DIR}/include" PATTERN "*")
+set (SWIG_BUILD "${CMAKE_CURRENT_BINARY_DIR}/swig")
+set (NATIVE_DIR "${SWIG_BUILD}/native_client")
+set (NATIVE_LIB_DIR "${NATIVE_DIR}/lib")
+
+file (MAKE_DIRECTORY "${SWIG_BUILD}" "${NATIVE_DIR}")
+file (TO_CMAKE_PATH "${HOTRODCPP_HOME}" CMAKE_CPP_HOME)
+file (COPY "${CMAKE_CPP_HOME}/lib/" DESTINATION "${NATIVE_LIB_DIR}" PATTERN "*")
+file (COPY "${CMAKE_CPP_HOME}/include/" DESTINATION "${NATIVE_DIR}/include" PATTERN "*")
 
 hr_protobuf_generate_csharp(PROTO_SRCS  
   proto/infinispan/hotrod/protobuf/base_types.proto
@@ -173,20 +160,13 @@ hr_protobuf_generate_csharp(TEST_PROTO_SRCS
 
 
 if (WIN32)
-  string(REPLACE " Win64" "" GENERATOR "${CMAKE_GENERATOR}")
-  add_custom_target(
-    swig32 ALL
-    COMMAND cmake -G "${GENERATOR}" "-DARCH=32" "-DHOTRODCPP_HOME=${NATIVE32_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
-    COMMAND cmake --build . --config "${CMAKE_CFG_INTDIR}"
-    WORKING_DIRECTORY "${SWIG32_BUILD}"
-    DEPENDS ${PROTO_SRCS} ${TEST_PROTO_SRCS}
-    )
 
   add_custom_target(
-    swig64 ALL
-    COMMAND cmake -G "${GENERATOR} Win64" "-DARCH=64" "-DHOTRODCPP_HOME=${NATIVE64_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
+    swig ALL
+    COMMAND cmake -G "${CMAKE_GENERATOR}" "-DHOTRODCPP_HOME=${NATIVE_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
     COMMAND cmake --build . --config "${CMAKE_CFG_INTDIR}"
-    WORKING_DIRECTORY "${SWIG64_BUILD}"
+    WORKING_DIRECTORY "${SWIG_BUILD}"
+    DEPENDS ${PROTO_SRCS} ${TEST_PROTO_SRCS}
     )
 
 else (WIN32)
@@ -237,18 +217,15 @@ endif (DEFINED HOTROD_SNK)
 string(REPLACE "/" "\\" W_S "${CMAKE_CURRENT_SOURCE_DIR}")
 string(REPLACE "/" "\\" W_CMAKE_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
 string(REPLACE "/" "\\" W_CMAKE_CURRENT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
-string(REPLACE "/" "\\" W_SWIG32_BUILD "${SWIG32_BUILD}")
-string(REPLACE "/" "\\" W_SWIG64_BUILD "${SWIG64_BUILD}")
+string(REPLACE "/" "\\" W_SWIG_BUILD "${SWIG_BUILD}")
 
 configure_file(templates/hotrodcs.proj.in hotrodcs.csproj)
 configure_file(templates/hotrodcs-tests.proj.in hotrodcs-tests.csproj)
 configure_file(templates/AssemblyInfo.cs.in AssemblyInfo.cs)
 configure_file(templates/nativeTestSuite.csproj.in nativeTestSuite.csproj)
 
-set (ARCH 32)
-configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG32_BUILD}/RemoteCacheSWIG32Impl.cs")
 set (ARCH 64)
-configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG64_BUILD}/RemoteCacheSWIG64Impl.cs")
+#configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG_BUILD}/RemoteCacheSWIGImpl.cs")
 
 if (WIN32)
   find_program(MSBUILD_BINARY MSBuild.exe HINTS "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\MSBuild\\ToolsVersions\\4.0;MSBuildToolsPath]")
@@ -259,26 +236,18 @@ if (WIN32)
   include_external_msproject(vs-hotrodcs-bin hotrodcs.csproj
 	                       TYPE AA8E36D7-FD51-4D63-A68E-227F5C4871C6
 			       GUID AA8E36D7-FD51-4D63-A68E-227F5C4871C6
-			       swig32 )
-		       include_external_msproject(nativeTestSuite nativeTestSuite.csproj
+			       swig )
+  include_external_msproject(nativeTestSuite nativeTestSuite.csproj
 		                TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
 				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				PLATFORM x64
+				PLATFORM ${PLATFORM}
 				vs-hotrodcs-bin)
-  add_custom_target(hotrodcs-bin DEPENDS swig32 swig64 vs-hotrodcs-bin)
-  if (ISWIN64)
-	  include_external_msproject(vs-hotrodcs-test-bin hotrodcs-tests.csproj
-					TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
+  add_custom_target(hotrodcs-bin DEPENDS swig vs-hotrodcs-bin)
+  include_external_msproject(vs-hotrodcs-test-bin hotrodcs-tests.csproj
+				TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
 				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				PLATFORM x64
+				PLATFORM ${PLATFORM}
 				vs-hotrodcs-bin)
-  else (ISWIN64)
-	  include_external_msproject(vs-hotrodcs-test-bin hotrodcs-tests.csproj
-		                TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				PLATFORM x86
-				vs-hotrodcs-bin)
-  endif (ISWIN64)
   add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin)
 else (WIN32)
   find_program(XBUILD_BINARY xbuild)
@@ -311,27 +280,27 @@ if (NOT DEFINED HOTROD_JBOSS_HOME)
   set (HOTROD_JBOSS_HOME $ENV{JBOSS_HOME})
 endif (NOT DEFINED HOTROD_JBOSS_HOME)
 
-find_program(NUNIT_BINARY nunit-console.exe)
-if (NOT NUNIT_BINARY)
-  message (FATAL_ERROR "Please make sure nunit-console.exe is on the PATH.")
-endif (NOT NUNIT_BINARY)
-
-find_program(NUNIT_BINARY_X86 nunit-console-x86.exe)
-if (NOT NUNIT_BINARY_X86)
-  message (FATAL_ERROR "Please make sure nunit-console-x86.exe is on the PATH.")
-endif (NOT NUNIT_BINARY_X86)
+if (PLATFORM STREQUAL "x64") 
+  find_program(NUNIT_BINARY nunit-console.exe)
+  if (NOT NUNIT_BINARY)
+    message (FATAL_ERROR "Please make sure nunit-console.exe is on the PATH.")
+  endif (NOT NUNIT_BINARY)
+else (PLATFORM STREQUAL "x64") 
+  find_program(NUNIT_BINARY nunit-console-x86.exe)
+  if (NOT NUNIT_BINARY)
+    message (FATAL_ERROR "Please make sure nunit-console-x86.exe is on the PATH.")
+  endif (NOT NUNIT_BINARY)
+endif (PLATFORM STREQUAL "x64") 
 
 if (WIN32)
   # Add the native libs to the path.
-  file (TO_NATIVE_PATH "${NATIVE32_LIB_DIR}" native_dir32)
-  file (TO_NATIVE_PATH "${NATIVE64_LIB_DIR}" native_dir64)
-  set (UT_PATH "${native_dir32};${native_dir64};$ENV{PATH}")
+  file (TO_NATIVE_PATH "${NATIVE_LIB_DIR}" native_dir)
+  set (UT_PATH "${native_dir};$ENV{PATH}")
 
   # Add the wrapper libs to the path.
   foreach (loop_var ${CMAKE_CONFIGURATION_TYPES})
-    file (TO_NATIVE_PATH "${SWIG32_BUILD}/${loop_var}" native_dir32)
-    file (TO_NATIVE_PATH "${SWIG64_BUILD}/${loop_var}" native_dir64)
-    set (UT_PATH "${native_dir32};${native_dir64};${UT_PATH}")
+    file (TO_NATIVE_PATH "${SWIG_BUILD}/${loop_var}" native_dir)
+    set (UT_PATH "${native_dir};${UT_PATH}")
   endforeach (loop_var)
 endif (WIN32)
 
@@ -441,15 +410,9 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   if (WIN32)
     # Pass the updated path using an external script.
     file (TO_NATIVE_PATH "${NUNIT_BINARY}" NUNIT_NATIVE_BINARY)
-    configure_file(templates/nunit.bat.in nunit64.bat)
-    file (TO_NATIVE_PATH "${NUNIT_BINARY_X86}" NUNIT_NATIVE_BINARY)
-    configure_file(templates/nunit.bat.in nunit32.bat)
+    configure_file(templates/nunit.bat.in nunit.bat)
 
-    if (ISWIN64)
-      add_test(NAME csharp_unittests COMMAND nunit64.bat bin/x64/$<CONFIG>/)
-    else (ISWIN64)
-      add_test(NAME csharp_unittests COMMAND nunit32.bat bin/x86/$<CONFIG>/)
-    endif (ISWIN64)
+    add_test(NAME csharp_unittests COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/)
   else (WIN32)
     add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
     set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
@@ -471,38 +434,32 @@ endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
 #COMMAND ispn-cli.bat --connect command=:shutdown
 #)
   
-
 ### Packaging. ###
 set (CPACK_GENERATOR "WIX")
 set (CPACK_SOURCE_GENERATOR "ZIP")
 
 # Native client.
-if (ISWIN64)
-  set (native_lib_suffix "")
-  set (arch "64")
-else (ISWIN64)
-  set (native_lib_suffix "32")
-  set (arch "32")
-endif (ISWIN64)
 
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/native_client/lib/hotrod.dll" DESTINATION lib/)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/native_client/lib/hotrod.lib" DESTINATION lib/)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.dll" DESTINATION lib/)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.lib" DESTINATION lib/)
 
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/native_client/lib/hotrod32.dll" DESTINATION lib/)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/native_client/lib/hotrod32.lib" DESTINATION lib/)
 # Native wrapper.
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/$<CONFIG>/hotrod_wrap64.dll" DESTINATION lib/ OPTIONAL)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig64/$<CONFIG>/hotrod_wrap64.lib" DESTINATION lib/ OPTIONAL)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/$<CONFIG>/hotrod_wrap.dll" DESTINATION lib/ OPTIONAL)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/$<CONFIG>/hotrod_wrap.lib" DESTINATION lib/ OPTIONAL)
 # Native wrapper.
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/$<CONFIG>/hotrod_wrap32.dll" DESTINATION lib/ OPTIONAL)
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig32/$<CONFIG>/hotrod_wrap32.lib" DESTINATION lib/ OPTIONAL)
 # Managed wrapper.
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll" DESTINATION lib/)
 # Managed wrapper API doc for IDE.
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.xml" DESTINATION lib/)
 # Dependencies.
+file(TO_CMAKE_PATH ${GOOGLE_PROTOBUF_NUPKG} CM_GOOGLE_PROTOBUF_NUPKG)
+file(TO_CMAKE_PATH ${PROTOBUF_PROTOC_EXECUTABLE_CS} CM_PROTOBUF_PROTOC_EXECUTABLE_CS)
+file(TO_CMAKE_PATH ${OPENSSL_ROOT_DIR} CM_OPENSSL_ROOT_DIR)
 install (FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
 install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
+install (FILES "${CM_GOOGLE_PROTOBUF_NUPKG}/Google.Protobuf.3.0.0-beta2/lib/portable-net45+netcore45+wpa81+wp8/Google.Protobuf.dll" DESTINATION lib/)
+install (FILES "${CM_PROTOBUF_PROTOC_EXECUTABLE_CS}" DESTINATION bin/)
+install (DIRECTORY "${CM_OPENSSL_ROOT_DIR}/lib" "${CM_OPENSSL_ROOT_DIR}/bin" "${CM_OPENSSL_ROOT_DIR}/include" DESTINATION .)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/License.txt" License.txt NEWLINE_STYLE CRLF)

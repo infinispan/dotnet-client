@@ -13,9 +13,9 @@ namespace Infinispan.HotRod.Config
         public ConfigurationBuilder()
         {
             if (Util.Use64()) {
-                builder = new Infinispan.HotRod.SWIG64.ConfigurationBuilder();
+                builder = new Infinispan.HotRod.SWIGGen.ConfigurationBuilder();
             } else {
-                builder = new Infinispan.HotRod.SWIG32.ConfigurationBuilder();
+                builder = new Infinispan.HotRod.SWIGGen.ConfigurationBuilder();
             }
         }
 

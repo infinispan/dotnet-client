@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using Infinispan.HotRod.SWIG${ARCH};
+using Infinispan.HotRod.SWIGGen;
 using Infinispan.HotRod.Exceptions;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
@@ -10,12 +10,12 @@ using Google.Protobuf;
 namespace Infinispan.HotRod.Impl
 {
 #pragma warning disable 1591
-    internal class RemoteCacheSWIG${ARCH}Impl<K, V> : IRemoteCache<K, V>
+    internal class RemoteCacheSWIGGenImpl<K, V> : IRemoteCache<K, V>
     {
         private RemoteByteArrayCache cache;
         private IMarshaller marshaller;
 
-        public RemoteCacheSWIG${ARCH}Impl(Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
+        public RemoteCacheSWIGGenImpl(Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
         {
             this.cache = (RemoteByteArrayCache) cache;
             this.marshaller = marshaller;
@@ -219,7 +219,7 @@ namespace Infinispan.HotRod.Impl
 
         public IRemoteCache<K, V> WithFlags(Flags flags)
         {
-            cache.withFlags((Infinispan.HotRod.SWIG${ARCH}.Flag) flags);
+            cache.withFlags((Infinispan.HotRod.SWIGGen.Flag) flags);
             return this;
         }
 
@@ -305,44 +305,44 @@ namespace Infinispan.HotRod.Impl
             return result;
         }
 
-        private Infinispan.HotRod.SWIG${ARCH}.TimeUnit wrap(TimeUnit timeUnit)
+        private Infinispan.HotRod.SWIGGen.TimeUnit wrap(TimeUnit timeUnit)
         {
             switch (timeUnit) {
             case TimeUnit.NANOSECONDS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.NANOSECONDS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS;
             case TimeUnit.MICROSECONDS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MICROSECONDS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS;
             case TimeUnit.MILLISECONDS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MILLISECONDS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS;
             case TimeUnit.SECONDS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.SECONDS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS;
             case TimeUnit.MINUTES:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MINUTES;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES;
             case TimeUnit.HOURS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.HOURS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.HOURS;
             case TimeUnit.DAYS:
-                return Infinispan.HotRod.SWIG${ARCH}.TimeUnit.DAYS;
+                return Infinispan.HotRod.SWIGGen.TimeUnit.DAYS;
             default:
                 throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
             }
         }
 
-        private TimeUnit unwrap(Infinispan.HotRod.SWIG${ARCH}.TimeUnit timeUnit)
+        private TimeUnit unwrap(Infinispan.HotRod.SWIGGen.TimeUnit timeUnit)
         {
             switch (timeUnit) {
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.NANOSECONDS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS:
                 return TimeUnit.NANOSECONDS;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MICROSECONDS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS:
                 return TimeUnit.MICROSECONDS;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MILLISECONDS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS:
                 return TimeUnit.MILLISECONDS;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.SECONDS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS:
                 return TimeUnit.SECONDS;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.MINUTES:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES:
                 return TimeUnit.MINUTES;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.HOURS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.HOURS:
                 return TimeUnit.HOURS;
-            case Infinispan.HotRod.SWIG${ARCH}.TimeUnit.DAYS:
+            case Infinispan.HotRod.SWIGGen.TimeUnit.DAYS:
                 return TimeUnit.DAYS;
             default:
                 throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");

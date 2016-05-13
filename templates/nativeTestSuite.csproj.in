@@ -62,7 +62,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\build_windows_64\hotrodcs.csproj">
+    <ProjectReference Include="${W_CMAKE_CURRENT_BINARY_DIR}\hotrodcs.csproj">
       <Project>{aa8e36d7-fd51-4d63-a68e-227f5c4871c6}</Project>
       <Name>hotrodcs</Name>
     </ProjectReference>

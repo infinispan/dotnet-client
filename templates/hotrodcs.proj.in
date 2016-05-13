@@ -18,8 +18,7 @@
   <ItemGroup>
     <!-- Generated SWIG source files. -->
     <Compile Include="${W_CMAKE_CURRENT_BINARY_DIR}\*.cs"/>
-    <Compile Include="${W_SWIG32_BUILD}\*.cs"/>
-    <Compile Include="${W_SWIG64_BUILD}\*.cs"/>
+    <Compile Include="${W_SWIG_BUILD}\*.cs"/>
     
     <!-- API source files. -->
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\*.cs"/>
