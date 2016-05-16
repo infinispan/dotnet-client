@@ -6,54 +6,54 @@ using System.Text;
 namespace Infinispan.HotRod.Tests
 {
     [TestFixture]
-    public class CompatibilitySerializerTest 
+    public class CompatibilityMarshallerTest 
     {
-        private CompatibilitySerializer serializer;
+        private CompatibilityMarshaller marshaller;
 
         [SetUp]
         public void Before()
         {
-            serializer = new CompatibilitySerializer();
+            marshaller = new CompatibilityMarshaller();
         }
 
         [Test]
-        public void SerializerNonString()
+        public void MarshallerNonString()
         {
             HotRodClientException ex = Assert.Throws<HotRodClientException>
                 (delegate
                  {
-                     serializer.Serialize(12345);
+                     marshaller.ObjectToByteBuffer(12345);
                  });
             Assert.That(ex.Message, Is.EqualTo("Cannot serialize non-string object: 12345."));
         }
 
         [Test]
-        public void DeserializerUnknownVersion()
+        public void UnmarshallerUnknownVersion()
         {
             HotRodClientException ex = Assert.Throws<HotRodClientException>
                 (delegate
                  {
-                     serializer.Deserialize(new byte[] {4});
+                     marshaller.ObjectFromByteBuffer(new byte[] {4});
                  });
             Assert.That(ex.Message, Is.EqualTo("Unknown compatibility serialization version: 4."));
         }
 
         [Test]
-        public void DeserializerNonString()
+        public void UnmarshallerNonString()
         {
             HotRodClientException ex = Assert.Throws<HotRodClientException>
                 (delegate
                  {
-                     serializer.Deserialize(new byte[] {3, 0xff});
+                     marshaller.ObjectFromByteBuffer(new byte[] {3, 0xff});
                  });
             Assert.That(ex.Message, Is.EqualTo("Cannot deserialize non-string (type 255)."));
         }
 
         [Test]
-        public void SerializerNull()
+        public void MarshallerNull()
         {
             int header = 2;
-            byte[] ba = serializer.Serialize(null);
+            byte[] ba = marshaller.ObjectToByteBuffer(null);
             Assert.AreEqual(header, ba.Length);
             //version
             Assert.AreEqual(3, ba[0]);
@@ -62,10 +62,10 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerEmpty()
+        public void MarshallerEmpty()
         {
             int header = 2;
-            byte[] ba = serializer.Serialize("");
+            byte[] ba = marshaller.ObjectToByteBuffer("");
             Assert.AreEqual(header, ba.Length);
             //version
             Assert.AreEqual(3, ba[0]);
@@ -74,14 +74,14 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerSmallLowerBound()
+        public void MarshallerSmallLowerBound()
         {
             int header = 3;
             int length = 1;
             string input = GenerateString(length);
             byte[] utf = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] ba = serializer.Serialize(input);
+            byte[] ba = marshaller.ObjectToByteBuffer(input);
             Assert.AreEqual(header + utf.Length, ba.Length);
 
             //version
@@ -95,14 +95,14 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerSmallUpperBound()
+        public void MarshallerSmallUpperBound()
         {
             int header = 3;
             int length = 256;
             string input = GenerateString(length);
             byte[] utf = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] ba = serializer.Serialize(input);
+            byte[] ba = marshaller.ObjectToByteBuffer(input);
             Assert.AreEqual(header + utf.Length, ba.Length);
 
             //version
@@ -115,14 +115,14 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerMediumLowerBound()
+        public void MarshallerMediumLowerBound()
         {
             int header = 4;
             int length = 257;
             string input = GenerateString(length);
             byte[] utf = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] ba = serializer.Serialize(input);
+            byte[] ba = marshaller.ObjectToByteBuffer(input);
             Assert.AreEqual(header + utf.Length, ba.Length);
 
             //version
@@ -136,14 +136,14 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerMediumUpperBound()
+        public void MarshallerMediumUpperBound()
         {
             int header = 4;
             int length = 65536;
             string input = GenerateString(length);
             byte[] utf = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] ba = serializer.Serialize(input);
+            byte[] ba = marshaller.ObjectToByteBuffer(input);
             Assert.AreEqual(header + utf.Length, ba.Length);
 
             //version
@@ -157,14 +157,14 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void SerializerLargeLowerBound()
+        public void MarshallerLargeLowerBound()
         {
             int header = 6;
             int length = 65537;
             string input = GenerateString(length);
             byte[] utf = System.Text.Encoding.UTF8.GetBytes(input);
 
-            byte[] ba = serializer.Serialize(input);
+            byte[] ba = marshaller.ObjectToByteBuffer(input);
             Assert.AreEqual(header + utf.Length, ba.Length);
 
             //version
@@ -181,21 +181,21 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void DeserializerNull()
+        public void UnmarshallerNull()
         {
             byte[] ba = new byte[] {3, 0x01};
-            Assert.AreEqual(null, serializer.Deserialize(ba));
+            Assert.AreEqual(null, marshaller.ObjectFromByteBuffer(ba));
         }
 
         [Test]
-        public void DeserializerEmpty()
+        public void UnmarshallerEmpty()
         {
             byte[] ba = new byte[] {3, 0x3d};
-            Assert.AreEqual("", serializer.Deserialize(ba));
+            Assert.AreEqual("", marshaller.ObjectFromByteBuffer(ba));
         }
 
         [Test]
-        public void DeserializerSmallLowerBound()
+        public void UnmarshallerSmallLowerBound()
         {
             int length = 1;
             string input = GenerateString(length);
@@ -205,11 +205,11 @@ namespace Infinispan.HotRod.Tests
             bytes.Add(0x3e);
             bytes.Add(0x01);
             bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(input));
-            Assert.AreEqual(input, serializer.Deserialize(bytes.ToArray()));
+            Assert.AreEqual(input, marshaller.ObjectFromByteBuffer(bytes.ToArray()));
         }
 
         [Test]
-        public void DeserializerSmallUpperBound()
+        public void UnmarshallerSmallUpperBound()
         {
             int length = 256;
             string input = GenerateString(length);
@@ -219,11 +219,11 @@ namespace Infinispan.HotRod.Tests
             bytes.Add(0x3e);
             bytes.Add(0x00);
             bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(input));
-            Assert.AreEqual(input, serializer.Deserialize(bytes.ToArray()));
+            Assert.AreEqual(input, marshaller.ObjectFromByteBuffer(bytes.ToArray()));
         }
 
         [Test]
-        public void DeserializerMediumLowerBound()
+        public void UnmarshallerMediumLowerBound()
         {
             int length = 257;
             string input = GenerateString(length);
@@ -234,11 +234,11 @@ namespace Infinispan.HotRod.Tests
             bytes.Add(0x01);
             bytes.Add(0x01);
             bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(input));
-            Assert.AreEqual(input, serializer.Deserialize(bytes.ToArray()));
+            Assert.AreEqual(input, marshaller.ObjectFromByteBuffer(bytes.ToArray()));
         }
 
         [Test]
-        public void DeserializerMediumUpperBound()
+        public void UnmarshallerMediumUpperBound()
         {
             int length = 65536;
             string input = GenerateString(length);
@@ -249,11 +249,11 @@ namespace Infinispan.HotRod.Tests
             bytes.Add(0x00);
             bytes.Add(0x00);
             bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(input));
-            Assert.AreEqual(input, serializer.Deserialize(bytes.ToArray()));
+            Assert.AreEqual(input, marshaller.ObjectFromByteBuffer(bytes.ToArray()));
         }
 
         [Test]
-        public void DeserializerLargeLowerBound()
+        public void UnmarshallerLargeLowerBound()
         {
             int length = 65537;
             string input = GenerateString(length);
@@ -266,7 +266,7 @@ namespace Infinispan.HotRod.Tests
             bytes.Add(0x00);
             bytes.Add(0x01);
             bytes.AddRange(System.Text.Encoding.UTF8.GetBytes(input));
-            Assert.AreEqual(input, serializer.Deserialize(bytes.ToArray()));
+            Assert.AreEqual(input, marshaller.ObjectFromByteBuffer(bytes.ToArray()));
         }
 
         private string GenerateString(int length)

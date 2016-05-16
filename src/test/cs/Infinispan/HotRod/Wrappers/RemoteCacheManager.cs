@@ -11,47 +11,47 @@ namespace Infinispan.HotRod.Wrappers
     {
         private Infinispan.HotRod.RemoteCacheManager manager;
 
-        public RemoteCacheManager(Configuration configuration, ISerializer serializer, bool start)
+        public RemoteCacheManager(Configuration configuration, Infinispan.HotRod.IMarshaller marshaller, bool start)
         {
-            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, serializer, start);
+            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, marshaller, start);
         }
 
-        public RemoteCacheManager(Configuration configuration, ISerializer serializer)
+        public RemoteCacheManager(Configuration configuration, Infinispan.HotRod.IMarshaller marshaller)
         {
-            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, serializer);
+            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, marshaller);
         }
 
         public RemoteCacheManager(Configuration configuration, bool start)
         {
             // Don't serialize, use the already serialized data.
-            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new IdentitySerializer(), start);
+            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new Infinispan.HotRod.IdentityMarshaller(), start);
         }
 
         public RemoteCacheManager(Configuration configuration, bool start, bool useCompatibilityMarshaller)
         {
             if (useCompatibilityMarshaller)
-                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new CompatibilitySerializer(), start);
+                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new Infinispan.HotRod.CompatibilityMarshaller(), start);
             else
                 // Don't serialize, use the already serialized data.
-                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new IdentitySerializer(), start);
+                manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new Infinispan.HotRod.IdentityMarshaller(), start);
         }
 
         public RemoteCacheManager(Configuration configuration)
         {
             // Don't serialize, use the already serialized data.
-            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new IdentitySerializer());
+            manager = new Infinispan.HotRod.RemoteCacheManager(configuration, new Infinispan.HotRod.IdentityMarshaller());
         }
 
         public RemoteCacheManager(bool start)
         {
             // Don't serialize, use the already serialized data.
-            manager = new Infinispan.HotRod.RemoteCacheManager(new IdentitySerializer(), start);
+            manager = new Infinispan.HotRod.RemoteCacheManager(new Infinispan.HotRod.IdentityMarshaller(), start);
         }
 
         public RemoteCacheManager()
         {
             // Don't serialize, use the already serialized data.
-            manager = new Infinispan.HotRod.RemoteCacheManager(new IdentitySerializer());
+            manager = new Infinispan.HotRod.RemoteCacheManager(new Infinispan.HotRod.IdentityMarshaller());
         }
 
         public void Start()
