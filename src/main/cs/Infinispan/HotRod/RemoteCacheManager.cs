@@ -65,12 +65,11 @@ namespace Infinispan.HotRod
         /// Construct an instance with specific configuration and serializer.
         /// </summary>
         /// <param name="configuration"></param>
-        /// <param name="serializer"></param>
+        /// <param name="marshaller"></param>
         /// <param name="start"></param>
-        [Obsolete]
-        public RemoteCacheManager(Configuration configuration, ISerializer serializer, bool start = true)
+        public RemoteCacheManager(Configuration configuration, IMarshaller marshaller, bool start = true)
         {
-            this.marshaller = new SerializerAdapter(serializer);
+            this.marshaller = marshaller;
 
             if (Infinispan.HotRod.SWIG.Util.Use64()) {
                 manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager((Infinispan.HotRod.SWIG64.Configuration) configuration.Config(), start);
@@ -82,12 +81,11 @@ namespace Infinispan.HotRod
         /// <summary>
         /// Construct an instance with default configuration and specific serializer.
         /// </summary>
-        /// <param name="serializer"></param>
+        /// <param name="marshaller"></param>
         /// <param name="start"></param>
-        [Obsolete]
-        public RemoteCacheManager(ISerializer serializer, bool start = true)
+        public RemoteCacheManager(IMarshaller marshaller, bool start = true)
         {
-            this.marshaller = new SerializerAdapter(serializer);
+            this.marshaller = marshaller;
             if (Infinispan.HotRod.SWIG.Util.Use64()) {
                 manager = new Infinispan.HotRod.SWIG64.RemoteCacheManager(start);
             } else {
