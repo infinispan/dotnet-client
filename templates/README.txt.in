@@ -5,8 +5,8 @@
 
 * Pre-requisites
 
-  The .NET Framework 4.0 is required for using the client and the Microsoft Visual
-  C++ 2010 Redistributable Package specific to the platform you are using (x86/x64).
+  The .NET Framework 4.5 is required for using the client and the Microsoft Visual
+  C++ 2013 Redistributable Package for the x64 platform.
 
 * Package structure
 
@@ -35,7 +35,7 @@
 
 * References
 
-  [1] https://docs.jboss.org/author/display/ISPN/Hot+Rod+Protocol
+  [1] http://infinispan.org/documentation/
   [2] http://infinispan.org/docs/hotrod-clients/dotnet/
-  [3] https://github.com/infinispan/dotnet-client       
-  [4] http://infinispan.org/docs/6.0.x/contributing/contributing.html#_source_control
+  [3] https://github.com/infinispan/dotnet-client/
+  [4] http://infinispan.org/getinvolved/
