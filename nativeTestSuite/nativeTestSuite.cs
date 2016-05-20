@@ -10,7 +10,7 @@ namespace nativeTestSuite
     {
         public static void Main(string[] args)
         {
-            AsyncTest.testMain(args);
+            QueryTest.testMain(args);
         }
     }
 }
