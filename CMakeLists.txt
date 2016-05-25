@@ -39,6 +39,8 @@ set (REVISION_Beta3 "12")
 set (REVISION_Beta4 "13")
 set (REVISION_CR1 "20")
 set (REVISION_CR2 "21")
+set (REVISION_CR3 "22")
+set (REVISION_CR4 "23")
 set (REVISION_Final "30")
 string(TIMESTAMP REVISION_SNAPSHOT "%y%j" UTC)
 
