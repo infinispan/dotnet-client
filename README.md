@@ -11,7 +11,13 @@ Build prerequisites:
 * NLog 2.1.0 (http://nlog-project.org/)
 * NUnit 2.6.3 (https://launchpad.net/nunitv2)
 * IKVM.NET 8.1.5717.0 (http://www.ikvm.net/)
-* Google.Protobuf 3.x .net assembly with protoc (nupkg is fine)
+* Google.Protobuf 3.x .net assembly with protoc
+    
+    Example installation using Nuget:
+  
+       current_dir> nuget install Google.Protobuf -Pre -Version 3.0.0-beta2
+        
+* OpenSSL 1.x
 
 Note: after unpacking IKVM please edit the .exe.config files in <ikvm-root>/bin
 and comment-out the "\<supportedRuntime version="v2.0.50727"/\>" element from all
@@ -31,13 +37,16 @@ Build steps:
     set NLOG_DLL=/path/to/nlog/2.1.0/dll
     set NUNIT_DLL=/path/to/nunit.framework.dll
     
-    set HOTRODCPP32_HOME=/path/to/native/32bit/client
-    set HOTRODCPP64_HOME=/path/to/native/64bit/client
+    set HOTRODCPP_HOME=/path/to/native/64bit/client
     
     set HOTROD_SNK=/path/to/key/to/be/generated
     sn.exe -k %HOTROD_SNK%
 
     set JBOSS_HOME=/path/to/hotrod/standalone/server
+    
+    set PROTOBUF_PROTOC_EXECUTABLE_CS=/path/to/protoc.exe (typically C:\Users\%USERNAME%\google.grotobuf.install.dir\tools\protoc.exe}
+    set GOOGLE_PROTOBUF_NUPKG=/parent/folder/of/google.protobuf.install.dir  (typically C:\Users\%USERNAME%)
+    set OPENSSL_ROOT_DIR=/path/to/openssl/install/dir (typically C:\OpenSSL-Win64)
 
 By default the build script will run the unit/integrations tests. If
 you want to disable them pass ENABLE_{JAVA,CSHARP}_TESTING=false as flags

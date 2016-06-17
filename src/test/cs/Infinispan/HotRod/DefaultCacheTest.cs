@@ -1,18 +1,22 @@
 using Infinispan.HotRod;
+using Infinispan.HotRod.Config;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.Threading;
+using Infinispan.HotRod.Tests.Util;
 
 namespace Infinispan.HotRod.Tests
 {
-    public class DefaultCacheTest : SingleServerAbstractTest
+    public class DefaultCacheTest
     {
         private IRemoteCache<String, String> cache;
 
-        [SetUp]
-        public void BeforeTest()
+        [TestFixtureSetUp]
+        public void BeforeClass()
         {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(6000);
+            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
             cache = remoteManager.GetCache<String, String>();
         }
 

@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Management;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.Util
 {
     public class PlatformUtils
     {
