@@ -30,7 +30,6 @@
             <security-realm name="ApplicationRealm">
                 <authentication>
                     <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
-                    <truststore path="truststore_server.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
                 </authentication>
                 <authorization>
@@ -39,6 +38,27 @@
                 <server-identities>
                     <ssl>
                         <keystore path="keystore_server.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
+            <security-realm name="RealmSNI1">
+                <server-identities>
+                    <ssl>
+                        <keystore path="keystore_server_sni1.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
+            <security-realm name="RealmSNI2">
+                <server-identities>
+                    <ssl>
+                        <keystore path="keystore_server_sni2.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    </ssl>
+                </server-identities>
+            </security-realm>
+            <security-realm name="RealmSNI3-untrusted">
+                <server-identities>
+                    <ssl>
+                        <keystore path="keystore_server_sni3_untrusted.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     </ssl>
                 </server-identities>
             </security-realm>
@@ -147,7 +167,15 @@
         <subsystem xmlns="urn:infinispan:server:endpoint:9.0">
             <hotrod-connector socket-binding="hotrod" cache-container="local">
                 <topology-state-transfer lock-timeout="1000" replication-timeout="5000"/>
-                <encryption security-realm="ApplicationRealm" require-ssl-client-auth="false"/>
+                <encryption security-realm="ApplicationRealm" require-ssl-client-auth="false">
+                     <sni host-name="sni1" security-realm="RealmSNI1"/>
+                     <sni host-name="sni2" security-realm="RealmSNI2"/>
+                     <!-- Due to HRCPP-311 we rather expose an sni for which the client does
+                          not have a certificate registered. This equals to the case when
+                          client has a certificate registered but the server has an untrusted
+                          identity -->
+                     <sni host-name="sni3-unstrusted" security-realm="RealmSNI3-untrusted"/>
+                </encryption>
             </hotrod-connector>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:io:1.1">
