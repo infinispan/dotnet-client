@@ -209,7 +209,7 @@ namespace Infinispan.HotRod.Impl
                 }
             }
             
-            return result;
+            return (ISet<K>)result;
         }
 
         public IList<V> Values()
