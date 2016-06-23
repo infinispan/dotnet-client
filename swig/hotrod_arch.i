@@ -1,4 +1,4 @@
-%typemap(csinterfaces_derived) infinispan::hotrod::ConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
+%typemap(csinterfaces) infinispan::hotrod::ConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConfigurationBuilder %{
     public void Read(Infinispan.HotRod.SWIG.Configuration bean) {
         read((Configuration) bean);

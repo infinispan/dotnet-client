@@ -2,7 +2,6 @@
 
 %{
 #include <infinispan/hotrod/BasicMarshaller.h>
-#include <infinispan/hotrod/Builder.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
@@ -76,7 +75,6 @@
 %include "infinispan/hotrod/InetSocketAddress.h"
 %include "infinispan/hotrod/CacheTopologyInfo.h"
 
-%include "infinispan/hotrod/Builder.h"
 
 
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
@@ -85,10 +83,6 @@
 %include "infinispan/hotrod/FailOverRequestBalancingStrategy.h"
 %include "infinispan/hotrod/Configuration.h"
 
-%template(BuilderConf) infinispan::hotrod::Builder<infinispan::hotrod::Configuration>;
-%template(BuilderServerConf) infinispan::hotrod::Builder<infinispan::hotrod::ServerConfiguration>;
-%template(BuilderPoolConf) infinispan::hotrod::Builder<infinispan::hotrod::ConnectionPoolConfiguration>;
-%template(BuilderSSLConf) infinispan::hotrod::Builder<infinispan::hotrod::SslConfiguration>;
 
 %include "infinispan/hotrod/ConfigurationChildBuilder.h"
 %include "infinispan/hotrod/ConnectionPoolConfigurationBuilder.h"
