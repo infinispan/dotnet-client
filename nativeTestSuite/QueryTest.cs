@@ -14,7 +14,7 @@ using Org.Infinispan.Protostream;
 using SampleBankAccount;
 namespace nativeTestSuite
 {
-    class QueryNativeTest
+    class QueryTest
     {
         const String ERRORS_KEY_SUFFIX = ".errors";
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
@@ -28,7 +28,7 @@ namespace nativeTestSuite
             IRemoteCache<String,String> metadataCache = remote.GetCache<String, String>(PROTOBUF_METADATA_CACHE_NAME);
             IRemoteCache<int, User> testCache = remote.GetCache<int, User>("namedCache");
             String path = (args.Length > 0) ? args[0] : "";
-            metadataCache.Put("sample_bank_account/bank.proto", File.ReadAllText(path+"/query_proto/bank.proto"));
+            metadataCache.Put("sample_bank_account/bank.proto", File.ReadAllText(path+"bank.proto"));
             if (metadataCache.ContainsKey(ERRORS_KEY_SUFFIX))
             {
                 System.Console.WriteLine("fail: error in registering .proto model");

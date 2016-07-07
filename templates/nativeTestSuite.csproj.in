@@ -60,6 +60,13 @@
     <None Include="${W_S}\nativeTestSuite\infinispan-ca.pem">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="${W_S}\nativeTestSuite\query_proto\addressbook.proto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="${W_S}\nativeTestSuite\query_proto\bank.proto">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="${W_CMAKE_CURRENT_BINARY_DIR}\hotrodcs.csproj">
