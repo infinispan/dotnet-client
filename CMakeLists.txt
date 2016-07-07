@@ -27,7 +27,6 @@ else (ISWIN64)
 	set(PLATFORM "x86")
 endif (ISWIN64)
 
-
 # Map from version label to assembly revision.
 set (REVISION_Alpha1 "0")
 set (REVISION_Alpha2 "1")
@@ -150,14 +149,14 @@ file (COPY "${CMAKE_CPP_HOME}/lib/" DESTINATION "${NATIVE_LIB_DIR}" PATTERN "*")
 file (COPY "${CMAKE_CPP_HOME}/include/" DESTINATION "${NATIVE_DIR}/include" PATTERN "*")
 
 hr_protobuf_generate_csharp(PROTO_SRCS  
-  proto/infinispan/hotrod/protobuf/base_types.proto
-  proto/org/infinispan/protostream/message-wrapping.proto
-  proto/org/infinispan/query/remote/client/query.proto
+  src/main/resources/proto/infinispan/hotrod/protobuf/base_types.proto
+  src/main/resources/proto/org/infinispan/protostream/message-wrapping.proto
+  src/main/resources/proto/org/infinispan/query/remote/client/query.proto
 )
 
 hr_protobuf_generate_csharp(TEST_PROTO_SRCS  
-  test/query_proto/addressbook.proto
-  test/query_proto/bank.proto
+  src/test/resources/proto3/addressbook.proto
+  src/test/resources/proto3/bank.proto
 )
 
 
@@ -224,7 +223,6 @@ string(REPLACE "/" "\\" W_SWIG_BUILD "${SWIG_BUILD}")
 configure_file(templates/hotrodcs.proj.in hotrodcs.csproj)
 configure_file(templates/hotrodcs-tests.proj.in hotrodcs-tests.csproj)
 configure_file(templates/AssemblyInfo.cs.in AssemblyInfo.cs)
-configure_file(templates/nativeTestSuite.csproj.in nativeTestSuite.csproj)
 
 set (ARCH 64)
 #configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG_BUILD}/RemoteCacheSWIGImpl.cs")
@@ -239,11 +237,6 @@ if (WIN32)
 	                       TYPE AA8E36D7-FD51-4D63-A68E-227F5C4871C6
 			       GUID AA8E36D7-FD51-4D63-A68E-227F5C4871C6
 			       swig )
-  include_external_msproject(nativeTestSuite nativeTestSuite.csproj
-		                TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
-				PLATFORM ${PLATFORM}
-				vs-hotrodcs-bin)
   add_custom_target(hotrodcs-bin DEPENDS swig vs-hotrodcs-bin)
   include_external_msproject(vs-hotrodcs-test-bin hotrodcs-tests.csproj
 				TYPE 97560E9D-C7BA-40D6-9728-B39B1333EF49
@@ -409,32 +402,25 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/standalone-hotrod-ssl.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/truststore_server.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/keystore_server.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/infinispan-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/client-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file (COPY "${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/proto2" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION}" PATTERN "*")
+  
   if (WIN32)
     # Pass the updated path using an external script.
     file (TO_NATIVE_PATH "${NUNIT_BINARY}" NUNIT_NATIVE_BINARY)
     configure_file(templates/nunit.bat.in nunit.bat)
 
-    add_test(NAME csharp_unittests COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/)
+    add_test(NAME csharp_tests_default COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ Infinispan.HotRod.TestSuites.DefaultTestSuite TestResult-default.xml)
+	add_test(NAME csharp_tests_security COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ Infinispan.HotRod.TestSuites.SecurityTestSuite TestResult-security.xml)
   else (WIN32)
-    add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
+	add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
     set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
   endif (WIN32)
 endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
-
-#add_test(NAME start_jboss
-#WORKING_DIRECTORY ${JBOSS_HOME}/bin
-#COMMAND ${CMAKE_CURRENT_BINARY_DIR}/run_ispn.bat
-#)
-#
-#add_test(NAME nativeTestSuite
-#WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin/$<CONFIG>
-#COMMAND nativeTestSuite.exe "${CMAKE_CURRENT_SOURCE_DIR}/nativeTestSuite"
-#)
-#
-#add_test(NAME stop_jboss
-#WORKING_DIRECTORY ${JBOSS_HOME}/bin
-#COMMAND ispn-cli.bat --connect command=:shutdown
-#)
   
 ### Packaging. ###
 set (CPACK_GENERATOR "WIX")

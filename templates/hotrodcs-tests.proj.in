@@ -88,16 +88,20 @@
 
   <ItemGroup>
     <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Util\*.cs"/>
     <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
 
     <Reference Include="hotrodcs.dll"/>
     <Reference Include="${NLOG_DLL}"/>
     <Reference Include="${NUNIT_DLL}"/>
+    <Reference Include="Google.Protobuf">
+      <HintPath>${GOOGLE_PROTOBUF_NUPKG}\Google.Protobuf.3.0.0-beta2\lib\portable-net45+netcore45+wpa81+wp8\Google.Protobuf.dll</HintPath>
+    </Reference>
 
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
     <Reference Include="System.Management"/>
-
+  
     <!-- <None Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\resources\App.config"/> -->
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
