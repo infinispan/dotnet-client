@@ -4,9 +4,11 @@ using Infinispan.HotRod;
 
 namespace Infinispan.HotRod.Tests
 {
+    /* A marshaller for basic data types that is compatible with JBoss Marshalling 
+     * on the server side. */
     class JBasicMarshaller : IMarshaller
     {
-        public enum Defs : byte { MARSHALL_VERSION = 0x03, SMALL_STRING = 0x3e, MEDIUM_STRING = 0x3f, INTEGER = 0x4b };
+        public enum Defs : byte { MARSHALL_VERSION = 0x03, EMPTY_STRING = 0x3d, SMALL_STRING = 0x3e, MEDIUM_STRING = 0x3f, INTEGER = 0x4b, LONG = 0x4c};
         public bool IsMarshallable(object o)
         {
             throw new NotImplementedException();
@@ -18,18 +20,28 @@ namespace Infinispan.HotRod.Tests
             {
                 switch (buf[1])
                 {
+                    case (byte)Defs.EMPTY_STRING:
+                        return "";
                     case (byte)Defs.SMALL_STRING:
                         return Encoding.UTF8.GetString(buf, 3, buf[2]);
                     case (byte)Defs.MEDIUM_STRING:
                         return Encoding.UTF8.GetString(buf, 4, ((int)buf[2] << 8) + buf[3]);
                     case (byte)Defs.INTEGER:
-                        int result = 0;
+                        int resultInt = 0;
                         for (int i = 0; i < 4; i++)
                         {
-                            result <<= 8;
-                            result ^= ((int)buf[i + 2]) & 0xFF;
+                            resultInt <<= 8;
+                            resultInt ^= ((int)buf[i + 2]) & 0xFF;
                         }
-                        return result;
+                        return resultInt;
+                    case (byte)Defs.LONG:
+                        long resultLong = 0;
+                        for (int i = 0; i < 8; i++)
+                        {
+                            resultLong <<= 8;
+                            resultLong ^= ((int)buf[i + 2]) & 0xFF;
+                        }
+                        return resultLong;
                 }
             }
             throw new NotImplementedException();
@@ -46,7 +58,8 @@ namespace Infinispan.HotRod.Tests
                 return StringToByteBuffer((String)obj);
             if (obj.GetType() == typeof(int))
                 return IntToByteBuffer((int)obj);
-
+            if (obj.GetType() == typeof(long))
+                return LongToByteBuffer((long)obj);
             throw new NotImplementedException();
         }
 
@@ -62,9 +75,25 @@ namespace Infinispan.HotRod.Tests
             return buf;
         }
 
+        private static byte[] LongToByteBuffer(long num)
+        {
+            byte[] buf = new byte[10];
+            buf[0] = (byte)Defs.MARSHALL_VERSION;
+            buf[1] = (byte)Defs.LONG;
+            for (int i = 0; i < 8; i++)
+            {
+                buf[9 - i] = (byte)((num >> (8 * i)) & 0xFF);
+            }
+            return buf;
+        }
+
         private static byte[] StringToByteBuffer(string s)
         {
-            if (s.Length <= 0x100)
+            if (s.Length == 0)
+            {
+                return marshallEmpty();
+            }
+            else if (s.Length <= 0x100)
             {
                 return marshallSmall(s);
             }
@@ -73,6 +102,14 @@ namespace Infinispan.HotRod.Tests
                 return marshallMedium(s);
             }
             throw new NotImplementedException();
+        }
+
+        private static byte[] marshallEmpty()
+        {
+            byte[] buf = new byte[2];
+            buf[0] = (byte)Defs.MARSHALL_VERSION;
+            buf[1] = (byte)Defs.EMPTY_STRING;
+            return buf;
         }
 
         private static byte[] marshallSmall(string s)
@@ -97,10 +134,7 @@ namespace Infinispan.HotRod.Tests
             Buffer.BlockCopy(Encoding.UTF8.GetBytes(s), 0, buf, 4, s.Length);
             return buf;
         }
-
-
-
-
+        
         public byte[] ObjectToByteBuffer(object obj, int estimatedSize)
         {
             throw new NotImplementedException();

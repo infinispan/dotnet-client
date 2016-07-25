@@ -402,12 +402,15 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
+  file(COPY ${JBOSS_HOME}/docs/examples/configs/standalone-compatibility-mode.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/standalone-hotrod-ssl.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/truststore_server.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/keystore_server.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/infinispan-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/client-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
   file (COPY "${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/proto2" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION}" PATTERN "*")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/wordCountStream.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/macbeth.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
   
   if (WIN32)
     # Pass the updated path using an external script.
@@ -416,6 +419,7 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
 
     add_test(NAME csharp_tests_default COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ Infinispan.HotRod.TestSuites.DefaultTestSuite TestResult-default.xml)
 	add_test(NAME csharp_tests_security COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ Infinispan.HotRod.TestSuites.SecurityTestSuite TestResult-security.xml)
+	add_test(NAME csharp_tests_compatibility COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ Infinispan.HotRod.TestSuites.CompatibilityModeTestSuite TestResult-compatibility.xml)
   else (WIN32)
 	add_test(csharp_unittests ${MONO_BINARY} ${NUNIT_BINARY} hotrodcs-tests.dll)
     set_tests_properties(csharp_unittests PROPERTIES ENVIRONMENT "JBOSS_HOME=${HOTROD_JBOSS_HOME}")
