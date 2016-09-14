@@ -1,14 +1,14 @@
 #pragma warning disable 1591
 namespace Infinispan.HotRod.Config
 {
-    public class ConnectionPoolConfigurationBuilder : AbstractConfigurationChildBuilder, IBuilder<ConnectionPoolConfiguration>
+    public class ConnectionPoolConfigurationBuilder : AbstractConfigurationChildBuilder
     {
-        private Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder builder;
+        private Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder jniBuilder;
 
-        internal ConnectionPoolConfigurationBuilder(ConfigurationBuilder parent,
-                                                  Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder builder) : base(parent)
+        internal ConnectionPoolConfigurationBuilder(ConfigurationBuilder parentBuilder,
+                                                  Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder jniBuilder) : base(parentBuilder)
         {
-            this.builder = builder;
+            this.jniBuilder = jniBuilder;
         }
 
         public void Validate()
@@ -17,90 +17,84 @@ namespace Infinispan.HotRod.Config
 
         public ConnectionPoolConfiguration Create()
         {
-            return new ConnectionPoolConfiguration(builder.Create());
-        }
-
-        public IBuilder<ConnectionPoolConfiguration> Read(ConnectionPoolConfiguration bean)
-        {
-            builder.Read(bean.Config());
-            return this;
+            return new ConnectionPoolConfiguration(jniBuilder.Create());
         }
 
         public ConnectionPoolConfigurationBuilder ExhaustedAction(ExhaustedAction exhaustedAction)
         {
-            builder.ExhaustedAction(exhaustedAction);
+            jniBuilder.ExhaustedAction(exhaustedAction);
             return this;
         }
 
         public ConnectionPoolConfigurationBuilder Lifo(bool lifo)
         {
-            builder.Lifo(lifo);
+            jniBuilder.Lifo(lifo);
             return this;
         }
         
         public ConnectionPoolConfigurationBuilder MaxActive(int maxActive)
         {
-            builder.MaxActive(maxActive);
+            jniBuilder.MaxActive(maxActive);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder MaxTotal(int maxTotal)
         {
-            builder.MaxTotal(maxTotal);
+            jniBuilder.MaxTotal(maxTotal);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder MaxWait(int maxWait)
         {
-            builder.MaxWait(maxWait);
+            jniBuilder.MaxWait(maxWait);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder MaxIdle(int maxIdle)
         {
-            builder.MaxIdle(maxIdle);
+            jniBuilder.MaxIdle(maxIdle);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder MinIdle(int minIdle)
         {
-            builder.MinIdle(minIdle);
+            jniBuilder.MinIdle(minIdle);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder NumTestsPerEvictionRun(int numTestsPerEvictionRun)
         {
-            builder.NumTestsPerEvictionRun(numTestsPerEvictionRun);
+            jniBuilder.NumTestsPerEvictionRun(numTestsPerEvictionRun);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder TimeBetweenEvictionRuns(int timeBetweenEvictionRuns)
         {
-            builder.TimeBetweenEvictionRuns(timeBetweenEvictionRuns);
+            jniBuilder.TimeBetweenEvictionRuns(timeBetweenEvictionRuns);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder MinEvictableIdleTime(int minEvictableIdleTime)
         {
-            builder.MinEvictableIdleTime(minEvictableIdleTime);
+            jniBuilder.MinEvictableIdleTime(minEvictableIdleTime);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder TestOnBorrow(bool testOnBorrow)
         {
-            builder.TestOnBorrow(testOnBorrow);
+            jniBuilder.TestOnBorrow(testOnBorrow);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder TestOnReturn(bool testOnReturn)
         {
-            builder.TestOnReturn(testOnReturn);
+            jniBuilder.TestOnReturn(testOnReturn);
             return this;
         }
     
         public ConnectionPoolConfigurationBuilder TestWhileIdle(bool testWhileIdle)
         {
-            builder.TestWhileIdle(testWhileIdle);
+            jniBuilder.TestWhileIdle(testWhileIdle);
             return this;
         }
     }

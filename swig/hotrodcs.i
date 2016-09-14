@@ -207,6 +207,7 @@ namespace hotrod {
 %template(StringMap) std::map<std::string, std::string>;
 %template(ByteArrayVector) std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >;
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
+%template(ServerConfigurationMap) std::map<std::string,std::vector<infinispan::hotrod::ServerConfiguration> >;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 };

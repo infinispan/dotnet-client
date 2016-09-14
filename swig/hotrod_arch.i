@@ -1,8 +1,5 @@
 %typemap(csinterfaces) infinispan::hotrod::ConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConfigurationBuilder %{
-    public void Read(Infinispan.HotRod.SWIG.Configuration bean) {
-        read((Configuration) bean);
-    }
 
     public Infinispan.HotRod.SWIG.Configuration Create() {
         return create();
@@ -60,9 +57,6 @@
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ServerConfigurationBuilder %{
-    public void Read(Infinispan.HotRod.SWIG.ServerConfiguration bean) {
-        read((ServerConfiguration) bean);
-    }
 
     public Infinispan.HotRod.SWIG.ServerConfiguration Create() {
         return create();
@@ -79,9 +73,6 @@
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ConnectionPoolConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfigurationBuilder %{
-    public void Read(Infinispan.HotRod.SWIG.ConnectionPoolConfiguration bean) {
-        read((ConnectionPoolConfiguration) bean);
-    }
     
     public Infinispan.HotRod.SWIG.ConnectionPoolConfiguration Create() {
         return create();
@@ -167,9 +158,6 @@
 
 %typemap(csinterfaces_derived) infinispan::hotrod::SslConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SslConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::SslConfigurationBuilder %{
-    public void Read(Infinispan.HotRod.SWIG.SslConfiguration bean) {
-        read((SslConfiguration) bean);
-    }
 
     public Infinispan.HotRod.SWIG.SslConfiguration Create() {
         return create();
@@ -190,16 +178,29 @@
 
 %typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"
 %typemap(cscode) infinispan::hotrod::Configuration %{
-    public System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration> Servers() {
+public System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration> Servers() {
         System.Collections.Generic.List<Infinispan.HotRod.SWIG.ServerConfiguration> result
             = new System.Collections.Generic.List<Infinispan.HotRod.SWIG.ServerConfiguration>();
-
-        foreach (Infinispan.HotRod.SWIG.ServerConfiguration config in getServersConfiguration()) {
+        ServerConfigurationVector serversVec;
+        getServersMapConfiguration().TryGetValue("DEFAULT_CLUSTER_NAME",out serversVec);  
+        foreach (Infinispan.HotRod.SWIG.ServerConfiguration config in serversVec) {
             result.Add(config);
         }
         return result;
     }
-
+public System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration>> GetServersMapConfiguration() {
+  System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration>> dic = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration>>();
+  foreach (System.Collections.Generic.KeyValuePair<string, ServerConfigurationVector> p in getServersMapConfiguration())
+  {
+    System.Collections.Generic.IList<SWIG.ServerConfiguration> vec = new System.Collections.Generic.List<SWIG.ServerConfiguration>();
+    foreach (SWIG.ServerConfiguration sc in p.Value)
+    {
+      vec.Add(sc);
+    }
+    dic.Add(p.Key, vec);
+  }
+  return dic;
+}
     public Infinispan.HotRod.SWIG.ConnectionPoolConfiguration ConnectionPool() {
         return getConnectionPoolConfiguration();
     }

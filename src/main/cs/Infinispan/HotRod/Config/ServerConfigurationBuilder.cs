@@ -4,41 +4,29 @@ using Infinispan.HotRod.SWIG;
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class ServerConfigurationBuilder : AbstractConfigurationChildBuilder, IBuilder<ServerConfiguration>
+    public class ServerConfigurationBuilder : AbstractConfigurationChildBuilder
     {
-        private Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder;
-
-        internal ServerConfigurationBuilder(ConfigurationBuilder parent,
-                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder) : base(parent)
+        private Infinispan.HotRod.SWIG.ServerConfigurationBuilder jniBuilder;
+        internal ServerConfigurationBuilder(ConfigurationBuilder parentBuilder,
+                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder jniBuilder) : base(parentBuilder)
         {
-            this.builder = builder;
-        }
-
-        public void Validate()
-        {
-            builder.validate();
+            this.jniBuilder = jniBuilder;
         }
 
         public ServerConfiguration Create()
         {
-            return new ServerConfiguration(builder.Create());
-        }
-
-        public IBuilder<ServerConfiguration> Read(ServerConfiguration bean)
-        {
-            builder.Read(bean.Config());
-            return this;
+            return new ServerConfiguration(jniBuilder.Create());
         }
 
         public ServerConfigurationBuilder Host(String host)
         {
-            builder.Host(host);
+            jniBuilder.Host(host);
             return this;
         }
 
         public ServerConfigurationBuilder Port(int port)
         {
-            builder.Port(port);
+            jniBuilder.Port(port);
             return this;
         }
     }

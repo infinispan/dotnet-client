@@ -8,11 +8,12 @@ import org.infinispan.commons.configuration.Builder;
  * @author Tristan Tarrant
  * @since 5.3
  */
-public class ServerConfigurationBuilder extends AbstractConfigurationChildBuilder implements Builder<ServerConfiguration> {
+public class ServerConfigurationBuilder {
    private cli.Infinispan.HotRod.Config.ServerConfigurationBuilder jniServerConfigurationBuilder;
+   private ConfigurationBuilder builder;
 
    ServerConfigurationBuilder(ConfigurationBuilder builder) {
-      super(builder);
+      this.builder = builder;  
       jniServerConfigurationBuilder = builder.getJniConfigurationBuilder().AddServer();
    }
 
@@ -26,17 +27,19 @@ public class ServerConfigurationBuilder extends AbstractConfigurationChildBuilde
       return this;
    }
 
-   @Override
-   public void validate() {
-      this.jniServerConfigurationBuilder.Validate();
-   }
-
-   @Override
    public ServerConfiguration create() {
       return new ServerConfiguration(this.jniServerConfigurationBuilder.Create());
    }
 
-   @Override
+   public ConfigurationBuilder maxRetries(int maxRetries) {
+      this.jniServerConfigurationBuilder.MaxRetries(maxRetries);
+      return this.builder;
+   }
+
+   public ConnectionPoolConfigurationBuilder connectionPool() {
+      return new ConnectionPoolConfigurationBuilder(this.builder,this.jniServerConfigurationBuilder.ConnectionPool());
+   }
+
    public ServerConfigurationBuilder read(ServerConfiguration template) {      
       this.jniServerConfigurationBuilder.Host(template.host());
       this.jniServerConfigurationBuilder.Port(template.port());

@@ -8,7 +8,6 @@ namespace Infinispan.HotRod.SWIG
         ServerConfigurationBuilder AddServer();
         ConnectionPoolConfigurationBuilder ConnectionPool();
         SslConfigurationBuilder Ssl();
-        void Read(Configuration bean);
 
         void validate();
         ConfigurationBuilder AddServers(string serverList);
