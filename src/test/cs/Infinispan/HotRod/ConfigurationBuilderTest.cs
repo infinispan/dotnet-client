@@ -31,10 +31,9 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void AddServerTest()
         {
-            Configuration configuration = builder
-                .AddServer().Host("1.2.3.4").Port(12345)
-                .AddServer().Host("2.3.4.5").Port(23456)
-                .Build();
+            builder.AddServer().Host("1.2.3.4").Port(12345);
+            builder.AddServer().Host("2.3.4.5").Port(23456);
+            Configuration configuration = builder.Build();
 
             IList<ServerConfiguration> serverConfigurations = configuration.Servers();
             Assert.AreEqual(2, serverConfigurations.Count);
@@ -117,11 +116,13 @@ namespace Infinispan.HotRod.Tests
         public void LifoTest()
         {
             Configuration configuration;
-            
-            configuration = builder.ConnectionPool().Lifo(true).Build();
+
+            builder.ConnectionPool().Lifo(true);
+            configuration= builder.Build();
             Assert.AreEqual(true, configuration.ConnectionPool().Lifo());
 
-            configuration = builder.ConnectionPool().Lifo(false).Build();
+            builder.ConnectionPool().Lifo(false);
+            configuration = builder.Build();
             Assert.AreEqual(false, configuration.ConnectionPool().Lifo());
         }
 
@@ -130,7 +131,9 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().MaxActive(12345).Build();
+            builder.ConnectionPool().MaxActive(12345);
+            configuration = builder.Build();
+
             Assert.AreEqual(12345, configuration.ConnectionPool().MaxActive());
         }
 
@@ -139,7 +142,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().MaxTotal(12345).Build();
+            builder.ConnectionPool().MaxTotal(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().MaxTotal());
         }
 
@@ -148,7 +152,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().MaxIdle(12345).Build();
+            builder.ConnectionPool().MaxIdle(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().MaxIdle());
         }
 
@@ -157,7 +162,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().MinIdle(12345).Build();
+            builder.ConnectionPool().MinIdle(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().MinIdle());
         }
 
@@ -166,7 +172,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().NumTestsPerEvictionRun(12345).Build();
+            builder.ConnectionPool().NumTestsPerEvictionRun(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().NumTestsPerEvictionRun());
         }
 
@@ -175,7 +182,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().TimeBetweenEvictionRuns(12345).Build();
+            builder.ConnectionPool().TimeBetweenEvictionRuns(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().TimeBetweenEvictionRuns());
         }
 
@@ -184,7 +192,8 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().MinEvictableIdleTime(12345).Build();
+            builder.ConnectionPool().MinEvictableIdleTime(12345);
+            configuration = builder.Build();
             Assert.AreEqual(12345, configuration.ConnectionPool().MinEvictableIdleTime());
         }
 
@@ -193,10 +202,12 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().TestOnBorrow(true).Build();
+            builder.ConnectionPool().TestOnBorrow(true);
+            configuration = builder.Build();
             Assert.AreEqual(true, configuration.ConnectionPool().TestOnBorrow());
 
-            configuration = builder.ConnectionPool().TestOnBorrow(false).Build();
+            builder.ConnectionPool().TestOnBorrow(false);
+            configuration = builder.Build();
             Assert.AreEqual(false, configuration.ConnectionPool().TestOnBorrow());
         }
 
@@ -205,10 +216,12 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().TestOnReturn(true).Build();
+            builder.ConnectionPool().TestOnReturn(true);
+            configuration = builder.Build();
             Assert.AreEqual(true, configuration.ConnectionPool().TestOnReturn());
 
-            configuration = builder.ConnectionPool().TestOnReturn(false).Build();
+            builder.ConnectionPool().TestOnReturn(false);
+            configuration = builder.Build();
             Assert.AreEqual(false, configuration.ConnectionPool().TestOnReturn());
         }
 
@@ -217,10 +230,12 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().TestWhileIdle(true).Build();
+            builder.ConnectionPool().TestWhileIdle(true);
+            configuration = builder.Build();
             Assert.AreEqual(true, configuration.ConnectionPool().TestWhileIdle());
 
-            configuration = builder.ConnectionPool().TestWhileIdle(false).Build();
+            builder.ConnectionPool().TestWhileIdle(false);
+            configuration = builder.Build();
             Assert.AreEqual(false, configuration.ConnectionPool().TestWhileIdle());
         }
 
@@ -229,13 +244,16 @@ namespace Infinispan.HotRod.Tests
         {
             Configuration configuration;
             
-            configuration = builder.ConnectionPool().ExhaustedAction(ExhaustedAction.EXCEPTION).Build();
+            builder.ConnectionPool().ExhaustedAction(ExhaustedAction.EXCEPTION);
+            configuration = builder.Build();
             Assert.AreEqual(ExhaustedAction.EXCEPTION, configuration.ConnectionPool().ExhaustedAction());
 
-            configuration = builder.ConnectionPool().ExhaustedAction(ExhaustedAction.WAIT).Build();
+            builder.ConnectionPool().ExhaustedAction(ExhaustedAction.WAIT);
+            configuration = builder.Build();
             Assert.AreEqual(ExhaustedAction.WAIT, configuration.ConnectionPool().ExhaustedAction());
 
-            configuration = builder.ConnectionPool().ExhaustedAction(ExhaustedAction.CREATE_NEW).Build();
+            builder.ConnectionPool().ExhaustedAction(ExhaustedAction.CREATE_NEW);
+            configuration = builder.Build();
             Assert.AreEqual(ExhaustedAction.CREATE_NEW, configuration.ConnectionPool().ExhaustedAction());
         }
     }

@@ -1,11 +1,11 @@
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class SslConfigurationBuilder : AbstractConfigurationChildBuilder, IBuilder<SslConfiguration>
+    public class SslConfigurationBuilder
     {
         private Infinispan.HotRod.SWIG.SslConfigurationBuilder builder;
 
-        internal SslConfigurationBuilder(ConfigurationBuilder parent, Infinispan.HotRod.SWIG.SslConfigurationBuilder builder) : base(parent)
+        internal SslConfigurationBuilder(ConfigurationBuilder parent, Infinispan.HotRod.SWIG.SslConfigurationBuilder builder)
         {
             this.builder = builder;
         }
@@ -34,12 +34,6 @@ namespace Infinispan.HotRod.Config
         public SslConfigurationBuilder ClientCertificateFile(string filename)
         {
             builder.ClientCertificateFile(filename);
-            return this;
-        }
-
-        public IBuilder<SslConfiguration> Read(SslConfiguration bean)
-        {
-            builder.Read(bean.Config());
             return this;
         }
 

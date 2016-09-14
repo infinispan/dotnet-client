@@ -24,9 +24,9 @@ import org.infinispan.client.hotrod.HotRodServerStartStopTest;
 import org.infinispan.client.hotrod.HotRodStatisticsTest;
 import org.infinispan.client.hotrod.RemoteCacheManagerTest;
 import org.infinispan.client.hotrod.ServerErrorTest;
-import org.infinispan.client.hotrod.ServerRestartTest;
+import org.infinispan.client.hotrod.DotNetServerRestartTest;
 import org.infinispan.client.hotrod.ServerShutdownTest;
-import org.infinispan.client.hotrod.SizeTest;
+import org.infinispan.client.hotrod.DotNetSizeTest;
 import org.infinispan.client.hotrod.SocketTimeoutErrorTest;
 import org.testng.IMethodSelector;
 import org.testng.IMethodSelectorContext;
@@ -83,9 +83,9 @@ public class JavaClientTests implements IMethodSelector {
             HotRodStatisticsTest.class, 
             RemoteCacheManagerTest.class,
             ServerErrorTest.class,
-            ServerRestartTest.class,
+            DotNetServerRestartTest.class,
             //ServerShutdownTest.class,
-            SizeTest.class,
+            DotNetSizeTest.class,
             SocketTimeoutErrorTest.class,
       });
 

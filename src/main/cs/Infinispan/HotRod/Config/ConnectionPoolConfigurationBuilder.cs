@@ -1,12 +1,12 @@
 #pragma warning disable 1591
 namespace Infinispan.HotRod.Config
 {
-    public class ConnectionPoolConfigurationBuilder : AbstractConfigurationChildBuilder, IBuilder<ConnectionPoolConfiguration>
+    public class ConnectionPoolConfigurationBuilder
     {
         private Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder builder;
 
         internal ConnectionPoolConfigurationBuilder(ConfigurationBuilder parent,
-                                                  Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder builder) : base(parent)
+                                                  Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder builder)
         {
             this.builder = builder;
         }
@@ -18,12 +18,6 @@ namespace Infinispan.HotRod.Config
         public ConnectionPoolConfiguration Create()
         {
             return new ConnectionPoolConfiguration(builder.Create());
-        }
-
-        public IBuilder<ConnectionPoolConfiguration> Read(ConnectionPoolConfiguration bean)
-        {
-            builder.Read(bean.Config());
-            return this;
         }
 
         public ConnectionPoolConfigurationBuilder ExhaustedAction(ExhaustedAction exhaustedAction)

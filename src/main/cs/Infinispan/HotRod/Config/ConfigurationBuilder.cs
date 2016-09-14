@@ -5,7 +5,7 @@ using Infinispan.HotRod.SWIG;
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class ConfigurationBuilder : IBuilder<Configuration>, ConfigurationChildBuilder
+    public class ConfigurationBuilder
     {
         private Infinispan.HotRod.SWIG.ConfigurationBuilder builder;
         private IMarshaller marshaller = new DefaultMarshaller();
@@ -27,13 +27,6 @@ namespace Infinispan.HotRod.Config
         public Configuration Create()
         {
             return new Configuration(builder.Create(), marshaller);
-        }
-
-        public IBuilder<Configuration> Read(Configuration bean)
-        {
-            builder.Read(bean.Config());
-            this.marshaller = bean.Marshaller();
-            return this;
         }
 
         public Configuration Build()

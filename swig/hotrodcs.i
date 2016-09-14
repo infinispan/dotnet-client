@@ -5,7 +5,6 @@
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
-#include <infinispan/hotrod/ConfigurationChildBuilder.h>
 #include <infinispan/hotrod/ConnectionPoolConfiguration.h>
 #include <infinispan/hotrod/ConnectionPoolConfigurationBuilder.h>
 #include <infinispan/hotrod/Flag.h>
@@ -84,7 +83,6 @@
 %include "infinispan/hotrod/Configuration.h"
 
 
-%include "infinispan/hotrod/ConfigurationChildBuilder.h"
 %include "infinispan/hotrod/ConnectionPoolConfigurationBuilder.h"
 %include "infinispan/hotrod/ServerConfigurationBuilder.h"
 %include "infinispan/hotrod/SslConfigurationBuilder.h"
@@ -207,6 +205,7 @@ namespace hotrod {
 %template(StringMap) std::map<std::string, std::string>;
 %template(ByteArrayVector) std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >;
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
+%template(ServerConfigurationMap) std::map<std::string,std::vector<infinispan::hotrod::ServerConfiguration> >;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 };

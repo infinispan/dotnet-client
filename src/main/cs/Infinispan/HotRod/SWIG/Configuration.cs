@@ -20,5 +20,6 @@ namespace Infinispan.HotRod.SWIG
         SslConfiguration Ssl();
 
         IList<ServerConfiguration> Servers();
+        Dictionary<string,IList<ServerConfiguration>> GetServersMapConfiguration();
     }
 }

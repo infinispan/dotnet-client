@@ -6,6 +6,11 @@ import org.infinispan.client.hotrod.configuration.ConfigurationBuilder;
 import org.infinispan.server.hotrod.HotRodServer;
 import org.infinispan.server.hotrod.configuration.HotRodServerConfigurationBuilder;
 import org.infinispan.util.logging.LogFactory;
+/** This class overrides the setup configuration
+ * of the test org.infinispan.client.hotrod.ServerRestartTest. Configuration framework has been simplified
+ * in the C++ client and ConfigurationBuilder properties cannot be set via the ServerConfigurationBuilder.
+ * This code is equivalent to the original one.
+ */
 public class DotNetServerRestartTest extends ServerRestartTest
 {
 private static final Log log = LogFactory.getLog(DotNetServerRestartTest.class);

@@ -4,7 +4,6 @@ namespace Infinispan.HotRod.SWIG
 {
     internal interface ConnectionPoolConfigurationBuilder
     {
-        void Read(ConnectionPoolConfiguration bean);
         ConnectionPoolConfiguration Create();
         ConnectionPoolConfigurationBuilder ExhaustedAction(ExhaustedAction exhaustedAction);
         ConnectionPoolConfigurationBuilder Lifo(bool lifo);

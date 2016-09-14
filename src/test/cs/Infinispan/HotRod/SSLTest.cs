@@ -12,7 +12,8 @@ namespace Infinispan.HotRod.Tests
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
+            conf.AddServer().Host("127.0.0.1").Port(11222);
+            conf.ConnectionTimeout(90000).SocketTimeout(900);
             SslConfigurationBuilder sslConfB = conf.Ssl();
             if (!System.IO.File.Exists("infinispan-ca.pem"))
             {
@@ -20,12 +21,13 @@ namespace Infinispan.HotRod.Tests
                 Environment.Exit(-1);
             }
             sslConfB.Enable().ServerCAFile("infinispan-ca.pem");
-            if (!System.IO.File.Exists("client-ca.pem"))
-            {
-                Console.WriteLine("File not found: client-ca.pem.");
-                Environment.Exit(-1);
-            }
-            sslConfB.ClientCertificateFile("client-ca.pem");
+	    // No trusted certificate for now
+            //if (!System.IO.File.Exists("client-ca.pem"))
+            //{
+            //    Console.WriteLine("File not found: client-ca.pem.");
+            //    Environment.Exit(-1);
+            //}
+            //sslConfB.ClientCertificateFile("client-ca.pem");
 
             conf.Marshaller(new JBasicMarshaller());
             remoteManager = new RemoteCacheManager(conf.Build(), true);

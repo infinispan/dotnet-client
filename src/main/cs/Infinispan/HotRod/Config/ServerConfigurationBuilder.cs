@@ -4,30 +4,20 @@ using Infinispan.HotRod.SWIG;
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class ServerConfigurationBuilder : AbstractConfigurationChildBuilder, IBuilder<ServerConfiguration>
+    public class ServerConfigurationBuilder 
     {
         private Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder;
-
+        private ConfigurationBuilder parent;
         internal ServerConfigurationBuilder(ConfigurationBuilder parent,
-                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder) : base(parent)
+                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder)
         {
             this.builder = builder;
-        }
-
-        public void Validate()
-        {
-            builder.validate();
+            this.parent = parent;
         }
 
         public ServerConfiguration Create()
         {
             return new ServerConfiguration(builder.Create());
-        }
-
-        public IBuilder<ServerConfiguration> Read(ServerConfiguration bean)
-        {
-            builder.Read(bean.Config());
-            return this;
         }
 
         public ServerConfigurationBuilder Host(String host)

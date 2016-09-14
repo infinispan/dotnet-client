@@ -72,12 +72,15 @@ namespace Infinispan.HotRod.Config
         /// </summary>
         public IList<ServerConfiguration> Servers()
         {
-            IList<ServerConfiguration> result = new List<ServerConfiguration>();
-            foreach (Infinispan.HotRod.SWIG.ServerConfiguration conf in config.Servers()) {
-                result.Add(new ServerConfiguration(conf));
+            IList<Infinispan.HotRod.SWIG.ServerConfiguration> res = new List<Infinispan.HotRod.SWIG.ServerConfiguration>();
+            config.GetServersMapConfiguration().TryGetValue("DEFAULT_CLUSTER_NAME",out res);
+            IList<ServerConfiguration> ret = new List<ServerConfiguration>();
+            foreach(Infinispan.HotRod.SWIG.ServerConfiguration s in res) {
+                ret.Add(new ServerConfiguration(s));
             }
-            return result;
+            return ret;
         }
+
 
         /// <summary>
         ///   Retrieves the value configured for socket timeouts.
