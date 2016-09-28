@@ -6,29 +6,27 @@ namespace Infinispan.HotRod.Config
 #pragma warning disable 1591
     public class ServerConfigurationBuilder : AbstractConfigurationChildBuilder
     {
-        private Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder;
-        private ConfigurationBuilder parent;
-        internal ServerConfigurationBuilder(ConfigurationBuilder parent,
-                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder) : base(parent)
+        private Infinispan.HotRod.SWIG.ServerConfigurationBuilder jniBuilder;
+        internal ServerConfigurationBuilder(ConfigurationBuilder parentBuilder,
+                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder jniBuilder) : base(parentBuilder)
         {
-            this.builder = builder;
-            this.parent = parent;
+            this.jniBuilder = jniBuilder;
         }
 
         public ServerConfiguration Create()
         {
-            return new ServerConfiguration(builder.Create());
+            return new ServerConfiguration(jniBuilder.Create());
         }
 
         public ServerConfigurationBuilder Host(String host)
         {
-            builder.Host(host);
+            jniBuilder.Host(host);
             return this;
         }
 
         public ServerConfigurationBuilder Port(int port)
         {
-            builder.Port(port);
+            jniBuilder.Port(port);
             return this;
         }
     }

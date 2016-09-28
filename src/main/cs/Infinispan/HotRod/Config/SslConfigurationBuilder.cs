@@ -1,13 +1,13 @@
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class SslConfigurationBuilder
+    public class SslConfigurationBuilder: AbstractConfigurationChildBuilder
     {
-        private Infinispan.HotRod.SWIG.SslConfigurationBuilder builder;
+        private Infinispan.HotRod.SWIG.SslConfigurationBuilder jniBuilder;
 
-        internal SslConfigurationBuilder(ConfigurationBuilder parent, Infinispan.HotRod.SWIG.SslConfigurationBuilder builder)
-        {
-            this.builder = builder;
+        internal SslConfigurationBuilder(ConfigurationBuilder parentBuilder, Infinispan.HotRod.SWIG.SslConfigurationBuilder jniBuilder) : base(parentBuilder)
+        { 
+            this.jniBuilder = jniBuilder;
         }
 
         public void Validate()
@@ -16,24 +16,24 @@ namespace Infinispan.HotRod.Config
 
         public SslConfiguration Create()
         {
-            return new SslConfiguration(builder.Create());
+            return new SslConfiguration(jniBuilder.Create());
         }
 
         public SslConfigurationBuilder Enable()
         {
-            builder.Enable();
+            jniBuilder.Enable();
             return this;
         }
 
         public SslConfigurationBuilder ServerCAFile(string filename)
         {
-            builder.ServerCAFile(filename);
+            jniBuilder.ServerCAFile(filename);
             return this;
         }
 
         public SslConfigurationBuilder ClientCertificateFile(string filename)
         {
-            builder.ClientCertificateFile(filename);
+            jniBuilder.ClientCertificateFile(filename);
             return this;
         }
 
