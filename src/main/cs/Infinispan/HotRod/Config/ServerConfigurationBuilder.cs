@@ -4,12 +4,12 @@ using Infinispan.HotRod.SWIG;
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    public class ServerConfigurationBuilder 
+    public class ServerConfigurationBuilder : AbstractConfigurationChildBuilder
     {
         private Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder;
         private ConfigurationBuilder parent;
         internal ServerConfigurationBuilder(ConfigurationBuilder parent,
-                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder)
+                                            Infinispan.HotRod.SWIG.ServerConfigurationBuilder builder) : base(parent)
         {
             this.builder = builder;
             this.parent = parent;

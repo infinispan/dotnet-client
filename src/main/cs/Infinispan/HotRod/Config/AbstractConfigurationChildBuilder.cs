@@ -25,12 +25,17 @@ namespace Infinispan.HotRod.Config
         {
             return parent.ConnectionPool();
         }
-    
+
+        public ConnectionPoolConfigurationBuilder connectionPool()
+        {
+            return parent.ConnectionPool();
+        }
+
         public ConfigurationBuilder ConnectionTimeout(int connectionTimeout)
         {
             return parent.ConnectionTimeout(connectionTimeout);
         }
-    
+
         public ConfigurationBuilder ForceReturnValues(bool forceReturnValues)
         {
             return parent.ForceReturnValues(forceReturnValues);
@@ -70,7 +75,12 @@ namespace Infinispan.HotRod.Config
         {
             return parent.MaxRetries(maxRetries);
         }
-    
+
+        public ConfigurationBuilder maxRetries(int maxRetries)
+        {
+            return parent.MaxRetries(maxRetries);
+        }
+
         public Configuration Build()
         {
             return parent.Build();

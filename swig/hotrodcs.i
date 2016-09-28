@@ -5,6 +5,7 @@
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
+#include <infinispan/hotrod/ConfigurationChildBuilder.h>
 #include <infinispan/hotrod/ConnectionPoolConfiguration.h>
 #include <infinispan/hotrod/ConnectionPoolConfigurationBuilder.h>
 #include <infinispan/hotrod/Flag.h>
@@ -83,6 +84,7 @@
 %include "infinispan/hotrod/Configuration.h"
 
 
+%include "infinispan/hotrod/ConfigurationChildBuilder.h"
 %include "infinispan/hotrod/ConnectionPoolConfigurationBuilder.h"
 %include "infinispan/hotrod/ServerConfigurationBuilder.h"
 %include "infinispan/hotrod/SslConfigurationBuilder.h"

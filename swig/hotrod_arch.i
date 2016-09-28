@@ -55,7 +55,7 @@
     
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ServerConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.ServerConfiguration Create() {
@@ -71,7 +71,7 @@
     }
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::ConnectionPoolConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::ConnectionPoolConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfigurationBuilder %{
     
     public Infinispan.HotRod.SWIG.ConnectionPoolConfiguration Create() {
@@ -156,7 +156,7 @@
     }
 };
 
-%typemap(csinterfaces) infinispan::hotrod::SslConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SslConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::SslConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SslConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::SslConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.SslConfiguration Create() {
