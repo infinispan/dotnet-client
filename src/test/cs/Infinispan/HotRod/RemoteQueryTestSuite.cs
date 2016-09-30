@@ -5,14 +5,14 @@ using System.Collections;
 
 namespace Infinispan.HotRod.TestSuites
 {
-    public class DefaultTestSuite
+    public class RemoteQueryTestSuite
     {
         HotRodServer server;
 
         [TestFixtureSetUp]
         public void BeforeSuite()
         {
-            server = new HotRodServer("standalone.xml");
+            server = new HotRodServer("clustered-indexing.xml");
             server.StartHotRodServer();
         }
 
@@ -28,10 +28,7 @@ namespace Infinispan.HotRod.TestSuites
             get
             {
                 var suite = new ArrayList();
-                suite.Add(new ConfigurationBuilderTest());
-                suite.Add(new DefaultCacheTest());
-                suite.Add(new DefaultCacheForceReturnValueTest());
-                suite.Add(new AsyncOperationsTest());
+                suite.Add(new RemoteQueryTest());
                 return suite;
             }
         }

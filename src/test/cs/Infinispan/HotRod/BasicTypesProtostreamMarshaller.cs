@@ -32,35 +32,48 @@ namespace Infinispan.HotRod.Tests
 
         public byte[] ObjectToByteBuffer(object obj)
         {
-            if (obj.GetType() == typeof(String))
+            if (obj is String)
             {
                 return StringToByteBuffer((String)obj);
             }
-            if (obj.GetType() == typeof(int))
+            if (obj is int)
             {
                 return IntToByteBuffer((int)obj);
             }
-            if (obj.GetType() == typeof(User))
+            if (obj is User)
             {
-                User u = (User)obj;
-
-                int size = u.CalculateSize();
-                byte[] bytes = new byte[size];
-                CodedOutputStream cos = new CodedOutputStream(bytes);
-                u.WriteTo(cos);
-                cos.Flush();
-                WrappedMessage wm = new WrappedMessage();
-                wm.WrappedMessageBytes = ByteString.CopyFrom(bytes);
-                wm.WrappedDescriptorId = 42;
-
-                byte[] msgBytes = new byte[wm.CalculateSize()];
-                CodedOutputStream msgCos = new CodedOutputStream(msgBytes);
-                wm.WriteTo(msgCos);
-                msgCos.Flush();
-                return msgBytes;
+                return ObjectToByteBuffer(42, obj);
             }
-
+            if (obj is Account)
+            {
+                return ObjectToByteBuffer(43, obj);
+            }
+            if (obj is Transaction)
+            {
+                return ObjectToByteBuffer(44, obj);
+            }
             throw new NotImplementedException();
+        }
+
+        private byte[] ObjectToByteBuffer(int descriptorId, object obj)
+        {
+            IMessage u = (IMessage)obj;
+
+            int size = u.CalculateSize();
+            byte[] bytes = new byte[size];
+            CodedOutputStream cos = new CodedOutputStream(bytes);
+            u.WriteTo(cos);
+            
+            cos.Flush();
+            WrappedMessage wm = new WrappedMessage();
+            wm.WrappedMessageBytes = ByteString.CopyFrom(bytes);
+            wm.WrappedDescriptorId = descriptorId;
+
+            byte[] msgBytes = new byte[wm.CalculateSize()];
+            CodedOutputStream msgCos = new CodedOutputStream(msgBytes);
+            wm.WriteTo(msgCos);
+            msgCos.Flush();
+            return msgBytes;
         }
 
         private byte[] StringToByteBuffer(string str)
@@ -90,7 +103,6 @@ namespace Infinispan.HotRod.Tests
             cos.Flush();
             return bytes;
         }
-
 
         public byte[] ObjectToByteBuffer(object obj, int estimatedSize)
         {
