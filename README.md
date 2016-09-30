@@ -3,7 +3,7 @@
 ## Build ##
 Build prerequisites:
 
-* C++ HotRod Client (www.infinispan.org/hotrod-clients/)
+* C++ HotRod Client 8.1.0 (www.infinispan.org/hotrod-clients/)
 * CMake 3.x (www.cmake.org)
 * C++11
 * SWIG 2.0.x (http://www.swig.org)
