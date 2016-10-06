@@ -4,6 +4,8 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using Infinispan.HotRod.Tests.Util;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace Infinispan.HotRod.Tests
 {
@@ -57,13 +59,13 @@ namespace Infinispan.HotRod.Tests
             cache.Put(key, "uranium");
             IVersionedValue<String> previous = cache.GetVersioned(key);
             cache.Put(key, "rubidium");
-            
+
             IVersionedValue<String> current = cache.GetVersioned(key);
             Assert.AreEqual("rubidium", current.GetValue());
 
             Assert.AreNotEqual(previous.GetVersion(), current.GetVersion());
         }
-        
+
         [Test]
         public void GetWithMetadataImmortalTest()
         {
@@ -88,7 +90,7 @@ namespace Infinispan.HotRod.Tests
 
             /* Created with lifespan/maxidle. */
             cache.Put(key, "rubidium", 60, TimeUnit.MINUTES, 30, TimeUnit.MINUTES);
-            
+
             IMetadataValue<String> metadata = cache.GetWithMetadata(key);
             Assert.AreEqual("rubidium", metadata.GetValue());
 
@@ -105,7 +107,7 @@ namespace Infinispan.HotRod.Tests
             String key1 = UniqueKey.NextKey();
             String key2 = UniqueKey.NextKey();
             String key3 = UniqueKey.NextKey();
-            
+
             cache.Put(key1, "hydrogen");
             cache.Put(key2, "helium");
             cache.Put(key3, "lithium");
@@ -171,10 +173,13 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void ContainsValueTest()
         {
-            try {
+            try
+            {
                 cache.ContainsValue("key");
                 Assert.Fail("Should throw an unsupported op exception for now.");
-            } catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException) {
+            }
+            catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException)
+            {
             }
         }
 
@@ -184,14 +189,14 @@ namespace Infinispan.HotRod.Tests
             String key = UniqueKey.NextKey();
 
             cache.Put(key, "bromine");
-            ulong version = (ulong) cache.GetVersioned(key).GetVersion();
+            ulong version = (ulong)cache.GetVersioned(key).GetVersion();
             cache.Put(key, "hexane");
             bool response = cache.ReplaceWithVersion(key, "barium", version);
             Assert.IsFalse(response);
             Assert.AreEqual("hexane", cache.Get(key));
-            
+
             cache.Put(key, "oxygen");
-            ulong newVersion = (ulong) cache.GetVersioned(key).GetVersion();
+            ulong newVersion = (ulong)cache.GetVersioned(key).GetVersion();
             Assert.AreNotEqual(newVersion, version);
             Assert.IsTrue(cache.ReplaceWithVersion(key, "barium", newVersion));
             Assert.AreEqual("barium", cache.Get(key));
@@ -214,16 +219,16 @@ namespace Infinispan.HotRod.Tests
             String key = UniqueKey.NextKey();
 
             cache.Put(key, "bromine");
-            ulong version = (ulong) cache.GetVersioned(key).GetVersion();
+            ulong version = (ulong)cache.GetVersioned(key).GetVersion();
 
             cache.Put(key, "hexane");
             Assert.IsFalse(cache.RemoveWithVersion(key, version));
 
-            version = (ulong) cache.GetVersioned(key).GetVersion();
+            version = (ulong)cache.GetVersioned(key).GetVersion();
             Assert.IsTrue(cache.RemoveWithVersion(key, version));
             Assert.IsNull(cache.Get(key));
         }
- 
+
         [Test]
         public void ClearTest()
         {
@@ -259,10 +264,13 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void EntrySetTest()
         {
-            try {
+            try
+            {
                 cache.EntrySet();
                 Assert.Fail("Should throw an unsupported op exception for now.");
-            } catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException) {
+            }
+            catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException)
+            {
             }
         }
 
@@ -288,10 +296,13 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void ValuesTest()
         {
-            try {
+            try
+            {
                 cache.Values();
                 Assert.Fail("Should throw an unsupported op exception for now.");
-            } catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException) {
+            }
+            catch (Infinispan.HotRod.Exceptions.UnsupportedOperationException)
+            {
             }
         }
 
@@ -299,7 +310,7 @@ namespace Infinispan.HotRod.Tests
         public void WithFlagsTest()
         {
             String key1 = UniqueKey.NextKey();
-            
+
             Assert.IsNull(cache.Put(key1, "v1"));
             Assert.IsNull(cache.Put(key1, "v2"));
 

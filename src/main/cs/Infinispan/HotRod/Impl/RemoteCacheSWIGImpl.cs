@@ -6,6 +6,7 @@ using Infinispan.HotRod.Exceptions;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
 using Google.Protobuf;
+using System.Threading.Tasks;
 
 namespace Infinispan.HotRod.Impl
 {
@@ -14,10 +15,12 @@ namespace Infinispan.HotRod.Impl
     {
         private RemoteByteArrayCache cache;
         private IMarshaller marshaller;
+        private SWIG.RemoteCacheManager manager;
 
-        public RemoteCacheSWIGGenImpl(Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
+        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
         {
-            this.cache = (RemoteByteArrayCache) cache;
+            this.manager = manager;
+            this.cache = (RemoteByteArrayCache)cache;
             this.marshaller = marshaller;
         }
 
@@ -49,7 +52,8 @@ namespace Infinispan.HotRod.Impl
         public ServerStatistics Stats()
         {
             StringMap swigResult = cache.stats();
-            if (swigResult == null) {
+            if (swigResult == null)
+            {
                 return null;
             }
             return new ServerStatisticsImpl(unwrap(swigResult));
@@ -57,32 +61,32 @@ namespace Infinispan.HotRod.Impl
 
         public V Put(K key, V val, ulong lifespan, TimeUnit lifespanUnit)
         {
-            return (V) unwrap(cache.put(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
+            return (V)unwrap(cache.put(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
         }
 
         public V Put(K key, V val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
-            return (V) unwrap(cache.put(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
+            return (V)unwrap(cache.put(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
         }
 
         public V Put(K key, V val)
         {
-            return (V) unwrap(cache.put(wrap(key), wrap(val)));
+            return (V)unwrap(cache.put(wrap(key), wrap(val)));
         }
 
         public V PutIfAbsent(K key, V val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
-            return (V) unwrap(cache.putIfAbsent(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
+            return (V)unwrap(cache.putIfAbsent(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
         }
 
         public V PutIfAbsent(K key, V val, ulong lifespan, TimeUnit lifespanUnit)
         {
-            return (V) unwrap(cache.putIfAbsent(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
+            return (V)unwrap(cache.putIfAbsent(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
         }
 
         public V PutIfAbsent(K key, V val)
         {
-            return (V) unwrap(cache.putIfAbsent(wrap(key), wrap(val)));
+            return (V)unwrap(cache.putIfAbsent(wrap(key), wrap(val)));
         }
 
         public void PutAll(IDictionary<K, V> map, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
@@ -102,17 +106,17 @@ namespace Infinispan.HotRod.Impl
 
         public V Replace(K key, V val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
-            return (V) unwrap(cache.replace(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
+            return (V)unwrap(cache.replace(wrap(key), wrap(val), lifespan, wrap(lifespanUnit), maxIdleTime, wrap(maxIdleUnit)));
         }
 
         public V Replace(K key, V val, ulong lifespan, TimeUnit lifespanUnit)
         {
-            return (V) unwrap(cache.replace(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
+            return (V)unwrap(cache.replace(wrap(key), wrap(val), lifespan, wrap(lifespanUnit)));
         }
 
         public V Replace(K key, V val)
         {
-            return (V) unwrap(cache.replace(wrap(key), wrap(val)));
+            return (V)unwrap(cache.replace(wrap(key), wrap(val)));
         }
 
         public bool ContainsKey(K key)
@@ -127,7 +131,7 @@ namespace Infinispan.HotRod.Impl
 
         public V Get(K key)
         {
-            return (V) unwrap(cache.get(wrap(key)));
+            return (V)unwrap(cache.get(wrap(key)));
         }
 
         public IDictionary<K, V> GetBulk(int size)
@@ -142,7 +146,7 @@ namespace Infinispan.HotRod.Impl
 
         public V Remove(K key)
         {
-            return (V) unwrap(cache.remove(wrap(key)));
+            return (V)unwrap(cache.remove(wrap(key)));
         }
 
         public void Clear()
@@ -153,20 +157,22 @@ namespace Infinispan.HotRod.Impl
         public IVersionedValue<V> GetVersioned(K key)
         {
             ValueVersionPair pair = cache.getWithVersion(wrap(key));
-            if (pair == null || pair.first == null) {
+            if (pair == null || pair.first == null)
+            {
                 return null;
             }
-            return new VersionedValueImpl<V>((V) unwrap(pair.first),
+            return new VersionedValueImpl<V>((V)unwrap(pair.first),
                                              pair.second.version);
         }
 
         public IMetadataValue<V> GetWithMetadata(K key)
         {
             ValueMetadataPair pair = cache.getWithMetadata(wrap(key));
-            if (pair == null || pair.first == null) {
+            if (pair == null || pair.first == null)
+            {
                 return null;
             }
-            return new MetadataValueImpl<V>((V) unwrap(pair.first),
+            return new MetadataValueImpl<V>((V)unwrap(pair.first),
                                             pair.second.version,
                                             pair.second.created,
                                             pair.second.lastUsed,
@@ -203,12 +209,14 @@ namespace Infinispan.HotRod.Impl
         {
             ByteArrayVector swigResult = hotrodcs.as_vector(cache.keySet());
             HashSet<K> result = new HashSet<K>();
-            if (swigResult != null) {
-                foreach (ByteArray item in swigResult) {
-                    result.Add((K) unwrap(item));
+            if (swigResult != null)
+            {
+                foreach (ByteArray item in swigResult)
+                {
+                    result.Add((K)unwrap(item));
                 }
             }
-            
+
             return (ISet<K>)result;
         }
 
@@ -219,27 +227,27 @@ namespace Infinispan.HotRod.Impl
 
         public IRemoteCache<K, V> WithFlags(Flags flags)
         {
-            cache.withFlags((Infinispan.HotRod.SWIGGen.Flag) flags);
+            cache.withFlags((Infinispan.HotRod.SWIGGen.Flag)flags);
             return this;
         }
 
 
         public QueryResponse Query(QueryRequest qr)
         {
-            uint size = (uint) qr.CalculateSize();
+            uint size = (uint)qr.CalculateSize();
             byte[] bytes = new byte[size];
             CodedOutputStream cos = new CodedOutputStream(bytes);
             qr.WriteTo(cos);
             cos.Flush();
             string s2 = System.Text.Encoding.ASCII.GetString(bytes);
             VectorByte vb = new VectorByte(bytes);
-            VectorByte resp= cache.query(vb, size);
+            VectorByte resp = cache.query(vb, size);
             byte[] respBytes = new byte[resp.Count];
             resp.CopyTo(respBytes);
             QueryResponse queryResp = new QueryResponse();
             return QueryResponse.Parser.ParseFrom(respBytes);
         }
-        
+
         public byte[] Execute(string scriptName, IDictionary<string, string> dict)
         {
             StringMap sm = new StringMap();
@@ -253,6 +261,75 @@ namespace Infinispan.HotRod.Impl
             return ret;
         }
 
+        public Task<V> GetAsync(K key)
+        {
+            return Task.Run(() => Get(key));
+        }
+
+        public Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        {
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => Put(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+            }
+        }
+
+        public async Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        {
+            return await Task.Run(() => PutIfAbsent(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+        }
+
+        public Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        {
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => Replace(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+            }
+        }
+
+        public async Task<V> RemoveAsync(K key)
+        {
+            return await Task.Run(() => Remove(key));
+        }
+
+        public async Task ClearAsync()
+        {
+            await Task.Run(() => Clear());
+        }
+
+        public Task<bool> ReplaceWithVersionAsync(K key, V val, ulong version, ulong lifespan = 0, ulong maxIdleTime = 0)
+        {
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            return Task.Run(() => ReplaceWithVersion(key, val, version, lifespan, maxIdleTime));
+        }
+
+        public Task<bool> RemoveWithVersionAsync(K key, ulong version)
+        {
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => RemoveWithVersion(key, version));
+            }
+        }
+
         private ByteArray wrap(Object input)
         {
             byte[] barray = marshaller.ObjectToByteBuffer(input);
@@ -261,7 +338,8 @@ namespace Infinispan.HotRod.Impl
 
         private Object unwrap(ByteArray input)
         {
-            if (input == null) {
+            if (input == null)
+            {
                 return null;
             }
             byte[] barray = new byte[input.getSize()];
@@ -271,11 +349,13 @@ namespace Infinispan.HotRod.Impl
 
         private ByteArrayMapInput wrap(IDictionary<K, V> map)
         {
-            if (map == null) {
+            if (map == null)
+            {
                 return null;
             }
             ByteArrayMapInput result = new ByteArrayMapInput();
-            foreach (KeyValuePair<K, V> current in map) {
+            foreach (KeyValuePair<K, V> current in map)
+            {
                 result.Add(wrap(current.Key), wrap(current.Value));
             }
             return result;
@@ -283,23 +363,27 @@ namespace Infinispan.HotRod.Impl
 
         private IDictionary<K, V> unwrap(ByteArrayMap map)
         {
-            if (map == null) {
+            if (map == null)
+            {
                 return null;
             }
             Dictionary<K, V> result = new Dictionary<K, V>();
-            foreach (KeyValuePair<ByteArray, ByteArray> current in map) {
-                result.Add((K) unwrap(current.Key), (V) unwrap(current.Value));
+            foreach (KeyValuePair<ByteArray, ByteArray> current in map)
+            {
+                result.Add((K)unwrap(current.Key), (V)unwrap(current.Value));
             }
             return result;
         }
 
         private IDictionary<String, String> unwrap(StringMap map)
         {
-            if (map == null) {
+            if (map == null)
+            {
                 return null;
             }
             Dictionary<String, String> result = new Dictionary<String, String>();
-            foreach (KeyValuePair<String, String> current in map) {
+            foreach (KeyValuePair<String, String> current in map)
+            {
                 result.Add(current.Key, current.Value);
             }
             return result;
@@ -307,47 +391,50 @@ namespace Infinispan.HotRod.Impl
 
         private Infinispan.HotRod.SWIGGen.TimeUnit wrap(TimeUnit timeUnit)
         {
-            switch (timeUnit) {
-            case TimeUnit.NANOSECONDS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS;
-            case TimeUnit.MICROSECONDS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS;
-            case TimeUnit.MILLISECONDS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS;
-            case TimeUnit.SECONDS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS;
-            case TimeUnit.MINUTES:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES;
-            case TimeUnit.HOURS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.HOURS;
-            case TimeUnit.DAYS:
-                return Infinispan.HotRod.SWIGGen.TimeUnit.DAYS;
-            default:
-                throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
+            switch (timeUnit)
+            {
+                case TimeUnit.NANOSECONDS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS;
+                case TimeUnit.MICROSECONDS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS;
+                case TimeUnit.MILLISECONDS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS;
+                case TimeUnit.SECONDS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS;
+                case TimeUnit.MINUTES:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES;
+                case TimeUnit.HOURS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.HOURS;
+                case TimeUnit.DAYS:
+                    return Infinispan.HotRod.SWIGGen.TimeUnit.DAYS;
+                default:
+                    throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
             }
         }
 
         private TimeUnit unwrap(Infinispan.HotRod.SWIGGen.TimeUnit timeUnit)
         {
-            switch (timeUnit) {
-            case Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS:
-                return TimeUnit.NANOSECONDS;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS:
-                return TimeUnit.MICROSECONDS;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS:
-                return TimeUnit.MILLISECONDS;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS:
-                return TimeUnit.SECONDS;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES:
-                return TimeUnit.MINUTES;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.HOURS:
-                return TimeUnit.HOURS;
-            case Infinispan.HotRod.SWIGGen.TimeUnit.DAYS:
-                return TimeUnit.DAYS;
-            default:
-                throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
+            switch (timeUnit)
+            {
+                case Infinispan.HotRod.SWIGGen.TimeUnit.NANOSECONDS:
+                    return TimeUnit.NANOSECONDS;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.MICROSECONDS:
+                    return TimeUnit.MICROSECONDS;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.MILLISECONDS:
+                    return TimeUnit.MILLISECONDS;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.SECONDS:
+                    return TimeUnit.SECONDS;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.MINUTES:
+                    return TimeUnit.MINUTES;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.HOURS:
+                    return TimeUnit.HOURS;
+                case Infinispan.HotRod.SWIGGen.TimeUnit.DAYS:
+                    return TimeUnit.DAYS;
+                default:
+                    throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
             }
         }
+
     }
 #pragma warning restore 1591
 }

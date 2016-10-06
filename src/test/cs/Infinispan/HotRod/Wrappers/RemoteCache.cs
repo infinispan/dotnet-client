@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Infinispan.HotRod.Wrappers
 {
     public class RemoteCache
     {
         private Infinispan.HotRod.IRemoteCache<object, object> cache;
-
         internal RemoteCache(Infinispan.HotRod.IRemoteCache<object, object> cache)
         {
             this.cache = cache;
@@ -44,9 +44,10 @@ namespace Infinispan.HotRod.Wrappers
         {
             IDictionary<String, String> statsMap = cache.Stats().GetStatsMap();
             String[][] result = new String[statsMap.Keys.Count()][];
-            
+
             int count = 0;
-            foreach (KeyValuePair<String, String> kvp in statsMap) {
+            foreach (KeyValuePair<String, String> kvp in statsMap)
+            {
                 result[count] = new String[2];
                 result[count][0] = kvp.Key;
                 result[count][1] = kvp.Value;
@@ -151,7 +152,8 @@ namespace Infinispan.HotRod.Wrappers
         public VersionedValue GetVersioned(object key)
         {
             IVersionedValue<object> result = cache.GetVersioned(key);
-            if (result == null) {
+            if (result == null)
+            {
                 return null;
             }
             return new VersionedValue(result);
@@ -160,7 +162,8 @@ namespace Infinispan.HotRod.Wrappers
         public MetadataValue GetWithMetadata(object key)
         {
             IMetadataValue<object> result = cache.GetWithMetadata(key);
-            if (result == null) {
+            if (result == null)
+            {
                 return null;
             }
             return new MetadataValue(result);
@@ -207,23 +210,85 @@ namespace Infinispan.HotRod.Wrappers
         private object[] toObjectArray(ISet<object> data)
         {
             object[] result = null;
-            if (data != null) {
+            if (data != null)
+            {
                 result = new byte[data.Count()][];
                 int count = 0;
-                foreach (object item in data) {
+                foreach (object item in data)
+                {
                     result[count++] = item;
                 }
             }
             return result;
         }
 
+        public Task<object> PutAsync(object key, object value)
+        {
+            return cache.PutAsync(key, value);
+        }
+
+        public Task<object> GetAsync(object key)
+        {
+            return cache.GetAsync(key);
+        }
+
+
+        public Task<object> ReplaceAsync(object key, object value)
+        {
+            return cache.ReplaceAsync(key, value);
+        }
+
+        public Task<bool> ReplaceWithVersionAsync(object key, object val, ulong version)
+        {
+            return cache.ReplaceWithVersionAsync(key, val, version);
+        }
+
+        public Task<bool> ReplaceWithVersionAsync(object key, object val, ulong version, ulong lifeSpan)
+        {
+            return cache.ReplaceWithVersionAsync(key, val, version, lifeSpan);
+        }
+
+        public Task<bool> RemoveWithVersionAsync(object key, ulong version)
+        {
+            return cache.RemoveWithVersionAsync(key, version);
+        }
+
+        public Task<object> RemoveAsync(object key)
+        {
+            return cache.RemoveAsync(key);
+        }
+
+        public Task<object> PutIfAbsentAsync(object key, object value)
+        {
+            return cache.PutIfAbsentAsync(key, value);
+        }
+
+
+
+
+        public object taskResult(Task t)
+        {
+            var res = ((Task<object>)t).Result;
+            return res;
+        }
+
+        public bool taskResultBool(Task t)
+        {
+            var res = ((Task<bool>)t).Result;
+            return res;
+        }
+
+
+
         private object[][] toObjectArray(IDictionary<object, object> data)
         {
             object[][] result = null;
-            if (data != null) {
+            if (data != null)
+            {
                 result = new object[data.Count()][];
                 int count = 0;
-                foreach (KeyValuePair<object, object> kvp in data) {
+                foreach (KeyValuePair<object, object> kvp in data)
+                {
                     result[count] = new object[2];
                     result[count][0] = kvp.Key;
                     result[count][1] = kvp.Value;

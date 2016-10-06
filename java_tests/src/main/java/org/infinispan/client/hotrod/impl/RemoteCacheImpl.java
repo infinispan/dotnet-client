@@ -21,6 +21,7 @@ import org.infinispan.client.hotrod.RemoteCacheManager;
 import org.infinispan.client.hotrod.ServerStatistics;
 import org.infinispan.client.hotrod.VersionedValue;
 import org.infinispan.commons.marshall.Marshaller;
+import java.util.concurrent.CompletableFuture;
 
 public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
     private Marshaller marshaller;
@@ -44,7 +45,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -57,7 +57,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -70,7 +69,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -93,7 +91,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -107,7 +104,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -122,7 +118,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -135,7 +130,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -148,7 +142,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -161,7 +154,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -174,7 +166,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -187,7 +178,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -200,7 +190,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -214,7 +203,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -229,7 +217,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -243,7 +230,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
 
@@ -259,7 +245,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -275,7 +260,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -288,7 +272,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -302,7 +285,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -317,7 +299,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -352,8 +333,154 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
+
+   @Override
+   public CompletableFuture<V> putAsync(K k, V v) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.PutAsync(marshal(k),marshal(v));
+      return CompletableFuture.supplyAsync(() -> {
+          V res= (V)unmarshal(jniRemoteCache.taskResult(t));
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+   }
+
+   @Override
+   public CompletableFuture<V> putIfAbsentAsync(K k, V v) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.PutIfAbsentAsync(marshal(k),marshal(v));
+      return CompletableFuture.supplyAsync(() -> {
+          V res= (V)unmarshal(jniRemoteCache.taskResult(t));
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+   }
+
+   @Override
+   public CompletableFuture<V> getAsync(K k) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.GetAsync(marshal(k));
+      return CompletableFuture.supplyAsync(() -> {
+          V res= (V)unmarshal(jniRemoteCache.taskResult(t));
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+   }
+
+   @Override
+   public CompletableFuture<V> replaceAsync(K k, V v) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.ReplaceAsync(marshal(k),marshal(v));
+      return CompletableFuture.supplyAsync(() -> {
+          V res= (V)unmarshal(jniRemoteCache.taskResult(t));
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+
+   }
+
+   @Override
+   public CompletableFuture<Boolean> removeWithVersionAsync(K k, long version) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.RemoveWithVersionAsync(marshal(k),convert(version));
+      return CompletableFuture.supplyAsync(() -> {
+          Boolean res= jniRemoteCache.taskResultBool(t);
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+   }
+
+   @Override
+   public CompletableFuture<V> removeAsync(K k) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.RemoveAsync(marshal(k));
+      return CompletableFuture.supplyAsync(() -> {
+          V res= (V)unmarshal(jniRemoteCache.taskResult(t));
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+         catch (Exception ex) {
+        throw ex;
+        }
+   }
+
+   @Override
+   public CompletableFuture<Boolean> replaceWithVersionAsync(K k, V v, long version, int lifeSpan) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.ReplaceWithVersionAsync(marshal(k), marshal(v), convert(version), convert(lifeSpan));
+      return CompletableFuture.supplyAsync(() -> {
+          Boolean res= jniRemoteCache.taskResultBool(t);
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+   }
+
+   @Override
+   public CompletableFuture<Boolean> replaceWithVersionAsync(K k, V v, long version) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.ReplaceWithVersionAsync(marshal(k), marshal(v), convert(version));
+      return CompletableFuture.supplyAsync(() -> {
+          Boolean res= jniRemoteCache.taskResultBool(t);
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+   }
 
     @Override
         public boolean isEmpty() {
@@ -365,7 +492,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -383,7 +509,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -405,7 +530,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -418,7 +542,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -431,7 +554,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -444,7 +566,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
 
     }
 
@@ -458,7 +579,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -471,7 +591,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     @Override
@@ -491,7 +610,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
             throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
         }
-    
     }
 
     private Object marshal(Object obj) {
@@ -504,7 +622,6 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         } else {
             return obj;
         }
-        
     }
 
     private Object unmarshal(Object buf) {
@@ -519,7 +636,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
             }
         } else {
             return buf;
-        }    
+        }
     }
 
     private cli.Infinispan.HotRod.TimeUnit convert(TimeUnit timeUnit) {
