@@ -18,8 +18,8 @@ if %errorlevel% neq 0 goto fail
 
 if  not "%buildTest%"=="skip" ( 
 ctest -V -C RelWithDebInfo
-if %errorlevel% neq 0 goto fail
 )
+if %errorlevel% neq 0 goto fail
 
 cpack -G ZIP --config CPackSourceConfig.cmake
 if %errorlevel% neq 0 goto fail
