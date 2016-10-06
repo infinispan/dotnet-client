@@ -42,5 +42,6 @@ goto eof
 
 :fail
     cd ..
+    ()
     exit /b 1
 :eof
