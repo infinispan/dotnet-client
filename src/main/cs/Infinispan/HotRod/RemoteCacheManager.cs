@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,9 +38,11 @@ namespace Infinispan.HotRod
         public RemoteCacheManager(bool start = true)
         {
             this.marshaller = new DefaultMarshaller();
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
-            } else {
+            }
+            else {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
             }
         }
@@ -54,10 +56,12 @@ namespace Infinispan.HotRod
         {
             this.marshaller = configuration.Marshaller();
 
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration) configuration.Config(), start);
-            } else {
-                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration) configuration.Config(), start);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
+            }
+            else {
+                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
             }
         }
 
@@ -71,10 +75,12 @@ namespace Infinispan.HotRod
         {
             this.marshaller = marshaller;
 
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration) configuration.Config(), start);
-            } else {
-                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration) configuration.Config(), start);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
+            }
+            else {
+                manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
             }
         }
 
@@ -86,9 +92,11 @@ namespace Infinispan.HotRod
         public RemoteCacheManager(IMarshaller marshaller, bool start = true)
         {
             this.marshaller = marshaller;
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
-            } else {
+            }
+            else {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
             }
         }
@@ -126,10 +134,12 @@ namespace Infinispan.HotRod
         /// <returns>a remote cache instance which can be used to send requests to the default cache</returns>
         public IRemoteCache<K, V> GetCache<K, V>()
         {
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(), marshaller);
-            } else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(), marshaller);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), marshaller);
+            }
+            else {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), marshaller);
             }
         }
 
@@ -143,10 +153,12 @@ namespace Infinispan.HotRod
         /// <returns>a remote cache instance which can be used to send requests to the named cache</returns>
         public IRemoteCache<K, V> GetCache<K, V>(String cacheName)
         {
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(cacheName), marshaller);
-            } else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(cacheName), marshaller);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), marshaller);
+            }
+            else {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), marshaller);
             }
         }
 
@@ -159,10 +171,12 @@ namespace Infinispan.HotRod
         /// <returns>a remote cache instance which can be used to send requests to the default cache</returns>
         public IRemoteCache<K, V> GetCache<K, V>(bool forceReturnValue)
         {
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(forceReturnValue), marshaller);
-            } else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(forceReturnValue), marshaller);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), marshaller);
+            }
+            else {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), marshaller);
             }
         }
 
@@ -177,10 +191,12 @@ namespace Infinispan.HotRod
         /// <returns>a remote cache instance which can be used to send requests to the named cache</returns>
         public IRemoteCache<K, V> GetCache<K, V>(String cacheName, bool forceReturnValue)
         {
-            if (Infinispan.HotRod.SWIG.Util.Use64()) {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller);
-            } else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller);
+            if (Infinispan.HotRod.SWIG.Util.Use64())
+            {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller);
+            }
+            else {
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller);
             }
         }
     }

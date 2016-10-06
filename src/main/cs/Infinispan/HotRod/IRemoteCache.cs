@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Org.Infinispan.Query.Remote.Client;
+using System.Threading.Tasks;
 
 namespace Infinispan.HotRod
 {
@@ -387,6 +388,101 @@ namespace Infinispan.HotRod
         /// <param name="dict">map of the arguments</param>
         /// <returns>a stream of byte containing the result</returns>
         byte[] Execute(String scriptName, IDictionary<String, String> dict);
-    }
+        /// <summary>
+        ///   Async version of the Get method
+        /// </summary>
+        ///
+        /// <param name="key">key</param>
+        ///
+        /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Get</returns>
+        /// <see cref="Get(K)"/>
+        Task<V> GetAsync(K key);
 
+        /// <summary>
+        ///   Async version of the Put method
+        /// </summary>
+        ///     
+        /// <param name="key">key</param>
+        /// <param name="val">value</param>
+        /// <param name="lifespan">lifespan in the specified time unit</param>
+        /// <param name="lifespanUnit">the unit of time for lifespan</param>
+        /// <param name="maxIdleTime">maximum idle time in in the specified time unit</param>
+        /// <param name="maxIdleUnit">the unit of time for maximum idle time</param>
+        ///
+        /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Put</returns>
+        /// <see cref="Put(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
+        Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+
+        /// <summary>
+        ///   Async version of the PutIfAbsent method
+        /// </summary>
+        ///     
+        /// <param name="key">key</param>
+        /// <param name="val">value</param>
+        /// <param name="lifespan">lifespan in the specified time unit</param>
+        /// <param name="lifespanUnit">the unit of time for lifespan</param>
+        /// <param name="maxIdleTime">maximum idle time in in the specified time unit</param>
+        /// <param name="maxIdleUnit">the unit of time for maximum idle time</param>
+        ///
+        /// <returns>An instance of Task&lt;V&gt; that will contains the result of the PutIfAbsent</returns>
+        /// <see cref="PutIfAbsentAsync(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
+        Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+
+        /// <summary>
+        ///   Async version of the Replace method
+        /// </summary>
+        ///
+        /// <param name="key">key</param>
+        /// <param name="val">value</param>
+        /// <param name="lifespan">lifespan in the specified time unit</param>
+        /// <param name="lifespanUnit">the unit of time for lifespan</param>
+        /// <param name="maxIdleTime">maximum idle time in in the specified time unit</param>
+        /// <param name="maxIdleUnit">the unit of time for maximum idle time</param>
+        ///
+        /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Replace</returns>
+        /// <see cref="Replace(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
+        Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+
+        /// <summary>
+        ///  Async version of the Replace method
+        /// </summary>
+        ///
+        /// <param name="key">key</param>
+        ///
+        /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Remove</returns>
+        /// <see cref="Remove(K)"/>
+        Task<V> RemoveAsync(K key);
+
+        /// <summary>
+        ///   Async version of the Clear method
+        /// </summary>
+        /// <see cref="Clear()"/>
+        Task ClearAsync();
+
+        /// <summary>
+        ///   Async version of the ReplaceWithVersion method
+        /// </summary>
+        ///
+        /// <param name="key">key</param>
+        /// <param name="val">value</param>
+        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
+        /// <param name="lifespan">the lifespan of the new entry</param>
+        /// <param name="maxIdleTime">the max idle time of the new entry</param>
+        ///
+        /// <returns>An instance of Task&lt;bool&gt; that will contains the result of the Remove</returns>
+        /// <see cref="ReplaceWithVersion(K, V, ulong, ulong, ulong)"/>
+        Task<bool> ReplaceWithVersionAsync(K key, V val, ulong version, ulong lifespan = 0, ulong maxIdleTime = 0);
+
+        /// <summary>
+        ///   Async version of the RemoveWithVersion method
+        /// </summary>
+        ///
+        /// <param name="key">key</param>
+        /// <param name="version">version numeric version that should match the one in the server for the operation to succeed</param>
+        ///
+        /// <returns>An instance of Task&lt;bool&gt; that will contains the result of the Remove</returns>
+        /// <see cref="RemoveWithVersion(K, ulong)"/>
+        Task<bool> RemoveWithVersionAsync(K key, ulong version);
+
+    }
 }

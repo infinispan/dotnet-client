@@ -10,3 +10,4 @@ TestResults
 bin
 obj
 *.dll
+*.*~

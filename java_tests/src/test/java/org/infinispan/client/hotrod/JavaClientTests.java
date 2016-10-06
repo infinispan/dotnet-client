@@ -40,14 +40,9 @@ import java.util.logging.*;
 public class JavaClientTests implements IMethodSelector {
 	private final static String [] passOverTestList = {
         "CacheManagerNotStartedTest.testPutAllAsync",
-	"CacheManagerNotStartedTest.testPutAsync",
-	"CacheManagerNotStartedTest.testReplaceAsync",
-	"CacheManagerNotStartedTest.testVersionedRemoveAsync",
 	"CacheManagerStoppedTest.testPutAllAsync",
-	"CacheManagerStoppedTest.testPutAsync",
-	"CacheManagerStoppedTest.testReplaceAsync",
-	"CacheManagerStoppedTest.testVersionedRemoveAsync",
-        "HotRodIntegrationTest.testReplaceWithVersionWithLifespanAsync"
+        "RemoteAsyncAPITest.testPutAllAsync",
+        "RemoteAsyncAPITest.testPutAllAsyncWithListener"
 	};
 	
    private final static HashSet<String> passOverTestSet = new HashSet<String>(Arrays.asList(passOverTestList));
@@ -68,7 +63,6 @@ public class JavaClientTests implements IMethodSelector {
       testng.setTestClasses(new Class[] {
             CacheManagerNotStartedTest.class,
             RemoteCacheManagerTest.class,
-            
             //Known to work
             BulkGetKeysDistTest.class, 
             BulkGetKeysReplTest.class, 
@@ -84,9 +78,10 @@ public class JavaClientTests implements IMethodSelector {
             RemoteCacheManagerTest.class,
             ServerErrorTest.class,
             ServerRestartTest.class,
-            //ServerShutdownTest.class,
+            ServerShutdownTest.class,
             SizeTest.class,
             SocketTimeoutErrorTest.class,
+            RemoteAsyncAPITest.class
       });
 
       testng.addListener(tr);
