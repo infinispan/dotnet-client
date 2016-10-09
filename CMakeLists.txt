@@ -27,6 +27,10 @@ else (ISWIN64)
 	set(PLATFORM "x86")
 endif (ISWIN64)
 
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+  message (FATAL_ERROR "You are calling cmake from the source directory. Please create a separate build directory and call cmake from there. See README.md for details.")
+endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
+
 # Map from version label to assembly revision.
 set (REVISION_Alpha1 "0")
 set (REVISION_Alpha2 "1")
