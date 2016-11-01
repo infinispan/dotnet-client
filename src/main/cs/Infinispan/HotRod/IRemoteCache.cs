@@ -411,7 +411,20 @@ namespace Infinispan.HotRod
         ///
         /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Put</returns>
         /// <see cref="Put(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
-        Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+        Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS);
+
+        /// <summary>
+        ///   Async version of the PutAll method
+        /// </summary>
+        ///     
+        /// <param name="map">the entries to add</param>
+        /// <param name="lifespan">lifespan in the specified time unit</param>
+        /// <param name="lifespanUnit">the unit of time for lifespan</param>
+        /// <param name="maxIdleTime">maximum idle time in in the specified time unit</param>
+        /// <param name="maxIdleUnit">the unit of time for maximum idle time</param>
+        /// <returns>An instance of Task related to the PutAll operation</returns>
+        /// <see cref="PutAll(IDictionary&lt;K, V&gt;, ulong, TimeUnit, ulong, TimeUnit)"/>
+        Task PutAllAsync(IDictionary<K, V> map, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS);
 
         /// <summary>
         ///   Async version of the PutIfAbsent method
@@ -426,7 +439,7 @@ namespace Infinispan.HotRod
         ///
         /// <returns>An instance of Task&lt;V&gt; that will contains the result of the PutIfAbsent</returns>
         /// <see cref="PutIfAbsentAsync(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
-        Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+        Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS);
 
         /// <summary>
         ///   Async version of the Replace method
@@ -441,7 +454,7 @@ namespace Infinispan.HotRod
         ///
         /// <returns>An instance of Task&lt;V&gt; that will contains the result of the Replace</returns>
         /// <see cref="Replace(K, V, ulong, TimeUnit, ulong, TimeUnit)"/>
-        Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS);
+        Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS);
 
         /// <summary>
         ///  Async version of the Replace method

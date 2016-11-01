@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Infinispan.HotRod.Wrappers
 {
+    public class DictionaryOfObjects : Dictionary<object, object>
+    {
+    }
     public class RemoteCache
     {
         private Infinispan.HotRod.IRemoteCache<object, object> cache;
@@ -86,17 +89,20 @@ namespace Infinispan.HotRod.Wrappers
             return cache.PutIfAbsent(key, val);
         }
 
-        // public void PutAll(IDictionary<K, V> map, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
-        // {
-        // }
+        public void PutAll(IDictionary<object, object> map, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
+        {
+            cache.PutAll(map, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit);
+        }
 
-        // public void PutAll(IDictionary<K, V> map, ulong lifespan, TimeUnit lifespanUnit)
-        // {
-        // }
+        public void PutAll(IDictionary<object, object> map, ulong lifespan, TimeUnit lifespanUnit)
+        {
+            cache.PutAll(map, lifespan, lifespanUnit);
+        }
 
-        // public void PutAll(IDictionary<K, V> map)
-        // {
-        // }
+        public void PutAll(IDictionary<object, object> map)
+        {
+            cache.PutAll(map);
+        }
 
         public object Replace(object key, object val, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
         {
@@ -227,6 +233,21 @@ namespace Infinispan.HotRod.Wrappers
             return cache.PutAsync(key, value);
         }
 
+        public Task PutAllAsync(IDictionary<object, object> map)
+        {
+            return cache.PutAllAsync(map);
+        }
+
+        public Task PutAllAsync(IDictionary<object, object> map, ulong lifespan, TimeUnit lifespanUnit)
+        {
+            return cache.PutAllAsync(map, lifespan, lifespanUnit);
+        }
+
+        public Task PutAllAsync(IDictionary<object, object> map, ulong lifespan, TimeUnit lifespanUnit, ulong maxIdleTime, TimeUnit maxIdleUnit)
+        {
+            return cache.PutAllAsync(map, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit);
+        }
+
         public Task<object> GetAsync(object key)
         {
             return cache.GetAsync(key);
@@ -263,9 +284,6 @@ namespace Infinispan.HotRod.Wrappers
             return cache.PutIfAbsentAsync(key, value);
         }
 
-
-
-
         public object taskResult(Task t)
         {
             var res = ((Task<object>)t).Result;
@@ -278,6 +296,10 @@ namespace Infinispan.HotRod.Wrappers
             return res;
         }
 
+        public void taskResultVoid(Task t)
+        {
+            t.Wait();
+        }
 
 
         private object[][] toObjectArray(IDictionary<object, object> data)

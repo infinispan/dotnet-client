@@ -209,14 +209,11 @@ namespace Infinispan.HotRod.Impl
         {
             ByteArrayVector swigResult = hotrodcs.as_vector(cache.keySet());
             HashSet<K> result = new HashSet<K>();
-            if (swigResult != null)
-            {
-                foreach (ByteArray item in swigResult)
-                {
+            if (swigResult != null) {
+                foreach (ByteArray item in swigResult) {
                     result.Add((K)unwrap(item));
                 }
             }
-
             return (ISet<K>)result;
         }
 
@@ -263,10 +260,18 @@ namespace Infinispan.HotRod.Impl
 
         public Task<V> GetAsync(K key)
         {
-            return Task.Run(() => Get(key));
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => Get(key));
+            }
         }
 
-        public Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        public Task<V> PutAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS)
         {
             if (!manager.IsStarted())
             {
@@ -279,12 +284,33 @@ namespace Infinispan.HotRod.Impl
             }
         }
 
-        public async Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        public Task PutAllAsync(IDictionary<K, V> map, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS)
         {
-            return await Task.Run(() => PutIfAbsent(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => PutAll(map, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+            }
         }
 
-        public Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.SECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.SECONDS)
+        public Task<V> PutIfAbsentAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS)
+        {
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => PutIfAbsent(key, val, lifespan, lifespanUnit, maxIdleTime, maxIdleUnit));
+            }
+        }
+
+        public Task<V> ReplaceAsync(K key, V val, ulong lifespan = 0, TimeUnit lifespanUnit = TimeUnit.MILLISECONDS, ulong maxIdleTime = 0, TimeUnit maxIdleUnit = TimeUnit.MILLISECONDS)
         {
             if (!manager.IsStarted())
             {
@@ -297,14 +323,30 @@ namespace Infinispan.HotRod.Impl
             }
         }
 
-        public async Task<V> RemoveAsync(K key)
+        public Task<V> RemoveAsync(K key)
         {
-            return await Task.Run(() => Remove(key));
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+                return Task.Run(() => Remove(key));
+            }
         }
 
-        public async Task ClearAsync()
+        public Task ClearAsync()
         {
-            await Task.Run(() => Clear());
+            if (!manager.IsStarted())
+            {
+                String message = "Cannot perform operations on a cache associated with an unstarted RemoteCacheManager. Use RemoteCacheManager.start before using the remote cache.";
+                throw new Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException(message);
+            }
+            else
+            {
+               return Task.Run(() => Clear());
+            }
         }
 
         public Task<bool> ReplaceWithVersionAsync(K key, V val, ulong version, ulong lifespan = 0, ulong maxIdleTime = 0)
@@ -317,7 +359,7 @@ namespace Infinispan.HotRod.Impl
             return Task.Run(() => ReplaceWithVersion(key, val, version, lifespan, maxIdleTime));
         }
 
-        public Task<bool> RemoveWithVersionAsync(K key, ulong version)
+    public Task<bool> RemoveWithVersionAsync(K key, ulong version)
         {
             if (!manager.IsStarted())
             {
