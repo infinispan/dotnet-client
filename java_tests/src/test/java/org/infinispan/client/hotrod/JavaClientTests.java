@@ -39,10 +39,9 @@ import java.util.logging.*;
 
 public class JavaClientTests implements IMethodSelector {
 	private final static String [] passOverTestList = {
-        "CacheManagerNotStartedTest.testPutAllAsync",
-	"CacheManagerStoppedTest.testPutAllAsync",
-        "RemoteAsyncAPITest.testPutAllAsync",
-        "RemoteAsyncAPITest.testPutAllAsyncWithListener"
+        "RemoteAsyncAPITest.testPutAllAsyncWithListener",
+        "RemoteAsyncAPITest.testRemoveWithVersionAsyncWithListener",
+        "RemoteAsyncAPITest.testReplaceWithVersionAsyncWithListener"
 	};
 	
    private final static HashSet<String> passOverTestSet = new HashSet<String>(Arrays.asList(passOverTestList));

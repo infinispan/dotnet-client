@@ -354,6 +354,72 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
         }
    }
 
+   private cli.Infinispan.HotRod.Wrappers.DictionaryOfObjects mapToDict(Map<? extends K, ? extends V> m)
+   {
+	   cli.Infinispan.HotRod.Wrappers.DictionaryOfObjects dict = new cli.Infinispan.HotRod.Wrappers.DictionaryOfObjects();
+       for (Entry<? extends K, ? extends V> entry : m.entrySet()) {
+           dict.Add(marshal(entry.getKey()), marshal(entry.getValue()));
+       }
+       return dict;
+   }
+   
+   @Override
+   public CompletableFuture<Void> putAllAsync(Map<? extends K, ? extends V> map) {
+       try {
+           if (false) workaroundCLICheckedExceptions();
+       cli.System.Threading.Tasks.Task t = jniRemoteCache.PutAllAsync(mapToDict(map));
+     return CompletableFuture.runAsync(() -> {
+         jniRemoteCache.taskResultVoid(t);
+     });
+       } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+           throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+       } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+           throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+       }
+        catch (Exception ex) {
+       throw ex;
+       }
+   }
+
+   @Override
+   public CompletableFuture<Void> putAllAsync(Map<? extends K, ? extends V> map, long arg1, TimeUnit arg2) {
+       try {
+           if (false) workaroundCLICheckedExceptions();
+       cli.System.Threading.Tasks.Task t = jniRemoteCache.PutAllAsync(mapToDict(map), convert(arg1), convert(arg2));
+     return CompletableFuture.runAsync(() -> {
+         jniRemoteCache.taskResultVoid(t);
+     });
+       } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+           throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+       } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+           throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+       }
+        catch (Exception ex) {
+       throw ex;
+       }
+   }
+
+   @Override
+   public CompletableFuture<Void> putAllAsync(Map<? extends K, ? extends V> map, long lifespan,
+         TimeUnit lifespanTimeUnit, long maxIdle, TimeUnit maxIdleUnit) {
+       try {
+           if (false) workaroundCLICheckedExceptions();
+       cli.System.Threading.Tasks.Task t = jniRemoteCache.PutAllAsync(mapToDict(map), convert(lifespan), convert(lifespanTimeUnit), convert(maxIdle), convert(maxIdleUnit));
+     return CompletableFuture.runAsync(() -> {
+         jniRemoteCache.taskResultVoid(t);
+     });
+       } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+           throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+       } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+           throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+       }
+        catch (Exception ex) {
+       throw ex;
+       }
+   }
+
+
+
    @Override
    public CompletableFuture<V> putIfAbsentAsync(K k, V v) {
         try {
