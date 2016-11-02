@@ -517,6 +517,22 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
    }
 
    @Override
+   public CompletableFuture<Boolean> replaceWithVersionAsync(K k, V v, long version, int lifeSpan, int maxIdleTime) {
+        try {
+            if (false) workaroundCLICheckedExceptions();
+        cli.System.Threading.Tasks.Task t = jniRemoteCache.ReplaceWithVersionAsync(marshal(k), marshal(v), convert(version), convert(lifeSpan), convert(maxIdleTime));
+      return CompletableFuture.supplyAsync(() -> {
+          Boolean res= jniRemoteCache.taskResultBool(t);
+          return res;
+      });
+        } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
+            throw new RemoteCacheManagerNotStartedException(ex.get_Message());
+        } catch (cli.Infinispan.HotRod.Exceptions.HotRodClientException ex) {
+            throw new HotRodClientException(ex.get_Message(), cause(ex.get_Message()));
+        }
+   }
+
+   @Override
    public CompletableFuture<Boolean> replaceWithVersionAsync(K k, V v, long version, int lifeSpan) {
         try {
             if (false) workaroundCLICheckedExceptions();
