@@ -264,6 +264,11 @@ namespace Infinispan.HotRod.Wrappers
             return cache.ReplaceWithVersionAsync(key, val, version);
         }
 
+        public Task<bool> ReplaceWithVersionAsync(object key, object val, ulong version, ulong lifeSpan, ulong maxIdleTime)
+        {
+            return cache.ReplaceWithVersionAsync(key, val, version, lifeSpan, maxIdleTime);
+        }
+
         public Task<bool> ReplaceWithVersionAsync(object key, object val, ulong version, ulong lifeSpan)
         {
             return cache.ReplaceWithVersionAsync(key, val, version, lifeSpan);
