@@ -3,6 +3,8 @@
 %{
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
+#include <infinispan/hotrod/ClientEvent.h>
+#include <infinispan/hotrod/ClientListener.h>
 #include <infinispan/hotrod/Configuration.h>
 #include <infinispan/hotrod/ConfigurationBuilder.h>
 #include <infinispan/hotrod/ConfigurationChildBuilder.h>
@@ -77,6 +79,8 @@
 
 
 
+%include "infinispan/hotrod/ClientEvent.h"
+%include "infinispan/hotrod/ClientListener.h"
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
 %include "infinispan/hotrod/ServerConfiguration.h"
 %include "infinispan/hotrod/SslConfiguration.h"
