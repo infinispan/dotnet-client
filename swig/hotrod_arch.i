@@ -251,4 +251,12 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
     public Infinispan.HotRod.SWIG.RemoteByteArrayCache GetByteArrayCache(String cacheName, bool forceReturnValue) {
         return (RemoteByteArrayCache) getByteArrayCache(cacheName, forceReturnValue);
     }
+
+    public bool SwitchToCluster(string clusterName) {
+        return switchToCluster(clusterName);
+    }
+
+    public bool SwitchToDefaultCluster() {
+        return switchToDefaultCluster();
+    }
     %}

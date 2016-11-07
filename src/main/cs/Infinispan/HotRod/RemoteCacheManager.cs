@@ -199,5 +199,24 @@ namespace Infinispan.HotRod
                 return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller);
             }
         }
+
+        /// <summary>
+        /// Perform a cluster switch to the cluster with name clusterName
+        /// </summary>
+        /// <param name="clusterName"></param>
+        /// <returns>true if the switch successed, false otherwise</returns>
+        public bool switchToCluster(string clusterName)
+        {
+            return manager.SwitchToCluster(clusterName);
+        }
+
+        /// <summary>
+        /// Perform a cluster switch to the default cluster (the one defined by ConfigurationBuilder.addServer() method)
+        /// </summary>
+        /// <returns>true if the switch successed, false otherwise</returns>
+        public bool switchToDefaultCluster()
+        {
+            return manager.SwitchToDefaultCluster();
+        }
     }
 }

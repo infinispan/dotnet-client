@@ -11,5 +11,7 @@ namespace Infinispan.HotRod.SWIG
         RemoteByteArrayCache GetByteArrayCache(String cacheName);
         RemoteByteArrayCache GetByteArrayCache(bool forceReturnValue);
         RemoteByteArrayCache GetByteArrayCache(String cacheName, bool forceReturnValue);
+        bool SwitchToCluster(string clusterName);
+        bool SwitchToDefaultCluster();
     }
 }
