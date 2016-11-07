@@ -1,6 +1,10 @@
 %module hotrodcs
-
+%inline {
+/* Define org::infinispan::query::remote::client needed by RemoteCacheBase. This in place of including all the protobuf stuff */
+namespace org { namespace infinispan { namespace query { namespace remote { namespace client {}}}}}
+}
 %{
+#define HR_PROTO_EXPORT
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/ClientEvent.h>
@@ -14,9 +18,9 @@
 #include <infinispan/hotrod/ImportExport.h>
 #include <infinispan/hotrod/Marshaller.h>
 #include <infinispan/hotrod/MetadataValue.h>
-#include <swig/RemoteCache.h>
-#include <swig/RemoteCacheBase.h>
-#include <swig/RemoteCacheManager.h>
+#include <infinispan/hotrod/RemoteCache.h>
+#include <infinispan/hotrod/RemoteCacheBase.h>
+#include <infinispan/hotrod/RemoteCacheManager.h>
 #include <infinispan/hotrod/ServerConfiguration.h>
 #include <infinispan/hotrod/ServerConfigurationBuilder.h>
 #include <infinispan/hotrod/SslConfiguration.h>
@@ -94,9 +98,9 @@
 %include "infinispan/hotrod/SslConfigurationBuilder.h"
 %include "infinispan/hotrod/ConfigurationBuilder.h"
 
-%include "swig/RemoteCacheBase.h"
-%include "swig/RemoteCache.h"
-%include "swig/RemoteCacheManager.h"
+%include "infinispan/hotrod/RemoteCacheBase.h"
+%include "infinispan/hotrod/RemoteCache.h"
+%include "infinispan/hotrod/RemoteCacheManager.h"
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}
 %apply unsigned char OUTPUT[] {unsigned char* dest_bytes}
@@ -107,6 +111,14 @@
 %ignore goAsync;
 %ignore putAllAsync;
 %ignore replaceWithVersionAsync;
+%ignore putIfAbsentAsync;
+%ignore replaceAsync;
+%ignore removeAsync;
+%ignore removeWithVersionAsync;
+%ignore clearAsync;
+
+%ignore base_query;
+%ignore query(const QueryRequest &qr);
 
 %inline{
 
