@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Collections.Generic;
 using Infinispan.HotRod.SWIGGen;
 using Infinispan.HotRod.Exceptions;
+using Infinispan.HotRod.Event;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
 using Google.Protobuf;
@@ -371,6 +372,115 @@ namespace Infinispan.HotRod.Impl
                 return Task.Run(() => RemoveWithVersion(key, version));
             }
         }
+        VectorChar toVectorChar(string s)
+        {
+            if (s == null) return null;
+            VectorChar v = new VectorChar();
+            foreach (char c in s)
+            {
+                v.Add(c);
+            }
+            return v;
+        }
+
+        string toString(VectorChar v)
+        {
+            char[] cc = new char[v.Count];
+            int i = 0;
+            foreach (char c in v)
+            {
+                cc.SetValue(c, i++);
+            }
+            return new string(cc);
+        }
+
+        public void addClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback)
+        {
+            VectorVectorChar vvcFilterParams = new VectorVectorChar();
+            foreach (string s in filterFactoryParams)
+            {
+                vvcFilterParams.Add(toVectorChar(s));
+            }
+
+            VectorVectorChar vvcConverterParams = new VectorVectorChar();
+            foreach (string s in converterFactoryParams)
+            {
+                vvcConverterParams.Add(toVectorChar(s));
+            }
+            DotNetClientListener listener=cache.addClientListener(toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams);
+            cl.listenerId = toString(listener.getListenerId()).ToCharArray();
+            Task t = Task.Run(() => {
+                while (!listener.isShutdown())
+                {
+                    ClientCacheEventData evData = listener.pop();
+                    if (listener.isShutdown())
+                    {
+                        break;
+                    }
+                    if (evData.eventType==0xff)
+                    {
+                        // Wait on pop is timed out. Needed for collaborative shutdown
+                        continue;
+                    }
+                    switch (evData.eventType)
+                    {
+                        case (byte)EventType.CLIENT_CACHE_ENTRY_CREATED:
+                            {
+                                ClientCacheEntryCreatedEvent<K> ev = new ClientCacheEntryCreatedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
+                                cl.processEvent(ev);
+                            }
+                            break;
+                        case (byte)EventType.CLIENT_CACHE_ENTRY_MODIFIED:
+                            {
+                                ClientCacheEntryModifiedEvent<K> ev = new ClientCacheEntryModifiedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
+                                cl.processEvent(ev);
+                            }
+                            break;
+                        case (byte)EventType.CLIENT_CACHE_ENTRY_REMOVED:
+                            {
+                                ClientCacheEntryRemovedEvent<K> ev = new ClientCacheEntryRemovedEvent<K>((K)unwrap(evData.key), evData.isCommandRetried);
+                                cl.processEvent(ev);
+                            }
+                            break;
+                        case (byte)EventType.CLIENT_CACHE_ENTRY_EXPIRED:
+                            {
+                                ClientCacheEntryExpiredEvent<K> ev = new ClientCacheEntryExpiredEvent<K>((K)unwrap(evData.key));
+                                cl.processEvent(ev);
+                            }
+                            break;
+                        case (byte)EventType.CLIENT_CACHE_FAILOVER:
+                            {
+                                Event.ClientCacheFailoverEvent ev = new Event.ClientCacheFailoverEvent();
+                                //cl.processEvent(ev);
+                            }
+                            break;
+                    }
+                }
+                cache.deleteListener(listener);
+            });
+            addListener(cl.listenerId, new Tuple<Task, DotNetClientListener>(t, listener));
+        }
+
+        public static IDictionary<char[], Tuple<Task, DotNetClientListener> > runnningListeners = new Dictionary<char[], Tuple<Task, DotNetClientListener> >();
+
+        static void addListener(char[] listenerId, Tuple<Task, DotNetClientListener> tuple)
+        {
+            runnningListeners.Add(listenerId, tuple);
+        }
+        public static void stopAndRemoveTask(char[] listenerId)
+        {
+            runnningListeners[listenerId].Item2.setShutdown(true);
+            runnningListeners.Remove(listenerId);
+        }
+
+
+
+        public void removeClientListener(ClientListener<K, V> cl)
+        {
+            stopAndRemoveTask(cl.listenerId);
+            VectorChar vc = new VectorChar(cl.listenerId);
+            cache.removeClientListener(vc);
+        }
 
         private ByteArray wrap(Object input)
         {
@@ -386,6 +496,21 @@ namespace Infinispan.HotRod.Impl
             }
             byte[] barray = new byte[input.getSize()];
             input.copyBytesTo(barray);
+            return marshaller.ObjectFromByteBuffer(barray);
+        }
+
+        private Object unwrap(VectorChar input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            byte[] barray = new byte[input.Count];
+            int i = 0;
+            foreach (char c in input)
+            {
+                barray[i++]=(byte)c;
+            }
             return marshaller.ObjectFromByteBuffer(barray);
         }
 
@@ -476,7 +601,6 @@ namespace Infinispan.HotRod.Impl
                     throw new Infinispan.HotRod.Exceptions.InternalException("no mapping for given time unit");
             }
         }
-
     }
 #pragma warning restore 1591
 }
