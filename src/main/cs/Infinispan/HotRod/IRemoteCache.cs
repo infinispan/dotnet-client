@@ -497,5 +497,20 @@ namespace Infinispan.HotRod
         /// <see cref="RemoveWithVersion(K, ulong)"/>
         Task<bool> RemoveWithVersionAsync(K key, ulong version);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cl"></param>
+        /// <param name="filterFactoryParams"></param>
+        /// <param name="converterFactoryParams"></param>
+        /// <param name="recoveryCallback"></param>
+        void addClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="cl">ClientListener to be removed</param>
+        void removeClientListener(Event.ClientListener<K, V> cl);
+
     }
 }
