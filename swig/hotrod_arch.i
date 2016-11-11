@@ -174,6 +174,14 @@
     public Infinispan.HotRod.SWIG.SslConfigurationBuilder ClientCertificateFile(string filename) {
         return clientCertificateFile(filename);
     }
+
+    public Infinispan.HotRod.SWIG.SslConfigurationBuilder SniHostName(string _sniHostName) {
+        return sniHostName(_sniHostName);
+    }
+
+    public string GetSniHostName() {
+       return getSniHostName();
+    }
     %}
 
 %typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"

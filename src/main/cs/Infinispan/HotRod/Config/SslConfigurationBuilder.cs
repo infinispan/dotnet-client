@@ -37,6 +37,12 @@ namespace Infinispan.HotRod.Config
             return this;
         }
 
+        public SslConfigurationBuilder SniHostName(string sniHostName)
+        {
+            jniBuilder.SniHostName(sniHostName);
+            return this;
+        }
+
     }
 #pragma warning restore 1591
 }

@@ -6,6 +6,7 @@ namespace Infinispan.HotRod.SWIG
         SslConfigurationBuilder Enable();
         SslConfigurationBuilder ClientCertificateFile(string filename);
         SslConfigurationBuilder ServerCAFile(string filename);
+        SslConfigurationBuilder SniHostName(string hostName);
 
     }
 }
