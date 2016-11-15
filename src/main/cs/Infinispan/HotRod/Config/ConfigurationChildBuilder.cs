@@ -5,6 +5,8 @@ namespace Infinispan.HotRod.Config
 #pragma warning disable 1591
     internal interface ConfigurationChildBuilder
     {
+        ClusterConfigurationBuilder AddCluster(String clusterName);
+    
         ServerConfigurationBuilder AddServer();
 
         ConfigurationBuilder AddServers(String servers);

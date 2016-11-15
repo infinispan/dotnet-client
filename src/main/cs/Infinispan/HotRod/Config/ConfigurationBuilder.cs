@@ -105,7 +105,7 @@ namespace Infinispan.HotRod.Config
 
         public ClusterConfigurationBuilder AddCluster(string clusterName)
         {
-            return new ClusterConfigurationBuilder(builder.AddCluster(clusterName));
+            return new ClusterConfigurationBuilder(this, builder.AddCluster(clusterName));
         }
 
         public ConfigurationBuilder Marshaller(IMarshaller marshaller)
