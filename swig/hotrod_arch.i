@@ -53,6 +53,10 @@
         return maxRetries(_maxRetries);
     }
     
+    public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddCluster(string _clusterName) {
+        return addCluster(_clusterName);
+    }
+    
     %}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
@@ -184,6 +188,12 @@
     }
     %}
 
+%typemap(csinterfaces) infinispan::hotrod::ClusterConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ClusterConfigurationBuilder"
+%typemap(cscode) infinispan::hotrod::ClusterConfigurationBuilder %{
+public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddClusterNode(string host, int port) {
+       return addClusterNode(host, port);
+    }
+%}
 %typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"
 %typemap(cscode) infinispan::hotrod::Configuration %{
 public System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration> Servers() {
