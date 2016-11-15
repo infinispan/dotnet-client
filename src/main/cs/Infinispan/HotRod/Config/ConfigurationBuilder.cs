@@ -103,6 +103,11 @@ namespace Infinispan.HotRod.Config
             return this;
         }
 
+        public ClusterConfigurationBuilder AddCluster(string clusterName)
+        {
+            return new ClusterConfigurationBuilder(builder.AddCluster(clusterName));
+        }
+
         public ConfigurationBuilder Marshaller(IMarshaller marshaller)
         {
             this.marshaller = marshaller;
