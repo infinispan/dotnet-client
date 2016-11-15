@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,10 +7,10 @@ using Infinispan.HotRod.SWIG;
 #pragma warning disable 1591
 namespace Infinispan.HotRod.Config
 {
-    public class ClusterConfigurationBuilder
+    public class ClusterConfigurationBuilder : AbstractConfigurationChildBuilder
     {
         private Infinispan.HotRod.SWIG.ClusterConfigurationBuilder jniBuilder;
-        internal ClusterConfigurationBuilder(Infinispan.HotRod.SWIG.ClusterConfigurationBuilder jniBuilder)
+        internal ClusterConfigurationBuilder(ConfigurationBuilder parentBuilder, Infinispan.HotRod.SWIG.ClusterConfigurationBuilder jniBuilder)  : base(parentBuilder)
         {
             this.jniBuilder = jniBuilder;
         }

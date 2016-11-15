@@ -11,6 +11,11 @@ namespace Infinispan.HotRod.Config
             this.parent = parent;
         }
 
+        public ClusterConfigurationBuilder AddCluster(String clusterName)
+        {
+            return parent.AddCluster(clusterName);
+        }
+
         public ServerConfigurationBuilder AddServer()
         {
             return parent.AddServer();
