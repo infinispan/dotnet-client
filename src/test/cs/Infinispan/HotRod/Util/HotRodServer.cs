@@ -12,16 +12,19 @@ using System.IO;
 
 namespace Infinispan.HotRod.Tests.Util
 {
-    class HotRodServer
+    public class HotRodServer
     {
         public const string hostname = "127.0.0.1";
-        public const int port = 11222;
+        public int port;
         string configurationFile;
         private Process hrServer;
+        private string arguments;
 
-        public HotRodServer(string configurationFile)
+        public HotRodServer(string configurationFile, string arguments = "", int port = 11222)
         {
             this.configurationFile = configurationFile;
+            this.arguments = arguments;
+            this.port = port;
         }
 
         public void StartHotRodServer()
@@ -39,6 +42,16 @@ namespace Infinispan.HotRod.Tests.Util
             }
         }
 
+        public bool IsStopped()
+        {
+            return PortProbe.IsPortClosed(hostname, port, millisTimeout: 10000);
+        }
+
+        public bool IsRunning(int timeout = 60000)
+        {
+            return PortProbe.IsPortOpen(hostname, port, millisTimeout: timeout);
+        }
+
         void StartHotrodServerInternal()
         {
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
@@ -47,12 +60,16 @@ namespace Infinispan.HotRod.Tests.Util
                 throw new Exception("JBOSS_HOME env variable not set.");
             }
 
-            Assert.IsTrue(PortProbe.IsPortClosed(hostname, port, millisTimeout: 10000),
+            Assert.IsTrue(IsStopped(),
                           "Another process already listening on the same ip/port.");
 
             hrServer = new Process();
             hrServer.StartInfo.FileName = buildStartCommand(jbossHome);
             hrServer.StartInfo.Arguments = "-c " + configurationFile;
+            if (arguments.Length != 0)
+            {
+                hrServer.StartInfo.Arguments = hrServer.StartInfo.Arguments + " " + arguments;
+            }
             hrServer.StartInfo.UseShellExecute = false;
             if (PlatformUtils.isUnix())
             {
@@ -64,7 +81,7 @@ namespace Infinispan.HotRod.Tests.Util
             }
             hrServer.Start();
 
-            Assert.IsTrue(PortProbe.IsPortOpen(hostname, port),
+            Assert.IsTrue(IsRunning(),
                           "Server not listening on the expected ip/port.");
         }
 
@@ -75,7 +92,7 @@ namespace Infinispan.HotRod.Tests.Util
             {
                 PlatformUtils.killServer(hrServer);
 
-                Assert.IsTrue(PortProbe.IsPortClosed(hostname, port, millisTimeout: 10000),
+                Assert.IsTrue(IsStopped(),
                               "A process is still listening on the ip/port. Kill failed?");
             }
         }
