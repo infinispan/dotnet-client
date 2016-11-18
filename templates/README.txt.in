@@ -5,7 +5,7 @@
 
 * Pre-requisites
 
-  The .NET Framework 4.5 is required for using the client and the Microsoft Visual
+  The .NET Framework 4.5.2 is required for using the client and the Microsoft Visual
   C++ 2013 Redistributable Package for the x64 platform.
 
 * Package structure
