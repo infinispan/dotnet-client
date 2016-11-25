@@ -22,6 +22,7 @@
     
     <!-- API source files. -->
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Org\Infinispan\Query\Remote\Client\*.cs"/>
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Impl\*.cs"/>
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Exceptions\*.cs"/>
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Config\*.cs"/>
