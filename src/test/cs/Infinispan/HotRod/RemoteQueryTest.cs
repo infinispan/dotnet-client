@@ -58,7 +58,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User";
+            qr.QueryString = "from sample_bank_account.User";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -72,7 +74,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.name = \"John\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.name = \"John\"";
+            qr.QueryString = "from sample_bank_account.User u where u.name = \"John\"";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -88,7 +92,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.name = \"\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.name = \"\"";
+            qr.QueryString = "from sample_bank_account.User u where u.name = \"\"";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -102,7 +108,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Account> accountCache = remoteManager.GetCache<int, Account>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.Account a where a.description = \"John Doe's first bank account\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.Account a where a.description = \"John Doe's first bank account\"";
+            qr.QueryString = "from sample_bank_account.Account a where a.description = \"John Doe's first bank account\"";
 
             QueryResponse result = accountCache.Query(qr);
             List<User> listOfAccounts = unwrapResults<User>(result);
@@ -117,7 +125,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.notes = \"Lorem ipsum dolor sit amet\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.notes = \"Lorem ipsum dolor sit amet\"";
+            qr.QueryString = "from sample_bank_account.User u where u.notes = \"Lorem ipsum dolor sit amet\"";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -138,7 +148,9 @@ namespace Infinispan.HotRod.Tests
             param.Value = wm;
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where (u.notes = \"Lorem ipsum dolor sit amet\") and (u.surname = :surnameParam)";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where (u.notes = \"Lorem ipsum dolor sit amet\") and (u.surname = :surnameParam)";
+            qr.QueryString = "from sample_bank_account.User u where (u.notes = \"Lorem ipsum dolor sit amet\") and (u.surname = :surnameParam)";
             qr.NamedParameters.Add(param);
 
             QueryResponse result = userCache.Query(qr);
@@ -154,7 +166,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.addresses.postCode = \"X1234\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.addresses.postCode = \"X1234\"";
+            qr.QueryString = "from sample_bank_account.User u where u.addresses.postCode = \"X1234\"";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -169,7 +183,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> txCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.Transaction t where t.description like \"%rent%\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.description like \"%rent%\"";
+            qr.QueryString = "from sample_bank_account.Transaction t where t.description like \"%rent%\"";
             QueryResponse result = txCache.Query(qr);
             List<Transaction> listOfTx = unwrapResults<Transaction>(result);
 
@@ -184,7 +200,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> txCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.Transaction t where t.date between \""+ MakeDate("2013-01-01") +"\" and \"" + MakeDate("2013-01-31") + "\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.date between \""+ MakeDate("2013-01-01") +"\" and \"" + MakeDate("2013-01-31") + "\"";
+            qr.QueryString = "from sample_bank_account.Transaction t where t.date between \""+ MakeDate("2013-01-01") +"\" and \"" + MakeDate("2013-01-31") + "\"";
             QueryResponse result = txCache.Query(qr);
             List<Transaction> listOfTx = unwrapResults<Transaction>(result);
 
@@ -201,7 +219,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> txCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.Transaction t where t.amount > 1500";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.amount > 1500";
+            qr.QueryString = "from sample_bank_account.Transaction t where t.amount > 1500";
             QueryResponse result = txCache.Query(qr);
             List<Transaction> listOfTx = unwrapResults<Transaction>(result);
 
@@ -215,7 +235,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where (u.surname = \"Man\") or (u.surname = \"Woman\")";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where (u.surname = \"Man\") or (u.surname = \"Woman\")";
+            qr.QueryString = "from sample_bank_account.User u where (u.surname = \"Man\") or (u.surname = \"Woman\")";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -233,7 +255,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.name != \"Spider\"";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.name != \"Spider\"";
+            qr.QueryString = "from sample_bank_account.User u where u.name != \"Spider\"";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -249,7 +273,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select u.addresses from sample_bank_account.User u";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select u.addresses from sample_bank_account.User u";
+            qr.QueryString = "select u.addresses from sample_bank_account.User u";
 
             userCache.Query(qr);
         }
@@ -261,7 +287,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select u.addresses.postcode from sample_bank_account.User u";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select u.addresses.postcode from sample_bank_account.User u";
+            qr.QueryString = "select u.addresses.postcode from sample_bank_account.User u";
 
             userCache.Query(qr);
         }
@@ -272,7 +300,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select u.name, u.surname, u.age from sample_bank_account.User u where u.age is null";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select u.name, u.surname, u.age from sample_bank_account.User u where u.age is null";
+            qr.QueryString = "select u.name, u.surname, u.age from sample_bank_account.User u where u.age is null";
 
             QueryResponse result = userCache.Query(qr);
             List<Object[]> projections = unwrapWithProjection(result);
@@ -288,7 +318,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 2";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 2";
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 2";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -303,7 +335,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2" ;
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2" ;
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2" ;
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -318,7 +352,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2 and u.accountIds = 3";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2 and u.accountIds = 3";
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2 and u.accountIds = 3";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -332,7 +368,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 42";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 42";
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 42";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -347,7 +385,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 2 or u.accountIds = 3 order by u.id asc";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 2 or u.accountIds = 3 order by u.id asc";
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 2 or u.accountIds = 3 order by u.id asc";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -363,7 +403,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 4 or u.accountIds = 5";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.accountIds = 4 or u.accountIds = 5";
+            qr.QueryString = "from sample_bank_account.User u where u.accountIds = 4 or u.accountIds = 5";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -377,7 +419,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.id in (1, 3)";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.id in (1, 3)";
+            qr.QueryString = "from sample_bank_account.User u where u.id in (1, 3)";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -391,7 +435,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.User u where u.id in (4)";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.User u where u.id in (4)";
+            qr.QueryString = "from sample_bank_account.User u where u.id in (4)";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfUsers = unwrapResults<User>(result);
@@ -405,7 +451,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Account> userCache = remoteManager.GetCache<int, Account>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "from sample_bank_account.Account a where a.description = 'John Doe''s first bank account'";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "from sample_bank_account.Account a where a.description = 'John Doe''s first bank account'";
+            qr.QueryString = "from sample_bank_account.Account a where a.description = 'John Doe''s first bank account'";
 
             QueryResponse result = userCache.Query(qr);
             List<User> listOfAccounts = unwrapResults<User>(result);
@@ -420,7 +468,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> userCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select t.accountId, sum(t.amount) from sample_bank_account.Transaction t group by t.accountId having sum(t.amount) > 3300";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select t.accountId, sum(t.amount) from sample_bank_account.Transaction t group by t.accountId having sum(t.amount) > 3300";
+            qr.QueryString = "select t.accountId, sum(t.amount) from sample_bank_account.Transaction t group by t.accountId having sum(t.amount) > 3300";
 
             QueryResponse result = userCache.Query(qr);
             
@@ -437,7 +487,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> userCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select t.accountId, avg(t.amount) from sample_bank_account.Transaction t group by t.accountId having avg(t.amount) < 100";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select t.accountId, avg(t.amount) from sample_bank_account.Transaction t group by t.accountId having avg(t.amount) < 100";
+            qr.QueryString = "select t.accountId, avg(t.amount) from sample_bank_account.Transaction t group by t.accountId having avg(t.amount) < 100";
 
             QueryResponse result = userCache.Query(qr);
 
@@ -454,7 +506,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> userCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select t.accountId, min(t.amount) from sample_bank_account.Transaction t group by t.accountId having min(t.amount) < 10";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select t.accountId, min(t.amount) from sample_bank_account.Transaction t group by t.accountId having min(t.amount) < 10";
+            qr.QueryString = "select t.accountId, min(t.amount) from sample_bank_account.Transaction t group by t.accountId having min(t.amount) < 10";
 
             QueryResponse result = userCache.Query(qr);
 
@@ -471,7 +525,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> userCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select t.accountId, max(t.amount) from sample_bank_account.Transaction t group by t.accountId having max(t.amount) > 1000";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select t.accountId, max(t.amount) from sample_bank_account.Transaction t group by t.accountId having max(t.amount) > 1000";
+            qr.QueryString = "select t.accountId, max(t.amount) from sample_bank_account.Transaction t group by t.accountId having max(t.amount) > 1000";
 
             QueryResponse result = userCache.Query(qr);
 
@@ -488,7 +544,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, Transaction> userCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select sum(t.amount) from sample_bank_account.Transaction t";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select sum(t.amount) from sample_bank_account.Transaction t";
+            qr.QueryString = "select sum(t.amount) from sample_bank_account.Transaction t";
 
             QueryResponse result = userCache.Query(qr);
 
@@ -505,7 +563,9 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.JpqlString = "select u.name, count(u.age) from sample_bank_account.User u group by u.name";
+            // JpqlString will be deprecated please use QueryString
+	    // qr.JpqlString = "select u.name, count(u.age) from sample_bank_account.User u group by u.name";
+            qr.QueryString = "select u.name, count(u.age) from sample_bank_account.User u group by u.name";
 
             QueryResponse result = userCache.Query(qr);
 

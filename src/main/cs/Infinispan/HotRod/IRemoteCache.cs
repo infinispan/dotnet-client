@@ -376,7 +376,7 @@ namespace Infinispan.HotRod
         ///
         /// <example>
         ///   QueryRequest qReq = new QueryResponse();
-        ///   qReq.JpqlString="from sample_bank_account.User";
+        ///   qReq.QueryString="from sample_bank_account.User";
         ///   QueryResponse qRes= remoteCache.query(qReq);
         /// </example>
         QueryResponse Query(QueryRequest query);
