@@ -24,6 +24,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/ServerConfiguration.h>
 #include <infinispan/hotrod/ServerConfigurationBuilder.h>
 #include <infinispan/hotrod/SslConfiguration.h>
+#include <infinispan/hotrod/NearCacheConfiguration.h>
 #include <infinispan/hotrod/SslConfigurationBuilder.h>
 #include <infinispan/hotrod/TimeUnit.h>
 #include <infinispan/hotrod/Version.h>
@@ -90,6 +91,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
 %include "infinispan/hotrod/ServerConfiguration.h"
 %include "infinispan/hotrod/SslConfiguration.h"
+%include "infinispan/hotrod/NearCacheConfiguration.h"
 %include "infinispan/hotrod/FailOverRequestBalancingStrategy.h"
 %include "infinispan/hotrod/Configuration.h"
 

@@ -9,6 +9,7 @@ namespace Infinispan.HotRod.SWIG
         ClusterConfigurationBuilder AddCluster(string clusterName);
         ConnectionPoolConfigurationBuilder ConnectionPool();
         SslConfigurationBuilder Ssl();
+        NearCacheConfigurationBuilder NearCache();
 
         void validate();
         ConfigurationBuilder AddServers(string serverList);

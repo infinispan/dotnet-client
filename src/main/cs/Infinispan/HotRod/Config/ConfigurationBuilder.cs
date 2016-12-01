@@ -84,6 +84,11 @@ namespace Infinispan.HotRod.Config
         {
             return new SslConfigurationBuilder(this, builder.Ssl());
         }
+
+        public NearCacheConfigurationBuilder NearCache()
+        {
+            return new NearCacheConfigurationBuilder(this, builder.NearCache());
+        }
     
         public ConfigurationBuilder TcpNoDelay(bool tcpNoDelay)
         {

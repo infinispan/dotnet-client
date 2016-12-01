@@ -17,6 +17,10 @@
         return ssl();
     }
 
+    public Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder NearCache() {
+        return nearCache();
+    }
+
     public Infinispan.HotRod.SWIG.ConfigurationBuilder AddServers(string _serverList) {
         return addServers(_serverList);
     }
@@ -188,6 +192,38 @@
     }
     %}
 
+%typemap(csinterfaces_derived) infinispan::hotrod::NearCacheConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder"
+%typemap(cscode) infinispan::hotrod::NearCacheConfigurationBuilder %{
+
+    public Infinispan.HotRod.SWIG.NearCacheConfiguration Create() {
+        return create();
+    }
+
+    public Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder Mode(Infinispan.HotRod.NearCacheMode _mode) {
+        switch(_mode) {
+              case Infinispan.HotRod.NearCacheMode.INVALIDATED: return mode(NearCacheMode.INVALIDATED);
+              case Infinispan.HotRod.NearCacheMode.DISABLED:
+              default: return mode(NearCacheMode.DISABLED);
+        }
+    }
+
+    public Infinispan.HotRod.NearCacheMode GetMode() {
+        switch(getMode()) {
+              case NearCacheMode.INVALIDATED: return Infinispan.HotRod.NearCacheMode.INVALIDATED;
+              case NearCacheMode.DISABLED:
+              default: return Infinispan.HotRod.NearCacheMode.DISABLED;
+        }
+    }
+
+    public Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder MaxEntries(int maxEntries) {
+        return this.maxEntries(maxEntries);
+    }
+
+    public int GetMaxEntries() {
+        return getMaxEntries();
+    }
+    %}
+
 %typemap(csinterfaces) infinispan::hotrod::ClusterConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ClusterConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ClusterConfigurationBuilder %{
 public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddClusterNode(string host, int port) {
@@ -226,10 +262,15 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
     public Infinispan.HotRod.SWIG.SslConfiguration Ssl() {
         return getSslConfiguration();
     }
+
+    public Infinispan.HotRod.SWIG.NearCacheConfiguration NearCache() {
+        return getNearCacheConfiguration();
+    }
     %}
 
 %typemap(csinterfaces) infinispan::hotrod::ServerConfiguration "IDisposable, Infinispan.HotRod.SWIG.ServerConfiguration"
 %typemap(csinterfaces) infinispan::hotrod::SslConfiguration "IDisposable, Infinispan.HotRod.SWIG.SslConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::NearCacheConfiguration "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfiguration"
 
 %typemap(csinterfaces) infinispan::hotrod::ConnectionPoolConfiguration "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfiguration"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfiguration %{
