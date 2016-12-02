@@ -557,7 +557,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-303")]
         public void CountTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
@@ -618,14 +617,60 @@ namespace Infinispan.HotRod.Tests
                 for (int j = 0; j < resp.ProjectionSize; j++)
                 {
                     WrappedMessage wm = resp.Results.ElementAt(i * resp.ProjectionSize + j);
-                    if (wm.WrappedString != null)
-                        projection[j] = wm.WrappedString;
-                    if (wm.WrappedInt32 != 0)
-                        projection[j] = wm.WrappedInt32;
-                    if (wm.WrappedDouble != 0.0)
-                        projection[j] = wm.WrappedDouble;
-                    if (wm.WrappedInt64 != 0)
-                        projection[j] = wm.WrappedInt64;
+                    switch (wm.ScalarOrMessageCase)
+                    {
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedDouble:
+                            projection[j] = wm.WrappedDouble;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFloat:
+                            projection[j] = wm.WrappedFloat;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt64:
+                            projection[j] = wm.WrappedInt64;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt64:
+                            projection[j] = wm.WrappedUInt64;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt32:
+                            projection[j] = wm.WrappedInt32;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed64:
+                            projection[j] = wm.WrappedFixed64;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed32:
+                            projection[j] = wm.WrappedFixed32;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedBool:
+                            projection[j] = wm.WrappedBool;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedString:
+                            projection[j] = wm.WrappedString;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedBytes:
+                            projection[j] = wm.WrappedBytes;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt32:
+                            projection[j] = wm.WrappedUInt32;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed32:
+                            projection[j] = wm.WrappedSFixed32;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed64:
+                            projection[j] = wm.WrappedSFixed64;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt32:
+                            projection[j] = wm.WrappedSInt32;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt64:
+                            projection[j] = wm.WrappedSInt64;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedDescriptorFullName:
+                            projection[j] = wm.WrappedDescriptorFullName;
+                            break;
+                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedMessageBytes:
+                            projection[j] = wm.WrappedMessageBytes;
+                            break;
+                    }
                 }
                 result.Add(projection);
             }

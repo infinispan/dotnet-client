@@ -14,6 +14,7 @@ message WrappedMessage {
    //TODO [anistor] use 'oneof' introduced in protobuf 2.6.0
 
    // only one of these fields is used if the wrapped value is a scalar type
+oneof ScalarOrMessage {
     double wrappedDouble = 1;
     float wrappedFloat = 2;
     int64 wrappedInt64 = 3;
@@ -35,12 +36,14 @@ message WrappedMessage {
 
    // this is used if the wrapped value is a message
     bytes wrappedMessageBytes = 17;
-
+}
+   oneof TypeNameOrId {
    // this is used if the wrapped value is an enum
     int32 wrappedEnum = 18;
 
    // this is used as an alternative to wrappedDescriptorFullName if a unique id was assigned to the type
     int32 wrappedDescriptorId = 19;
+}
 }
 
 
