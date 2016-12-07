@@ -222,6 +222,11 @@
                         <property name="default.directory_provider">ram</property>
                     </indexing>
                 </replicated-cache>
+                <replicated-cache name="InMemoryNonSharedIndexFullText" mode="SYNC" start="EAGER">
+                    <indexing index="ALL">
+                        <property name="default.directory_provider">ram</property>
+                    </indexing>
+                </replicated-cache>
                 <!-- Indexes are local to each node, stored on infinispan itself on configured caches -->
                 <replicated-cache name="InfinispanCustomNonSharedIndex" mode="SYNC" start="EAGER">
                     <indexing index="ALL">

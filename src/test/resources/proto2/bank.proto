@@ -4,29 +4,29 @@ option java_package = "com.example.generated_by_protoc";
 option java_outer_classname = "BankProtos";
 
 /**
- * @Indexed(true)
+ * @Indexed
  * @TypeId(42)
  */
 message User {
 
    /**
-    * @IndexedField(index=true, store=true)
+    * @Field(store = Store.YES)
     */
    required int32 id = 1;
 
    /**
-    * @IndexedField()
+    * @Field(store = Store.YES)
     * Unable to use int32 type. See HRCPP-302.    
     */
    repeated string accountIds = 2;
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    required string name = 3;
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    required string surname = 4;
 
@@ -37,12 +37,12 @@ message User {
    }
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    repeated Address addresses = 5;     //a repeated field cannot be marked required
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    optional int32 age = 6;   // persisting age instead of birth date is not ideal but is ok for our sample code
 
@@ -53,7 +53,7 @@ message User {
    }
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    optional Gender gender = 7;
 
@@ -67,17 +67,17 @@ message User {
 message Account {
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    required int32 id = 1;
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    optional string description = 2 [default = "Checking account"];
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    required fixed64 creationDate = 3;
 
@@ -87,12 +87,12 @@ message Account {
    }
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    optional Limits limits = 4;
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    repeated bytes blurb = 5;
 }
@@ -104,36 +104,41 @@ message Account {
 message Transaction {
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
    required int32 id = 1;
 
    /**
-    * @IndexedField(store = false)
+    * @Field
     */
    optional string description = 2;
+   
+   /**
+    * @Field(store = Store.YES, analyze = Analyze.YES, analyzer = @Analyzer(definition = "standard"))
+    */
+   optional string longDescription = 3;        
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
-   required int32 accountId = 3;
+   required int32 accountId = 4;
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
-   required fixed64 date = 4;  // there is no native Date type in protobuf so we have to store it as a long
+   required fixed64 date = 5;  // there is no native Date type in protobuf so we have to store it as a long
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
-   required double amount = 5; // how do I store a BigDecimal? maybe as a byte array ..
+   required double amount = 6; // how do I store a BigDecimal? maybe as a byte array ..
 
    /**
-    * @IndexedField
+    * @Field(store = Store.YES)
     */
-   required bool isDebit = 6;
+   required bool isDebit = 7;
 
-   required bool isValid = 7;
+   required bool isValid = 8;
 }
 
 /**
