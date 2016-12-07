@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Infinispan.HotRod;
 using Infinispan.HotRod.Exceptions;
 using Infinispan.HotRod.Config;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
-using Google.Protobuf;
 using Org.Infinispan.Protostream;
 using SampleBankAccount;
 using NUnit.Framework;
@@ -63,7 +61,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(3, listOfUsers.Count);
         }
@@ -79,7 +77,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.name = \"John\"";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual("John", listOfUsers.ElementAt(0).Name);
@@ -97,7 +95,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.name = \"\"";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(0, listOfUsers.Count);
         }
@@ -113,7 +111,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.Account a where a.description = \"John Doe's first bank account\"";
 
             QueryResponse result = accountCache.Query(qr);
-            List<User> listOfAccounts = unwrapResults<User>(result);
+            List<User> listOfAccounts = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfAccounts.Count);
             Assert.AreEqual(1, listOfAccounts.ElementAt(0).Id);
@@ -130,7 +128,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.notes = \"Lorem ipsum dolor sit amet\"";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual(1, listOfUsers.ElementAt(0).Id);
@@ -154,7 +152,7 @@ namespace Infinispan.HotRod.Tests
             qr.NamedParameters.Add(param);
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual(1, listOfUsers.ElementAt(0).Id);
@@ -171,7 +169,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.addresses.postCode = \"X1234\"";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual("X1234", listOfUsers.ElementAt(0).Addresses.ElementAt(0).PostCode);
@@ -187,7 +185,7 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.description like \"%rent%\"";
             qr.QueryString = "from sample_bank_account.Transaction t where t.description like \"%rent%\"";
             QueryResponse result = txCache.Query(qr);
-            List<Transaction> listOfTx = unwrapResults<Transaction>(result);
+            List<Transaction> listOfTx = RemoteQueryUtils.unwrapResults<Transaction>(result);
 
             Assert.AreEqual(1, listOfTx.Count);
             Assert.AreEqual(1, listOfTx.ElementAt(0).AccountId);
@@ -204,7 +202,7 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.date between \""+ MakeDate("2013-01-01") +"\" and \"" + MakeDate("2013-01-31") + "\"";
             qr.QueryString = "from sample_bank_account.Transaction t where t.date between \""+ MakeDate("2013-01-01") +"\" and \"" + MakeDate("2013-01-31") + "\"";
             QueryResponse result = txCache.Query(qr);
-            List<Transaction> listOfTx = unwrapResults<Transaction>(result);
+            List<Transaction> listOfTx = RemoteQueryUtils.unwrapResults<Transaction>(result);
 
             Assert.AreEqual(4, listOfTx.Count);
             foreach (Transaction tx in listOfTx)
@@ -223,7 +221,7 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "from sample_bank_account.Transaction t where t.amount > 1500";
             qr.QueryString = "from sample_bank_account.Transaction t where t.amount > 1500";
             QueryResponse result = txCache.Query(qr);
-            List<Transaction> listOfTx = unwrapResults<Transaction>(result);
+            List<Transaction> listOfTx = RemoteQueryUtils.unwrapResults<Transaction>(result);
 
             Assert.AreEqual(1, listOfTx.Count);
             Assert.True(listOfTx.ElementAt(0).Amount > 1500);
@@ -240,7 +238,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where (u.surname = \"Man\") or (u.surname = \"Woman\")";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(2, listOfUsers.Count);
             foreach (User u in listOfUsers)
@@ -260,7 +258,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.name != \"Spider\"";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual("John", listOfUsers.ElementAt(0).Name);
@@ -305,7 +303,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "select u.name, u.surname, u.age from sample_bank_account.User u where u.age is null";
 
             QueryResponse result = userCache.Query(qr);
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
             Assert.AreEqual("Spider", projections.ElementAt(0)[0]);
             Assert.AreEqual("Man", projections.ElementAt(0)[1]);
             Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
@@ -323,7 +321,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 2";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual("John", listOfUsers.ElementAt(0).Name);
@@ -340,7 +338,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2" ;
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfUsers.Count);
             Assert.AreEqual(1, listOfUsers.ElementAt(0).Id);
@@ -357,7 +355,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 1 and u.accountIds = 2 and u.accountIds = 3";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(0, listOfUsers.Count);
         }
@@ -373,7 +371,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 42";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(0, listOfUsers.Count);
         }
@@ -390,7 +388,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 2 or u.accountIds = 3 order by u.id asc";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(2, listOfUsers.Count);
             Assert.AreEqual(1, listOfUsers.ElementAt(0).Id);
@@ -408,7 +406,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.accountIds = 4 or u.accountIds = 5";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(0, listOfUsers.Count);
         }
@@ -424,7 +422,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.id in (1, 3)";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(2, listOfUsers.Count);
         }
@@ -440,7 +438,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.User u where u.id in (4)";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfUsers = unwrapResults<User>(result);
+            List<User> listOfUsers = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(0, listOfUsers.Count);
         }
@@ -456,7 +454,7 @@ namespace Infinispan.HotRod.Tests
             qr.QueryString = "from sample_bank_account.Account a where a.description = 'John Doe''s first bank account'";
 
             QueryResponse result = userCache.Query(qr);
-            List<User> listOfAccounts = unwrapResults<User>(result);
+            List<User> listOfAccounts = RemoteQueryUtils.unwrapResults<User>(result);
 
             Assert.AreEqual(1, listOfAccounts.Count);
             Assert.AreEqual(1, listOfAccounts.ElementAt(0).Id);
@@ -474,7 +472,7 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
             
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
            
             Assert.AreEqual(1, projections.Count);
             Assert.AreEqual(1, projections.ElementAt(0)[0]);
@@ -493,7 +491,7 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
 
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
 
             Assert.AreEqual(1, projections.Count);
             Assert.AreEqual(2, projections.ElementAt(0)[0]);
@@ -512,7 +510,7 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
 
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
 
             Assert.AreEqual(1, projections.Count);
             Assert.AreEqual(2, projections.ElementAt(0)[0]);
@@ -531,7 +529,7 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
 
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
 
             Assert.AreEqual(1, projections.Count);
             Assert.AreEqual(1, projections.ElementAt(0)[0]);
@@ -550,7 +548,7 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
 
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
 
             Assert.AreEqual(1, projections.Count);
             Assert.AreEqual(3467.0, (double)projections.ElementAt(0)[0], 0.001d);
@@ -568,113 +566,13 @@ namespace Infinispan.HotRod.Tests
 
             QueryResponse result = userCache.Query(qr);
 
-            List<Object[]> projections = unwrapWithProjection(result);
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
 
             Assert.AreEqual(2, projections.Count);
             Assert.AreEqual("John" ,projections.ElementAt(0)[0]);
             Assert.AreEqual(1, projections.ElementAt(0)[1]);
             Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
             Assert.AreEqual(0, projections.ElementAt(1)[1]);
-        }
-
-        private static List<T> unwrapResults<T>(QueryResponse resp) where T : IMessage<T>
-        {
-            List<T> result = new List<T>();
-            if (resp.ProjectionSize > 0)
-            {  // Query has select
-                return result;
-            }
-            for (int i = 0; i < resp.NumResults; i++)
-            {
-                WrappedMessage wm = resp.Results.ElementAt(i);
-
-                if (wm.WrappedBytes != null)
-                {
-                    WrappedMessage wmr = WrappedMessage.Parser.ParseFrom(wm.WrappedBytes);
-                    if (wmr.WrappedMessageBytes != null)
-                    {
-                        System.Reflection.PropertyInfo pi = typeof(T).GetProperty("Parser");
-
-                        MessageParser<T> p = (MessageParser<T>)pi.GetValue(null);
-                        T u = p.ParseFrom(wmr.WrappedMessageBytes);
-                        result.Add(u);
-                    }
-                }
-            }
-            return result;
-        }
-
-        private static List<Object[]> unwrapWithProjection(QueryResponse resp)
-        {
-            List<Object[]> result = new List<Object[]>();
-            if (resp.ProjectionSize == 0)
-            {
-                return result;
-            }
-            for (int i = 0; i < resp.NumResults; i++)
-            {
-                Object[] projection = new Object[resp.ProjectionSize];
-                for (int j = 0; j < resp.ProjectionSize; j++)
-                {
-                    WrappedMessage wm = resp.Results.ElementAt(i * resp.ProjectionSize + j);
-                    switch (wm.ScalarOrMessageCase)
-                    {
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedDouble:
-                            projection[j] = wm.WrappedDouble;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFloat:
-                            projection[j] = wm.WrappedFloat;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt64:
-                            projection[j] = wm.WrappedInt64;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt64:
-                            projection[j] = wm.WrappedUInt64;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt32:
-                            projection[j] = wm.WrappedInt32;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed64:
-                            projection[j] = wm.WrappedFixed64;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed32:
-                            projection[j] = wm.WrappedFixed32;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedBool:
-                            projection[j] = wm.WrappedBool;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedString:
-                            projection[j] = wm.WrappedString;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedBytes:
-                            projection[j] = wm.WrappedBytes;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt32:
-                            projection[j] = wm.WrappedUInt32;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed32:
-                            projection[j] = wm.WrappedSFixed32;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed64:
-                            projection[j] = wm.WrappedSFixed64;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt32:
-                            projection[j] = wm.WrappedSInt32;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt64:
-                            projection[j] = wm.WrappedSInt64;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedDescriptorFullName:
-                            projection[j] = wm.WrappedDescriptorFullName;
-                            break;
-                        case WrappedMessage.ScalarOrMessageOneofCase.WrappedMessageBytes:
-                            projection[j] = wm.WrappedMessageBytes;
-                            break;
-                    }
-                }
-                result.Add(projection);
-            }
-            return result;
         }
 
         private void PutUsers(IRemoteCache<int, User> remoteCache)
