@@ -205,7 +205,7 @@ namespace Infinispan.HotRod
         /// </summary>
         /// <param name="clusterName"></param>
         /// <returns>true if the switch successed, false otherwise</returns>
-        public bool switchToCluster(string clusterName)
+        public bool SwitchToCluster(string clusterName)
         {
             return manager.SwitchToCluster(clusterName);
         }
@@ -214,7 +214,7 @@ namespace Infinispan.HotRod
         /// Perform a cluster switch to the default cluster (the one defined by ConfigurationBuilder.addServer() method)
         /// </summary>
         /// <returns>true if the switch successed, false otherwise</returns>
-        public bool switchToDefaultCluster()
+        public bool SwitchToDefaultCluster()
         {
             return manager.SwitchToDefaultCluster();
         }
