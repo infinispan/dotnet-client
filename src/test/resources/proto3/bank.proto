@@ -17,9 +17,9 @@ message User {
 
    /**
     * @IndexedField()
-    * Unable to use int32 type. See HRCPP-302.    
+    * Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled
     */
-   repeated string accountIds = 2;
+   repeated int32 accountIds = 2 [packed=false];
 
    /**
     * @IndexedField
@@ -141,7 +141,8 @@ message Transaction {
  *
  */
 message int_array {
-   repeated int32 theArray = 1;
+    /* Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled */
+   repeated int32 theArray = 1 [packed=false];
 }
 
 /**
