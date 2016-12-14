@@ -45,6 +45,7 @@ namespace Infinispan.HotRod.Tests
             }
 
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
+            userCache.Clear();
             PutUsers(userCache);
             IRemoteCache<int, Account> accountCache = remoteManager.GetCache<int, Account>(NAMED_CACHE);
             PutAccounts(accountCache);
@@ -686,9 +687,9 @@ namespace Infinispan.HotRod.Tests
             user1.Gender = User.Types.Gender.MALE;
             user1.Age = 22;
             user1.Notes = "Lorem ipsum dolor sit amet";
-            List<String> accountIds = new List<String>();
-            accountIds.Add("1");
-            accountIds.Add("2");
+            List<Int32> accountIds = new List<Int32>();
+            accountIds.Add(1);
+            accountIds.Add(2);
             user1.AccountIds.Add(accountIds);
             User.Types.Address address1 = new User.Types.Address();
             address1.Street = "Main Street";
@@ -705,8 +706,8 @@ namespace Infinispan.HotRod.Tests
             user2.Name = "Spider";
             user2.Surname = "Man";
             user2.Gender = User.Types.Gender.MALE;
-            accountIds = new List<String>();
-            accountIds.Add("3");
+            accountIds = new List<Int32>();
+            accountIds.Add(3);
             user2.AccountIds.Add(accountIds);
             User.Types.Address address2 = new User.Types.Address();
             address2.Street = "Old Street";
@@ -730,7 +731,7 @@ namespace Infinispan.HotRod.Tests
             user3.Gender = User.Types.Gender.FEMALE;
 
             remoteCache.Put(3, user3);
-            accountIds = new List<String>();
+            accountIds = new List<Int32>();
             user3.AccountIds.Add(accountIds);
         }
 
