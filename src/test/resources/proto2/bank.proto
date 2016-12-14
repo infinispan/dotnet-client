@@ -18,7 +18,7 @@ message User {
     * @Field(store = Store.YES)
     * Unable to use int32 type. See HRCPP-302.    
     */
-   repeated string accountIds = 2;
+   repeated int32 accountIds = 2;
 
    /**
     * @Field(store = Store.YES)

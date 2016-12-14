@@ -16,10 +16,10 @@ message User {
    int32 id = 1;
 
    /**
-    * @Field(store = Store.YES)
-    * Unable to use int32 type. See HRCPP-302.    
+    * @Field(store = Store.YES)    
+    * Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled
     */
-   repeated string accountIds = 2;
+   repeated int32 accountIds = 2 [packed=false];
 
    /**
     * @Field(store = Store.YES)
@@ -146,7 +146,8 @@ message Transaction {
  *
  */
 message int_array {
-   repeated int32 theArray = 1;
+    /* Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled */
+   repeated int32 theArray = 1 [packed=false];
 }
 
 /**
