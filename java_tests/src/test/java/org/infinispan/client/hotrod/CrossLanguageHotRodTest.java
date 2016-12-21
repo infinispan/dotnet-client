@@ -632,7 +632,7 @@ public class CrossLanguageHotRodTest extends SingleCacheManagerTest {
 
    public static void main(String[] args) {
       TestNG testng = new TestNG();
-      TextReporter tr = new TextReporter("Cross-language Test", 2);
+      IncrementalTextReporter tr = new IncrementalTextReporter("Cross-language Test", 2);
       testng.setTestClasses(new Class[] {
          CrossLanguageHotRodTest.class
       });
