@@ -49,7 +49,7 @@ public class JavaClientTests implements IMethodSelector {
    public static void main(String[] args) {
       TestNG testng = new TestNG();
      testng.addMethodSelector("org.infinispan.client.hotrod.JavaClientTests", 1);
-     TextReporter tr = new TextReporter("Java Tests", 2);
+     IncrementalTextReporter tr = new IncrementalTextReporter("Java Tests", 2);
 
       if (Boolean.parseBoolean(System.getProperty("VERBOSE_HOTROD_JAVA_TESTS"))) {
           Logger.getLogger("").setLevel(Level.ALL);

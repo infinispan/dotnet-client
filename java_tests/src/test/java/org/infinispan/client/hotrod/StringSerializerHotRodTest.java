@@ -208,7 +208,7 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
    public static void main(String[] args) {
       TestNG testng = new TestNG();
       testng.addMethodSelector("org.infinispan.client.hotrod.StringSerializerHotRodTest", 1);
-      TextReporter tr = new TextReporter("StringSerializer Test", 2);
+      IncrementalTextReporter tr = new IncrementalTextReporter("StringSerializer Test", 2);
       testng.setTestClasses(new Class[] {
          StringSerializerHotRodTest.class
       });
