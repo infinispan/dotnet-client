@@ -31,11 +31,6 @@ namespace Infinispan.HotRod.Config
             return parent.ConnectionPool();
         }
 
-        public ConnectionPoolConfigurationBuilder connectionPool()
-        {
-            return parent.ConnectionPool();
-        }
-
         public ConfigurationBuilder ConnectionTimeout(int connectionTimeout)
         {
             return parent.ConnectionTimeout(connectionTimeout);
@@ -54,6 +49,11 @@ namespace Infinispan.HotRod.Config
         public ConfigurationBuilder ProtocolVersion(String protocolVersion)
         {
             return parent.ProtocolVersion(protocolVersion);
+        }
+        
+        public NearCacheConfigurationBuilder NearCache()
+        {
+            return parent.NearCache();
         }
     
         public ConfigurationBuilder SocketTimeout(int socketTimeout)
@@ -77,11 +77,6 @@ namespace Infinispan.HotRod.Config
         }
     
         public ConfigurationBuilder MaxRetries(int maxRetries)
-        {
-            return parent.MaxRetries(maxRetries);
-        }
-
-        public ConfigurationBuilder maxRetries(int maxRetries)
         {
             return parent.MaxRetries(maxRetries);
         }
