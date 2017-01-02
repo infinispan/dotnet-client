@@ -504,13 +504,13 @@ namespace Infinispan.HotRod
         /// <param name="filterFactoryParams"></param>
         /// <param name="converterFactoryParams"></param>
         /// <param name="recoveryCallback"></param>
-        void addClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback);
+        void AddClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback);
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="cl">ClientListener to be removed</param>
-        void removeClientListener(Event.ClientListener<K, V> cl);
+        void RemoveClientListener(Event.ClientListener<K, V> cl);
 
     }
 }
