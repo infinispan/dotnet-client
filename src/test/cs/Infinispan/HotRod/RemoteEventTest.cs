@@ -56,16 +56,16 @@ namespace Infinispan.HotRod.Tests
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
             cl.filterFactoryName = "";
             cl.converterFactoryName = "";
-            cl.addListener(removedEventAction);
+            cl.AddListener(removedEventAction);
             removedEventCounter = 0;
             removedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.addClientListener(cl, new string[] { }, new string[] { }, null);
+            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
             cache.Put("key1", "value1");
             Assert.AreEqual(0, removedEventCounter);
             cache.Remove("key1");
             removedSemaphore.WaitOne();
             Assert.AreEqual(1,removedEventCounter);
-            cache.removeClientListener(cl);
+            cache.RemoveClientListener(cl);
         }
 
         [Test]
@@ -76,15 +76,15 @@ namespace Infinispan.HotRod.Tests
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
             cl.filterFactoryName = "";
             cl.converterFactoryName = "";
-            cl.addListener(createdEventAction);
+            cl.AddListener(createdEventAction);
             createdEventCounter = 0;
             createdSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.addClientListener(cl, new string[] { }, new string[] { }, null);
+            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
             Assert.AreEqual(0, createdEventCounter);
             cache.Put("key1", "value1");
             createdSemaphore.WaitOne();
             Assert.AreEqual(1, createdEventCounter);
-            cache.removeClientListener(cl);
+            cache.RemoveClientListener(cl);
         }
 
         [Test]
@@ -95,17 +95,17 @@ namespace Infinispan.HotRod.Tests
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
             cl.filterFactoryName = "";
             cl.converterFactoryName = "";
-            cl.addListener(modifiedEventAction);
+            cl.AddListener(modifiedEventAction);
             modifiedEventCounter = 0;
             modifiedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.addClientListener(cl, new string[] { }, new string[] { }, null);
+            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
             Assert.AreEqual(0, modifiedEventCounter);
             cache.Put("key1", "value1");
             Assert.AreEqual(0, modifiedEventCounter);
             cache.Put("key1", "value1bis");
             modifiedSemaphore.WaitOne();
             Assert.AreEqual(1, modifiedEventCounter);
-            cache.removeClientListener(cl);
+            cache.RemoveClientListener(cl);
         }
 
         [Test]
@@ -116,16 +116,16 @@ namespace Infinispan.HotRod.Tests
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
             cl.filterFactoryName = "";
             cl.converterFactoryName = "";
-            cl.addListener(modifiedEventAction);
-            cl.addListener(createdEventAction);
-            cl.addListener(removedEventAction);
+            cl.AddListener(modifiedEventAction);
+            cl.AddListener(createdEventAction);
+            cl.AddListener(removedEventAction);
             createdEventCounter = 0;
             modifiedEventCounter = 0;
             removedEventCounter = 0;
             createdSemaphore = new System.Threading.Semaphore(0, 1);
             modifiedSemaphore = new System.Threading.Semaphore(0, 1);
             removedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.addClientListener(cl, new string[] { }, new string[] { }, null);
+            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
             Assert.AreEqual(0, modifiedEventCounter);
             cache.Put("key1", "value1");
             Assert.AreEqual(0, removedEventCounter);
@@ -139,7 +139,7 @@ namespace Infinispan.HotRod.Tests
             cache.Remove("key1");
             removedSemaphore.WaitOne();
             Assert.AreEqual(1, removedEventCounter);
-            cache.removeClientListener(cl);
+            cache.RemoveClientListener(cl);
         }
 
         [Test]
@@ -154,12 +154,12 @@ namespace Infinispan.HotRod.Tests
             cl.converterFactoryName = "";
             cl.includeCurrentState = true;
             Assert.AreEqual(0, createdEventCounter);
-            cl.addListener(createdEventAction);
+            cl.AddListener(createdEventAction);
             createdSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.addClientListener(cl, new string[] { }, new string[] { }, null);
+            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
             createdSemaphore.WaitOne();
             Assert.AreEqual(1, createdEventCounter);
-            cache.removeClientListener(cl);
+            cache.RemoveClientListener(cl);
         }
 
     }

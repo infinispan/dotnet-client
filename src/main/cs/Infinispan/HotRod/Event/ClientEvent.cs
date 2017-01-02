@@ -13,7 +13,7 @@ namespace Infinispan.HotRod.Event
 
     public abstract class ClientEvent
     {
-        public abstract EventType getType();
+        public abstract EventType GetType();
     };
 
     public class ClientCacheEntryCreatedEvent<K> : ClientEvent
@@ -25,10 +25,10 @@ namespace Infinispan.HotRod.Event
             this.commandRetried = commandRetried;
         }
 
-        public K getKey() { return key; }
-        public ulong getVersion() { return version; }
-        public bool isCommandRetried() { return commandRetried; }
-        override public EventType getType() { return EventType.CLIENT_CACHE_ENTRY_CREATED; }
+        public K GetKey() { return key; }
+        public ulong GetVersion() { return version; }
+        public bool IsCommandRetried() { return commandRetried; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_CREATED; }
         private K key;
         private ulong version;
         private bool commandRetried;
@@ -42,10 +42,10 @@ namespace Infinispan.HotRod.Event
             this.version = version;
             this.commandRetried = commandRetried;
         }
-        public K getKey() { return key; }
-        public ulong getVersion() { return version; }
-        public bool isCommandRetried() { return commandRetried; }
-        override public EventType getType() { return EventType.CLIENT_CACHE_ENTRY_MODIFIED; }
+        public K GetKey() { return key; }
+        public ulong GetVersion() { return version; }
+        public bool IsCommandRetried() { return commandRetried; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_MODIFIED; }
         private K key;
         private ulong version;
         private bool commandRetried;
@@ -57,8 +57,8 @@ namespace Infinispan.HotRod.Event
         {
             this.key = key;
         }
-        public K getKey() { return key; }
-        override public EventType getType() { return EventType.CLIENT_CACHE_ENTRY_EXPIRED; }
+        public K GetKey() { return key; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_EXPIRED; }
         private K key;
     };
 
@@ -69,9 +69,9 @@ namespace Infinispan.HotRod.Event
             this.key = key;
             this.commandRetried = commandRetried;
         }
-        public K getKey() { return key; }
-        public bool isCommandRetried() { return commandRetried; }
-        override public EventType getType() { return EventType.CLIENT_CACHE_ENTRY_MODIFIED; }
+        public K GetKey() { return key; }
+        public bool IsCommandRetried() { return commandRetried; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_MODIFIED; }
         private K key;
         private bool commandRetried;
     };
@@ -83,16 +83,16 @@ namespace Infinispan.HotRod.Event
             this.data = data;
             this.commandRetried = commandRetried;
         }
-        char[] getEventData() { return data; }
-        bool isCommandRetried() { return commandRetried; }
-        override public EventType getType() { return EventType.CLIENT_CACHE_ENTRY_CUSTOM; }
+        char[] GetEventData() { return data; }
+        bool IsCommandRetried() { return commandRetried; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_CUSTOM; }
         char[] data;
         bool commandRetried;
     };
 
     public class ClientCacheFailoverEvent : ClientEvent
     {
-        override public EventType getType() { return EventType.CLIENT_CACHE_FAILOVER; }
+        override public EventType GetType() { return EventType.CLIENT_CACHE_FAILOVER; }
 
     };
 }

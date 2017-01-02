@@ -394,7 +394,7 @@ namespace Infinispan.HotRod.Impl
             return new string(cc);
         }
 
-        public void addClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback)
+        public void AddClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback)
         {
             VectorVectorChar vvcFilterParams = new VectorVectorChar();
             foreach (string s in filterFactoryParams)
@@ -427,25 +427,25 @@ namespace Infinispan.HotRod.Impl
                         case (byte)EventType.CLIENT_CACHE_ENTRY_CREATED:
                             {
                                 ClientCacheEntryCreatedEvent<K> ev = new ClientCacheEntryCreatedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
-                                cl.processEvent(ev);
+                                cl.ProcessEvent(ev);
                             }
                             break;
                         case (byte)EventType.CLIENT_CACHE_ENTRY_MODIFIED:
                             {
                                 ClientCacheEntryModifiedEvent<K> ev = new ClientCacheEntryModifiedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
-                                cl.processEvent(ev);
+                                cl.ProcessEvent(ev);
                             }
                             break;
                         case (byte)EventType.CLIENT_CACHE_ENTRY_REMOVED:
                             {
                                 ClientCacheEntryRemovedEvent<K> ev = new ClientCacheEntryRemovedEvent<K>((K)unwrap(evData.key), evData.isCommandRetried);
-                                cl.processEvent(ev);
+                                cl.ProcessEvent(ev);
                             }
                             break;
                         case (byte)EventType.CLIENT_CACHE_ENTRY_EXPIRED:
                             {
                                 ClientCacheEntryExpiredEvent<K> ev = new ClientCacheEntryExpiredEvent<K>((K)unwrap(evData.key));
-                                cl.processEvent(ev);
+                                cl.ProcessEvent(ev);
                             }
                             break;
                         case (byte)EventType.CLIENT_CACHE_FAILOVER:
@@ -475,7 +475,7 @@ namespace Infinispan.HotRod.Impl
 
 
 
-        public void removeClientListener(ClientListener<K, V> cl)
+        public void RemoveClientListener(ClientListener<K, V> cl)
         {
             stopAndRemoveTask(cl.listenerId);
             VectorChar vc = new VectorChar(cl.listenerId);
