@@ -20,6 +20,8 @@ namespace Infinispan.HotRod.Config
         ConfigurationBuilder KeySizeEstimate(int keySizeEstimate);
 
         ConfigurationBuilder ProtocolVersion(String protocolVersion);
+        
+        NearCacheConfigurationBuilder NearCache();
 
         ConfigurationBuilder SocketTimeout(int socketTimeout);
 

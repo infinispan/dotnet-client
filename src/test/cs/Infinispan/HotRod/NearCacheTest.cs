@@ -16,9 +16,9 @@ namespace Infinispan.HotRod.Tests
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222);
-            conf.ConnectionTimeout(90000).SocketTimeout(6000);
-            conf.NearCache().Mode(NearCacheMode.INVALIDATED).MaxEntries(10);
+            conf.AddServer().Host("127.0.0.1").Port(11222)
+            .ConnectionTimeout(90000).SocketTimeout(6000)
+            .NearCache().Mode(NearCacheMode.INVALIDATED).MaxEntries(10);
             marshaller = new JBasicMarshaller();
             conf.Marshaller(marshaller);
             remoteManager = new RemoteCacheManager(conf.Build(), true);
