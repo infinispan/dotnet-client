@@ -31,7 +31,14 @@ namespace Infinispan.HotRod.Tests.Util
             } else {
                 killJavaSubprocesses(process.Id);
             }
-            kill(process);
+            try
+            {
+                kill(process);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to kill " + process.Id + ": exception is " + e.ToString());
+            }
         }
 
         private static void kill(Process process)
@@ -49,12 +56,28 @@ namespace Infinispan.HotRod.Tests.Util
             ManagementObjectCollection moc = searcher.Get();
             foreach (ManagementObject mo in moc)
             {
-                KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+                try
+                {
+                    Console.WriteLine("Killing childs of " + mo["ProcessID"]);
+                    KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to kill "+ mo["ProcessID"]+": exception is "+e.ToString());
+                }
             }
             try
             {
+                Console.WriteLine("Killing " + pid);
                 Process proc = Process.GetProcessById(pid);
-                proc.Kill();
+                try
+                {
+                    proc.Kill();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to kill " + pid + ": exception is " + e.ToString());
+                }
             }
             catch (ArgumentException)
             { /* process already exited */ }
