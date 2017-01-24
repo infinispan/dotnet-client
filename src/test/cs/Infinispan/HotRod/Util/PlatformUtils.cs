@@ -63,7 +63,14 @@ namespace Infinispan.HotRod.Tests.Util
             {
                 Console.WriteLine("Killing " + pid);
                 Process proc = Process.GetProcessById(pid);
-                proc.Kill();
+                try
+                {
+                    proc.Kill();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Unable to kill " + pid + ": exception is " + e.ToString());
+                }
             }
             catch (ArgumentException)
             { /* process already exited */ }
