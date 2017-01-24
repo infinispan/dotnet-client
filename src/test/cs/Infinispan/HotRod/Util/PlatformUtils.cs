@@ -31,7 +31,14 @@ namespace Infinispan.HotRod.Tests.Util
             } else {
                 killJavaSubprocesses(process.Id);
             }
-            kill(process);
+            try
+            {
+                kill(process);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unable to kill " + process.Id + ": exception is " + e.ToString());
+            }
         }
 
         private static void kill(Process process)
