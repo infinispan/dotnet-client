@@ -36,8 +36,9 @@ namespace Infinispan.HotRod.Tests.Util
             }
             catch (Exception ex)
             {
-                ShutDownHotrodServer();
+                Console.WriteLine(ex.Message);
                 Console.WriteLine(ex.StackTrace);
+                ShutDownHotrodServer();
                 throw ex;
             }
         }
