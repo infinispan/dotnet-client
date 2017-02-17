@@ -1,15 +1,11 @@
 ﻿using Infinispan.HotRod.Config;
-using System.Collections.Generic;
-using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 
 namespace Infinispan.HotRod.Tests
 {
-    class NearCacheTest
+    class NearCacheEvictionTest
     {
         RemoteCacheManager remoteManager;
-        const string ERRORS_KEY_SUFFIX = ".errors";
-        const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
 
         [TestFixtureSetUp]
@@ -24,37 +20,41 @@ namespace Infinispan.HotRod.Tests
             remoteManager = new RemoteCacheManager(conf.Build(), true);
         }
 
-
         [Test]
-        public void PopulateNearCacheTest()
+        public void PutGetTest()
         {
             var cache = remoteManager.GetCache<string, string>();
             cache.Clear();
             var stats0 = cache.Stats();
             cache.Get("key1");
             cache.Put("key1", "value1");
+            cache.Get("key1");
             // key1 is near now
             cache.Get("key1");
             var stats1 = cache.Stats();
             // Retrieve stats form the server and do some checks
             // counters don't consider hit and miss on the near cache
-            Assert.AreEqual(stats0.GetStatistic("hits"), stats1.GetStatistic("hits"));
-            Assert.AreEqual(int.Parse(stats0.GetStatistic("misses"))+1, int.Parse(stats1.GetStatistic("misses")));
+            Assert.AreEqual(stats0.GetIntStatistic("hits")+1, stats1.GetIntStatistic("hits"));
+            Assert.AreEqual(stats0.GetIntStatistic("misses")+1, stats1.GetIntStatistic("misses"));
             // now fill the near cache
-            for (int i=0; i<=10; i++)
+            for (int i=0; i<10; i++)
             {
                 cache.Put("key" + (i+2), "value" + (i+2));
+                //call Get to populate the near cache
+                cache.Get("key" + (i+2));
             }
+            var stats2 = cache.Stats();
             // key1 is now far
             cache.Get("key1");
             // key1 push key2 out from near cache
             // key2 is now far
             cache.Get("key2");
             // key4 is near
-            cache.Get("key4");
-            var stats2 = cache.Stats();
-            Assert.AreEqual(stats1.GetStatistic("misses"), stats2.GetStatistic("misses"));
-            Assert.AreEqual(int.Parse(stats1.GetStatistic("hits")) + 3, int.Parse(stats2.GetStatistic("hits")));
+            cache.Get("key3");
+            var stats3 = cache.Stats();
+            Assert.AreEqual(stats2.GetIntStatistic("misses"), stats3.GetIntStatistic("misses"));
+            Assert.AreEqual(stats2.GetIntStatistic("hits") + 3, stats3.GetIntStatistic("hits"));
+            cache.Clear();
         }
     }
 }
