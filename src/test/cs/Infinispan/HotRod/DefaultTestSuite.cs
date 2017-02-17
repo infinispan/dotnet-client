@@ -33,6 +33,9 @@ namespace Infinispan.HotRod.TestSuites
                 suite.Add(new DefaultCacheForceReturnValueTest());
                 suite.Add(new AsyncOperationsTest());
                 suite.Add(new RemoteEventTest());
+                suite.Add(new NearCacheEvictionTest());
+                suite.Add(new NearCacheStaleReadsTest());
+                suite.Add(new NearCacheMultipleClientsTest());
                 return suite;
             }
         }
