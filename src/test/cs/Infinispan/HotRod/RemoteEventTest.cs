@@ -23,144 +23,147 @@ namespace Infinispan.HotRod.Tests
             remoteManager = new RemoteCacheManager(conf.Build(), true);
         }
 
-        private static int createdEventCounter;
-        private static System.Threading.Semaphore createdSemaphore;
-        private static void createdEventAction(Event.ClientCacheEntryCreatedEvent<string> e)
-        {
-            ++createdEventCounter;
-            createdSemaphore.Release();
-        }
-
-        private static int removedEventCounter;
-        private static System.Threading.Semaphore removedSemaphore;
-        private static void removedEventAction(Event.ClientCacheEntryRemovedEvent<string> e)
-        {
-            ++removedEventCounter;
-            removedSemaphore.Release();
-        }
-
-        private static int modifiedEventCounter;
-        private static System.Threading.Semaphore modifiedSemaphore;
-        private static void modifiedEventAction(Event.ClientCacheEntryModifiedEvent<string> e)
-        {
-            ++modifiedEventCounter;
-            modifiedSemaphore.Release();
-        }
-
-
         [Test]
-        public void RemovedEventTest()
+        public void BasicEventsTest()
         {
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
             IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
-            cache.Clear();
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
-            cl.filterFactoryName = "";
-            cl.converterFactoryName = "";
-            cl.AddListener(removedEventAction);
-            removedEventCounter = 0;
-            removedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
-            cache.Put("key1", "value1");
-            Assert.AreEqual(0, removedEventCounter);
-            cache.Remove("key1");
-            removedSemaphore.WaitOne();
-            Assert.AreEqual(1,removedEventCounter);
-            cache.RemoveClientListener(cl);
-        }
-
-        [Test]
-        public void CreatedEventTest()
-        {
-            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
-            cache.Clear();
-            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
-            cl.filterFactoryName = "";
-            cl.converterFactoryName = "";
-            cl.AddListener(createdEventAction);
-            createdEventCounter = 0;
-            createdSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
-            Assert.AreEqual(0, createdEventCounter);
-            cache.Put("key1", "value1");
-            createdSemaphore.WaitOne();
-            Assert.AreEqual(1, createdEventCounter);
-            cache.RemoveClientListener(cl);
-        }
-
-        [Test]
-        public void ModifiedEventTest()
-        {
-            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
-            cache.Clear();
-            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
-            cl.filterFactoryName = "";
-            cl.converterFactoryName = "";
-            cl.AddListener(modifiedEventAction);
-            modifiedEventCounter = 0;
-            modifiedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
-            Assert.AreEqual(0, modifiedEventCounter);
-            cache.Put("key1", "value1");
-            Assert.AreEqual(0, modifiedEventCounter);
-            cache.Put("key1", "value1bis");
-            modifiedSemaphore.WaitOne();
-            Assert.AreEqual(1, modifiedEventCounter);
-            cache.RemoveClientListener(cl);
-        }
-
-        [Test]
-        public void MultipleEventsTest()
-        {
-            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
-            cache.Clear();
-            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
-            cl.filterFactoryName = "";
-            cl.converterFactoryName = "";
-            cl.AddListener(modifiedEventAction);
-            cl.AddListener(createdEventAction);
-            cl.AddListener(removedEventAction);
-            createdEventCounter = 0;
-            modifiedEventCounter = 0;
-            removedEventCounter = 0;
-            createdSemaphore = new System.Threading.Semaphore(0, 1);
-            modifiedSemaphore = new System.Threading.Semaphore(0, 1);
-            removedSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
-            Assert.AreEqual(0, modifiedEventCounter);
-            cache.Put("key1", "value1");
-            Assert.AreEqual(0, removedEventCounter);
-            Assert.AreEqual(0, modifiedEventCounter);
-            createdSemaphore.WaitOne();
-            Assert.AreEqual(1, createdEventCounter);
-            cache.Put("key1", "value1bis");
-            modifiedSemaphore.WaitOne();
-            Assert.AreEqual(0, removedEventCounter);
-            Assert.AreEqual(1, modifiedEventCounter);
-            cache.Remove("key1");
-            removedSemaphore.WaitOne();
-            Assert.AreEqual(1, removedEventCounter);
-            cache.RemoveClientListener(cl);
+            try
+            {
+                cache.Clear();
+                cl.filterFactoryName = "";
+                cl.converterFactoryName = "";
+                cl.AddListener(listener.CreatedEventAction);
+                cl.AddListener(listener.ModifiedEventAction);
+                cl.AddListener(listener.RemovedEventAction);
+                cl.AddListener(listener.ExpiredEventAction);
+                cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
+                AssertNoEvents(listener);
+                cache.Put("key1", "value1");
+                AssertOnlyCreated("key1", listener);
+                cache.Put("key1", "value1bis");
+                AssertOnlyModified("key1", listener);
+                cache.Remove("key1");
+                AssertOnlyRemoved("key1", listener);
+                cache.Put("key1", "value1", 100, TimeUnit.MILLISECONDS);
+                AssertOnlyCreated("key1", listener);
+                TimeUtils.WaitFor(() => { return cache.Get("key1") == null; });
+                AssertOnlyExpired("key1", listener);
+            }
+            finally
+            {
+                cache.RemoveClientListener(cl);
+            }
         }
 
         [Test]
         public void IncludeCurrentStateEventTest()
         {
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
             IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
-            cache.Clear();
             Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
-            createdEventCounter = 0;
-            cache.Put("key1", "value1");
-            cl.filterFactoryName = "";
-            cl.converterFactoryName = "";
-            cl.includeCurrentState = true;
-            Assert.AreEqual(0, createdEventCounter);
-            cl.AddListener(createdEventAction);
-            createdSemaphore = new System.Threading.Semaphore(0, 1);
-            cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
-            createdSemaphore.WaitOne();
-            Assert.AreEqual(1, createdEventCounter);
-            cache.RemoveClientListener(cl);
+            try
+            {
+                cache.Clear();
+                cache.Put("key1", "value1");
+                cl.filterFactoryName = "";
+                cl.converterFactoryName = "";
+                cl.includeCurrentState = true;
+                cl.AddListener(listener.CreatedEventAction);
+                AssertNoEvents(listener);
+                cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
+                AssertOnlyCreated("key1", listener);
+            }
+            finally
+            {
+                cache.RemoveClientListener(cl);
+            }
         }
 
+        [Test]
+        public void ConditionalEventsTest()
+        {
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
+            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
+            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
+            try
+            {
+                cache.Clear();
+                cl.filterFactoryName = "";
+                cl.converterFactoryName = "";
+                cl.AddListener(listener.CreatedEventAction);
+                cl.AddListener(listener.ModifiedEventAction);
+                cl.AddListener(listener.RemovedEventAction);
+                cl.AddListener(listener.ExpiredEventAction);
+                cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
+                AssertNoEvents(listener);
+                cache.PutIfAbsent("key1", "value1");
+                AssertOnlyCreated("key1", listener);
+                cache.PutIfAbsent("key1", "value1again");
+                AssertNoEvents(listener);
+                cache.Replace("key1", "modified");
+                AssertOnlyModified("key1", listener);
+                cache.ReplaceWithVersion("key1", "modified", 0);
+                AssertNoEvents(listener);
+                IVersionedValue<string> versioned = cache.GetVersioned("key1");
+                //TODO: this needs conversion from long to ulong (is it a bug?)
+                cache.ReplaceWithVersion("key1", "modified", (ulong) versioned.GetVersion());
+                AssertOnlyModified("key1", listener);
+                cache.RemoveWithVersion("key1", 0);
+                AssertNoEvents(listener);
+                versioned = cache.GetVersioned("key1");
+                cache.RemoveWithVersion("key1", (ulong)versioned.GetVersion());
+                AssertOnlyRemoved("key1", listener);
+            }
+            finally
+            {
+                cache.RemoveClientListener(cl);
+            }
+        }
+
+        private void AssertNoEvents(LoggingEventListener<string> listener)
+        {
+            Assert.AreEqual(0, listener.createdEvents.Count);
+            Assert.AreEqual(0, listener.removedEvents.Count);
+            Assert.AreEqual(0, listener.modifiedEvents.Count);
+            Assert.AreEqual(0, listener.expiredEvents.Count);
+        }
+
+        private void AssertOnlyCreated(string key, LoggingEventListener<string> listener)
+        {
+            var remoteEvent = listener.PollCreatedEvent();
+            Assert.AreEqual(key, remoteEvent.GetKey());
+            Assert.AreEqual(0, listener.removedEvents.Count);
+            Assert.AreEqual(0, listener.modifiedEvents.Count);
+            Assert.AreEqual(0, listener.expiredEvents.Count);
+        }
+
+        private void AssertOnlyModified(string key, LoggingEventListener<string> listener)
+        {
+            var remoteEvent = listener.PollModifiedEvent();
+            Assert.AreEqual(key, remoteEvent.GetKey());
+            Assert.AreEqual(0, listener.removedEvents.Count);
+            Assert.AreEqual(0, listener.createdEvents.Count);
+            Assert.AreEqual(0, listener.expiredEvents.Count);
+        }
+
+        private void AssertOnlyRemoved(string key, LoggingEventListener<string> listener)
+        {
+            var remoteEvent = listener.PollRemovedEvent();
+            Assert.AreEqual(key, remoteEvent.GetKey());
+            Assert.AreEqual(0, listener.modifiedEvents.Count);
+            Assert.AreEqual(0, listener.createdEvents.Count);
+            Assert.AreEqual(0, listener.expiredEvents.Count);
+        }
+
+        private void AssertOnlyExpired(string key, LoggingEventListener<string> listener)
+        {
+            var remoteEvent = listener.PollExpiredEvent();
+            Assert.AreEqual(key, remoteEvent.GetKey());
+            Assert.AreEqual(0, listener.modifiedEvents.Count);
+            Assert.AreEqual(0, listener.createdEvents.Count);
+            Assert.AreEqual(0, listener.removedEvents.Count);
+        }
     }
 }
