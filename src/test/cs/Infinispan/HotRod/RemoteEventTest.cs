@@ -10,7 +10,7 @@ namespace Infinispan.HotRod.Tests
         RemoteCacheManager remoteManager;
         const string ERRORS_KEY_SUFFIX = ".errors";
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
-        IMarshaller marshaller;
+        static IMarshaller marshaller;
 
         [TestFixtureSetUp]
         public void BeforeClass()
