@@ -243,7 +243,7 @@ if (WIN32)
 				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
 				PLATFORM ${PLATFORM}
 				vs-hotrodcs-bin)
-  add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin)
+  add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin hotrod-java-events-jar)
 else (WIN32)
   find_program(XBUILD_BINARY xbuild)
   if (NOT XBUILD_BINARY)
@@ -322,7 +322,9 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
   endif (NOT IKVM_CUSTOM_BIN_PATH)
 
   set(java_tests_dir ${CMAKE_CURRENT_BINARY_DIR}/java_tests)
+  set(java_events_dir ${CMAKE_CURRENT_BINARY_DIR}/java_events)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/java_tests DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/java_events DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 
   # Pass the updated path using an external script.
   file (TO_NATIVE_PATH "${IKVM_BINARY}" IKVM_NATIVE_BINARY)
@@ -358,6 +360,14 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
     WORKING_DIRECTORY ${java_tests_dir}
     DEPENDS hotrodcs-test-bin)
+
+
+  add_custom_target (hotrod-java-events-jar ALL
+    COMMAND ${MAVEN_BINARY}
+    "clean" "package"
+    WORKING_DIRECTORY ${java_events_dir})
+  add_custom_command(TARGET hotrod-java-events-jar POST_BUILD  
+    COMMAND (${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/java_events/target/java-filters-converters.jar" "${JBOSS_HOME}/standalone/deployments"))
 
   add_test(NAME java_tests
     WORKING_DIRECTORY ${java_tests_dir}
