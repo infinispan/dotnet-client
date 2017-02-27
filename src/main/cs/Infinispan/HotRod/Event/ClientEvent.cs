@@ -78,15 +78,15 @@ namespace Infinispan.HotRod.Event
 
     public class ClientCacheEntryCustomEvent : ClientEvent
     {
-        public ClientCacheEntryCustomEvent(char[] data, bool commandRetried)
+        public ClientCacheEntryCustomEvent(byte[] data, bool commandRetried)
         {
             this.data = data;
             this.commandRetried = commandRetried;
         }
-        char[] GetEventData() { return data; }
-        bool IsCommandRetried() { return commandRetried; }
+        public byte[] GetEventData() { return data; }
+        public bool IsCommandRetried() { return commandRetried; }
         override public EventType GetType() { return EventType.CLIENT_CACHE_ENTRY_CUSTOM; }
-        char[] data;
+        byte[] data;
         bool commandRetried;
     };
 
