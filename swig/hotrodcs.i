@@ -86,6 +86,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 
 %ignore infinispan::hotrod::event::ClientCacheFailoverEvent;
 %ignore infinispan::hotrod::event::ClientCacheEntryCustomEvent;
+%ignore infinispan::hotrod::event::DotNetClientListener::getFailoverFunction;
 
 %include "infinispan/hotrod/ClientEvent.h"
 %include "infinispan/hotrod/ClientListener.h"
@@ -106,7 +107,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "infinispan/hotrod/RemoteCacheBase.h"
 %include "infinispan/hotrod/RemoteCache.h"
 %include "infinispan/hotrod/RemoteCacheManager.h"
-%include "swig/DotNetClientListener.h"
+%include "swig/DotNetClientListener.h" 
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}
 %apply unsigned char OUTPUT[] {unsigned char* dest_bytes}
@@ -241,7 +242,7 @@ namespace hotrod {
        cl->includeCurrentState=includeCurrentState;
        cl->filterFactoryName=filterName;
        cl->converterFactoryName=converterName;
-       $self->addClientListener(*cl, filterFactoryParam, converterFactoryParams, nullptr);
+       $self->addClientListener(*cl, filterFactoryParam, converterFactoryParams, cl->getFailoverFunction());
        return cl;
     }
 
