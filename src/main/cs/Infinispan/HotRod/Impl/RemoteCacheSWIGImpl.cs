@@ -394,6 +394,17 @@ namespace Infinispan.HotRod.Impl
             return new string(cc);
         }
 
+        byte[] toByteArray(VectorChar v)
+        {
+            byte[] bytes = new byte[v.Count];
+            int i = 0;
+            foreach (char c in v)
+            {
+                bytes[i++] = (byte)c;
+            }
+            return bytes;
+        }
+
         public void AddClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback)
         {
             VectorVectorChar vvcFilterParams = new VectorVectorChar();
@@ -445,6 +456,12 @@ namespace Infinispan.HotRod.Impl
                         case (byte)EventType.CLIENT_CACHE_ENTRY_EXPIRED:
                             {
                                 ClientCacheEntryExpiredEvent<K> ev = new ClientCacheEntryExpiredEvent<K>((K)unwrap(evData.key));
+                                cl.ProcessEvent(ev);
+                            }
+                            break;
+                        case (byte)EventType.CLIENT_CACHE_ENTRY_CUSTOM:
+                            {
+                                ClientCacheEntryCustomEvent ev = new ClientCacheEntryCustomEvent(toByteArray(evData.data), evData.isCommandRetried);
                                 cl.ProcessEvent(ev);
                             }
                             break;

@@ -84,7 +84,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "infinispan/hotrod/InetSocketAddress.h"
 %include "infinispan/hotrod/CacheTopologyInfo.h"
 
-
+%ignore infinispan::hotrod::event::ClientCacheFailoverEvent;
+%ignore infinispan::hotrod::event::ClientCacheEntryCustomEvent;
 
 %include "infinispan/hotrod/ClientEvent.h"
 %include "infinispan/hotrod/ClientListener.h"
