@@ -15,6 +15,7 @@ namespace Infinispan.HotRod.Tests
         public BlockingCollection<Event.ClientCacheEntryRemovedEvent<E>> removedEvents = new BlockingCollection<Event.ClientCacheEntryRemovedEvent<E>>();
         public BlockingCollection<Event.ClientCacheEntryModifiedEvent<E>> modifiedEvents = new BlockingCollection<Event.ClientCacheEntryModifiedEvent<E>>();
         public BlockingCollection<Event.ClientCacheEntryExpiredEvent<E>> expiredEvents = new BlockingCollection<Event.ClientCacheEntryExpiredEvent<E>>();
+        public BlockingCollection<Event.ClientCacheEntryCustomEvent> customEvents = new BlockingCollection<Event.ClientCacheEntryCustomEvent>();
 
         public void CreatedEventAction(Event.ClientCacheEntryCreatedEvent<E> e)
         {
@@ -36,6 +37,11 @@ namespace Infinispan.HotRod.Tests
             expiredEvents.Add(e);
         }
 
+        public void CustomEventAction(Event.ClientCacheEntryCustomEvent e)
+        {
+            customEvents.Add(e);
+        }
+
         public Event.ClientCacheEntryCreatedEvent<E> PollCreatedEvent()
         {
             return PollEvent<Event.ClientCacheEntryCreatedEvent<E>>(typeof(Event.ClientCacheEntryCreatedEvent<E>));
@@ -54,6 +60,11 @@ namespace Infinispan.HotRod.Tests
         public Event.ClientCacheEntryExpiredEvent<E> PollExpiredEvent()
         {
             return PollEvent<Event.ClientCacheEntryExpiredEvent<E>>(typeof(Event.ClientCacheEntryExpiredEvent<E>));
+        }
+
+        public Event.ClientCacheEntryCustomEvent PollCustomEvent()
+        {
+            return PollEvent<Event.ClientCacheEntryCustomEvent>(typeof(Event.ClientCacheEntryCustomEvent));
         }
 
         private T PollEvent<T>(Type eventType) where T : ClientEvent
@@ -78,6 +89,10 @@ namespace Infinispan.HotRod.Tests
                 else if (eventType == typeof(Event.ClientCacheEntryExpiredEvent<E>))
                 {
                     return expiredEvents.Take(token) as T;
+                }
+                else if (eventType == typeof(Event.ClientCacheEntryCustomEvent))
+                {
+                    return customEvents.Take(token) as T;
                 }
                 else
                 {

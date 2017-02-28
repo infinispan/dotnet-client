@@ -467,8 +467,7 @@ namespace Infinispan.HotRod.Impl
                             break;
                         case (byte)EventType.CLIENT_CACHE_FAILOVER:
                             {
-                                Event.ClientCacheFailoverEvent ev = new Event.ClientCacheFailoverEvent();
-                                //cl.processEvent(ev);
+                                recoveryCallback();
                             }
                             break;
                     }

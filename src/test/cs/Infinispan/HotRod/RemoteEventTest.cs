@@ -38,6 +38,7 @@ namespace Infinispan.HotRod.Tests
                 cl.AddListener(listener.ModifiedEventAction);
                 cl.AddListener(listener.RemovedEventAction);
                 cl.AddListener(listener.ExpiredEventAction);
+                cl.AddListener(listener.CustomEventAction);
                 cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
                 AssertNoEvents(listener);
                 cache.Put("key1", "value1");
@@ -96,6 +97,7 @@ namespace Infinispan.HotRod.Tests
                 cl.AddListener(listener.ModifiedEventAction);
                 cl.AddListener(listener.RemovedEventAction);
                 cl.AddListener(listener.ExpiredEventAction);
+                cl.AddListener(listener.CustomEventAction);
                 cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
                 AssertNoEvents(listener);
                 cache.PutIfAbsent("key1", "value1");
@@ -122,12 +124,39 @@ namespace Infinispan.HotRod.Tests
             }
         }
 
+        [Test]
+        public void CustomEventsTest()
+        {
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
+            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
+            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
+            try
+            {
+                cache.Clear();
+                cl.filterFactoryName = "";
+                cl.converterFactoryName = "";
+                cl.converterFactoryName = "to-string-converter-factory";
+                cl.AddListener(listener.CreatedEventAction);
+                cl.AddListener(listener.ModifiedEventAction);
+                cl.AddListener(listener.RemovedEventAction);
+                cl.AddListener(listener.ExpiredEventAction);
+                cl.AddListener(listener.CustomEventAction);
+                cache.AddClientListener(cl, new string[] { }, new string[] { }, null);
+                cache.Put("key1", "value1");
+                AssertOnlyCustom("custom event: key1 value1", listener);
+            }
+            finally
+            {
+                cache.RemoveClientListener(cl);
+            }
+        }
         private void AssertNoEvents(LoggingEventListener<string> listener)
         {
             Assert.AreEqual(0, listener.createdEvents.Count);
             Assert.AreEqual(0, listener.removedEvents.Count);
             Assert.AreEqual(0, listener.modifiedEvents.Count);
             Assert.AreEqual(0, listener.expiredEvents.Count);
+            Assert.AreEqual(0, listener.customEvents.Count);
         }
 
         private void AssertOnlyCreated(string key, LoggingEventListener<string> listener)
@@ -137,6 +166,7 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(0, listener.removedEvents.Count);
             Assert.AreEqual(0, listener.modifiedEvents.Count);
             Assert.AreEqual(0, listener.expiredEvents.Count);
+            Assert.AreEqual(0, listener.customEvents.Count);
         }
 
         private void AssertOnlyModified(string key, LoggingEventListener<string> listener)
@@ -146,6 +176,7 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(0, listener.removedEvents.Count);
             Assert.AreEqual(0, listener.createdEvents.Count);
             Assert.AreEqual(0, listener.expiredEvents.Count);
+            Assert.AreEqual(0, listener.customEvents.Count);
         }
 
         private void AssertOnlyRemoved(string key, LoggingEventListener<string> listener)
@@ -155,6 +186,7 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(0, listener.modifiedEvents.Count);
             Assert.AreEqual(0, listener.createdEvents.Count);
             Assert.AreEqual(0, listener.expiredEvents.Count);
+            Assert.AreEqual(0, listener.customEvents.Count);
         }
 
         private void AssertOnlyExpired(string key, LoggingEventListener<string> listener)
@@ -164,6 +196,17 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(0, listener.modifiedEvents.Count);
             Assert.AreEqual(0, listener.createdEvents.Count);
             Assert.AreEqual(0, listener.removedEvents.Count);
+            Assert.AreEqual(0, listener.customEvents.Count);
+        }
+
+        private void AssertOnlyCustom(string key, LoggingEventListener<string> listener)
+        {
+            var remoteEvent = listener.PollCustomEvent();
+            Assert.AreEqual(key, marshaller.ObjectFromByteBuffer(remoteEvent.GetEventData()));
+            Assert.AreEqual(0, listener.modifiedEvents.Count);
+            Assert.AreEqual(0, listener.createdEvents.Count);
+            Assert.AreEqual(0, listener.removedEvents.Count);
+            Assert.AreEqual(0, listener.expiredEvents.Count);
         }
     }
 }
