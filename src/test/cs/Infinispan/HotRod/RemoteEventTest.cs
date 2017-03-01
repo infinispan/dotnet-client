@@ -1,5 +1,4 @@
 ﻿using Infinispan.HotRod.Config;
-using System.Collections.Generic;
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 
@@ -147,9 +146,54 @@ namespace Infinispan.HotRod.Tests
             }
             finally
             {
-                cache.RemoveClientListener(cl);
+                if (cl.listenerId != null)
+                {
+                    cache.RemoveClientListener(cl);
+                }
             }
         }
+
+        [Test]
+        public void FilterEventsTest()
+        {
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
+            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>();
+            Event.ClientListener<string, string> cl = new Event.ClientListener<string, string>();
+            try
+            {
+                cache.Clear();
+                cl.filterFactoryName = "string-is-equal-filter-factory";
+                cl.converterFactoryName = "";
+                cl.AddListener(listener.CreatedEventAction);
+                cl.AddListener(listener.ModifiedEventAction);
+                cl.AddListener(listener.RemovedEventAction);
+                cl.AddListener(listener.ExpiredEventAction);
+                cl.AddListener(listener.CustomEventAction);
+                cache.AddClientListener(cl, new string[] { "wantedkeyprefix" }, new string[] { }, null);
+                AssertNoEvents(listener);
+                cache.Put("key1", "value1");
+                cache.Put("wantedkeyprefix_key1", "value2");
+                //only one received; one is ignored
+                AssertOnlyCreated("wantedkeyprefix_key1", listener);
+                AssertNoEvents(listener);
+                cache.Replace("key1", "modified");
+                cache.Replace("wantedkeyprefix_key1", "modified");
+                AssertOnlyModified("wantedkeyprefix_key1", listener);
+                AssertNoEvents(listener);
+                cache.Remove("key1");
+                cache.Remove("wantedkeyprefix_key1");
+                AssertOnlyRemoved("wantedkeyprefix_key1", listener);
+                AssertNoEvents(listener);
+            }           
+            finally
+            {
+                if (cl.listenerId != null)
+                {
+                    cache.RemoveClientListener(cl);
+                }
+            }
+        }
+
         private void AssertNoEvents(LoggingEventListener<string> listener)
         {
             Assert.AreEqual(0, listener.createdEvents.Count);
