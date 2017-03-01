@@ -13,7 +13,6 @@ public class StringIsEqualFilterFactory implements CacheEventFilterFactory {
 
 	@Override
 	public CacheEventFilter<String, String> getFilter(Object[] params) {
-		// TODO Auto-generated method stub
 		return new StringIsEqualFilter(params);
 	}
 
@@ -22,14 +21,11 @@ public class StringIsEqualFilterFactory implements CacheEventFilterFactory {
         private String productName;
 		public StringIsEqualFilter(Object[] params) {
 			productName=(String)params[0];
-			System.out.println("Created with par "+productName);
 		}
 
 		@Override
 		public boolean accept(String key, String oldValue, Metadata oldMetadata, String newValue, Metadata newMetadata,
 				EventType eventType) {
-			System.out.println("Checking if "+key+" starts with "+productName);
-			System.out.println("Result is: "+(key!=null && key.startsWith(productName)));
 			return key!=null && key.startsWith(productName);
 		}
 	}
