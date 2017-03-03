@@ -110,12 +110,12 @@ namespace Infinispan.HotRod.Tests
                 AssertNoEvents(listener);
                 IVersionedValue<string> versioned = cache.GetVersioned("key1");
                 //TODO: this needs conversion from long to ulong (is it a bug?)
-                cache.ReplaceWithVersion("key1", "modified", (ulong) versioned.GetVersion());
+                cache.ReplaceWithVersion("key1", "modified", versioned.GetVersion());
                 AssertOnlyModified("key1", listener);
                 cache.RemoveWithVersion("key1", 0);
                 AssertNoEvents(listener);
                 versioned = cache.GetVersioned("key1");
-                cache.RemoveWithVersion("key1", (ulong)versioned.GetVersion());
+                cache.RemoveWithVersion("key1", versioned.GetVersion());
                 AssertOnlyRemoved("key1", listener);
             }
             finally

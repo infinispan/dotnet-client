@@ -8,7 +8,7 @@ namespace Infinispan.HotRod.Impl
         private long created, lastUsed;
         private int lifespan, maxIdle;
 
-        public MetadataValueImpl(V value, long version, long created, long lastUsed, int lifespan, int maxIdle) : base(value, version)
+        public MetadataValueImpl(V value, ulong version, long created, long lastUsed, int lifespan, int maxIdle) : base(value, version)
         {
             this.created = created;
             this.lastUsed = lastUsed;

@@ -584,7 +584,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
             if (vv == null) {
                 return null;
             }
-            return new VersionedValueImpl<V>(vv.GetVersion(),
+            return new VersionedValueImpl<V>(cli.System.Convert.ToInt64(vv.GetVersion()),
                                              (V) unmarshal(vv.GetValue()));
         } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
             throw new RemoteCacheManagerNotStartedException(ex.get_Message());
@@ -605,7 +605,7 @@ public class RemoteCacheImpl<K, V> extends RemoteCacheUnsupported<K, V> {
                                             mv.GetLifespan(),
                                             mv.GetLastUsed(),
                                             mv.GetMaxIdle(),
-                                            mv.GetVersion(),
+                                            cli.System.Convert.ToInt64(mv.GetVersion()),
                                             (V) unmarshal(mv.GetValue()));
         } catch (cli.Infinispan.HotRod.Exceptions.RemoteCacheManagerNotStartedException ex) {
             throw new RemoteCacheManagerNotStartedException(ex.get_Message());

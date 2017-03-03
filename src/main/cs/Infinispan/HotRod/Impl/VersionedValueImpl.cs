@@ -6,9 +6,9 @@ namespace Infinispan.HotRod.Impl
     public class VersionedValueImpl<V> : IVersionedValue<V>
     {
         private V value;
-        private long version;
+        private ulong version;
 
-        public VersionedValueImpl(V value, long version)
+        public VersionedValueImpl(V value, ulong version)
         {
             this.value = value;
             this.version = version;
@@ -19,7 +19,7 @@ namespace Infinispan.HotRod.Impl
             return value;
         }
 
-        public long GetVersion()
+        public ulong GetVersion()
         {
             return this.version;
         }

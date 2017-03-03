@@ -24,6 +24,6 @@ namespace Infinispan.HotRod
            Returns the versioned associated with the value.
            </summary>
         */
-        long GetVersion();
+        ulong GetVersion();
     }
 }

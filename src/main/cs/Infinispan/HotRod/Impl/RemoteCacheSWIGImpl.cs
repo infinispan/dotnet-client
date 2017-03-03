@@ -163,7 +163,7 @@ namespace Infinispan.HotRod.Impl
                 return null;
             }
             return new VersionedValueImpl<V>((V)unwrap(pair.first),
-                                             pair.second.version);
+                                             (ulong)pair.second.version);
         }
 
         public IMetadataValue<V> GetWithMetadata(K key)
@@ -174,7 +174,7 @@ namespace Infinispan.HotRod.Impl
                 return null;
             }
             return new MetadataValueImpl<V>((V)unwrap(pair.first),
-                                            pair.second.version,
+                                            (ulong)pair.second.version,
                                             pair.second.created,
                                             pair.second.lastUsed,
                                             pair.second.lifespan,
