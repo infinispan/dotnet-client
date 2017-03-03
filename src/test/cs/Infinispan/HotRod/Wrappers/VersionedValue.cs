@@ -19,7 +19,7 @@ namespace Infinispan.HotRod.Wrappers
             return value.GetValue();
         }
 
-        public long GetVersion()
+        public ulong GetVersion()
         {
             return value.GetVersion();
         }
