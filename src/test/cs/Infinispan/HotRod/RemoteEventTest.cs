@@ -53,7 +53,10 @@ namespace Infinispan.HotRod.Tests
             }
             finally
             {
-                cache.RemoveClientListener(cl);
+                if (cl.listenerId != null)
+                {
+                    cache.RemoveClientListener(cl);
+                }
             }
         }
 
@@ -77,7 +80,10 @@ namespace Infinispan.HotRod.Tests
             }
             finally
             {
-                cache.RemoveClientListener(cl);
+                if (cl.listenerId != null)
+                {
+                    cache.RemoveClientListener(cl);
+                }
             }
         }
 
@@ -119,7 +125,10 @@ namespace Infinispan.HotRod.Tests
             }
             finally
             {
-                cache.RemoveClientListener(cl);
+                if (cl.listenerId != null)
+                {
+                    cache.RemoveClientListener(cl);
+                }
             }
         }
 
