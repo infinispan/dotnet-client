@@ -372,7 +372,19 @@ namespace Infinispan.HotRod.Impl
                 return Task.Run(() => RemoveWithVersion(key, version));
             }
         }
+
         VectorChar toVectorChar(string s)
+        {
+            if (s == null) return null;
+            VectorChar v = new VectorChar();
+            foreach (char c in s)
+            {
+                v.Add(c);
+            }
+            return v;
+        }
+
+        VectorChar toVectorChar(byte[] s)
         {
             if (s == null) return null;
             VectorChar v = new VectorChar();
@@ -410,13 +422,13 @@ namespace Infinispan.HotRod.Impl
             VectorVectorChar vvcFilterParams = new VectorVectorChar();
             foreach (string s in filterFactoryParams)
             {
-                vvcFilterParams.Add(toVectorChar(s));
+                vvcFilterParams.Add(toVectorChar(marshaller.ObjectToByteBuffer(s)));
             }
 
             VectorVectorChar vvcConverterParams = new VectorVectorChar();
             foreach (string s in converterFactoryParams)
             {
-                vvcConverterParams.Add(toVectorChar(s));
+                vvcConverterParams.Add(toVectorChar(marshaller.ObjectToByteBuffer(s)));
             }
             DotNetClientListener listener=cache.addClientListener(toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams);
             cl.listenerId = toString(listener.getListenerId()).ToCharArray();
