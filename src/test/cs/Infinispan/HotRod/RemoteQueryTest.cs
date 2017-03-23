@@ -378,7 +378,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-301")]
         public void ContainsAnyTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
