@@ -40,7 +40,7 @@ message User {
    /**
     * @Field(store = Store.YES)
     */
-   repeated Address addresses = 5;     //a repeated field cannot be marked required
+   repeated Address addresses = 5 [packed=false];     //a repeated field cannot be marked required
 
    /**
     * @Field(store = Store.YES)
@@ -95,7 +95,7 @@ message Account {
    /**
     * @Field(store = Store.YES)
     */
-   repeated bytes blurb = 5;
+   repeated bytes blurb = 5 [packed=false];
 }
 
 /**
@@ -154,7 +154,7 @@ message int_array {
  *
  */
 message user_list {
-   repeated User theList = 1;
+   repeated User theList = 1 [packed=false];
 }
 
 //todo demonstrate collection of 'any'
