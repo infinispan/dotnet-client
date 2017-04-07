@@ -572,7 +572,7 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual("John" ,projections.ElementAt(0)[0]);
             Assert.AreEqual(1, projections.ElementAt(0)[1]);
             Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
-            Assert.AreEqual(0, projections.ElementAt(1)[1]);
+            Assert.AreEqual(2, projections.ElementAt(1)[1]);
         }
 
         private void PutUsers(IRemoteCache<int, User> remoteCache)

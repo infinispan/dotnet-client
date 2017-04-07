@@ -12,7 +12,7 @@ message User {
    /**
     * @Field(store = Store.YES)
     */
-   required int32 id = 1 [default = 0];
+   required int32 id = 1 ;
 
    /**
     * @Field(store = Store.YES)
@@ -23,17 +23,17 @@ message User {
    /**
     * @Field(store = Store.YES)
     */
-   required string name = 3 [default = ""];
+   required string name = 3 ;
 
    /**
     * @Field(store = Store.YES)
     */
-   required string surname = 4 [default = ""];
+   required string surname = 4 ;
 
    message Address {
-      required string street = 1 [default = ""];
-      required string postCode = 2 [default = ""];
-      required int32 number = 3 [default = 0];
+      required string street = 1 ;
+      required string postCode = 2 ;
+      required int32 number = 3 ;
    }
 
    /**
@@ -42,7 +42,7 @@ message User {
    repeated Address addresses = 5;     //a repeated field cannot be marked required
 
    /**
-    * @Field(store = Store.YES)
+    * @Field(store = Store.YES,  indexNullAs = "-1")
     */
    optional int32 age = 6;   // persisting age instead of birth date is not ideal but is ok for our sample code
 
@@ -69,7 +69,7 @@ message Account {
    /**
     * @Field(store = Store.YES)
     */
-   required int32 id = 1 [default = 0];
+   required int32 id = 1 ;
 
    /**
     * @Field(store = Store.YES)
@@ -106,7 +106,7 @@ message Transaction {
    /**
     * @Field(store = Store.YES)
     */
-   required int32 id = 1 [default = 0];
+   required int32 id = 1 ;
 
    /**
     * @Field
@@ -114,14 +114,14 @@ message Transaction {
    optional string description = 2;
    
    /**
-    * @Field(store = Store.YES, analyze = Analyze.YES, analyzer = @Analyzer(definition = "standard"))
+    * @Field(store = Store.YES, analyze = Analyze.YES)
     */
    optional string longDescription = 3;        
 
    /**
     * @Field(store = Store.YES)
     */
-   required int32 accountId = 4 [default = 0];
+   required int32 accountId = 4 ;
 
    /**
     * @Field(store = Store.YES)
