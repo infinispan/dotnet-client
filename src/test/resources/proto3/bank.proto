@@ -43,7 +43,7 @@ message User {
    repeated Address addresses = 5 [packed=false];     //a repeated field cannot be marked required
 
    /**
-    * @Field(store = Store.YES)
+    * @Field(store = Store.YES,  indexNullAs = "-1")
     */
    int32 age = 6;   // persisting age instead of birth date is not ideal but is ok for our sample code
 
@@ -115,7 +115,7 @@ message Transaction {
    string description = 2;
    
    /**
-    * @Field(store = Store.YES, analyze = Analyze.YES, analyzer = @Analyzer(definition = "standard"))
+    * @Field(store = Store.YES, analyze = Analyze.YES)
     */
    string longDescription = 3;
 
