@@ -17,11 +17,11 @@
     <description>Infinispan HotRod IKVM Wrapper</description>
 
     <properties>
-        <version.org.infinispan>9.0.0.Alpha4</version.org.infinispan>
-        <version.org.jboss.logging.processor>1.1.0.Final</version.org.jboss.logging.processor>
+        <version.org.infinispan>9.0.0.Final</version.org.infinispan>
+        <version.org.jboss.logging.processor>1.2.1.Final</version.org.jboss.logging.processor>
         <version.org.jboss.narayana.jta>5.2.16.Final</version.org.jboss.narayana.jta>
         <version.org.testng>6.8</version.org.testng>
-        <version.io.netty>4.0.25.Final</version.io.netty>
+        <version.io.netty>4.1.9.Final</version.io.netty>
         <version.jcipannotations>1.0</version.jcipannotations>
         <maven.test.skip.exec>true</maven.test.skip.exec>
     </properties>
@@ -124,11 +124,6 @@
             <artifactId>narayana-jta</artifactId>
             <version>${version.org.jboss.narayana.jta}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>${version.io.netty}</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>

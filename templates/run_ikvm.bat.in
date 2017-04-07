@@ -6,7 +6,7 @@ set ORIG_PATH=%PATH%
 set PATH=${UT_PATH}
 
 echo on
-"${IKVM_NATIVE_BINARY}" -cp %dep%;hotrodcs.jar;%JAVA_TESTS_DIR%\target\hotrod-ikvm.jar;%JAVA_TESTS_DIR%\target\test-classes %*
+"${IKVM_NATIVE_BINARY}" -Dio.netty.noUnsafe=true -cp %dep%;hotrodcs.jar;%JAVA_TESTS_DIR%\target\hotrod-ikvm.jar;%JAVA_TESTS_DIR%\target\test-classes %*
 if %ERRORLEVEL% neq 0 goto FAIL
 goto SUCCESS
 

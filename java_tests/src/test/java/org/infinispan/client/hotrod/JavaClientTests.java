@@ -14,7 +14,6 @@ import org.infinispan.client.hotrod.BulkGetKeysReplTest;
 import org.infinispan.client.hotrod.BulkGetKeysSimpleTest;
 import org.infinispan.client.hotrod.BulkGetReplTest;
 import org.infinispan.client.hotrod.BulkGetSimpleTest;
-import org.infinispan.client.hotrod.ClientAsymmetricClusterTest;
 import org.infinispan.client.hotrod.CacheManagerStoppedTest;
 import org.infinispan.client.hotrod.CacheManagerNotStartedTest;
 import org.infinispan.client.hotrod.DefaultExpirationTest;
@@ -63,22 +62,25 @@ public class JavaClientTests implements IMethodSelector {
             CacheManagerNotStartedTest.class,
             RemoteCacheManagerTest.class,
             //Known to work
-            BulkGetKeysDistTest.class, 
-            BulkGetKeysReplTest.class, 
-            BulkGetKeysSimpleTest.class,
-            BulkGetReplTest.class,
-            BulkGetSimpleTest.class, 
+            // Since 9.0.0.Final some tests use java unsafe
+            // which is not supported by IKVM
+            // commenting out
+            //Uses UNSAFE BulkGetKeysDistTest.class,
+            //Uses UNSAFE BulkGetKeysReplTest.class,
+            //Uses UNSAFE BulkGetKeysSimpleTest.class,
+            //Uses UNSAFE BulkGetReplTest.class,
+            //Uses UNSAFE BulkGetSimpleTest.class,
             DefaultExpirationTest.class,
             CacheManagerStoppedTest.class,
-            ForceReturnValuesTest.class, 
+            ForceReturnValuesTest.class,
             HotRodIntegrationTest.class,
-            HotRodServerStartStopTest.class, 
-            HotRodStatisticsTest.class, 
+            //Uses UNSAFE HotRodServerStartStopTest.class,
+            //Uses UNSAFE HotRodStatisticsTest.class,
             RemoteCacheManagerTest.class,
             ServerErrorTest.class,
             ServerRestartTest.class,
             ServerShutdownTest.class,
-            SizeTest.class,
+            //Uses UNSAFE SizeTest.class,
             SocketTimeoutErrorTest.class,
             RemoteAsyncAPITest.class
       });
