@@ -3,6 +3,11 @@ echo Using HOTRODCPP_HOME=%HOTRODCPP_HOME%
 if [%generator%] == [""] set generator="Visual Studio 14 2015 Win64"
 echo Using generator -G %generator%
 
+subst Y: /D
+subst Y: %CD%
+
+Y:
+
 rmdir /s /q build_windows
 mkdir build_windows
 cd build_windows
@@ -45,3 +50,4 @@ goto eof
     ()
     exit /b 1
 :eof
+subst Y: /D
