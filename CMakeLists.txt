@@ -487,7 +487,7 @@ install (FILES
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix.xml.in" wix.xml)
 set (CPACK_WIX_TEMPLATE "wix.xml")
 set (CPACK_WIX_UPGRADE_GUID "7cc17657-80b5-417f-9209-710682f852f4") # This value should not change.
-set (CPACK_SOURCE_IGNORE_FILES "/build.*/;/\\\\.git/")
+set (CPACK_SOURCE_IGNORE_FILES "/cpp-client\\\\.*/;/build.*/;/\\\\.git/")
 
 #Bundle-specific properties (see wix-bundle.cmake).
 if (DEFINED HOTROD_BUILD_BUNDLE OR DEFINED ENV{HOTROD_BUILD_BUNDLE})
