@@ -16,7 +16,7 @@ if [ "$#" == "1" ]; then
     -e 's/set (HOTROD_VERSION_MINOR *".*")/set (HOTROD_VERSION_MINOR "'"$MIN"'")/' \
     -e 's/set (HOTROD_VERSION_PATCH *".*")/set (HOTROD_VERSION_PATCH "'"$MIC"'")/' \
     -e 's/set (HOTROD_VERSION_LABEL *".*")/set (HOTROD_VERSION_LABEL "'"$QUAL"'")/' CMakeLists.txt
-    sed -i -e 's/git branch: \'master\'/git branch: \'$MAJ.$MIN.$PAT\'/' Jenkinsfile
+    sed -i -e "s/git branch: 'master'/git branch: '$MAJ.$MIN.$PAT'/" Jenkinsfile
     git add CMakeLists.txt Jenkinsfile
     git commit -m  "$MAJ.$MIN.$PAT"
     git tag -a "$MAJ.$MIN.$PAT" -m "$MAJ.$MIN.$PAT"
