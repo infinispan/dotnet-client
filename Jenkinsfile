@@ -83,6 +83,7 @@ pipeline {
             steps {
                 script {
                     bat ".\\build.bat"
+                    archiveArtifacts artifacts: 'build_windows\\_CPack_Packages\\win64\\WIX\\*.msi, build_windows\\_CPack_Packages\\win64-Source\\ZIP\\*.zip'
                 }
             }
         }
