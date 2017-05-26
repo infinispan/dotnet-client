@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                 dir('cpp-client') {
-                    git branch: 'jenkins_dev', url: 'https://github.com/infinispan/cpp-client.git'
+                    git branch: 'master', url: 'https://github.com/infinispan/cpp-client.git'
                 }
                 script {
                     dir ('cpp-client') {
