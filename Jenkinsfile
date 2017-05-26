@@ -31,7 +31,9 @@ pipeline {
             }
             steps {
                 dir('cpp-client') {
-                    git branch: 'master', url: 'https://github.com/infinispan/cpp-client.git'
+                    checkout scm: [$class: 'GitSCM',
+                       userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
+                       branches: [[name: 'master']]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
