@@ -85,6 +85,11 @@ namespace Infinispan.HotRod.Config
             return new SslConfigurationBuilder(this, builder.Ssl());
         }
 
+        public SecurityConfigurationBuilder Security()
+        {
+            return new SecurityConfigurationBuilder(this, builder.Security());
+        }
+
         public NearCacheConfigurationBuilder NearCache()
         {
             return new NearCacheConfigurationBuilder(this, builder.NearCache());

@@ -11,6 +11,8 @@ subst Y: .
 
 Y:
 
+cd \
+
 rmdir /s /q build_windows
 mkdir build_windows
 cd build_windows
@@ -42,7 +44,6 @@ cmake %* -P ../wix-bundle.cmake
 
 %home_drive%
 
-subst /D Y:
 
 if %errorlevel% neq 0 goto fail
 cd ..
@@ -54,7 +55,10 @@ goto eof
   goto :EOF
 
 :fail
-    cd ..
+    %home_drive%
+    subst /D Y:
     ()
     exit /b 1
 :eof
+%home_drive%
+subst Y: /D

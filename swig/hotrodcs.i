@@ -1,10 +1,11 @@
-%module hotrodcs
+%module(directors="1") hotrodcs
 %inline {
 /* Define org::infinispan::query::remote::client needed by RemoteCacheBase. This in place of including all the protobuf stuff */
 namespace org { namespace infinispan { namespace query { namespace remote { namespace client {}}}}}
 }
 %{
 #define HR_PROTO_EXPORT
+#define _WIN64
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/ClientEvent.h>
@@ -14,6 +15,11 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/ConfigurationChildBuilder.h>
 #include <infinispan/hotrod/ConnectionPoolConfiguration.h>
 #include <infinispan/hotrod/ConnectionPoolConfigurationBuilder.h>
+#include <infinispan/hotrod/SecurityConfigurationBuilder.h>
+#include <infinispan/hotrod/SslConfigurationBuilder.h>
+#include <infinispan/hotrod/AuthenticationConfigurationBuilder.h>
+#include <infinispan/hotrod/AuthenticationConfiguration.h>
+#include <infinispan/hotrod/SecurityConfiguration.h>
 #include <infinispan/hotrod/Flag.h>
 #include <infinispan/hotrod/ImportExport.h>
 #include <infinispan/hotrod/Marshaller.h>
@@ -25,7 +31,6 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/ServerConfigurationBuilder.h>
 #include <infinispan/hotrod/SslConfiguration.h>
 #include <infinispan/hotrod/NearCacheConfiguration.h>
-#include <infinispan/hotrod/SslConfigurationBuilder.h>
 #include <infinispan/hotrod/TimeUnit.h>
 #include <infinispan/hotrod/Version.h>
 #include <infinispan/hotrod/VersionedValue.h>
@@ -60,6 +65,69 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "std_shared_ptr.i"
 %shared_ptr(infinispan::hotrod::ByteArray)
 
+%feature("director") AuthenticationStringCallback;
+
+%inline{
+
+static char* simple_data="writer";
+static char* secret_data="somePassword";
+
+static char realm_data[] = "ApplicationRealm";
+static char path_data[] = "/usr/lib64/sasl2";
+
+class AuthenticationStringCallback {
+public:
+    virtual ~AuthenticationStringCallback() {}
+    virtual std::string getString()  { return ""; }
+};
+
+static int getrealm(void* context, int id, const char **result, unsigned *len) {
+    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
+    AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
+    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
+    *result=cb_buff_ptr.get();
+    if (len)
+        *len = strlen(*result);
+    return SASL_OK;
+}
+
+
+static int getsecret(void* /* conn */, void* context, int id, sasl_secret_t **psecret) {
+    AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
+    size_t len;
+    static std::unique_ptr<sasl_secret_t, decltype(std::free) *> cb_buff_ptr= { nullptr, std::free };
+    len = asc->getString().length();
+    cb_buff_ptr.reset((sasl_secret_t *) malloc(sizeof(sasl_secret_t) + len));
+    cb_buff_ptr->len = len;
+    strcpy((char *) cb_buff_ptr->data, asc->getString().c_str());
+    *psecret = cb_buff_ptr.get();
+    return SASL_OK;
+}
+
+static int simple(void* context, int id, const char **result, unsigned *len) {
+    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
+    AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
+    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
+    *result=cb_buff_ptr.get();
+    if (len)
+        *len = strlen(*result);
+    return SASL_OK;
+}
+
+static int getpath(void *context, const char ** path) {
+    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
+    AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
+    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
+    if (!path)
+        return SASL_BADPARAM;
+    *path = cb_buff_ptr.get();
+    return SASL_OK;
+}
+
+std::vector<sasl_callback_t> p_callbackHandler;
+}
+
+
 // include order matters.
 %include "infinispan/hotrod/ImportExport.h"
 
@@ -93,6 +161,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "infinispan/hotrod/ConnectionPoolConfiguration.h"
 %include "infinispan/hotrod/ServerConfiguration.h"
 %include "infinispan/hotrod/SslConfiguration.h"
+%include "infinispan/hotrod/AuthenticationConfiguration.h"
+%include "infinispan/hotrod/SecurityConfiguration.h"
 %include "infinispan/hotrod/NearCacheConfiguration.h"
 %include "infinispan/hotrod/FailOverRequestBalancingStrategy.h"
 %include "infinispan/hotrod/Configuration.h"
@@ -101,7 +171,9 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "infinispan/hotrod/ConfigurationChildBuilder.h"
 %include "infinispan/hotrod/ConnectionPoolConfigurationBuilder.h"
 %include "infinispan/hotrod/ServerConfigurationBuilder.h"
+%include "infinispan/hotrod/SecurityConfigurationBuilder.h"
 %include "infinispan/hotrod/SslConfigurationBuilder.h"
+%include "infinispan/hotrod/AuthenticationConfigurationBuilder.h"
 %include "infinispan/hotrod/ConfigurationBuilder.h"
 
 %include "infinispan/hotrod/RemoteCacheBase.h"
@@ -230,10 +302,48 @@ namespace hotrod {
 %template(ByteArrayVector) std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >;
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
 %template(ServerConfigurationMap) std::map<std::string,std::vector<infinispan::hotrod::ServerConfiguration> >;
+%template(SaslCallbackHandlerMap) std::map<int, AuthenticationStringCallback *>;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 };
 
+
+
+%extend infinispan::hotrod::AuthenticationConfigurationBuilder{
+    void setupCallback() {}
+    void setupCallback(std::map<int, AuthenticationStringCallback *> mAsc)
+    {
+       int index = 0;
+       p_callbackHandler.resize(mAsc.size()+1);
+       for(auto&& iter: mAsc)
+       {
+           switch (iter.first) 
+           {
+               case SASL_CB_GETPATH:
+                  p_callbackHandler[index++]= {SASL_CB_GETPATH, (sasl_callback_ft) &getpath, (void*) iter.second};
+                  break;
+               case SASL_CB_USER:
+                  p_callbackHandler[index++]= {SASL_CB_USER, (sasl_callback_ft) &simple, (void*) iter.second};
+                  simple_data = strdup(iter.second->getString().c_str());
+                  break;
+               case SASL_CB_AUTHNAME:
+                  p_callbackHandler[index++]= {SASL_CB_AUTHNAME, (sasl_callback_ft) &simple, (void*) iter.second};
+                  break;
+               case SASL_CB_PASS:
+                  p_callbackHandler[index++]= {SASL_CB_PASS, (sasl_callback_ft) &getsecret, (void*) iter.second};
+                  secret_data = strdup(iter.second->getString().c_str());
+                  break;
+               case SASL_CB_GETREALM:
+                  p_callbackHandler[index++]= {SASL_CB_GETREALM, (sasl_callback_ft) &getrealm, (void*) iter.second};
+                  break;
+               default:
+               break;
+           }
+       }
+       p_callbackHandler[index++]= {SASL_CB_LIST_END, NULL, NULL };
+       $self->callbackHandler(p_callbackHandler);
+    }
+}
 %extend infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> {
     DotNetClientListener* addClientListener(std::vector<char> filterName, std::vector<char> converterName, bool includeCurrentState
                                , const std::vector<std::vector<char> > filterFactoryParam, const std::vector<std::vector<char> > converterFactoryParams)
