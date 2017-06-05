@@ -10,6 +10,7 @@ namespace Infinispan.HotRod.SWIG
         ConnectionPoolConfigurationBuilder ConnectionPool();
         SslConfigurationBuilder Ssl();
         NearCacheConfigurationBuilder NearCache();
+        SecurityConfigurationBuilder Security();
 
         void validate();
         ConfigurationBuilder AddServers(string serverList);

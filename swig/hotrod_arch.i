@@ -21,6 +21,10 @@
         return nearCache();
     }
 
+    public Infinispan.HotRod.SWIG.SecurityConfigurationBuilder Security() {
+        return security();
+    }
+
     public Infinispan.HotRod.SWIG.ConfigurationBuilder AddServers(string _serverList) {
         return addServers(_serverList);
     }
@@ -192,6 +196,45 @@
     }
     %}
 
+%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder"
+%typemap(cscode) infinispan::hotrod::AuthenticationConfigurationBuilder %{
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfiguration Create() {
+        return create();
+    }
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder Enable() {
+        return enable();
+    }
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder Disable() {
+        return disable();
+    }
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder SaslMechanism(string saslMechanism) {
+      return this.saslMechanism(saslMechanism);
+    }
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder ServerFQDN(string serverFQDN) {
+      return this.serverFQDN(serverFQDN);
+    }
+
+
+    %}
+
+%typemap(csinterfaces_derived) infinispan::hotrod::SecurityConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SecurityConfigurationBuilder"
+%typemap(cscode) infinispan::hotrod::SecurityConfigurationBuilder %{
+
+    public Infinispan.HotRod.SWIG.SecurityConfiguration Create() {
+        return create();
+    }
+
+    public Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder Authentication() {
+        return authentication();
+    }
+
+    %}
+
 %typemap(csinterfaces_derived) infinispan::hotrod::NearCacheConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::NearCacheConfigurationBuilder %{
 
@@ -270,6 +313,8 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
 
 %typemap(csinterfaces) infinispan::hotrod::ServerConfiguration "IDisposable, Infinispan.HotRod.SWIG.ServerConfiguration"
 %typemap(csinterfaces) infinispan::hotrod::SslConfiguration "IDisposable, Infinispan.HotRod.SWIG.SslConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfiguration "IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::SecurityConfiguration "IDisposable, Infinispan.HotRod.SWIG.SecurityConfiguration"
 %typemap(csinterfaces) infinispan::hotrod::NearCacheConfiguration "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfiguration"
 
 %typemap(csinterfaces) infinispan::hotrod::ConnectionPoolConfiguration "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfiguration"
