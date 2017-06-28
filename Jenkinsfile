@@ -33,7 +33,7 @@ pipeline {
                 dir('cpp-client') {
                     checkout scm: [$class: 'GitSCM',
                        userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
-                       branches: [[name: 'master']]], changelog: false, poll: false
+                       branches: [[name: 'refs/tags/8.2.0.Alpha1']]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
