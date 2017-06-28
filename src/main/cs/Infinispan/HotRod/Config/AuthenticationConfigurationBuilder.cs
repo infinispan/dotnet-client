@@ -48,7 +48,7 @@ namespace Infinispan.HotRod.Config
             jniBuilder.setupCallback(map);
         }
 
-        public AuthenticationConfigurationBuilder setupCallback(System.Collections.Generic.IDictionary<int, AuthenticationStringCallback> map)
+        public AuthenticationConfigurationBuilder SetupCallback(System.Collections.Generic.IDictionary<int, AuthenticationStringCallback> map)
         {
             Infinispan.HotRod.SWIGGen.SaslCallbackHandlerMap cbMap = new SWIGGen.SaslCallbackHandlerMap();
             foreach(int k in map.Keys)
