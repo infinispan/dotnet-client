@@ -20,7 +20,7 @@ namespace Infinispan.HotRod.Tests
             cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
             cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
             cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
-            conf.Security().Authentication().Enable().SaslMechanism("PLAIN").setupCallback(cbMap);
+            conf.Security().Authentication().Enable().SaslMechanism("PLAIN").SetupCallback(cbMap);
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
@@ -43,7 +43,7 @@ namespace Infinispan.HotRod.Tests
             cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
             cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
             cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
-            conf.Security().Authentication().Enable().SaslMechanism("DIGEST-MD5").ServerFQDN("node0").setupCallback(cbMap);
+            conf.Security().Authentication().Enable().SaslMechanism("DIGEST-MD5").ServerFQDN("node0").SetupCallback(cbMap);
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
@@ -65,7 +65,7 @@ namespace Infinispan.HotRod.Tests
             cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
             cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
             cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
-            conf.Security().Authentication().Enable().SaslMechanism("PLAIN").setupCallback(cbMap);
+            conf.Security().Authentication().Enable().SaslMechanism("PLAIN").SetupCallback(cbMap);
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
