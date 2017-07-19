@@ -89,14 +89,7 @@ public class JavaClientTests implements IMethodSelector {
       testng.setGroups("unit,functional");
       testng.run();
 
-      Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
-            //see HRCPP-190
-            "RemoteCacheManagerTest.testMarshallerInstance",
-            //see HRCPP-189
-            "RemoteCacheManagerTest.testGetUndefinedCache",
-	    "ForceReturnValuesTest.testDifferentInstancesForDifferentForceReturnValues",
- 	    "ForceReturnValuesTest.testSameInstanceForSameForceReturnValues"
-      ));
+      Set<String> expectedTestFailures = new TreeSet<String>();
       Set<String> expectedSkips = Collections.emptySet();
 
       Set<String> failures = new TreeSet<String>();
