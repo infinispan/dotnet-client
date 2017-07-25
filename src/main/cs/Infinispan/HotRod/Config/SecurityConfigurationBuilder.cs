@@ -6,6 +6,7 @@ namespace Infinispan.HotRod.Config
     {
         private Infinispan.HotRod.SWIG.SecurityConfigurationBuilder jniBuilder;
         private ConfigurationBuilder parentBuilder;
+        private AuthenticationConfigurationBuilder m_Authentication;
 
         internal SecurityConfigurationBuilder(ConfigurationBuilder parentBuilder, Infinispan.HotRod.SWIG.SecurityConfigurationBuilder jniBuilder) : base(parentBuilder)
         { 
@@ -24,7 +25,11 @@ namespace Infinispan.HotRod.Config
 
         public AuthenticationConfigurationBuilder Authentication()
         {
-            return new AuthenticationConfigurationBuilder(parentBuilder, jniBuilder.Authentication());
+            if (m_Authentication == null)
+            {
+                m_Authentication = new AuthenticationConfigurationBuilder(parentBuilder, jniBuilder.Authentication());
+            }
+            return m_Authentication;
         }
       
 

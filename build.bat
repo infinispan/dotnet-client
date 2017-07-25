@@ -4,12 +4,10 @@ if [%generator%] == [""] set generator="Visual Studio 14 2015 Win64"
 echo Using generator -G %generator%
 
 set home_drive=%CD:~0,2%
-
-subst /D Y:
-
+subst Y: /D
 subst Y: .
-
 Y:
+cd \
 
 cd \
 
@@ -42,11 +40,7 @@ if %errorlevel% neq 0 goto fail
 
 cmake %* -P ../wix-bundle.cmake
 
-%home_drive%
-
-
 if %errorlevel% neq 0 goto fail
-cd ..
 endlocal
 goto eof
 
