@@ -8,10 +8,11 @@ namespace Infinispan.HotRod.Config
     public class AuthenticationConfiguration
     {
         private Infinispan.HotRod.SWIG.AuthenticationConfiguration config;
-
-        internal AuthenticationConfiguration(Infinispan.HotRod.SWIG.AuthenticationConfiguration config)
+        private System.Collections.Generic.IDictionary<int, AuthenticationCallback> callBackMap;
+        internal AuthenticationConfiguration(Infinispan.HotRod.SWIG.AuthenticationConfiguration config, System.Collections.Generic.IDictionary<int, AuthenticationCallback> callBackMap)
         {
             this.config = config;
+            this.callBackMap = callBackMap;
         }
 
         internal Infinispan.HotRod.SWIG.AuthenticationConfiguration Config()

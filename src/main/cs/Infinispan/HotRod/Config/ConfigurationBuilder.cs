@@ -10,6 +10,7 @@ namespace Infinispan.HotRod.Config
         private Infinispan.HotRod.SWIG.ConfigurationBuilder builder;
         private IMarshaller marshaller = new DefaultMarshaller();
 
+        SecurityConfigurationBuilder m_Security;
         public ConfigurationBuilder()
         {
             if (Util.Use64()) {
@@ -26,7 +27,7 @@ namespace Infinispan.HotRod.Config
 
         public Configuration Create()
         {
-            return new Configuration(builder.Create(), marshaller);
+            return new Configuration(builder.Create(), marshaller, this.Security().Authentication().Create());
         }
 
         public Configuration Build()
@@ -87,7 +88,11 @@ namespace Infinispan.HotRod.Config
 
         public SecurityConfigurationBuilder Security()
         {
-            return new SecurityConfigurationBuilder(this, builder.Security());
+            if (m_Security == null)
+            {
+                m_Security = new SecurityConfigurationBuilder(this, builder.Security());
+            }
+            return m_Security;
         }
 
         public NearCacheConfigurationBuilder NearCache()

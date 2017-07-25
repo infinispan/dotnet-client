@@ -17,12 +17,13 @@ namespace Infinispan.HotRod.Impl
         private RemoteByteArrayCache cache;
         private IMarshaller marshaller;
         private SWIG.RemoteCacheManager manager;
-
-        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
+        private Infinispan.HotRod.Config.Configuration configuration;
+        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller, Infinispan.HotRod.Config.Configuration configuration = null)
         {
             this.manager = manager;
             this.cache = (RemoteByteArrayCache)cache;
             this.marshaller = marshaller;
+            this.configuration = configuration;
         }
 
         public string GetName()

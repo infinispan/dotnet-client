@@ -11,11 +11,12 @@ namespace Infinispan.HotRod.Config
     {
         private Infinispan.HotRod.SWIG.Configuration config;
         private IMarshaller marshaller;
-
-        internal Configuration(Infinispan.HotRod.SWIG.Configuration config, IMarshaller marshaller)
+        private AuthenticationConfiguration authConfig;
+        internal Configuration(Infinispan.HotRod.SWIG.Configuration config, IMarshaller marshaller, AuthenticationConfiguration authConfig)
         {
             this.config = config;
             this.marshaller = marshaller;
+            this.authConfig = authConfig;
         }
 
         internal Infinispan.HotRod.SWIG.Configuration Config()
