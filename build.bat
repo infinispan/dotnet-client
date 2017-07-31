@@ -4,7 +4,7 @@ if [%generator%] == [""] set generator="Visual Studio 14 2015 Win64"
 echo Using generator -G %generator%
 
 set home_drive=%CD:~0,2%
-subst Y: /D
+subst /D Y:
 subst Y: .
 Y:
 cd \
@@ -22,7 +22,7 @@ if %errorlevel% neq 0 goto fail
 cmake --build . --config RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
-if  not "%buildTest%"=="skip" ( 
+if  not "%buildTest%"=="skip" (
 ctest -V -C RelWithDebInfo
 )
 if %errorlevel% neq 0 goto fail
@@ -53,4 +53,4 @@ goto eof
     exit /b 1
 :eof
 %home_drive%
-subst Y: /D
+subst /D Y: 

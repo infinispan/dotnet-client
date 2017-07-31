@@ -14,25 +14,31 @@ namespace Infinispan.HotRod.Event
         public string converterFactoryName;
         public bool useRawData = false;
         public char[] listenerId;
+        public byte interestFlag = 0;
         public void AddListener(Action<Event.ClientCacheEntryCreatedEvent<K>> e)
         {
             createdCallbacks.Add(e);
+            interestFlag |= 0x1;
         }
         public void AddListener(Action<Event.ClientCacheEntryModifiedEvent<K>> e)
         {
             modifiedCallbacks.Add(e);
+            interestFlag |= 0x2;
         }
         public void AddListener(Action<Event.ClientCacheEntryRemovedEvent<K>> e)
         {
             removedCallbacks.Add(e);
+            interestFlag |= 0x4;
         }
         public void AddListener(Action<Event.ClientCacheEntryExpiredEvent<K>> e)
         {
             expiredCallbacks.Add(e);
+            interestFlag |= 0x8;
         }
         public void AddListener(Action<Event.ClientCacheEntryCustomEvent> e)
         {
             customCallbacks.Add(e);
+            interestFlag |= 0xf;
         }
 
         public void ProcessEvent(Event.ClientCacheEntryCreatedEvent<K> e)
