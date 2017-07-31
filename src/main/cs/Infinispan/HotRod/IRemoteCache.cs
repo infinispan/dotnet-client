@@ -507,10 +507,22 @@ namespace Infinispan.HotRod
         void AddClientListener(Event.ClientListener<K,V> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback);
 
         /// <summary>
+        /// Register a continuous query listener on the server
+        /// </summary>
+        /// <param name="cql">The listener to be installed</param>
+        void AddContinuousQueryListener<CQK, CQV> (Event.ContinuousQueryListener<CQK, CQV> cql);
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="cl">ClientListener to be removed</param>
         void RemoveClientListener(Event.ClientListener<K, V> cl);
+
+        /// <summary>
+        /// Unregister a continuous query listener from the server
+        /// </summary>
+        /// <param name="cql">ContinuousQueryListener to be removed</param>
+        void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql);
 
     }
 }

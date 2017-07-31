@@ -66,6 +66,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %shared_ptr(infinispan::hotrod::ByteArray)
 
 %feature("director") AuthenticationStringCallback;
+%feature("director") ClientListenerCallback;
+
 
 %inline{
 class AuthenticationStringCallback {
@@ -334,13 +336,16 @@ namespace hotrod {
     }
 }
 %extend infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> {
-    DotNetClientListener* addClientListener(std::vector<char> filterName, std::vector<char> converterName, bool includeCurrentState
-                               , const std::vector<std::vector<char> > filterFactoryParam, const std::vector<std::vector<char> > converterFactoryParams)
+    DotNetClientListener* addClientListener(ClientListenerCallback *cb, std::vector<char> filterName, std::vector<char> converterName, bool includeCurrentState
+                               , const std::vector<std::vector<char> > filterFactoryParam, const std::vector<std::vector<char> > converterFactoryParams, bool useRawData, unsigned char interestFlag)
     {
        DotNetClientListener* cl = new DotNetClientListener();
        cl->includeCurrentState=includeCurrentState;
        cl->filterFactoryName=filterName;
        cl->converterFactoryName=converterName;
+       cl->useRawData=useRawData;
+       cl->setCb(cb);
+       cl->interestFlag=interestFlag;
        $self->addClientListener(*cl, filterFactoryParam, converterFactoryParams, cl->getFailoverFunction());
        return cl;
     }
