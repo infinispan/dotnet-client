@@ -17,12 +17,13 @@ namespace Infinispan.HotRod.Impl
         private RemoteByteArrayCache cache;
         private IMarshaller marshaller;
         private SWIG.RemoteCacheManager manager;
-
-        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller)
+        private Infinispan.HotRod.Config.Configuration configuration;
+        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller, Infinispan.HotRod.Config.Configuration configuration = null)
         {
             this.manager = manager;
             this.cache = (RemoteByteArrayCache)cache;
             this.marshaller = marshaller;
+            this.configuration = configuration;
         }
 
         public string GetName()
@@ -430,74 +431,50 @@ namespace Infinispan.HotRod.Impl
             {
                 vvcConverterParams.Add(toVectorChar(marshaller.ObjectToByteBuffer(s)));
             }
-            DotNetClientListener listener=cache.addClientListener(toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams);
+            InternalClientEventListenerCallback<K,V> cb = new InternalClientEventListenerCallback<K,V>(cl, marshaller);
+            DotNetClientListener listener =cache.addClientListener(cb, toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams, cl.useRawData, cl.interestFlag);
             cl.listenerId = toString(listener.getListenerId()).ToCharArray();
-            Task t = Task.Run(() => {
-                while (!listener.isShutdown())
-                {
-                    ClientCacheEventData evData = listener.pop();
-                    if (listener.isShutdown())
-                    {
-                        break;
-                    }
-                    if (evData.eventType==0xff)
-                    {
-                        // Wait on pop is timed out. Needed for collaborative shutdown
-                        continue;
-                    }
-                    switch (evData.eventType)
-                    {
-                        case (byte)EventType.CLIENT_CACHE_ENTRY_CREATED:
-                            {
-                                ClientCacheEntryCreatedEvent<K> ev = new ClientCacheEntryCreatedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
-                                cl.ProcessEvent(ev);
-                            }
-                            break;
-                        case (byte)EventType.CLIENT_CACHE_ENTRY_MODIFIED:
-                            {
-                                ClientCacheEntryModifiedEvent<K> ev = new ClientCacheEntryModifiedEvent<K>((K)unwrap(evData.key), evData.version, evData.isCommandRetried);
-                                cl.ProcessEvent(ev);
-                            }
-                            break;
-                        case (byte)EventType.CLIENT_CACHE_ENTRY_REMOVED:
-                            {
-                                ClientCacheEntryRemovedEvent<K> ev = new ClientCacheEntryRemovedEvent<K>((K)unwrap(evData.key), evData.isCommandRetried);
-                                cl.ProcessEvent(ev);
-                            }
-                            break;
-                        case (byte)EventType.CLIENT_CACHE_ENTRY_EXPIRED:
-                            {
-                                ClientCacheEntryExpiredEvent<K> ev = new ClientCacheEntryExpiredEvent<K>((K)unwrap(evData.key));
-                                cl.ProcessEvent(ev);
-                            }
-                            break;
-                        case (byte)EventType.CLIENT_CACHE_ENTRY_CUSTOM:
-                            {
-                                ClientCacheEntryCustomEvent ev = new ClientCacheEntryCustomEvent(toByteArray(evData.data), evData.isCommandRetried);
-                                cl.ProcessEvent(ev);
-                            }
-                            break;
-                        case (byte)EventType.CLIENT_CACHE_FAILOVER:
-                            {
-                                recoveryCallback();
-                            }
-                            break;
-                    }
-                }
-                cache.deleteListener(listener);
-            });
-            addListener(cl.listenerId, new Tuple<Task, DotNetClientListener>(t, listener));
+            addListener(cl.listenerId, listener);
         }
 
-        public static IDictionary<char[], Tuple<Task, DotNetClientListener> > runnningListeners = new Dictionary<char[], Tuple<Task, DotNetClientListener> >();
+        private void AddClientListener<CQK,CQV>(Event.ClientListener<CQK, CQV> cl, string[] filterFactoryParams, string[] converterFactoryParams, Action recoveryCallback)
+        {
+            VectorVectorChar vvcFilterParams = new VectorVectorChar();
+            foreach (string s in filterFactoryParams)
+            {
+                vvcFilterParams.Add(toVectorChar(marshaller.ObjectToByteBuffer(s)));
+            }
 
-        static void addListener(char[] listenerId, Tuple<Task, DotNetClientListener> tuple)
+            VectorVectorChar vvcConverterParams = new VectorVectorChar();
+            foreach (string s in converterFactoryParams)
+            {
+                vvcConverterParams.Add(toVectorChar(marshaller.ObjectToByteBuffer(s)));
+            }
+            InternalClientEventListenerCallback<CQK, CQV> cb = new InternalClientEventListenerCallback<CQK, CQV>(cl, marshaller);
+            DotNetClientListener listener = cache.addClientListener(cb, toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams, cl.useRawData, cl.interestFlag);
+            cl.listenerId = toString(listener.getListenerId()).ToCharArray();
+            addListener(cl.listenerId, listener);
+        }
+
+        public void AddContinuousQueryListener<CQK,CQV>(Event.ContinuousQueryListener<CQK, CQV> cql)
+        {
+            cql.clientEventListener = new ClientListener<CQK, CQV>();
+            cql.clientEventListener.filterFactoryName = "continuous-query-filter-converter-factory";
+            cql.clientEventListener.converterFactoryName = "continuous-query-filter-converter-factory";
+            cql.clientEventListener.useRawData = true;
+            Action<ClientCacheEntryCustomEvent> f = (ClientCacheEntryCustomEvent ev) => { cql.ContinuousQueryListenerFunction(ev); };
+            cql.clientEventListener.AddListener(f);
+            this.AddClientListener(cql.clientEventListener, new string[] { cql.query }, new string[] { }, null);
+        }
+
+        public static IDictionary<char[], DotNetClientListener > runnningListeners = new Dictionary<char[], DotNetClientListener>();
+
+        static void addListener(char[] listenerId, DotNetClientListener tuple)
         {
             runnningListeners.Add(listenerId, tuple);
         }
         public static void stopAndRemoveTask(char[] listenerId)
         {
-            runnningListeners[listenerId].Item2.setShutdown(true);
             runnningListeners.Remove(listenerId);
         }
 
@@ -507,6 +484,14 @@ namespace Infinispan.HotRod.Impl
         {
             stopAndRemoveTask(cl.listenerId);
             VectorChar vc = new VectorChar(cl.listenerId);
+            cache.removeClientListener(vc);
+        }
+
+        public void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql)
+
+        {
+            stopAndRemoveTask(cql.clientEventListener.listenerId);
+            VectorChar vc = new VectorChar(cql.clientEventListener.listenerId);
             cache.removeClientListener(vc);
         }
 

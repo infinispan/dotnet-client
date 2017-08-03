@@ -4,13 +4,9 @@ if [%generator%] == [""] set generator="Visual Studio 14 2015 Win64"
 echo Using generator -G %generator%
 
 set home_drive=%CD:~0,2%
-
 subst /D Y:
-
 subst Y: .
-
 Y:
-
 cd \
 
 rmdir /s /q build_windows
@@ -26,7 +22,7 @@ if %errorlevel% neq 0 goto fail
 cmake --build . --config RelWithDebInfo
 if %errorlevel% neq 0 goto fail
 
-if  not "%buildTest%"=="skip" ( 
+if  not "%buildTest%"=="skip" (
 ctest -V -C RelWithDebInfo
 )
 if %errorlevel% neq 0 goto fail
@@ -42,11 +38,7 @@ if %errorlevel% neq 0 goto fail
 
 cmake %* -P ../wix-bundle.cmake
 
-%home_drive%
-
-
 if %errorlevel% neq 0 goto fail
-cd ..
 endlocal
 goto eof
 
@@ -56,9 +48,11 @@ goto eof
 
 :fail
     %home_drive%
+    cd ..
     subst /D Y:
     ()
     exit /b 1
 :eof
 %home_drive%
-subst Y: /D
+cd ..
+subst /D Y: 

@@ -21,8 +21,15 @@ namespace Infinispan.HotRod.Tests
         public object ObjectFromByteBuffer(byte[] buf)
         {
             base_types bt = base_types.Parser.ParseFrom(buf);
-            return bt;
-            throw new NotImplementedException();
+            if (bt.I32 != 0)
+            {
+                return bt.I32;
+            }
+            else if (bt.I64 != 0)
+            {
+                return bt.I64;
+            }
+            else return bt.Str;
         }
 
         public object ObjectFromByteBuffer(byte[] buf, int offset, int length)

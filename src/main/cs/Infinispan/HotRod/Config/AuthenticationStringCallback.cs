@@ -1,7 +1,6 @@
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
-    using System;
     class InternalAuthenticationStringCallback : Infinispan.HotRod.SWIGGen.AuthenticationStringCallback
     {
         private string str;

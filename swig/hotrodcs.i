@@ -66,65 +66,57 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %shared_ptr(infinispan::hotrod::ByteArray)
 
 %feature("director") AuthenticationStringCallback;
+%feature("director") ClientListenerCallback;
+
 
 %inline{
-
-static char* simple_data="writer";
-static char* secret_data="somePassword";
-
-static char realm_data[] = "ApplicationRealm";
-static char path_data[] = "/usr/lib64/sasl2";
-
 class AuthenticationStringCallback {
 public:
-    virtual ~AuthenticationStringCallback() {}
-    virtual std::string getString()  { return ""; }
+    AuthenticationStringCallback() { }
+    AuthenticationStringCallback(const const char* s) : c_string(s) { }
+    virtual ~AuthenticationStringCallback() { }
+    virtual std::string getString() { return c_string; };
+    const char* getCString() { return c_string.data(); };
+    std::string c_string;
 };
 
-static int getrealm(void* context, int id, const char **result, unsigned *len) {
-    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
+static int getrealm(void* context, int id, const char** result, unsigned int *len) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
-    *result=cb_buff_ptr.get();
-    if (len)
-        *len = strlen(*result);
+    *result=asc->getCString();
+    *len = strlen(*result);
     return SASL_OK;
 }
 
 
 static int getsecret(void* /* conn */, void* context, int id, sasl_secret_t **psecret) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    size_t len;
-    static std::unique_ptr<sasl_secret_t, decltype(std::free) *> cb_buff_ptr= { nullptr, std::free };
-    len = asc->getString().length();
-    cb_buff_ptr.reset((sasl_secret_t *) malloc(sizeof(sasl_secret_t) + len));
-    cb_buff_ptr->len = len;
-    strcpy((char *) cb_buff_ptr->data, asc->getString().c_str());
-    *psecret = cb_buff_ptr.get();
+    std::string& s = asc->getString();
+    size_t len = s.length();
+    sasl_secret_t * p= (sasl_secret_t*)malloc(sizeof(sasl_secret_t)+len);
+    p->len=len;
+    strcpy((char*) p->data, s.data());
+    *psecret = p;
     return SASL_OK;
 }
 
-static int simple(void* context, int id, const char **result, unsigned *len) {
-    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
+static int simple(void* context, int id, const char **result, unsigned int *len) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
-    *result=cb_buff_ptr.get();
+    *result=asc->getCString();
     if (len)
+    {
         *len = strlen(*result);
+    }
     return SASL_OK;
 }
 
 static int getpath(void *context, const char ** path) {
-    static std::unique_ptr<char, decltype(std::free) *> cb_buff_ptr(nullptr, std::free);
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    cb_buff_ptr.reset(strdup(asc->getString().c_str()));
+    *path=asc->getCString();
     if (!path)
         return SASL_BADPARAM;
-    *path = cb_buff_ptr.get();
     return SASL_OK;
 }
 
-std::vector<sasl_callback_t> p_callbackHandler;
 }
 
 
@@ -314,27 +306,26 @@ namespace hotrod {
     void setupCallback(std::map<int, AuthenticationStringCallback *> mAsc)
     {
        int index = 0;
-       p_callbackHandler.resize(mAsc.size()+1);
+       std::vector<sasl_callback_t> p_callbackHandler(mAsc.size()+1);
        for(auto&& iter: mAsc)
        {
+           AuthenticationStringCallback *asc;
            switch (iter.first) 
            {
                case SASL_CB_GETPATH:
-                  p_callbackHandler[index++]= {SASL_CB_GETPATH, (sasl_callback_ft) &getpath, (void*) iter.second};
+                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
+                  p_callbackHandler[index++]= {SASL_CB_GETPATH, (sasl_callback_ft) &getpath, (void*) asc};
                   break;
                case SASL_CB_USER:
-                  p_callbackHandler[index++]= {SASL_CB_USER, (sasl_callback_ft) &simple, (void*) iter.second};
-                  simple_data = strdup(iter.second->getString().c_str());
-                  break;
-               case SASL_CB_AUTHNAME:
-                  p_callbackHandler[index++]= {SASL_CB_AUTHNAME, (sasl_callback_ft) &simple, (void*) iter.second};
+                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
+                  p_callbackHandler[index++]= {SASL_CB_USER, (sasl_callback_ft) &simple, (void*) asc};
                   break;
                case SASL_CB_PASS:
                   p_callbackHandler[index++]= {SASL_CB_PASS, (sasl_callback_ft) &getsecret, (void*) iter.second};
-                  secret_data = strdup(iter.second->getString().c_str());
                   break;
                case SASL_CB_GETREALM:
-                  p_callbackHandler[index++]= {SASL_CB_GETREALM, (sasl_callback_ft) &getrealm, (void*) iter.second};
+                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
+                  p_callbackHandler[index++]= {SASL_CB_GETREALM, (sasl_callback_ft) &getrealm, (void*) asc};
                   break;
                default:
                break;
@@ -345,13 +336,16 @@ namespace hotrod {
     }
 }
 %extend infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> {
-    DotNetClientListener* addClientListener(std::vector<char> filterName, std::vector<char> converterName, bool includeCurrentState
-                               , const std::vector<std::vector<char> > filterFactoryParam, const std::vector<std::vector<char> > converterFactoryParams)
+    DotNetClientListener* addClientListener(ClientListenerCallback *cb, std::vector<char> filterName, std::vector<char> converterName, bool includeCurrentState
+                               , const std::vector<std::vector<char> > filterFactoryParam, const std::vector<std::vector<char> > converterFactoryParams, bool useRawData, unsigned char interestFlag)
     {
        DotNetClientListener* cl = new DotNetClientListener();
        cl->includeCurrentState=includeCurrentState;
        cl->filterFactoryName=filterName;
        cl->converterFactoryName=converterName;
+       cl->useRawData=useRawData;
+       cl->setCb(cb);
+       cl->interestFlag=interestFlag;
        $self->addClientListener(*cl, filterFactoryParam, converterFactoryParams, cl->getFailoverFunction());
        return cl;
     }
