@@ -7,6 +7,41 @@ namespace Infinispan.HotRod.Tests
 {
     class AuthenticationTest
     {
+
+        [Test]
+        public void PlainAutheticationTestWithEasySaslSetup()
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
+            conf.Security().Authentication()
+                                .Enable()
+                                .ServerFQDN("node0")
+                                .SaslMechanism("PLAIN")
+                                .SetupStringCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
+            conf.Marshaller(new JBasicMarshaller());
+            Configuration c = conf.Build();
+            RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
+            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("authCache");
+            TestPut(testCache);
+        }
+
+        [Test]
+        public void MD5AutheticationTestWithEasySaslSetup()
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
+            conf.Security().Authentication()
+                                .Enable()
+                                .ServerFQDN("node0")
+                                .SaslMechanism("DIGEST-MD5")
+                                .SetupStringCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
+            conf.Marshaller(new JBasicMarshaller());
+            Configuration c = conf.Build();
+            RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
+            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("authCache");
+            TestPut(testCache);
+        }
+
         [Test]
         public void PlainAutheticationTest()
         {
@@ -61,8 +96,8 @@ namespace Infinispan.HotRod.Tests
             cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
             conf.Security().Authentication()
                                 .Enable()
-                                .SaslMechanism(mech)
                                 .ServerFQDN(serverName)
+                                .SaslMechanism(mech)
                                 .SetupCallback(cbMap);
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();

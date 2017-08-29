@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
@@ -61,6 +63,17 @@ namespace Infinispan.HotRod.Config
             return this;
         }
 
+        public AuthenticationConfigurationBuilder SetupStringCallback(string user, string password, string realm)
+        {
+            AuthenticationStringCallback cbUser = new AuthenticationStringCallback(user);
+            AuthenticationStringCallback cbPass = new AuthenticationStringCallback(password);
+            AuthenticationStringCallback cbRealm = new AuthenticationStringCallback(realm);
+            IDictionary<int, AuthenticationStringCallback> cbMap = new Dictionary<int, AuthenticationStringCallback>();
+            cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
+            cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
+            cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
+            return SetupCallback(cbMap);
+        }
 
     }
 #pragma warning restore 1591
