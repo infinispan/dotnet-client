@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Infinispan.HotRod.Config
@@ -50,29 +51,41 @@ namespace Infinispan.HotRod.Config
             jniBuilder.setupCallback(map);
         }
 
-        public AuthenticationConfigurationBuilder SetupCallback(System.Collections.Generic.IDictionary<int, AuthenticationStringCallback> map)
+        public AuthenticationConfigurationBuilder SetupCallback(string user, string password, string realm)
         {
-            Infinispan.HotRod.SWIGGen.SaslCallbackHandlerMap cbMap = new SWIGGen.SaslCallbackHandlerMap();
-            foreach(int k in map.Keys)
-            {
-                AuthenticationStringCallback asc;
-                map.TryGetValue(k, out asc);
-                cbMap.Add(k, asc.iasc);
-            }
-            jniBuilder.setupCallback(cbMap);
-            return this;
-        }
-
-        public AuthenticationConfigurationBuilder SetupStringCallback(string user, string password, string realm)
-        {
-            AuthenticationStringCallback cbUser = new AuthenticationStringCallback(user);
-            AuthenticationStringCallback cbPass = new AuthenticationStringCallback(password);
-            AuthenticationStringCallback cbRealm = new AuthenticationStringCallback(realm);
-            IDictionary<int, AuthenticationStringCallback> cbMap = new Dictionary<int, AuthenticationStringCallback>();
+            AuthenticationCallback cbUser = new AuthenticationCallback(user);
+            AuthenticationCallback cbPass = new AuthenticationCallback(password);
+            AuthenticationCallback cbRealm = new AuthenticationCallback(realm);
+            IDictionary<int, AuthenticationCallback> cbMap = new Dictionary<int, AuthenticationCallback>();
             cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
             cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
             cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
             return SetupCallback(cbMap);
+        }
+
+        public AuthenticationConfigurationBuilder SetupCallback(Func<string> userFunc, Func<string> passwordFunc, Func<string> realmFunc)
+        {
+            AuthenticationCallback cbUser = new AuthenticationCallback(userFunc);
+            AuthenticationCallback cbPass = new AuthenticationCallback(passwordFunc);
+            AuthenticationCallback cbRealm = new AuthenticationCallback(realmFunc);
+            IDictionary<int, AuthenticationCallback> cbMap = new Dictionary<int, AuthenticationCallback>();
+            cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
+            cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
+            cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
+            return SetupCallback(cbMap);
+        }
+
+        AuthenticationConfigurationBuilder SetupCallback(System.Collections.Generic.IDictionary<int, AuthenticationCallback> map)
+        {
+            Infinispan.HotRod.SWIGGen.SaslCallbackHandlerMap cbMap = new SWIGGen.SaslCallbackHandlerMap();
+            foreach (int k in map.Keys)
+            {
+                AuthenticationCallback ac;
+                map.TryGetValue(k, out ac);
+                cbMap.Add(k, ac.iafc);
+            }
+            jniBuilder.setupCallback(cbMap);
+            return this;
         }
 
     }

@@ -17,7 +17,7 @@ namespace Infinispan.HotRod.Tests
                                 .Enable()
                                 .ServerFQDN("node0")
                                 .SaslMechanism("PLAIN")
-                                .SetupStringCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
+                                .SetupCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
@@ -34,7 +34,7 @@ namespace Infinispan.HotRod.Tests
                                 .Enable()
                                 .ServerFQDN("node0")
                                 .SaslMechanism("DIGEST-MD5")
-                                .SetupStringCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
+                                .SetupCallback("supervisor", "lessStrongPassword", "ApplicationRealm");
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
@@ -87,18 +87,11 @@ namespace Infinispan.HotRod.Tests
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
             //registerServerCAFile(conf, "infinispan-ca.pem");
-            AuthenticationStringCallback cbUser = new AuthenticationStringCallback("supervisor");
-            AuthenticationStringCallback cbPass = new AuthenticationStringCallback("lessStrongPassword");
-            AuthenticationStringCallback cbRealm = new AuthenticationStringCallback("ApplicationRealm");
-            IDictionary<int, AuthenticationStringCallback> cbMap = new Dictionary<int, AuthenticationStringCallback>();
-            cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
-            cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
-            cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
             conf.Security().Authentication()
                                 .Enable()
                                 .ServerFQDN(serverName)
                                 .SaslMechanism(mech)
-                                .SetupCallback(cbMap);
+                                .SetupCallback(() => "supervisor", () => "lessStrongPassword", () => "ApplicationRealm");
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
