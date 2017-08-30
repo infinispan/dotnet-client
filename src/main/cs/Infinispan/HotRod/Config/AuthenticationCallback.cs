@@ -2,14 +2,16 @@ namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
     using System;
-    class InternalAuthenticationStringCallback : Infinispan.HotRod.SWIGGen.AuthenticationStringCallback
+    using SWIGGen;
+
+    class InternalAuthenticationFunctionCallback : Infinispan.HotRod.SWIGGen.AuthenticationStringCallback
     {
-        private string str;
-        public InternalAuthenticationStringCallback(string str)
-        { this.str = str; }
+        private Func<string> f_str;
+        public InternalAuthenticationFunctionCallback(Func<string> f_str)
+        { this.f_str = f_str; }
         public override string getString()
         {
-            return str;
+            return f_str();
         }
     }
 
@@ -21,14 +23,22 @@ namespace Infinispan.HotRod.Config
         SASL_CB_PASS        = 0x4004,   /* client passphrase-based secret */
         SASL_CB_GETREALM    = 0x4008    /* realm to attempt authentication in */
     }
-    public class AuthenticationStringCallback
+
+    public class AuthenticationCallback
     {
-        public AuthenticationStringCallback(string s)
+        public AuthenticationCallback(Func<string> f_s)
         {
-            iasc = new InternalAuthenticationStringCallback(s);
+            iafc = new InternalAuthenticationFunctionCallback(f_s);
         }
-        internal InternalAuthenticationStringCallback iasc;
+
+        public AuthenticationCallback(string s)
+        {
+            iafc = new InternalAuthenticationFunctionCallback(()=>s);
+        }
+
+        internal InternalAuthenticationFunctionCallback iafc;
     }
+
 
 #pragma warning restore 1591
 

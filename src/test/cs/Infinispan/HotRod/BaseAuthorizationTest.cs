@@ -52,18 +52,11 @@ namespace Infinispan.HotRod.Tests
                     .Port(HOTROD_PORT)
                     .ConnectionTimeout(90000)
                     .SocketTimeout(900);
-            AuthenticationStringCallback cbUser = new AuthenticationStringCallback(user);
-            AuthenticationStringCallback cbPass = new AuthenticationStringCallback(password);
-            AuthenticationStringCallback cbRealm = new AuthenticationStringCallback(REALM);
-            IDictionary<int, AuthenticationStringCallback> cbMap = new Dictionary<int, AuthenticationStringCallback>();
-            cbMap.Add((int)SaslCallbackId.SASL_CB_USER, cbUser);
-            cbMap.Add((int)SaslCallbackId.SASL_CB_PASS, cbPass);
-            cbMap.Add((int)SaslCallbackId.SASL_CB_GETREALM, cbRealm);
             conf.Security().Authentication()
                                 .Enable()
                                 .SaslMechanism(GetMech())
                                 .ServerFQDN(GetServerName())
-                                .SetupCallback(cbMap);
+                                .SetupCallback(user, password, REALM);
             marshaller = new JBasicMarshaller();
             conf.Marshaller(marshaller);
             Configuration c = conf.Build();
