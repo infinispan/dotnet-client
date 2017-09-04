@@ -7,7 +7,7 @@ namespace Infinispan.HotRod.Config
     public class AuthenticationConfigurationBuilder: AbstractConfigurationChildBuilder
     {
         private Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder jniBuilder;
-        internal System.Collections.Generic.IDictionary<int, AuthenticationStringCallback> callbackMap;
+        internal System.Collections.Generic.IDictionary<int, AuthenticationCallback> callbackMap;
         internal AuthenticationConfigurationBuilder(ConfigurationBuilder parentBuilder, Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder jniBuilder) : base(parentBuilder)
         { 
             this.jniBuilder = jniBuilder;
