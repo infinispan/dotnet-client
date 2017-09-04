@@ -104,9 +104,17 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void WriterPerformsSupervisorOpsTest()
         {
-            //test only minimum of operations because of JIRA: TBD
-            //some operations hang indefinitely (cache.clear, cache.put)
-            //and break the test suite under some circumstances
+            AssertError(writerCache, cache => TestPutClear(cache));
+            AssertError(writerCache, cache => TestPutContains(cache));
+            AssertError(writerCache, cache => TestPutGetBulk(cache));
+            AssertError(writerCache, cache => TestPutGetVersioned(cache));
+            AssertError(writerCache, cache => TestPutGetWithMetadata(cache));
+            AssertError(writerCache, cache => TestPutAll(cache));
+            AssertError(writerCache, cache => TestPutIfAbsent(cache));
+            AssertError(writerCache, cache => TestPutRemoveContains(cache));
+            AssertError(writerCache, cache => TestPutRemoveWithVersion(cache));
+            AssertError(writerCache, cache => TestPutReplaceWithFlag(cache));
+            AssertError(writerCache, cache => TestPutReplaceWithVersion(cache));
             AssertError(writerCache, cache => TestPutSize(cache));
             AssertError(writerCache, cache => TestRemoteTaskExec(cache));
         }
@@ -121,8 +129,7 @@ namespace Infinispan.HotRod.Tests
         public void SupervisorPerformsAdminOpsTest()
         {
             AssertError(supervisorCache, cache => TestStats(cache));
-            //see HRCPP-384
-            //AssertError(supervisorCache, cache => TestAddRemoveListener(cache));
+            AssertError(supervisorCache, cache => TestAddRemoveListener(cache));
         }
 
         [Test]
