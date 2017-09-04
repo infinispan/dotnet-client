@@ -27,7 +27,7 @@ namespace Infinispan.HotRod.Config
 
         public Configuration Create()
         {
-            return new Configuration(builder.Create(), marshaller, this.Security().Authentication().callbackMap);
+            return new Configuration(builder.Create(), marshaller, this.Security().Authentication().Create());
         }
 
         public Configuration Build()
