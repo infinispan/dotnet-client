@@ -1,15 +1,15 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Infinispan.HotRod.Config;
-using System.Collections.Generic;
 
 namespace Infinispan.HotRod.Tests
 {
     class AuthenticationTest
     {
+        private const string USER = "supervisor";
+        private const string PASS = "lessStrongPassword";
 
         [Test]
-        public void PlainAutheticationTestWithEasySaslSetup()
+        public void PlainAutheticationWithEasySaslSetupTest()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
@@ -26,7 +26,7 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        public void MD5AutheticationTestWithEasySaslSetup()
+        public void MD5AutheticationWithEasySaslSetupTest()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
@@ -45,24 +45,30 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void PlainAutheticationTest()
         {
-            IRemoteCache<string, string> testCache = InitCache("PLAIN", "node0");
+            IRemoteCache<string, string> testCache = InitCache("PLAIN", "node0", USER, PASS);
             TestPut(testCache);
         }
 
         [Test]
         public void MD5AutheticationTest()
         {
-            IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "node0");
+            IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "node0", USER, PASS);
             TestPut(testCache);
         }
 
+        [Test]
+        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
+        public void PlainAutheticationWrongPasswordTest()
+        {
+            IRemoteCache<string, string> testCache = InitCache("PLAIN", "node0", USER, "mallicious_password");
+            TestPut(testCache);
+        }
 
         [Test]
         [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-385")]
-        public void WrongServerNamePlainAuthTest()
+        public void DigestAutheticationWrongPasswordTest()
         {
-            IRemoteCache<string, string> testCache = InitCache("PLAIN", "nonExistentNode");
+            IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "node0", USER, "mallicious_password");
             TestPut(testCache);
         }
 
@@ -70,7 +76,7 @@ namespace Infinispan.HotRod.Tests
         [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void WrongServerNameDigestAuthTest()
         {
-            IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "nonExistentNode");
+            IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "nonExistentNode", USER, PASS);
             TestPut(testCache);
         }
 
@@ -82,7 +88,7 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(v1, testCache.Get(k1));
         }
 
-        private IRemoteCache<string, string> InitCache(string mech, string serverName)
+        private IRemoteCache<string, string> InitCache(string mech, string serverName, string username, string password)
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
@@ -91,7 +97,7 @@ namespace Infinispan.HotRod.Tests
                                 .Enable()
                                 .ServerFQDN(serverName)
                                 .SaslMechanism(mech)
-                                .SetupCallback(() => "supervisor", () => "lessStrongPassword", () => "ApplicationRealm");
+                                .SetupCallback(() => username, () => password, () => "ApplicationRealm");
             conf.Marshaller(new JBasicMarshaller());
             Configuration c = conf.Build();
             RemoteCacheManager remoteManager = new RemoteCacheManager(c, true);
