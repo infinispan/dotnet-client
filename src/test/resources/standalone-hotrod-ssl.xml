@@ -30,6 +30,7 @@
             <security-realm name="ApplicationRealm">
                 <authentication>
                     <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <truststore path="truststore.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
                 </authentication>
                 <authorization>
@@ -37,11 +38,16 @@
                 </authorization>
                 <server-identities>
                     <ssl>
-                        <keystore path="keystore_server.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                        <keystore path="keystore.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     </ssl>
                 </server-identities>
             </security-realm>
             <security-realm name="RealmSNI1">
+                <authentication>
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <truststore path="truststore.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication>
                 <server-identities>
                     <ssl>
                         <keystore path="keystore_server_sni1.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
@@ -49,6 +55,11 @@
                 </server-identities>
             </security-realm>
             <security-realm name="RealmSNI2">
+                <authentication>
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <truststore path="truststore.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication> 
                 <server-identities>
                     <ssl>
                         <keystore path="keystore_server_sni2.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
@@ -56,6 +67,11 @@
                 </server-identities>
             </security-realm>
             <security-realm name="RealmSNI3-untrusted">
+                <authentication>
+                    <local default-user="$local" allowed-users="*" skip-group-loading="true"/>
+                    <truststore path="truststore.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                    <properties path="application-users.properties" relative-to="jboss.server.config.dir"/>
+                </authentication>
                 <server-identities>
                     <ssl>
                         <keystore path="keystore_server_sni3_untrusted.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
@@ -152,8 +168,20 @@
         </subsystem>
         <subsystem xmlns="urn:infinispan:server:core:9.0" default-cache-container="local">
             <cache-container name="local" default-cache="default" statistics="true">
+                <security>
+                    <authorization>
+                        <identity-role-mapper/>
+                        <role name="admin" permissions="ALL"/>
+                        <role name="reader" permissions="READ"/>
+                        <role name="writer" permissions="WRITE"/>
+                        <role name="supervisor" permissions="READ WRITE EXEC BULK_READ BULK_WRITE LISTEN"/>
+                    </authorization>
+                </security>
                 <global-state/>
                 <local-cache name="default" start="EAGER">
+                    <security>
+                        <authorization enabled="true" roles="admin reader writer supervisor"/>
+                    </security>
                     <locking acquire-timeout="30000" concurrency-level="1000" striping="false"/>
                     <transaction mode="NONE"/>
                 </local-cache>
@@ -167,14 +195,20 @@
         <subsystem xmlns="urn:infinispan:server:endpoint:9.0">
             <hotrod-connector socket-binding="hotrod" cache-container="local">
                 <topology-state-transfer lock-timeout="1000" replication-timeout="5000"/>
-                <encryption security-realm="ApplicationRealm" require-ssl-client-auth="false">
+                <authentication security-realm="ApplicationRealm">
+                    <sasl mechanisms="EXTERNAL" qop="auth" server-name="node0" strength="high medium low">
+                        <policy>
+                            <no-anonymous value="true"/>
+                        </policy>
+                        <property name="com.sun.security.sasl.digest.utf8">
+                            true
+                        </property>
+                    </sasl>
+                </authentication>
+                <encryption security-realm="ApplicationRealm" require-ssl-client-auth="true">
                      <sni host-name="sni1" security-realm="RealmSNI1"/>
                      <sni host-name="sni2" security-realm="RealmSNI2"/>
-                     <!-- Due to HRCPP-311 we rather expose an sni for which the client does
-                          not have a certificate registered. This equals to the case when
-                          client has a certificate registered but the server has an untrusted
-                          identity -->
-                     <sni host-name="sni3-unstrusted" security-realm="RealmSNI3-untrusted"/>
+                     <sni host-name="sni3-untrusted" security-realm="RealmSNI3-untrusted"/>
                 </encryption>
             </hotrod-connector>
         </subsystem>
