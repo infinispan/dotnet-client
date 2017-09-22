@@ -35,8 +35,8 @@ namespace Infinispan.HotRod.TestSuites
             {
                 var suite = new ArrayList();
                 suite.Add(new AuthenticationTest());
-                suite.Add(new AuthPlainTest());
-                suite.Add(new AuthDigestTest());
+                suite.Add(new AuthorizationPlainTest());
+                suite.Add(new AuthorizationDigestTest());
                 return suite;
             }
         }

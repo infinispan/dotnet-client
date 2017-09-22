@@ -4,124 +4,110 @@ using Infinispan.HotRod.Config;
 
 namespace Infinispan.HotRod.Tests
 {
-    /*
-     * Due to https://issues.jboss.org/browse/HRCPP-311 
-     * the client registers the trusted server certificate 
-     * via MMC (Microsoft Management Console) in Windows 
-     * and not via sslConfBuilder.Enable().ServerCAFile(filename).
-     * This has to be done manually and prevents running multiple tests at once
-     * since all the certifacates have to installed at once and they collide
-     * (each test requires a different certificate, not all of them).
-     * How to: http://www.databasemart.com/howto/SQLoverssl/How_To_Install_Trusted_Root_Certification_Authority_With_MMC.aspx 
-     */
     class SSLTest
     {
-        /*
-         * Before running this test, install src/test/resoureces/infinispan-ca.pem via MMC.
-         */
+        private AuthorizationTester tester = new AuthorizationTester();
+        private IRemoteCache<string, string> testCache;
+        private IRemoteCache<string, string> scriptCache;
+        private IMarshaller marshaller;
+
         [Test]
-        public void SSLSuccessfullServerAndClientAuthTest()
+        public void WriterSuccessTest()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
-            registerServerCAFile(conf, "infinispan-ca.pem");
-            conf.Marshaller(new JBasicMarshaller());
-
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
-
-            testCache.Clear();
-            string k1 = "key13";
-            string v1 = "boron";
-            testCache.Put(k1, v1);
-            Assert.AreEqual(v1, testCache.Get(k1));
+            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            tester.TestWriterSuccess(testCache);
         }
 
-        /*
-         * Before running this test, 
-         * install src/test/resoureces/keystore_server_sni1.pem via MMC
-         * and uninstall all the other certificates.
-         */
         [Test]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-311")]
-        public void SNI1CorrectCredentialsTest() 
+        public void WriterPerformsReadsTest()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
-            conf.Marshaller(new JBasicMarshaller());
-            registerServerCAFile(conf, "keystore_server_sni1.pem", "sni1");
-            
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
-
-            testCache.Clear();
-            string k1 = "key13";
-            string v1 = "boron";
-            testCache.Put(k1, v1);
-            Assert.AreEqual(v1, testCache.Get(k1));
+            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            tester.TestWriterPerformsReads(testCache);
         }
 
-        /*
-         * Before running this test,
-         * install src/test/resoureces/keystore_server_sni2.pem via MMC
-         * and uninstall all the other certificates.
-         */
         [Test]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-311")]
-        public void SNI2CorrectCredentialsTest()
+        public void WriterPerformsSupervisorOpsTest()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
-            conf.Marshaller(new JBasicMarshaller());
-            registerServerCAFile(conf, "keystore_server_sni2.pem", "sni2");
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
-
-            testCache.Clear();
-            string k1 = "key13";
-            string v1 = "boron";
-            testCache.Put(k1, v1);
-            Assert.AreEqual(v1, testCache.Get(k1));
+            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            tester.TestWriterPerformsSupervisorOps(testCache, scriptCache, marshaller);
         }
 
-        /*
-         * Before running this test, uninstall all certificates via MMC.
-         */
+        [Ignore("https://issues.jboss.org/browse/HRCPP-434")]
         [Test]
-        [Ignore("https://issues.jboss.org/browse/HRCPP-311")]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.TransportException), ExpectedMessage = "**** Error 0x%x authenticating server credentials!\n")]
-        public void SNIUntrustedTest()
+        public void ClientAuthFailureTest()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
-            conf.Marshaller(new JBasicMarshaller());
-            registerServerCAFile(conf, "malicious.pem", "sni3-untrusted");
-
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
-
-            testCache.Clear();
-            string k1 = "key13";
-            string v1 = "boron";
-            testCache.Put(k1, v1);
+            ConfigureSecuredCaches("infinispan-ca.pem", "malicious_client.p12");
+            tester.TestWriterSuccess(testCache);
             Assert.Fail("Should not get here");
         }
 
-        void registerServerCAFile(ConfigurationBuilder conf, string filename = "", string sni = "")
+        [Test]
+        public void SNI1CorrectCredentialsTest()
         {
-            SslConfigurationBuilder sslConfB = conf.Ssl();
+            ConfigureSecuredCaches("keystore_server_sni1.pem", "keystore_client.p12", "sni1");
+            tester.TestWriterSuccess(testCache);
+        }
+
+        [Test]
+        public void SNI2CorrectCredentialsTest()
+        {
+            ConfigureSecuredCaches("keystore_server_sni2.pem", "keystore_client.p12", "sni2");
+            tester.TestWriterSuccess(testCache);
+        }
+
+        [Test]
+        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.TransportException), ExpectedMessage = "**** The server certificate did not validate correctly.\n")]
+        public void SNIUntrustedTest()
+        {
+            ConfigureSecuredCaches("malicious.pem", "keystore_client.p12", "sni3-untrusted");
+            tester.TestWriterSuccess(testCache); //this should actually fail
+            Assert.Fail("Should not get here");
+        }
+
+        private void ConfigureSecuredCaches(string serverCAFile, string clientCertFile, string sni = "")
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
+            marshaller = new JBasicMarshaller();
+            conf.Marshaller(marshaller);
+            SslConfigurationBuilder sslConf = conf.Ssl();
+            conf.Security().Authentication()
+                                .Enable()
+                                .SaslMechanism("EXTERNAL")
+                                .ServerFQDN("node0");
+
+            RegisterServerCAFile(sslConf, serverCAFile, sni);
+            RegisterClientCertificateFile(sslConf, clientCertFile);
+
+            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
+
+            testCache = remoteManager.GetCache<string, string>();
+            scriptCache = remoteManager.GetCache<string, string>("___script_cache");
+        }
+
+        private void RegisterServerCAFile(SslConfigurationBuilder conf, string filename = "", string sni = "")
+        {
             if (filename != "")
             {
-                checkFileExists(filename);
-                sslConfB.Enable().ServerCAFile(filename);
+                CheckFileExists(filename);
+                conf.Enable().ServerCAFile(filename);
                 if (sni != "")
                 {
-                    sslConfB.SniHostName(sni);
+                    conf.SniHostName(sni);
                 }
             }
         }
 
-        void checkFileExists(string filename)
+        private void RegisterClientCertificateFile(SslConfigurationBuilder conf, string filename = "")
+        {
+            if (filename != "")
+            {
+                CheckFileExists(filename);
+                conf.Enable().ClientCertificateFile(filename);
+            }
+        }
+
+        private void CheckFileExists(string filename)
         {
             if (!System.IO.File.Exists(filename))
             {
@@ -129,5 +115,5 @@ namespace Infinispan.HotRod.Tests
                 Environment.Exit(-1);
             }
         }
-    }
+    }   
 }
