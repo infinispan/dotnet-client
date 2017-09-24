@@ -1,82 +1,29 @@
-# C# Hot Rod Client #
+# C# Hot Rod Client
 
-## Build ##
-Build prerequisites:
+Hot Rod client enables you to connect to (infinispan)[http://infinispan.org].
 
-* C++ HotRod Client 8.1.0 (www.infinispan.org/hotrod-clients/)
-* CMake 3.x (www.cmake.org)
-* C++11
-* SWIG 2.0.x (http://www.swig.org)
-* .NET Framework 4.5
-* NLog 2.1.0 (http://nlog-project.org/)
-* NUnit 2.6.3 (https://launchpad.net/nunitv2)
-* IKVM.NET 8.1.5717.0 (http://www.ikvm.net/)
-* Google.Protobuf 3.x .net assembly with protoc
-    
-    Example installation using Nuget:
-  
-       current_dir> nuget install Google.Protobuf -Pre -Version 3.0.0-beta2
-        
-* OpenSSL 1.x
+> Currently it builds only on windows x64
 
-Note: after unpacking IKVM please edit the .exe.config files in <ikvm-root>/bin
-and comment-out the "\<supportedRuntime version="v2.0.50727"/\>" element from all
-of them.
+## Build
+You need to have (.NET Core SDK)[http://dot.net/core] installed. Tools other than that are downloaded from internet to `./buildtools`. It uses (FAKE)[http://fake.build] internally, bootstrapped from `build.ps1`.
 
-Documentation building requirements:
-* Doxygen (http://doxygen.org)
+Once you run `build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
 
-Package building requirements:
-* WiX (http://wixtoolset.org)
+### IDE
 
-After you install the dependencies please update the PATH environment
-variable to include the bin/ directories of CMake, SWIG, Maven, NUnit, IKVM.
+Unfortunatelly, if you want to open the `Infinispan.HotRod.sln` from your favorite IDE, you need to run at least once `build.ps1 Generate` to generate swig and protobuffers.
 
-Build steps:
+### Complete build
 
-    set NLOG_DLL=/path/to/nlog/2.1.0/dll
-    set NUNIT_DLL=/path/to/nunit.framework.dll
-    
-    set HOTRODCPP_HOME=/path/to/native/64bit/client
-    
-    set HOTROD_SNK=/path/to/key/to/be/generated
-    sn.exe -k %HOTROD_SNK%
+If you want to build all the things from console, run `build.ps1`. If you want to work with the project in IDE (VS/Rider/VSCode), run `build.ps1 Generate`. This will generate files required for build - swig and Google Protobuffers.
 
-    set JBOSS_HOME=/path/to/hotrod/standalone/server
-    
-    set PROTOBUF_PROTOC_EXECUTABLE_CS=/path/to/protoc.exe (typically C:\Users\%USERNAME%\google.grotobuf.install.dir\tools\protoc.exe}
-    set GOOGLE_PROTOBUF_NUPKG=/parent/folder/of/google.protobuf.install.dir  (typically C:\Users\%USERNAME%)
-    set OPENSSL_ROOT_DIR=/path/to/openssl/install/dir (typically C:\OpenSSL-Win64)
+### SWIG
 
-By default the build script will run the unit/integrations tests. If
-you want to disable them pass ENABLE_{JAVA,CSHARP}_TESTING=false as flags
-on the command line:
+C# Hot Rod client is a binding to native C++ client. It uses (swig)[http://swig.org] to generate .NET binding. In order for swig to know what to generate, folder `./swig` contains swig templates. Swig will generate C# files which **must not be pushed to this repo** to `src/Infinispan.HotRod/generated/`. If you want to generate just swig files, run `build.ps1 GenerateSwig`. 
 
-    build.bat [-DENABLE_JAVA_TESTING=false] [-DENABLE_CSHARP_TESTING=false]
+### Google Protobuffers
 
-Any additional build.bat arguments you might add will be passed on to cmake
-during the build script generation phase.
-
-After the script completes successfully you can find the .msi installer in
-the build_windows/ subdirectory.
-
-Optionally you can build a bundle to include the .NET and C++ runtimes which are
-project dependencies.
-
-Important: Make sure the runtimes to be bundled match the ones used for the actual build!
-
-To build the bundle define:
-
-    set HOTROD_VCREDIST_x86=<path to vcredist_x86.exe>
-    set HOTROD_VCREDIST_x64=<path to vcredist_x64.exe>
-    set HOTROD_DOTNET=<path to the .NET runtime standalone installer>
-
-and then pass -DHOTROD_BUILD_BUNDLE=true on the command line as argument to build.bat. After
-the build is complete you cand find the package in build_windows/ with a name ending in
-"-bundle.exe".
-
-Support for building the client using Mono (http://www.mono-project.com) will
-be coming soon.
+Some functionality of the client also depends on Google Protobuffers. Source is at `./protos` and generated C# files will be at `src/Infinispan.HotRod/generated/`. If you want to generate just proto files, run `build.ps1 GenerateProto`.
 
 ## Reporting Issues ##
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org

@@ -31,7 +31,7 @@
 
          static CustomExceptionDelegate customDelegate = new CustomExceptionDelegate(SetPendingCustomException);
 
-         [DllImport("$dllimport", EntryPoint="CustomExceptionRegisterCallback")]
+         [System.Runtime.InteropServices.DllImport("$dllimport", EntryPoint="CustomExceptionRegisterCallback")]
          public static extern void CustomExceptionRegisterCallback(CustomExceptionDelegate customCallback);
 
          static void SetPendingCustomException(int errcode, string message) {

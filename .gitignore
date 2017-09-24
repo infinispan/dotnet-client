@@ -1,7 +1,6 @@
 # ignore files
 TestResults
 *.vsmdi
-*.sln
 *.testsettings
 *.suo
 *.zip
@@ -11,3 +10,8 @@ bin
 obj
 *.dll
 *.*~
+src/Infinispan.HotRod/generated
+.vs/
+buildtools/tmp
+buildtools/.fake
+swig/

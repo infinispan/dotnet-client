@@ -1,4 +1,4 @@
-%typemap(csinterfaces) infinispan::hotrod::ConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
+%typemap(csinterfaces) infinispan::hotrod::ConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.Configuration Create() {
@@ -67,14 +67,14 @@
     
     %}
 
-%typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ServerConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.ServerConfiguration Create() {
         return create();
     }
     
-    public Infinispan.HotRod.SWIG.ServerConfigurationBuilder Host(String _host) {
+    public Infinispan.HotRod.SWIG.ServerConfigurationBuilder Host(string _host) {
         return host(_host);
     }
     
@@ -83,7 +83,7 @@
     }
     %}
 
-%typemap(csinterfaces_derived) infinispan::hotrod::ConnectionPoolConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::ConnectionPoolConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfigurationBuilder %{
     
     public Infinispan.HotRod.SWIG.ConnectionPoolConfiguration Create() {
@@ -168,7 +168,7 @@
     }
 };
 
-%typemap(csinterfaces_derived) infinispan::hotrod::SslConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SslConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::SslConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.SslConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::SslConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.SslConfiguration Create() {
@@ -196,7 +196,7 @@
     }
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder"
+%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::AuthenticationConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.AuthenticationConfiguration Create() {
@@ -222,7 +222,7 @@
 
     %}
 
-%typemap(csinterfaces_derived) infinispan::hotrod::SecurityConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.SecurityConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::SecurityConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.SecurityConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::SecurityConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.SecurityConfiguration Create() {
@@ -235,7 +235,7 @@
 
     %}
 
-%typemap(csinterfaces_derived) infinispan::hotrod::NearCacheConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder"
+%typemap(csinterfaces_derived) infinispan::hotrod::NearCacheConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::NearCacheConfigurationBuilder %{
 
     public Infinispan.HotRod.SWIG.NearCacheConfiguration Create() {
@@ -267,13 +267,13 @@
     }
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::ClusterConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ClusterConfigurationBuilder"
+%typemap(csinterfaces) infinispan::hotrod::ClusterConfigurationBuilder "System.IDisposable, Infinispan.HotRod.SWIG.ClusterConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ClusterConfigurationBuilder %{
 public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddClusterNode(string host, int port) {
        return addClusterNode(host, port);
     }
 %}
-%typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"
+%typemap(csinterfaces) infinispan::hotrod::Configuration "System.IDisposable, Infinispan.HotRod.SWIG.Configuration"
 %typemap(cscode) infinispan::hotrod::Configuration %{
 public System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration> Servers() {
         System.Collections.Generic.List<Infinispan.HotRod.SWIG.ServerConfiguration> result
@@ -311,22 +311,22 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
     }
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::ServerConfiguration "IDisposable, Infinispan.HotRod.SWIG.ServerConfiguration"
-%typemap(csinterfaces) infinispan::hotrod::SslConfiguration "IDisposable, Infinispan.HotRod.SWIG.SslConfiguration"
-%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfiguration "IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfiguration"
-%typemap(csinterfaces) infinispan::hotrod::SecurityConfiguration "IDisposable, Infinispan.HotRod.SWIG.SecurityConfiguration"
-%typemap(csinterfaces) infinispan::hotrod::NearCacheConfiguration "IDisposable, Infinispan.HotRod.SWIG.NearCacheConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::ServerConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.ServerConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::SslConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.SslConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::AuthenticationConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.AuthenticationConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::SecurityConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.SecurityConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::NearCacheConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.NearCacheConfiguration"
 
-%typemap(csinterfaces) infinispan::hotrod::ConnectionPoolConfiguration "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfiguration"
+%typemap(csinterfaces) infinispan::hotrod::ConnectionPoolConfiguration "System.IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfiguration"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfiguration %{
     public Infinispan.HotRod.Config.ExhaustedAction ExhaustedAction() {
         return (Infinispan.HotRod.Config.ExhaustedAction) (int) getExhaustedAction();
     }
     %}
 
-%typemap(csinterfaces) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> "IDisposable, Infinispan.HotRod.SWIG.RemoteByteArrayCache"
+%typemap(csinterfaces) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> "System.IDisposable, Infinispan.HotRod.SWIG.RemoteByteArrayCache"
 
-%typemap(csinterfaces) infinispan::hotrod::RemoteCacheManager "IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
+%typemap(csinterfaces) infinispan::hotrod::RemoteCacheManager "System.IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
 %typemap(cscode) infinispan::hotrod::RemoteCacheManager %{
     public void Start() {
         start();
@@ -344,7 +344,7 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
         return (RemoteByteArrayCache) getByteArrayCache();
     }
     
-    public Infinispan.HotRod.SWIG.RemoteByteArrayCache GetByteArrayCache(String cacheName) {
+    public Infinispan.HotRod.SWIG.RemoteByteArrayCache GetByteArrayCache(string cacheName) {
         return (RemoteByteArrayCache) getByteArrayCache(cacheName);
     }
 
@@ -352,7 +352,7 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
         return (RemoteByteArrayCache) getByteArrayCache(forceReturnValue);
     }
 
-    public Infinispan.HotRod.SWIG.RemoteByteArrayCache GetByteArrayCache(String cacheName, bool forceReturnValue) {
+    public Infinispan.HotRod.SWIG.RemoteByteArrayCache GetByteArrayCache(string cacheName, bool forceReturnValue) {
         return (RemoteByteArrayCache) getByteArrayCache(cacheName, forceReturnValue);
     }
 
