@@ -1,11 +1,11 @@
 # C# Hot Rod Client
 
-Hot Rod client enables you to connect to (infinispan)[http://infinispan.org].
+Hot Rod client enables you to connect to [infinispan](http://infinispan.org).
 
 > Currently it builds only on windows x64
 
 ## Build
-You need to have (.NET Core SDK)[http://dot.net/core] installed. Tools other than that are downloaded from internet to `./buildtools`. It uses (FAKE)[http://fake.build] internally, bootstrapped from `build.ps1`.
+You need to have [.NET Core SDK](http://dot.net/core) installed. Tools other than that are downloaded from internet to `./buildtools`. It uses [FAKE](http://fake.build) internally, bootstrapped from `build.ps1`.
 
 Once you run `build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
 
@@ -19,7 +19,7 @@ If you want to build all the things from console, run `build.ps1`. If you want t
 
 ### SWIG
 
-C# Hot Rod client is a binding to native C++ client. It uses (swig)[http://swig.org] to generate .NET binding. In order for swig to know what to generate, folder `./swig` contains swig templates. Swig will generate C# files which **must not be pushed to this repo** to `src/Infinispan.HotRod/generated/`. If you want to generate just swig files, run `build.ps1 GenerateSwig`. 
+C# Hot Rod client is a binding to native C++ client. It uses [swig](http://swig.org) to generate .NET binding. In order for swig to know what to generate, folder `./swig` contains swig templates. Swig will generate C# files which **must not be pushed to this repo** to `src/Infinispan.HotRod/generated/`. If you want to generate just swig files, run `build.ps1 GenerateSwig`. 
 
 ### Google Protobuffers
 
