@@ -8,7 +8,7 @@
   * [x] unziping - ICsharpZipLib cannot unzip the cpp-client
 * [x] update NLog
 * [x] update protobufs
-* [ ] create nuget package for C++
+* [x] create nuget package for C++
 * [ ] create nuget package for C#
 * [ ] release + git tag
 * [x] NUnit

@@ -9,6 +9,7 @@ open Fake
 open Fake.NuGet.Install
 open Fake.ArchiveHelper.Tar.GZip
 
+let nugetPath = "./tmp/nuget/nuget.exe"
 
 ///**Description**
 /// Downloads file from internet
@@ -32,7 +33,7 @@ let downloadArtifact (url:string) (downloadLocation:string) =
 ///  * `cppClientVersion` - parameter of type `string`
 ///
 ///**Output Type**
-///  * `string`
+///  * `string` - location of cpp-client
 ///
 ///**Exceptions**
 ///
@@ -44,7 +45,7 @@ let downloadCppClientIfNonexist cppClientVersion =
     if not (File.Exists zipPath) then
         NugetInstall (fun p ->
             {p with
-                ToolPath = "./tmp/nuget/nuget.exe";
+                ToolPath = nugetPath;
                 OutputDirectory = "tmp";
                 ExcludeVersion = true}) "7-Zip.CommandLine"
     let cppClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-WIN-x86_64" cppClientVersion
@@ -69,7 +70,7 @@ let downloadCppClientIfNonexist cppClientVersion =
 ///  * `swigVersion` - parameter of type `string`
 ///
 ///**Output Type**
-///  * `string`
+///  * `string` - location of swig tools
 ///
 ///**Exceptions**
 ///
@@ -79,7 +80,7 @@ let downloadSwigToolsIfNonexist swigVersion =
         NugetInstall (fun p ->
             {p with
                 Version = swigVersion;
-                ToolPath = "./tmp/nuget/nuget.exe";
+                ToolPath = nugetPath;
                 OutputDirectory = "tmp";
                 ExcludeVersion = true}) "swigwintools"
     else
@@ -94,7 +95,7 @@ let downloadSwigToolsIfNonexist swigVersion =
 ///  * `protocVersion` - parameter of type `string`
 ///
 ///**Output Type**
-///  * `string`
+///  * `string` - location of protoc
 ///
 ///**Exceptions**
 ///
@@ -104,7 +105,7 @@ let downloadProtocIfNonexist protocVersion =
         NugetInstall (fun p ->
             {p with
                 Version = protocVersion;
-                ToolPath = "./tmp/nuget/nuget.exe";
+                ToolPath = nugetPath;
                 OutputDirectory = "tmp";
                 ExcludeVersion = true}) "Google.Protobuf.Tools"
     else

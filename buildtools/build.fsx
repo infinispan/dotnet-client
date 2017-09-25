@@ -8,6 +8,7 @@ open Fake.NuGet.Install
 open Fake.DotNetCli
 
 let cppClientVersion = "8.2.0.Alpha1"
+let cppClientPackageVersion = "8.2.0-Alpha1" // nuget does not support string values after .
 let swigVersion = "3.0.12"
 let protobufVersion = "3.4.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 
@@ -72,8 +73,34 @@ Target "Publish" (fun _ ->
     trace "published"
 )
 
-// targets chain
+// CPP client targets
+
+Target "CppPackage" (fun _ ->
+    let packageRoot = "tmp/Infinispan.HotRod.Cpp-Client/"
+    let binsPath = "tmp/Infinispan.HotRod.Cpp-Client/runtimes/win7-x64/native"
+    ensureDirectory binsPath
+    let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    Copy binsPath (Directory.EnumerateFiles (sprintf "%s/lib" cppClientLocation))
+    Copy packageRoot ["Infinispan.HotRod.Cpp-client.win7-x64.nuspec"]
+    NuGetPack (fun p ->
+                    { p with
+                        OutputPath = "tmp"
+                        WorkingDir = packageRoot
+                        ToolPath = "tmp/nuget/nuget.exe"
+                        Version = cppClientPackageVersion
+                        Publish = false }) "Infinispan.HotRod.Cpp-client.win7-x64.nuspec"
+    trace "cpp-client package created"
+)
+
+Target "CppPackagePublish" (fun _ ->
+    trace "cpp-client package published"
+)
+
+// main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "SetVersion" ==> "Build"
     ==> "UnitTest" ==> "IntegrationTest" ==> "Publish"
+
+// CPP client chain - run with each new cpp-client release
+"CppPackage" ==> "CppPackagePublish"
 
 RunParameterTargetOrDefault "target" "Build"
