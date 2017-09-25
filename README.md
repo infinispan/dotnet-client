@@ -5,6 +5,7 @@ Hot Rod client enables you to connect to [infinispan](http://infinispan.org).
 > Currently it builds only on windows x64
 
 ## Build
+
 You need to have [.NET Core SDK](http://dot.net/core) installed. Tools other than that are downloaded from internet to `./buildtools`. It uses [FAKE](http://fake.build) internally, bootstrapped from `build.ps1`.
 
 Once you run `build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
@@ -26,6 +27,7 @@ C# Hot Rod client is a binding to native C++ client. It uses [swig](http://swig.
 Some functionality of the client also depends on Google Protobuffers. Source is at `./protos` and generated C# files will be at `src/Infinispan.HotRod/generated/`. If you want to generate just proto files, run `build.ps1 GenerateProto`.
 
 ## Reporting Issues ##
+
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org
 (https://issues.jboss.org/browse/HRCPP). You can log in using your jboss.org
 username and password.

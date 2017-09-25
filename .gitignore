@@ -11,6 +11,7 @@ obj
 *.dll
 *.*~
 src/Infinispan.HotRod/generated
+test/Infinispan.HotRod.Tests/generated/
 .vs/
 buildtools/tmp
 buildtools/.fake

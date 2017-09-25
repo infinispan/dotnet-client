@@ -13,34 +13,37 @@ let protobufVersion = "3.4.0" // if changing this, be sure to also update Google
 
 let buildDir = "../build"
 let generateDir = "../src/Infinispan.HotRod/generated"
+let generateTestDir = "../test/Infinispan.HotRod.Tests/generated"
 
 Target "Clean" (fun _ ->
-    CleanDirs [buildDir; generateDir]
+    // git will not preserve empty folders, so ensure they exist because the tools expect them to exist and clean them
+    [buildDir; generateDir; generateTestDir]
+        |> Seq.iter ensureDirectory
+    CleanDirs [buildDir; generateDir; generateTestDir]
 )
 
 Target "GenerateProto" (fun _ ->
+    trace "running generation of proto files"
     let protocLocation = downloadProtocIfNonexist protobufVersion
-    DirectoryInfo("../protos").GetFiles "*.proto"
-        |> Seq.map (fun protoFile ->
-            ExecProcess (fun p ->
-                p.FileName <- protocLocation
-                p.Arguments <- sprintf "%s --csharp_out=%s" protoFile.Name generateDir
-                p.WorkingDirectory <- "../protos") (TimeSpan.FromMinutes 5.0))
-        |> Seq.iter (fun returnCode ->
-            if returnCode <> 0 then failwith "could not process proto file")
+    generateCSharpFromProtoFiles protocLocation "../protos" generateDir
     trace "proto files generated"
 )
 
+Target "GenerateProtoForTests" (fun _ ->
+    trace "running generation of proto files for tests"
+    let protocLocation = downloadProtocIfNonexist protobufVersion
+    generateCSharpFromProtoFiles protocLocation "../test/resources/proto3" ("../../" + generateTestDir)
+    trace "proto files for tests generated"
+)
+
 Target "GenerateSwig" (fun _ ->
+    trace "running swig generation"
     let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
     let swigToolPath = downloadSwigToolsIfNonexist swigVersion
     let cppClientInclude = @"..\buildtools" @@ cppClientLocation @@ "include" // remember, it's gonna run from ../swig folder
-    trace "running swig generation"
-    let swigResult = ExecProcess (fun p ->
-        p.FileName <- swigToolPath
-        p.Arguments <- sprintf "-csharp -c++ -I%s -Iinclude -v -namespace Infinispan.HotRod.SWIGGen -outdir %s hotrodcs.i" cppClientInclude generateDir
-        p.WorkingDirectory <- "../swig") (TimeSpan.FromMinutes 5.0)
-    if swigResult <> 0 then failwith "could not process swig files"
+    let sourceDir = "../swig"
+    let _namespace = "Infinispan.HotRod.SWIGGen"
+    generateCSharpFilesFromSwigTemplates swigToolPath cppClientInclude sourceDir _namespace generateDir
     trace "swig generated"
 )
 
@@ -53,7 +56,7 @@ Target "SetVersion" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-    Build (fun p -> { p with Project = "../src/Infinispan.HotRod/Infinispan.HotRod.csproj"})
+    Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
     trace "solution built"
 )
 
@@ -70,7 +73,7 @@ Target "Publish" (fun _ ->
 )
 
 // targets chain
-"Clean" ==> "GenerateProto" ==> "GenerateSwig" ==> "Generate" ==> "SetVersion" ==> "Build"
+"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "SetVersion" ==> "Build"
     ==> "UnitTest" ==> "IntegrationTest" ==> "Publish"
 
 RunParameterTargetOrDefault "target" "Build"

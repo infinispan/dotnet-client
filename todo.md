@@ -1,4 +1,6 @@
-## TODO
+# TODO
+
+* [x] FAKE build, powershell bootstrap
 * [x] nuget download - https://dist.nuget.org/win-x86-commandline/latest/nuget.exe
 * [x] protoc - Google.Protobuf.Tools
 * [x] swig - Install-Package swigwintools -Version 3.0.12
@@ -6,12 +8,16 @@
   * [x] unziping - ICsharpZipLib cannot unzip the cpp-client
 * [x] update NLog
 * [x] update protobufs
-* [ ] create nuget package
+* [ ] create nuget package for C++
+* [ ] create nuget package for C#
 * [ ] release + git tag
-* [ ] NUnit
+* [x] NUnit
+* [ ] NUnit run using dotnet test
 * [ ] IKVM tests
-* [ ] OpenSSL 1.x
 * [ ] publish nuget package
+* [ ] update NUnit
+* [ ] OpenSSL 1.x
 * [ ] doxygen
 * [ ] remove NLog and introduce .NET core logging
 * [ ] multiplatform
+* [ ] async/await API

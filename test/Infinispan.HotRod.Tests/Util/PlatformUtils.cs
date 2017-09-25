@@ -1,6 +1,5 @@
 using System;
 using System.Diagnostics;
-using System.Management;
 
 namespace Infinispan.HotRod.Tests.Util
 {
@@ -29,7 +28,7 @@ namespace Infinispan.HotRod.Tests.Util
                 killProcess.Start();
                 killProcess.WaitForExit();
             } else {
-                killJavaSubprocesses(process.Id);
+                process.Kill();
             }
             try
             {
@@ -48,45 +47,6 @@ namespace Infinispan.HotRod.Tests.Util
             }
             process.WaitForExit();
             process.Close();
-        }
-
-        private static void KillProcessAndChildren(int pid)
-        {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * From Win32_Process Where ParentProcessID=" + pid);
-            ManagementObjectCollection moc = searcher.Get();
-            foreach (ManagementObject mo in moc)
-            {
-                try
-                {
-                    Console.WriteLine("Killing childs of " + mo["ProcessID"]);
-                    KillProcessAndChildren(Convert.ToInt32(mo["ProcessID"]));
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to kill "+ mo["ProcessID"]+": exception is "+e.ToString());
-                }
-            }
-            try
-            {
-                Console.WriteLine("Killing " + pid);
-                Process proc = Process.GetProcessById(pid);
-                try
-                {
-                    proc.Kill();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Unable to kill " + pid + ": exception is " + e.ToString());
-                }
-            }
-            catch (ArgumentException)
-            { /* process already exited */ }
-        }
-
-        private static bool killJavaSubprocesses(int pid)
-        {
-            KillProcessAndChildren(pid);
-            return true;
         }
     }
 }

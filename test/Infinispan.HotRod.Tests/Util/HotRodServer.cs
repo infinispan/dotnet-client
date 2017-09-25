@@ -92,8 +92,7 @@ namespace Infinispan.HotRod.Tests.Util
             Console.WriteLine("Shutting down Infinispan Server ...");
             if (hrServer != null)
             {
-                PlatformUtils.killServer(hrServer);
-
+                hrServer.Kill();
                 Assert.IsTrue(IsStopped(),
                               "A process is still listening on the ip/port. Kill failed?");
             }
