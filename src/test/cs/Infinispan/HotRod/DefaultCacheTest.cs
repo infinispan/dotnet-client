@@ -52,6 +52,28 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
+        public void GetAllTest()
+        {
+            String key1 = UniqueKey.NextKey();
+            String key2 = UniqueKey.NextKey();
+            cache.Clear();
+            Assert.IsNull(cache.Get(key1));
+            Assert.IsNull(cache.Get(key2));
+            cache.Put(key1, "carbon");
+            cache.Put(key2, "oxygen");
+            ISet<String> keySet = new HashSet<String>();
+            keySet.Add(key1);
+            keySet.Add(key2);
+            IDictionary<String,String> d = cache.GetAll(keySet);
+            Assert.AreEqual(d[key1], cache.Get(key1));
+            Assert.AreEqual(d[key2], cache.Get(key2));
+            Assert.AreEqual(d[key1], "carbon");
+            Assert.AreEqual(d[key2], "oxygen");
+        }
+
+
+
+        [Test]
         public void GetVersionedTest()
         {
             String key = UniqueKey.NextKey();
