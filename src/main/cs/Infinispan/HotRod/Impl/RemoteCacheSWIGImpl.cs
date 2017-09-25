@@ -141,6 +141,16 @@ namespace Infinispan.HotRod.Impl
             return unwrap(cache.getBulk(size));
         }
 
+        public IDictionary<K,V> GetAll(ISet<K> keySet)
+        {
+            ByteArrayVector v = new ByteArrayVector();
+            foreach (var k in keySet)
+            {
+                v.Add(wrap(k));
+            }
+            return unwrap (cache.getAll(v));
+        }
+
         public IDictionary<K, V> GetBulk()
         {
             return unwrap(cache.getBulk());

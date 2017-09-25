@@ -302,7 +302,6 @@ namespace hotrod {
 /* %template(ByteArrayPair) std::pair<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>; */
 
 %template(ByteArrayMap) std::map<std::shared_ptr<infinispan::hotrod::ByteArray>, std::shared_ptr<infinispan::hotrod::ByteArray> >;
-
 %template(ByteArrayMapInput) std::map<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 /* %template(ByteArrayPairSet) std::set<ByteArrayPair>; */
 
@@ -378,6 +377,16 @@ namespace hotrod {
     void deleteListener(DotNetClientListener *l) 
     {
       delete l;
+    }
+    // Swig doesn-t support std::set. Adding a wrapper to solve the problem
+    std::map<std::shared_ptr<infinispan::hotrod::ByteArray>,std::shared_ptr<infinispan::hotrod::ByteArray> > getAll(const std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >& keyVec)
+    {
+       std::set<infinispan::hotrod::ByteArray> keySet;
+       for (auto i : keyVec)
+       {
+          keySet.insert(*i);
+       }
+       return $self->getAll(keySet);
     }
 }
 

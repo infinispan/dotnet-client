@@ -238,6 +238,15 @@ namespace Infinispan.HotRod
         V Get(K key);
 
         /// <summary>
+        ///   Retrieve from the cache the values associated with the given key set.
+        /// </summary>
+        ///
+        /// <param name="keySet">the key set</param>
+        ///
+        /// <returns>the value associated with the key set</returns>
+        IDictionary<K,V> GetAll(ISet<K> keySet);
+
+        /// <summary>
         ///   Bulk get operations, returns the entries within the remote cache limiting the returned
         ///   set of values to the specified size. No ordering is guaranteed, and there is no guarantee
         ///   that "size" elements are returned (e.g. if the number of elements in the back-end server
