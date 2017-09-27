@@ -94,7 +94,6 @@ public class JavaClientTests implements IMethodSelector {
             "RemoteCacheManagerTest.testMarshallerInstance",
             //see HRCPP-189
             "RemoteCacheManagerTest.testGetUndefinedCache",
-	    "ForceReturnValuesTest.testDifferentInstancesForDifferentForceReturnValues",
  	    "ForceReturnValuesTest.testSameInstanceForSameForceReturnValues"
       ));
       Set<String> expectedSkips = Collections.emptySet();
