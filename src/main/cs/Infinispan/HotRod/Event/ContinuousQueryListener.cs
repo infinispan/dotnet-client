@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf;
 using Org.Infinispan.Protostream;
 using Org.Infinispan.Query.Remote.Client;
+using Infinispan.Hotrod.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -13,13 +14,10 @@ namespace Infinispan.HotRod.Event
 {
     public class ContinuousQueryListener<K, V>
     {
-        public ContinuousQueryListener(string query,  Func<object, K> keyFromByteBuffer, Func<object,V> valueFromByteBuffer)
+        public ContinuousQueryListener(string query)
         {
             this.query = query;
-            this.KeyFromByteBuffer = keyFromByteBuffer;
-            this.ValueFromByteBuffer = valueFromByteBuffer;
         }
-
         internal void ContinuousQueryListenerFunction(ClientCacheEntryCustomEvent ev)
         {
             byte[] data = ev.GetEventData();
@@ -28,22 +26,21 @@ namespace Infinispan.HotRod.Event
                 WrappedMessage wm = WrappedMessage.Parser.ParseFrom(data);
                 ContinuousQueryResult r = ContinuousQueryResult.Parser.ParseFrom(wm.WrappedMessageBytes);
                 ContinuousQueryResult.Types.ResultType t = r.ResultType;
-                K k = (K)KeyFromByteBuffer(r.Key.ToByteArray());
+                K k = (K)marshaller.ObjectFromByteBuffer(r.Key.ToByteArray());
                 V v= default(V);
                 if (r.Projection.Count != 0)
                 {
                     WrappedMessage[] awm= r.Projection.ToArray();
-                    Collection<byte[]> arrayOfByteArray = new Collection<byte[]>();
-                    foreach(WrappedMessage item in awm)
+                    object[] ret = new object[awm.Length];
+                    for(var i=0; i<awm.Length; i++)
                     {
-                        arrayOfByteArray.Add(item.ToByteArray());
+                        ret[i] = marshaller.ObjectFromByteBuffer(awm[i].ToByteArray());
                     }
-                    v = (V)ValueFromByteBuffer(arrayOfByteArray);
+                    v = (V)(object)ret;
                 }
                 else
                 {
-                    WrappedMessage wm1 = WrappedMessage.Parser.ParseFrom(r.Value.ToByteArray());
-                    v = (V)ValueFromByteBuffer(wm1.WrappedMessageBytes.ToByteArray());
+                    v = (V)marshaller.ObjectFromByteBuffer(r.Value.ToByteArray());
                 }
                 switch (t)
                 {
@@ -72,7 +69,6 @@ namespace Infinispan.HotRod.Event
         public Action<K, V> UpdatedCallback { get; set; }
         public Action FailoverCallback { get; set; }
         public string query { get; set; }
-        public Func<object, K> KeyFromByteBuffer = null;
-        public Func<object, V> ValueFromByteBuffer = null;
+        public IMarshaller marshaller { get; set; }
 }
 }

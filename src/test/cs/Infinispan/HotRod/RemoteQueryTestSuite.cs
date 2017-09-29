@@ -30,6 +30,7 @@ namespace Infinispan.HotRod.TestSuites
                 var suite = new ArrayList();
                 suite.Add(new RemoteQueryTest());
                 suite.Add(new RemoteFullTextQueryTest());
+                suite.Add(new ContinuousQueryTest());
                 return suite;
             }
         }

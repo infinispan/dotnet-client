@@ -462,6 +462,7 @@ namespace Infinispan.HotRod.Impl
             cql.clientEventListener.filterFactoryName = "continuous-query-filter-converter-factory";
             cql.clientEventListener.converterFactoryName = "continuous-query-filter-converter-factory";
             cql.clientEventListener.useRawData = true;
+            cql.marshaller = this.marshaller;
             Action<ClientCacheEntryCustomEvent> f = (ClientCacheEntryCustomEvent ev) => { cql.ContinuousQueryListenerFunction(ev); };
             cql.clientEventListener.AddListener(f);
             this.AddClientListener(cql.clientEventListener, new string[] { cql.query }, new string[] { }, null);

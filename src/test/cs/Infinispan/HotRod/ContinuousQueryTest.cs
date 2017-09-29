@@ -21,74 +21,83 @@ using System.Collections.ObjectModel;
  */
 namespace Infinispan.HotRod.Tests
 {
-    //    class IntProtoStreamMarshaller : BasicTypesProtoStreamMarshaller
-    //    {
-    //new public object ObjectFromByteBuffer(byte[] buf)
-    //    {
-
-    //}
-    //}
-    class KeyMarshaller : IMarshaller
+    class ProtobufMarshaller : BasicTypesProtoStreamMarshaller
     {
-        public bool IsMarshallable(object o)
+        override public object ObjectFromByteBuffer(byte[] buf)
         {
-            throw new NotImplementedException();
-        }
-
-        public object ObjectFromByteBuffer(byte[] buf)
-        {
-            base_types bt = base_types.Parser.ParseFrom(buf);
-            if (bt.I32 != 0)
+            WrappedMessage wm = WrappedMessage.Parser.ParseFrom(buf);
+            object o;
+            switch (wm.ScalarOrMessageCase)
             {
-                return bt.I32;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedDouble:
+                    o = wm.WrappedDouble;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedFloat:
+                    o = wm.WrappedFloat;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt64:
+                    o = wm.WrappedInt64;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt64:
+                    o = wm.WrappedUInt64;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedInt32:
+                    o = wm.WrappedInt32;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed64:
+                    o = wm.WrappedFixed64;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedFixed32:
+                    o = wm.WrappedFixed32;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedBool:
+                    o = wm.WrappedBool;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedString:
+                    o = wm.WrappedString;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedBytes:
+                    o = wm.WrappedBytes;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedUInt32:
+                    o = wm.WrappedUInt32;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed32:
+                    o = wm.WrappedSFixed32;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedSFixed64:
+                    o = wm.WrappedSFixed64;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt32:
+                    o = wm.WrappedSInt32;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedSInt64:
+                    o = wm.WrappedSInt64;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedDescriptorFullName:
+                    o = wm.WrappedDescriptorFullName;
+                    break;
+                case WrappedMessage.ScalarOrMessageOneofCase.WrappedMessageBytes:
+                    switch (wm.WrappedDescriptorId)
+                    {
+                        case 42:
+                            o = User.Parser.ParseFrom(wm.WrappedMessageBytes);
+                            break;
+                        case 43:
+                            o = Account.Parser.ParseFrom(wm.WrappedMessageBytes);
+                            break;
+                        case 44:
+                            o = Transaction.Parser.ParseFrom(wm.WrappedMessageBytes);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+                    break;
+                default:
+                    throw new NotImplementedException();
             }
-            else if (bt.I64 != 0)
-            {
-                return bt.I64;
-            }
-            else return bt.Str;
-        }
+            return o;
 
-        public object ObjectFromByteBuffer(byte[] buf, int offset, int length)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ObjectToByteBuffer(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ObjectToByteBuffer(object obj, int estimatedSize)
-        {
-            throw new NotImplementedException();
-        }
-    }
-    class ValueMarshaller : IMarshaller
-    {
-        public bool IsMarshallable(object o)
-        {
-            throw new NotImplementedException();
-        }
-
-        public object ObjectFromByteBuffer(byte[] buf)
-        {
-            return User.Parser.ParseFrom(buf);
-        }
-
-        public object ObjectFromByteBuffer(byte[] buf, int offset, int length)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ObjectToByteBuffer(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        public byte[] ObjectToByteBuffer(object obj, int estimatedSize)
-        {
-            throw new NotImplementedException();
         }
     }
     class ContinuousQueryTest
@@ -104,7 +113,7 @@ namespace Infinispan.HotRod.Tests
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ProtocolVersion("2.6");
             conf.ConnectionTimeout(90000).SocketTimeout(6000);
-            conf.Marshaller(new BasicTypesProtoStreamMarshaller());
+            conf.Marshaller(new ProtobufMarshaller());
             remoteManager = new RemoteCacheManager(conf.Build(), true);
 
             IRemoteCache<String, String> metadataCache = remoteManager.GetCache<String, String>(PROTOBUF_METADATA_CACHE_NAME);
@@ -129,19 +138,17 @@ namespace Infinispan.HotRod.Tests
             try
             {
                 IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
+                userCache.Clear();
                 Semaphore s = new Semaphore(0, 1);
                 QueryRequest qr = new QueryRequest();
                 // JpqlString will be deprecated please use QueryString
                 // qr.JpqlString = "from sample_bank_account.User";
                 qr.QueryString = "from sample_bank_account.User";
 
-                Func<object, User> vFromByteBuffer = (b) => new Google.Protobuf.MessageParser<User>(() => new User()).ParseFrom((byte[])b);
-                Func<object, int> kFromByteBuffer = (b) => new Google.Protobuf.MessageParser<base_types>(() => new base_types()).ParseFrom((byte[])b).I32;
-
-                Event.ContinuousQueryListener<int, User> cql = new Event.ContinuousQueryListener<int, User>(qr.QueryString, kFromByteBuffer, vFromByteBuffer);
+                Event.ContinuousQueryListener<int, User> cql = new Event.ContinuousQueryListener<int, User>(qr.QueryString);
                 cql.JoiningCallback = (int k, User v) => { joined++; };
-                cql.LeavingCallback = (int k, User v) => { leaved++;  };
-                cql.UpdatedCallback = (int k, User v) => { updated++; s.Release(); };
+                cql.LeavingCallback = (int k, User v) => { leaved++; s.Release(); };
+                cql.UpdatedCallback = (int k, User v) => { updated++; };
                 userCache.AddContinuousQueryListener(cql);
 
                 User u = CreateUser1(userCache);
@@ -166,7 +173,7 @@ namespace Infinispan.HotRod.Tests
         public void ProjectionBasicContQueryTest()
         {
             int joined = 0, updated = 0, leaved = 0;
-            Tuple<int,string> uT = null, lT = null;
+            object[] uT = null, lT = null;
             try
             {
                 IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
@@ -174,23 +181,13 @@ namespace Infinispan.HotRod.Tests
                 Semaphore s = new Semaphore(0, 1);
                 QueryRequest qr = new QueryRequest();
                 qr.QueryString = "select id, name from sample_bank_account.User";
-                Google.Protobuf.MessageParser < base_types > mp = new Google.Protobuf.MessageParser<base_types>(() => new base_types());
-                Google.Protobuf.MessageParser<base_types> mp1 = new Google.Protobuf.MessageParser<base_types>(() => new base_types());
-                Func<object, int> kFromByteBuffer = (b) => new Google.Protobuf.MessageParser<base_types>(() => new base_types()).ParseFrom((byte[])b).I32;
-                Func<object, Tuple<int, string>> vFromByteBuffer = (b) =>
-                {
-                    Collection<byte[]> c = (Collection<byte[]>)b;
-                    int x = mp.ParseFrom(c[0]).I32;
-                    string st = mp1.ParseFrom(c[1]).Str;
-                    return new Tuple<int, string>(x, st);
-                };
-                Event.ContinuousQueryListener<int, Tuple<int, string>> cql = new Event.ContinuousQueryListener<int, Tuple<int, string>>(qr.QueryString, kFromByteBuffer, vFromByteBuffer);
-                cql.JoiningCallback = (int k, Tuple<int, string> v) => { joined++; };
-                cql.UpdatedCallback = (int k, Tuple<int, string> v) => {
+                Event.ContinuousQueryListener<int, object[]> cql = new Event.ContinuousQueryListener<int, object[]>(qr.QueryString);
+                cql.JoiningCallback = (int k, object[] v) => { joined++; };
+                cql.UpdatedCallback = (int k, object[] v) => {
                     uT = v;
                     updated++;
                 };
-                cql.LeavingCallback = (int k, Tuple<int, string> v) => {
+                cql.LeavingCallback = (int k, object[] v) => {
                     lT = v;
                     leaved++;
                     s.Release(); };
@@ -218,8 +215,8 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual(2, joined);
             Assert.AreEqual(1, updated);
             Assert.AreEqual(1, leaved);
-            Assert.AreEqual(uT, new Tuple<int, string>(1, "Jerry"));
-            Assert.AreEqual(lT, new Tuple<int,string>(2,"Spider"));
+            Assert.AreEqual(uT, new object[] { 1, "Jerry"});
+            Assert.AreEqual(lT, new object[] { 2, "Spider"});
         }
 
         private User CreateUser1(IRemoteCache<int, User> remoteCache)

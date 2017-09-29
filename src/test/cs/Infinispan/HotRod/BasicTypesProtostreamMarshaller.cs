@@ -18,7 +18,7 @@ namespace Infinispan.HotRod.Tests
             throw new NotImplementedException();
         }
 
-        public object ObjectFromByteBuffer(byte[] buf)
+        virtual public object ObjectFromByteBuffer(byte[] buf)
         {
             base_types bt = base_types.Parser.ParseFrom(buf);
             if (bt.I32 != 0)
