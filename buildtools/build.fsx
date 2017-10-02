@@ -66,11 +66,7 @@ Target "ObtainInfinispan" (fun _ ->
 
 Target "UnitTest" (fun _ ->
     Test (fun p -> { p with Project = "../test/Infinispan.HotRod.Tests/Infinispan.HotRod.Tests.csproj"
-<<<<<<< HEAD
                             AdditionalArgs = ["--logger \"trx;LogFileName=TestResults.trx\""; "--no-build"] } )
-=======
-                            AdditionalArgs = ["-r tmp/testresults"] } )
->>>>>>> 05ecbd092b11ed6bda0b86cb6fdd306cb982ad0d
     trace "unit tests done"
 )
 
