@@ -54,7 +54,7 @@ Target "Generate" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
+    Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
     trace "solution built"
 )
 
@@ -76,6 +76,11 @@ Target "IntegrationTest" (fun _ ->
 
 Target "Test" (fun _ ->
     trace "tests done"
+)
+
+Target "Pack" (fun _ ->
+    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
+    trace "packages created"
 )
 
 Target "Publish" (fun _ ->
