@@ -1,5 +1,7 @@
 # C# Hot Rod Client
 
+[![Build status](https://ci.appveyor.com/api/projects/status/u4epfsjoso2a45lt?svg=true)](https://ci.appveyor.com/project/jfojtl/dotnet-client)
+
 Hot Rod client enables you to connect to [infinispan](http://infinispan.org).
 
 > Currently it builds only on windows x64
@@ -26,7 +28,7 @@ C# Hot Rod client is a binding to native C++ client. It uses [swig](http://swig.
 
 Some functionality of the client also depends on Google Protobuffers. Source is at `./protos` and generated C# files will be at `src/Infinispan.HotRod/generated/`. If you want to generate just proto files, run `build.ps1 GenerateProto`.
 
-## Reporting Issues ##
+## Reporting Issues
 
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org
 (https://issues.jboss.org/browse/HRCPP). You can log in using your jboss.org

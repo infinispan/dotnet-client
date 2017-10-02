@@ -12,6 +12,7 @@ let cppClientPackageVersion = "8.2.0-Alpha1" // nuget does not support string va
 let swigVersion = "3.0.12"
 let protobufVersion = "3.4.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"
+let infinispanServerVersion = "9.1.1.Final"
 
 let buildDir = "../build"
 let generateDir = "../src/Infinispan.HotRod/generated"
@@ -58,9 +59,15 @@ Target "Build" (fun _ ->
     trace "solution built"
 )
 
+Target "ObtainInfinispan" (fun _ ->
+    let infinispanLocation = downloadInfinispanIfNeeded infinispanServerVersion
+    setEnvironVar "JBOSS_HOME" infinispanLocation
+    trace "Infinispan obtained"
+)
+
 Target "UnitTest" (fun _ ->
-    let nuniPath = downloadNUnitIfNonexist nunitToolsVersion
-    runTests nuniPath !!"../test/**/*.Tests.dll"
+    Test (fun p -> { p with Project = "../test/Infinispan.HotRod.Tests/Infinispan.HotRod.Tests.csproj"
+                            AdditionalArgs = ["-r tmp/testresults"] } )
     trace "unit tests done"
 )
 
@@ -101,7 +108,7 @@ Target "CppPackagePublish" (fun _ ->
 
 // main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "Build"
-    ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
+    ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "CppPackage" ==> "CppPackagePublish"
