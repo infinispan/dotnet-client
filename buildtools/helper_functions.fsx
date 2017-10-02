@@ -26,6 +26,23 @@ let downloadArtifact (url:string) (downloadLocation:string) =
     let client = new WebClient()
     client.DownloadFile(url, downloadLocation)
 
+///**Description**
+/// Downloads 7-zip from NuGet.org
+///
+///**Output Type**
+///  * `unit`
+///
+///**Exceptions**
+///
+let download7zipIfNonexist () =
+    let zipPath = "tmp/7-zip.CommandLine/tools/7za.exe"
+    if not (File.Exists zipPath) then
+        NugetInstall (fun p ->
+            {p with
+                ToolPath = nugetPath;
+                OutputDirectory = "tmp";
+                ExcludeVersion = true}) "7-Zip.CommandLine"
+    zipPath
 
 ///**Description**
 /// Downloads HotRod cpp-client release from jboss.org
@@ -41,13 +58,7 @@ let downloadCppClientIfNonexist cppClientVersion =
     // FAKE uses ICSharpLibZip which is capable of extracting zips, but cpp-client.zip is corrupted for it
     // java is known to create invalid headers. 7zip can extract it without checking it
     // more info at http://community.sharpdevelop.net/forums/t/9055.aspx
-    let zipPath = "tmp/7-zip.CommandLine/tools/7za.exe"
-    if not (File.Exists zipPath) then
-        NugetInstall (fun p ->
-            {p with
-                ToolPath = nugetPath;
-                OutputDirectory = "tmp";
-                ExcludeVersion = true}) "7-Zip.CommandLine"
+    let zipPath = download7zipIfNonexist ()
     let cppClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-WIN-x86_64" cppClientVersion
     if not (Directory.Exists cppClientDirectory) then
         let cppClientUrl = sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion;
@@ -63,6 +74,30 @@ let downloadCppClientIfNonexist cppClientVersion =
         trace "cpp client already downloaded, skipping"
     cppClientDirectory
 
+///**Description**
+/// Downloads Infinispan server from internet
+///**Parameters**
+///  * `infinispanServerVersion` - parameter of type `string`
+///
+///**Output Type**
+///  * `string` - location of infinispan server
+///
+///**Exceptions**
+///
+let downloadInfinispanIfNeeded infinispanServerVersion =
+    let zipPath = download7zipIfNonexist ()
+    let infinispanPath = sprintf "tmp/infinispan-server-%s" infinispanServerVersion
+    if not (Directory.Exists infinispanPath) then
+        let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/infinispan-server-%s-bin.zip" infinispanServerVersion infinispanServerVersion
+        trace (sprintf "downloading infinispan server version %s" infinispanServerVersion)
+        downloadArtifact infinispanServerUrl "tmp/infinispan.zip"
+        trace "infinispan downloaded, unziping"
+        let unzip = ExecProcess (fun p ->
+            p.FileName <- zipPath
+            p.Arguments <- "x infinispan.zip"
+            p.WorkingDirectory <- "tmp") (TimeSpan.FromMinutes 5.0)
+        trace "infinispan unziped"
+    infinispanPath
 
 ///**Description**
 /// Downloads swig tools from public nuget repository
@@ -87,8 +122,6 @@ let downloadSwigToolsIfNonexist swigVersion =
         trace "swig tools already exists, skipping"
     swigLocation
     
-
-
 ///**Description**
 /// downloads protoc compiler from public nuget repository
 ///**Parameters**
@@ -113,30 +146,6 @@ let downloadProtocIfNonexist protocVersion =
     protocLocation
 
 ///**Description**
-/// downloads NUnit tools to run the tests from console
-///**Parameters**
-///  * `protocVersion` - parameter of type `string`
-///
-///**Output Type**
-///  * `string` - location of protoc
-///
-///**Exceptions**
-///
-let downloadNUnitIfNonexist nunitVerion =
-    let nunitLocation = "tmp/NUnit.Runners/tools"
-    if not (Directory.Exists nunitLocation) then
-        NugetInstall (fun p ->
-            {p with
-                Version = nunitVerion;
-                ToolPath = nugetPath;
-                OutputDirectory = "tmp";
-                ExcludeVersion = true}) "NUnit.Runners"
-    else
-        trace "protoc already exists, skipping"
-    nunitLocation
-
-
-///**Description**
 /// Generates C# files from proto files using protocLocation
 ///**Parameters**
 ///  * `protocLocation` - parameter of type `string`
@@ -159,7 +168,6 @@ let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
         |> Seq.iter (fun returnCode ->
             if returnCode <> 0 then failwith "could not process proto file")
 
-
 ///**Description**
 /// Generates C# files from swig templates using swigToolPath
 ///**Parameters**
@@ -181,19 +189,3 @@ let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _nam
         p.WorkingDirectory <- sourceDir) (TimeSpan.FromMinutes 5.0)
     if swigResult <> 0 then failwith "could not process swig files"
  
-///**Description**
-/// Run NUnit tests
-///**parameters**
-///  * `nunitPath` path to nunit runner
-///  * `testProjects` projects to unit test
-///
-///**Output Type**
-///  * `unit`
-///
-///**Exceptions**
-///
-let runTests nunitPath testProjects =
-    NUnit (fun p ->
-        {p with
-            ToolPath = nunitPath
-            Framework = "net-4.6.1" }) testProjects

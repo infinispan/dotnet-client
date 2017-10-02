@@ -12,7 +12,7 @@
 * [x] create nuget package for C#
 * [x] NUnit
 * [x] Run NUnit with NUnit.Runners (NUnit 2.x)
-* [ ] server build
+* [x] server build
 * [ ] IKVM tests
 * [ ] publish nuget package
 * [ ] release + git tag
