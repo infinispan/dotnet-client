@@ -114,7 +114,6 @@ public:
   }
   virtual void processEvent(ClientCacheEntryCustomEvent e, std::vector<char >listId, uint8_t isCustom) const 
   {
-	  std::cout << "C++ processEvent()\n";
     ClientCacheEventData eData(e.getEventData());
     eData.isCustom=isCustom;
     eData.isCommandRetried=e.isCommandRetried();
