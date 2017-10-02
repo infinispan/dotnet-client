@@ -34,6 +34,7 @@ C# Hot Rod client is a binding to native C++ client. It uses [swig](http://swig.
 
 Some functionality of the client also depends on Google Protobuffers. Source is at `./protos` and generated C# files will be at `src/Infinispan.HotRod/generated/`. If you want to generate just proto files, run `build.ps1 GenerateProto`.
 
+<<<<<<< HEAD
 ### Tests
 
 Tests require Java installed. Then to run tests, you may use Visual Studio (tested with VS2017 15.3) or run `.\build.ps1 Tests`
@@ -46,6 +47,8 @@ To publish nuget package to [nuget.org](https://nuget.org), run `.\build.ps1 Pub
 
 This binding relies on having cpp-client avaialable via nuget package. This build is also part of this repo. When new version of cpp-client is released, publish it to [nuget.org](https://nuget.org) by running `.\build.ps1 CppPublish`.
 
+=======
+>>>>>>> 05ecbd092b11ed6bda0b86cb6fdd306cb982ad0d
 ## Reporting Issues
 
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org
