@@ -5,6 +5,7 @@ using Infinispan.HotRod.Exceptions;
 using Infinispan.HotRod.Config;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
+using Infinispan.HotRod.TestSuites;
 using Org.Infinispan.Protostream;
 using SampleBankAccount;
 using NUnit.Framework;
@@ -18,14 +19,15 @@ using NUnit.Framework;
  */
 namespace Infinispan.HotRod.Tests
 {
-    class RemoteQueryTest
+    [TestFixture]
+    class RemoteQueryTest : RemoteQueryTestBase
     {
         RemoteCacheManager remoteManager;
         const String ERRORS_KEY_SUFFIX = ".errors";
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
         const String NAMED_CACHE = "InMemoryNonSharedIndex";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
@@ -266,21 +268,17 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void InvalidEmbeddedAttributeTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            // JpqlString will be deprecated please use QueryString
-	    // qr.JpqlString = "select u.addresses from sample_bank_account.User u";
             qr.QueryString = "select u.addresses from sample_bank_account.User u";
 
-            userCache.Query(qr);
+            Assert.That(() => userCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void RejectProjectionOfRepeatedPropertyTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
@@ -290,7 +288,7 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "select u.addresses.postcode from sample_bank_account.User u";
             qr.QueryString = "select u.addresses.postcode from sample_bank_account.User u";
 
-            userCache.Query(qr);
+            Assert.That(() => userCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]

@@ -9,13 +9,15 @@
 * [x] update NLog
 * [x] update protobufs
 * [x] create nuget package for C++
-* [ ] create nuget package for C#
-* [ ] release + git tag
+* [x] create nuget package for C#
 * [x] NUnit
-* [ ] NUnit run using dotnet test
+* [x] Run NUnit with NUnit.Runners (NUnit 2.x)
+* [ ] server build
 * [ ] IKVM tests
 * [ ] publish nuget package
-* [ ] update NUnit
+* [ ] release + git tag
+* [x] update NUnit
+* [x] NUnit run using dotnet test
 * [ ] OpenSSL 1.x
 * [ ] doxygen
 * [ ] remove NLog and introduce .NET core logging

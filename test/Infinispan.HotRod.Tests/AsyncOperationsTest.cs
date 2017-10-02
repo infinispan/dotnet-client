@@ -2,11 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Infinispan.HotRod.TestSuites;
 using NUnit.Framework;
 
 namespace Infinispan.HotRod.Tests
 {
-    class AsyncOperationsTest
+    [TestFixture]
+    public class AsyncOperationsTest : DefaultTestSuiteBase
     {
         RemoteCacheManager remoteManager;
 
@@ -14,7 +16,7 @@ namespace Infinispan.HotRod.Tests
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass() {
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222);

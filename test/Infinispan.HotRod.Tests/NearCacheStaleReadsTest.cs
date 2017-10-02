@@ -2,15 +2,17 @@
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    class NearCacheStaleReadsTest
+    [TestFixture]
+    class NearCacheStaleReadsTest : DefaultTestSuiteBase
     {
         RemoteCacheManager remoteManager;
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

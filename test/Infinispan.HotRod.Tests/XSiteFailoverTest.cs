@@ -5,13 +5,14 @@ using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    public class XSiteFailoverTest
+    [TestFixture]
+    public class XSiteFailoverTest : XSiteTestBase
     {
         private RemoteCacheManager manager1;
         private IRemoteCache<String, String> cache1;
         private IRemoteCache<String, String> cache2;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf1 = new ConfigurationBuilder();
@@ -33,11 +34,11 @@ namespace Infinispan.HotRod.Tests
             Assert.IsNull(cache1.Put("k1", "v1"));
             Assert.AreEqual("v1", cache1.Get("k1"), "Expected v1 from cache1");
             Assert.AreEqual("v1", cache2.Get("k1"), "Expected v1 from cache2");
-            XSiteTestSuite.server1.ShutDownHotrodServer();
+            XSiteTestBase.server1.ShutDownHotrodServer();
             //client1 should failover
             Assert.AreEqual("v1", cache1.Get("k1"), "Expected v1 from cache1 after failover");
             Assert.AreEqual("v1", cache2.Get("k1"), "Expected v1 from cache2 after failover");
-            XSiteTestSuite.server1.StartHotRodServer();
+            XSiteTestBase.server1.StartHotRodServer();
             manager1.SwitchToDefaultCluster();
             //client1 should get null as state transfer is not enabled
             Assert.IsNull(cache1.Get("k1"));

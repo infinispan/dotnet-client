@@ -3,10 +3,11 @@ using NUnit.Framework;
 using Infinispan.HotRod.Config;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    public abstract class BaseAuthorizationTest
+    public abstract class BaseAuthorizationTest : AuthenticationTestsBase
     {
         public const string HOTROD_HOST = "127.0.0.1";
         public const int HOTROD_PORT = 11222;
@@ -34,7 +35,7 @@ namespace Infinispan.HotRod.Tests
             return "node0";
         }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             readerCache = InitCache("reader", "password");

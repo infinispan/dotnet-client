@@ -1,9 +1,12 @@
 ﻿using NUnit.Framework;
 using Infinispan.HotRod.Config;
+using Infinispan.HotRod.Exceptions;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    class AuthenticationTest
+    [TestFixture]
+    class AuthenticationTest : AuthenticationTestsBase
     {
         private const string USER = "supervisor";
         private const string PASS = "lessStrongPassword";
@@ -57,27 +60,24 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void PlainAutheticationWrongPasswordTest()
         {
             IRemoteCache<string, string> testCache = InitCache("PLAIN", "node0", USER, "mallicious_password");
-            TestPut(testCache);
+            Assert.That(() => TestPut(testCache), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void DigestAutheticationWrongPasswordTest()
         {
             IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "node0", USER, "mallicious_password");
-            TestPut(testCache);
+            Assert.That(() => TestPut(testCache), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void WrongServerNameDigestAuthTest()
         {
             IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "nonExistentNode", USER, PASS);
-            TestPut(testCache);
+            Assert.That(() => TestPut(testCache), Throws.TypeOf<HotRodClientException>());
         }
 
         private void TestPut(IRemoteCache<string, string> testCache)

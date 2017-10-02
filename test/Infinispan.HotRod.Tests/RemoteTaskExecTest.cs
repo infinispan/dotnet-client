@@ -1,18 +1,20 @@
 ﻿using Infinispan.HotRod.Config;
 using System.Collections.Generic;
 using Infinispan.HotRod.Tests.Util;
+using Infinispan.HotRod.TestSuites;
 using NUnit.Framework;
 
 namespace Infinispan.HotRod.Tests
 {
-    class RemoteTaskExecTest
+    [TestFixture]
+    class RemoteTaskExecTest : CompatibilityModeTestBase
     {
         RemoteCacheManager remoteManager;
         const string ERRORS_KEY_SUFFIX = ".errors";
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

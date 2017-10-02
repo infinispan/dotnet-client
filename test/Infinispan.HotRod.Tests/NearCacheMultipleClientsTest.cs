@@ -1,16 +1,17 @@
 using Infinispan.HotRod.Config;
 using NUnit.Framework;
 using Infinispan.HotRod.Tests.Util;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    class NearCacheMultipleClientsTest
+    class NearCacheMultipleClientsTest : DefaultTestSuiteBase
     {
         RemoteCacheManager remoteManager1;
         RemoteCacheManager remoteManager2;
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

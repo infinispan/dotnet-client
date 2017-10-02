@@ -11,6 +11,7 @@ let cppClientVersion = "8.2.0.Alpha1"
 let cppClientPackageVersion = "8.2.0-Alpha1" // nuget does not support string values after .
 let swigVersion = "3.0.12"
 let protobufVersion = "3.4.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
+let nunitToolsVersion = "2.6.1"
 
 let buildDir = "../build"
 let generateDir = "../src/Infinispan.HotRod/generated"
@@ -52,21 +53,23 @@ Target "Generate" (fun _ ->
     trace "proto files and swig files generated"
 )
 
-Target "SetVersion" (fun _ ->
-    trace "version set"
-)
-
 Target "Build" (fun _ ->
-    Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
+    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
     trace "solution built"
 )
 
 Target "UnitTest" (fun _ ->
+    let nuniPath = downloadNUnitIfNonexist nunitToolsVersion
+    runTests nuniPath !!"../test/**/*.Tests.dll"
     trace "unit tests done"
 )
 
 Target "IntegrationTest" (fun _ ->
     trace "integration tests done"
+)
+
+Target "Test" (fun _ ->
+    trace "tests done"
 )
 
 Target "Publish" (fun _ ->
@@ -97,8 +100,8 @@ Target "CppPackagePublish" (fun _ ->
 )
 
 // main targets chain
-"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "SetVersion" ==> "Build"
-    ==> "UnitTest" ==> "IntegrationTest" ==> "Publish"
+"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "Build"
+    ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "CppPackage" ==> "CppPackagePublish"

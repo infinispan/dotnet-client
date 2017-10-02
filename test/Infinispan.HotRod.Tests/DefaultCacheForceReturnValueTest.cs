@@ -3,14 +3,16 @@ using Infinispan.HotRod.Config;
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    public class DefaultCacheForceReturnValueTest
+    [TestFixture]
+    public class DefaultCacheForceReturnValueTest : DefaultTestSuiteBase
     {
         private IRemoteCache<String, String> cache;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

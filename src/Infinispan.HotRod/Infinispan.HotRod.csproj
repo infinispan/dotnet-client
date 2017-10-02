@@ -2,11 +2,22 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Infinispan.HotRod</PackageId>
+    <PackageVersion>8.2.0-Alpha2</PackageVersion>
+    <Authors>infinispan.org</Authors>
+    <Description>.NET binding of C++ HotRod client for connecting to infinispan</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Copyright>Copyright 2017 (c) RedHat. All rights reserved.</Copyright>
+    <PackageTags>hotrod infinispan</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.4.1" />
-    <PackageReference Include="NLog" Version="4.4.12" />
+    <PackageReference Include="Infinispan.HotRod.Cpp-Client.win7-x64" Version="8.2.0-Alpha1" />
+    <PackageReference Include="NLog" Version="4.4.12">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

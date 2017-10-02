@@ -6,14 +6,16 @@ using System.Collections.Generic;
 using Infinispan.HotRod.Tests.Util;
 using System.Threading.Tasks;
 using System.Threading;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
-    public class DefaultCacheTest
+    [TestFixture]
+    public class DefaultCacheTest : DefaultTestSuiteBase
     {
         private IRemoteCache<String, String> cache;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

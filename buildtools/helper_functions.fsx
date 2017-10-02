@@ -112,6 +112,29 @@ let downloadProtocIfNonexist protocVersion =
         trace "protoc already exists, skipping"
     protocLocation
 
+///**Description**
+/// downloads NUnit tools to run the tests from console
+///**Parameters**
+///  * `protocVersion` - parameter of type `string`
+///
+///**Output Type**
+///  * `string` - location of protoc
+///
+///**Exceptions**
+///
+let downloadNUnitIfNonexist nunitVerion =
+    let nunitLocation = "tmp/NUnit.Runners/tools"
+    if not (Directory.Exists nunitLocation) then
+        NugetInstall (fun p ->
+            {p with
+                Version = nunitVerion;
+                ToolPath = nugetPath;
+                OutputDirectory = "tmp";
+                ExcludeVersion = true}) "NUnit.Runners"
+    else
+        trace "protoc already exists, skipping"
+    nunitLocation
+
 
 ///**Description**
 /// Generates C# files from proto files using protocLocation
@@ -157,3 +180,20 @@ let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _nam
         p.Arguments <- sprintf "-csharp -c++ -I%s -Iinclude -v -namespace %s -outdir %s hotrodcs.i" includePath _namespace targetDir
         p.WorkingDirectory <- sourceDir) (TimeSpan.FromMinutes 5.0)
     if swigResult <> 0 then failwith "could not process swig files"
+ 
+///**Description**
+/// Run NUnit tests
+///**parameters**
+///  * `nunitPath` path to nunit runner
+///  * `testProjects` projects to unit test
+///
+///**Output Type**
+///  * `unit`
+///
+///**Exceptions**
+///
+let runTests nunitPath testProjects =
+    NUnit (fun p ->
+        {p with
+            ToolPath = nunitPath
+            Framework = "net-4.6.1" }) testProjects

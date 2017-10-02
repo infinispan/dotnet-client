@@ -5,33 +5,21 @@ using System.Collections;
 
 namespace Infinispan.HotRod.TestSuites
 {
-    public class RemoteQueryTestSuite
+    public abstract class RemoteQueryTestBase
     {
         HotRodServer server;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server = new HotRodServer("clustered-indexing.xml");
             server.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             server.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new RemoteQueryTest());
-                suite.Add(new RemoteFullTextQueryTest());
-                return suite;
-            }
         }
     }
 }

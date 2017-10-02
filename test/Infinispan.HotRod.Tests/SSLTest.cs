@@ -1,6 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
 using Infinispan.HotRod.Config;
+using Infinispan.HotRod.Exceptions;
+using Infinispan.HotRod.TestSuites;
 
 namespace Infinispan.HotRod.Tests
 {
@@ -14,7 +16,8 @@ namespace Infinispan.HotRod.Tests
      * (each test requires a different certificate, not all of them).
      * How to: http://www.databasemart.com/howto/SQLoverssl/How_To_Install_Trusted_Root_Certification_Authority_With_MMC.aspx 
      */
-    class SSLTest
+    [TestFixture]
+    class SSLTest : SecurityTestSuite
     {
         /*
          * Before running this test, install src/test/resoureces/infinispan-ca.pem via MMC.
@@ -89,22 +92,20 @@ namespace Infinispan.HotRod.Tests
          */
         [Test]
         [Ignore("https://issues.jboss.org/browse/HRCPP-311")]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.TransportException), ExpectedMessage = "**** Error 0x%x authenticating server credentials!\n")]
         public void SNIUntrustedTest()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
+            var conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
             conf.Marshaller(new JBasicMarshaller());
             registerServerCAFile(conf, "malicious.pem", "sni3-untrusted");
 
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
+            var remoteManager = new RemoteCacheManager(conf.Build(), true);
+            var testCache = remoteManager.GetCache<string, string>();
 
             testCache.Clear();
-            string k1 = "key13";
-            string v1 = "boron";
-            testCache.Put(k1, v1);
-            Assert.Fail("Should not get here");
+            const string k1 = "key13";
+            const string v1 = "boron";
+            Assert.That(() => testCache.Put(k1, v1), Throws.TypeOf<TransportException>());
         }
 
         void registerServerCAFile(ConfigurationBuilder conf, string filename = "", string sni = "")

@@ -1,17 +1,18 @@
 ﻿using Infinispan.HotRod.Config;
 using Infinispan.HotRod.Tests.Util;
+using Infinispan.HotRod.TestSuites;
 using NUnit.Framework;
 
 namespace Infinispan.HotRod.Tests
 {
-    class RemoteEventTest
+    class RemoteEventTest : DefaultTestSuiteBase
     {
         RemoteCacheManager remoteManager;
         const string ERRORS_KEY_SUFFIX = ".errors";
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         static IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

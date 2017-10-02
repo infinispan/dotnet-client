@@ -13,7 +13,7 @@ namespace Infinispan.HotRod.Event
 
     public abstract class ClientEvent
     {
-        public abstract EventType GetType();
+        public new abstract EventType GetType();
     };
 
     public class ClientCacheEntryCreatedEvent<K> : ClientEvent

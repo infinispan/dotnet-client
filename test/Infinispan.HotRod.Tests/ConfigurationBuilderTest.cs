@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using Infinispan.HotRod.Config;
+using Infinispan.HotRod.TestSuites;
 using NUnit.Framework;
 
 namespace Infinispan.HotRod.Tests
 {
     [TestFixture]
-    public class ConfigurationBuilderTest
+    public class ConfigurationBuilderTest : DefaultTestSuiteBase
     {
         private ConfigurationBuilder builder;
 

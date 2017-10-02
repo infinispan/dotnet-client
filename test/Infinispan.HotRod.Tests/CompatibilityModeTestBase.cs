@@ -5,32 +5,22 @@ using System.Collections;
 
 namespace Infinispan.HotRod.TestSuites
 {
-    public class CompatibilityModeTestSuite
+    [TestFixture]
+    public class CompatibilityModeTestBase
     {
         HotRodServer server;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server = new HotRodServer("standalone-compatibility-mode.xml");
             server.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             server.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new RemoteTaskExecTest());
-                return suite;
-            }
         }
     }
 }

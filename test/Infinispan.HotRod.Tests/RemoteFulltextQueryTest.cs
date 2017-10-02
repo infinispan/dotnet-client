@@ -5,6 +5,7 @@ using Infinispan.HotRod.Exceptions;
 using Infinispan.HotRod.Config;
 using Org.Infinispan.Query.Remote.Client;
 using System.IO;
+using Infinispan.HotRod.TestSuites;
 using SampleBankAccount;
 using NUnit.Framework;
 
@@ -14,14 +15,15 @@ using NUnit.Framework;
  */
 namespace Infinispan.HotRod.Tests
 {
-    class RemoteFullTextQueryTest
+    [TestFixture]
+    class RemoteFullTextQueryTest : RemoteQueryTestBase
     {
         RemoteCacheManager remoteManager;
         const String ERRORS_KEY_SUFFIX = ".errors";
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
         const String NAMED_CACHE = "InMemoryNonSharedIndexFullText";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
@@ -71,7 +73,7 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [Ignore]
+        [Ignore("I dont know")]
         public void TestFullTextTermRightOperandAnalyzed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -213,7 +215,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void TestFullTextWildcardFuzzyNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -221,7 +222,7 @@ namespace Infinispan.HotRod.Tests
             QueryRequest qr = new QueryRequest();
             qr.QueryString = "from sample_bank_account.Transaction t where t.longDescription : 're?t'~2";
 
-            transactionCache.Query(qr);
+            Assert.That(() =>transactionCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]
@@ -253,7 +254,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void TestFullTextRegexpFuzzyNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -261,11 +261,10 @@ namespace Infinispan.HotRod.Tests
             QueryRequest qr = new QueryRequest();
             qr.QueryString = "from sample_bank_account.Transaction t where t.longDescription : /[R|r]ent/~2";
 
-            transactionCache.Query(qr);
+            Assert.That(() =>transactionCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void TestExactMatchOnAnalyzedFieldNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -273,10 +272,10 @@ namespace Infinispan.HotRod.Tests
             QueryRequest qr = new QueryRequest();
             qr.QueryString = "from sample_bank_account.Transaction t where t.longDescription = 'Birthday present'";
 
-            transactionCache.Query(qr);
+            Assert.That(() => transactionCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
-        [ExpectedException(typeof(HotRodClientException))]
+        [Test]
         public void TestFullTextTermOnNonAnalyzedFieldNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -284,7 +283,7 @@ namespace Infinispan.HotRod.Tests
             QueryRequest qr = new QueryRequest();
             qr.QueryString = "from sample_bank_account.Transaction t where t.description:'rent'";
 
-            transactionCache.Query(qr);
+            Assert.That(() => transactionCache.Query(qr), Throws.TypeOf<HotRodClientException>());
         }
 
         private void PutTransactions(IRemoteCache<String, Transaction> remoteCache)

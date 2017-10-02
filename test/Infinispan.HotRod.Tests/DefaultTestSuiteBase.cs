@@ -5,14 +5,14 @@ using System.Collections;
 
 namespace Infinispan.HotRod.TestSuites
 {
-    public abstract class SecurityTestSuite
+    public abstract class DefaultTestSuiteBase
     {
         HotRodServer server;
 
         [OneTimeSetUp]
         public void BeforeSuite()
         {
-            server = new HotRodServer("standalone-hotrod-ssl.xml");
+            server = new HotRodServer("standalone.xml");
             server.StartHotRodServer();
         }
 
