@@ -1,6 +1,6 @@
 image: Visual Studio 2017
 build_script:
-  - ps: build.ps1 Publish
+  - ps: .\build.ps1 Publish
 test: off
 artifacts:
   - path: 'src\Infinispan.HotRod\bin\Release\*.nupkg'
