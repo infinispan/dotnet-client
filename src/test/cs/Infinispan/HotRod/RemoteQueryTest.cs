@@ -10,9 +10,6 @@ using SampleBankAccount;
 using NUnit.Framework;
 
 /**
- * Known issues: HRCPP-301, HRCPP-302
- * 
- * No queries use sorting because of HRCPP-301.
  * No queries use pagination as JPQL itself does not support it.
  * 
  */
@@ -574,6 +571,43 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
             Assert.AreEqual(2, projections.ElementAt(1)[1]);
         }
+
+        [Test]
+        public void SampleDomainQueryWith2SortingOptionsTest()
+        {
+            IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
+
+            QueryRequest qr = new QueryRequest();
+            qr.QueryString = "from sample_bank_account.User u order by u.name DESC, u.surname ASC";
+
+            QueryResponse result = userCache.Query(qr);
+
+            List<User> list = RemoteQueryUtils.unwrapResults<User>(result);
+
+            Assert.AreEqual(3, list.Count);
+            Assert.AreEqual("Spider", list.ElementAt(0).Name);
+            Assert.AreEqual("Man", list.ElementAt(0).Surname);
+            Assert.AreEqual("Spider", list.ElementAt(1).Name);
+            Assert.AreEqual("Woman", list.ElementAt(1).Surname);
+            Assert.AreEqual("John", list.ElementAt(2).Name);
+        }
+
+        [Test]
+        public void SortByDateTest()
+        {
+            IRemoteCache<int, Transaction> txCache = remoteManager.GetCache<int, Transaction>(NAMED_CACHE);
+
+            QueryRequest qr = new QueryRequest();
+            qr.QueryString = "from sample_bank_account.Transaction t order by t.date ASC";
+            QueryResponse result = txCache.Query(qr);
+            List<Transaction> listOfTx = RemoteQueryUtils.unwrapResults<Transaction>(result);
+
+            Assert.AreEqual(MakeDate("2012-09-07"), listOfTx.ElementAt(0).Date);
+            Assert.AreEqual(MakeDate("2013-02-27"), listOfTx.ElementAt(listOfTx.Count - 1).Date);
+        }
+
+
+
 
         private void PutUsers(IRemoteCache<int, User> remoteCache)
         {
