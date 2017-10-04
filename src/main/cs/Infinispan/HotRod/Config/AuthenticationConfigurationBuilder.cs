@@ -8,6 +8,8 @@ namespace Infinispan.HotRod.Config
     {
         private Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder jniBuilder;
         internal System.Collections.Generic.IDictionary<int, AuthenticationCallback> callbackMap;
+        internal Infinispan.HotRod.SWIGGen.SaslCallbackHandlerMap cbHandlerMap;
+
         internal AuthenticationConfigurationBuilder(ConfigurationBuilder parentBuilder, Infinispan.HotRod.SWIG.AuthenticationConfigurationBuilder jniBuilder) : base(parentBuilder)
         { 
             this.jniBuilder = jniBuilder;
@@ -19,7 +21,7 @@ namespace Infinispan.HotRod.Config
 
         public AuthenticationConfiguration Create()
         {
-            return new AuthenticationConfiguration(jniBuilder.Create(), callbackMap);
+            return new AuthenticationConfiguration(jniBuilder.Create(), callbackMap, cbHandlerMap);
         }
 
         public AuthenticationConfigurationBuilder Enable()
@@ -78,14 +80,14 @@ namespace Infinispan.HotRod.Config
         AuthenticationConfigurationBuilder SetupCallback(System.Collections.Generic.IDictionary<int, AuthenticationCallback> map)
         {
             callbackMap = map;
-            Infinispan.HotRod.SWIGGen.SaslCallbackHandlerMap cbMap = new SWIGGen.SaslCallbackHandlerMap();
+            cbHandlerMap = new SWIGGen.SaslCallbackHandlerMap();
             foreach (int k in map.Keys)
             {
                 AuthenticationCallback ac;
                 map.TryGetValue(k, out ac);
-                cbMap.Add(k, ac.iafc);
+                cbHandlerMap.Add(k, ac.iafc);
             }
-            jniBuilder.setupCallback(cbMap);
+            jniBuilder.setupCallback(cbHandlerMap);
             return this;
         }
 
