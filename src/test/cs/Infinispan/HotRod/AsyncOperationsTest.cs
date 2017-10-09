@@ -1,5 +1,5 @@
 ﻿using Infinispan.HotRod.Config;
-using System;
+using Infinispan.HotRod.Exceptions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
@@ -14,19 +14,21 @@ namespace Infinispan.HotRod.Tests
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
-        public void BeforeClass() {
+        private void InitializeRemoteCacheManager(bool started)
+        {
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222);
             conf.ConnectionTimeout(90000).SocketTimeout(6000);
             marshaller = new JBasicMarshaller();
             conf.Marshaller(marshaller);
-            remoteManager = new RemoteCacheManager(conf.Build(), true);
+            remoteManager = new RemoteCacheManager(conf.Build(), started);
         }
+
 
         [Test]
         public void AsyncRemoteTaskExecTest()
         {
+            InitializeRemoteCacheManager(true);
             // Register on the server a js routine that takes 3 sec to return a value
             string script_name = "script.js";
             string script = "// mode=local,language=javascript\n "
@@ -56,6 +58,28 @@ namespace Infinispan.HotRod.Tests
             Assert.AreEqual("syncVal", testCache.Get("syncKey"));
             // Get the async result
             Assert.AreEqual("abc", futureExec.Result);
+        }
+
+        [Test]
+        public void PutAsyncTest()
+        {
+            InitializeRemoteCacheManager(true);
+            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("default");
+            Task<string> result = testCache.PutAsync("kasync", "vasync");
+            Assert.AreEqual(null, result.Result);
+            Assert.IsTrue(result.IsCompleted);
+            Assert.Null(result.Exception);
+            Assert.AreEqual("vasync", testCache.Get("kasync"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(RemoteCacheManagerNotStartedException))]
+        public void PutAsyncExceptionTest()
+        {
+            InitializeRemoteCacheManager(false);
+            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("default");
+            testCache.PutAsync("kasync", "vasync");
+            Assert.Fail("Should not get here");
         }
     }
 }
