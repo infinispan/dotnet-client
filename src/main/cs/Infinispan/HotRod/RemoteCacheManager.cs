@@ -30,7 +30,23 @@ namespace Infinispan.HotRod
     {
         private Infinispan.HotRod.SWIG.RemoteCacheManager manager;
         private IMarshaller marshaller;
+        private IMarshaller argMarshaller;
         private Configuration configuration;
+        /// <summary>
+        /// Marshaller for the remote execution arguments. Defaulted to JBasicMarshaller class.
+        /// </summary>
+        public IMarshaller ArgMarshaller
+        {
+            get
+            {
+                return argMarshaller;
+            }
+
+            set
+            {
+                argMarshaller = value;
+            }
+        }
 
         /// <summary>
         /// Construct an instance with default configuration and marshaller.
@@ -71,17 +87,20 @@ namespace Infinispan.HotRod
         /// </summary>
         /// <param name="configuration"></param>
         /// <param name="marshaller"></param>
+        /// <param name="argMarshaller"></param>
         /// <param name="start"></param>
-        public RemoteCacheManager(Configuration configuration, IMarshaller marshaller, bool start = true)
+        public RemoteCacheManager(Configuration configuration, IMarshaller marshaller, bool start = true, IMarshaller argMarshaller = null)
         {
             this.marshaller = marshaller;
+            this.ArgMarshaller = argMarshaller;
             this.configuration = configuration;
 
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
             }
-            else {
+            else
+            {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager((Infinispan.HotRod.SWIGGen.Configuration)configuration.Config(), start);
             }
         }
@@ -90,15 +109,18 @@ namespace Infinispan.HotRod
         /// Construct an instance with default configuration and specific serializer.
         /// </summary>
         /// <param name="marshaller"></param>
+        /// <param name="argMarshaller"></param>
         /// <param name="start"></param>
-        public RemoteCacheManager(IMarshaller marshaller, bool start = true)
+        public RemoteCacheManager(IMarshaller marshaller, bool start = true, IMarshaller argMarshaller = null)
         {
             this.marshaller = marshaller;
+            this.ArgMarshaller = argMarshaller;
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
             }
-            else {
+            else
+            {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
             }
         }
@@ -132,16 +154,17 @@ namespace Infinispan.HotRod
         /// <summary>
         ///   Retrieves the default cache from the remote server.
         /// </summary>
+        /// <param name="m">the marshaller policy for this cache</param>
         ///
         /// <returns>a remote cache instance which can be used to send requests to the default cache</returns>
-        public IRemoteCache<K, V> GetCache<K, V>()
+        public IRemoteCache<K, V> GetCache<K, V>(IMarshaller m = null)
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, ArgMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, ArgMarshaller, configuration);
             }
         }
 
@@ -151,16 +174,17 @@ namespace Infinispan.HotRod
         /// </summary>
         ///
         /// <param name="cacheName">the name of the cache</param>
+        /// <param name="m">the marshaller policy for this cache</param>
         ///
         /// <returns>a remote cache instance which can be used to send requests to the named cache</returns>
-        public IRemoteCache<K, V> GetCache<K, V>(String cacheName)
+        public IRemoteCache<K, V> GetCache<K, V>(String cacheName, IMarshaller m = null)
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, ArgMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, ArgMarshaller, configuration);
             }
         }
 
@@ -169,16 +193,17 @@ namespace Infinispan.HotRod
         /// </summary>
         ///
         /// <param name="forceReturnValue">indicates if the force return value flag should be enabled or not</param>
+        /// <param name="m">the marshaller policy for this cache</param>
         ///
         /// <returns>a remote cache instance which can be used to send requests to the default cache</returns>
-        public IRemoteCache<K, V> GetCache<K, V>(bool forceReturnValue)
+        public IRemoteCache<K, V> GetCache<K, V>(bool forceReturnValue, IMarshaller m = null)
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller, ArgMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller,  ArgMarshaller,configuration);
             }
         }
 
@@ -189,16 +214,17 @@ namespace Infinispan.HotRod
         ///
         /// <param name="cacheName">the name of the cache</param>
         /// <param name="forceReturnValue">indicates if the force return value flag should be enabled or not</param>
+        /// <param name="m">the marshaller policy for this cache</param>
         ///
         /// <returns>a remote cache instance which can be used to send requests to the named cache</returns>
-        public IRemoteCache<K, V> GetCache<K, V>(String cacheName, bool forceReturnValue)
+        public IRemoteCache<K, V> GetCache<K, V>(String cacheName, bool forceReturnValue, IMarshaller m = null)
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), marshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName, forceReturnValue), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
         }
 
