@@ -8,6 +8,7 @@ using Org.Infinispan.Query.Remote.Client;
 using System.IO;
 using Google.Protobuf;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace Infinispan.HotRod.Impl
 {
@@ -16,13 +17,15 @@ namespace Infinispan.HotRod.Impl
     {
         private RemoteByteArrayCache cache;
         private IMarshaller marshaller;
+        private IMarshaller argMarshaller;
         private SWIG.RemoteCacheManager manager;
         private Infinispan.HotRod.Config.Configuration configuration;
-        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller, Infinispan.HotRod.Config.Configuration configuration = null)
+        public RemoteCacheSWIGGenImpl(SWIG.RemoteCacheManager manager, Infinispan.HotRod.SWIG.RemoteByteArrayCache cache, IMarshaller marshaller, IMarshaller argMarshaller, Infinispan.HotRod.Config.Configuration configuration = null)
         {
             this.manager = manager;
             this.cache = (RemoteByteArrayCache)cache;
             this.marshaller = marshaller;
+            this.argMarshaller = (argMarshaller != null) ? argMarshaller : new JBasicMarshaller();
             this.configuration = configuration;
         }
 
@@ -257,17 +260,22 @@ namespace Infinispan.HotRod.Impl
             return QueryResponse.Parser.ParseFrom(respBytes);
         }
 
-        public byte[] Execute(string scriptName, IDictionary<string, string> dict)
+        public object Execute(string scriptName, IDictionary<string, string> dict = null)
         {
             StringMap sm = new StringMap();
-            foreach (KeyValuePair<string, string> p in dict)
+            if (dict != null)
             {
-                sm.Add(p.Key, p.Value);
+                foreach (KeyValuePair<string, string> p in dict)
+                {
+                    byte[] bvalue = argMarshaller.ObjectToByteBuffer(p.Value);
+                    string svalue = System.Text.Encoding.UTF8.GetString(bvalue);
+                    sm.Add(p.Key, svalue);
+                }
             }
             VectorByte vb = cache.execute(scriptName, sm);
             byte[] ret = new byte[vb.Count];
             vb.CopyTo(ret);
-            return ret;
+            return argMarshaller.ObjectFromByteBuffer(ret);
         }
 
         public Task<V> GetAsync(K key)

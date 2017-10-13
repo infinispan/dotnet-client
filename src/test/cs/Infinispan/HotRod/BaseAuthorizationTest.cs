@@ -464,11 +464,9 @@ namespace Infinispan.HotRod.Tests
                             + "cache.get(\"k1\");\n";
             scriptCache.Put(scriptName, script);
             Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
-            byte[] bvalue = marshaller.ObjectToByteBuffer("v1");
-            string svalue = System.Text.Encoding.UTF8.GetString(bvalue);
-            scriptArgs.Add("value", svalue);
-            byte[] ret1 = cache.Execute(scriptName, scriptArgs);
-            Assert.AreEqual("v1", marshaller.ObjectFromByteBuffer(ret1));
+            scriptArgs.Add("value", "v1");
+            string ret1 = (string)cache.Execute(scriptName, scriptArgs);
+            Assert.AreEqual("v1", ret1);
         }
     }
 }

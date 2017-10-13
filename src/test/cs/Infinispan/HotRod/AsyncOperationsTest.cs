@@ -51,7 +51,7 @@ namespace Infinispan.HotRod.Tests
             scriptCache.Put(script_name, script);
 
             Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
-            Task<string> futureExec = Task.Factory.StartNew<string>(() => (string) marshaller.ObjectFromByteBuffer(testCache.Execute(script_name, scriptArgs)));
+            Task<string> futureExec = Task.Factory.StartNew<string>(() => (string)testCache.Execute(script_name, scriptArgs));
 
             // Do something in the meanwhile
             testCache.Put("syncKey", "syncVal");
