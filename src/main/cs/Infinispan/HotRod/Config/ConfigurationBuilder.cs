@@ -5,6 +5,7 @@ using Infinispan.HotRod.SWIG;
 namespace Infinispan.HotRod.Config
 {
 #pragma warning disable 1591
+    public delegate Transport.FailOverRequestBalancingStrategy FailOverRequestBalancingStrategyProducerDelegate();
     public class ConfigurationBuilder
     {
         private Infinispan.HotRod.SWIG.ConfigurationBuilder builder;
@@ -121,6 +122,12 @@ namespace Infinispan.HotRod.Config
         public ClusterConfigurationBuilder AddCluster(string clusterName)
         {
             return new ClusterConfigurationBuilder(this, builder.AddCluster(clusterName));
+        }
+
+        public ConfigurationBuilder BalancingStrategyProducer(Infinispan.HotRod.Config.FailOverRequestBalancingStrategyProducerDelegate d)
+        {
+            builder.BalancingStrategyProducer(d);
+            return this;
         }
 
         public ConfigurationBuilder Marshaller(IMarshaller marshaller)

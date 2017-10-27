@@ -3,6 +3,18 @@
 /* Define org::infinispan::query::remote::client needed by RemoteCacheBase. This in place of including all the protobuf stuff */
 namespace org { namespace infinispan { namespace query { namespace remote { namespace client {}}}}}
 }
+
+%define %cs_callback(TYPE, CSTYPE)
+    %typemap(ctype) TYPE, TYPE& "void *"
+    %typemap(in) TYPE  %{ $1 = ($1_type)$input; %}
+    %typemap(in) TYPE& %{ $1 = ($1_type)&$input; %}
+    %typemap(imtype, out="IntPtr") TYPE, TYPE& "CSTYPE"
+    %typemap(cstype, out="IntPtr") TYPE, TYPE& "CSTYPE"
+    %typemap(csin) TYPE, TYPE& "$csinput"
+%enddef
+
+%cs_callback(infinispan::hotrod::FailOverRequestBalancingStrategy::ProducerFn, FailOverRequestBalancingStrategyProducerDelegate)
+
 %{
 #define HR_PROTO_EXPORT
 #define _WIN64
@@ -57,6 +69,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %include "std_pair.i"
 %include "std_map.i"
 %include "std_vector.i"
+%include "std_set.i"
 
 %template (VectorChar) std::vector<char>;
 %template (VectorVectorChar) std::vector<std::vector<char> >;
@@ -67,6 +80,9 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 
 %feature("director") AuthenticationStringCallback;
 %feature("director") ClientListenerCallback;
+%feature("director") FailOverRequestBalancingStrategy;
+%feature("director") FailOverRequestBalancingStrategyProducer;
+%feature("director") FailOverRequestBalancingStrategyProducerDelegate;
 
 
 %inline{
@@ -116,7 +132,6 @@ static int getpath(void *context, const char ** path) {
         return SASL_BADPARAM;
     return SASL_OK;
 }
-
 }
 
 
@@ -147,6 +162,7 @@ static int getpath(void *context, const char ** path) {
 %ignore infinispan::hotrod::event::ClientCacheFailoverEvent;
 %ignore infinispan::hotrod::event::ClientCacheEntryCustomEvent;
 %ignore infinispan::hotrod::event::DotNetClientListener::getFailoverFunction;
+%ignore getBalancingStrategy;
 
 %include "infinispan/hotrod/ClientEvent.h"
 %include "infinispan/hotrod/ClientListener.h"
@@ -295,6 +311,8 @@ namespace hotrod {
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
 %template(ServerConfigurationMap) std::map<std::string,std::vector<infinispan::hotrod::ServerConfiguration> >;
 %template(SaslCallbackHandlerMap) std::map<int, AuthenticationStringCallback *>;
+%template(InetSocketAddressVector) std::vector<infinispan::hotrod::transport::InetSocketAddress>;
+%template(InetSocketAddressSet) std::set<infinispan::hotrod::transport::InetSocketAddress>;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 };

@@ -64,7 +64,14 @@
     public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddCluster(string _clusterName) {
         return addCluster(_clusterName);
     }
-    
+
+    public Infinispan.HotRod.SWIG.ConfigurationBuilder BalancingStrategyProducer(Infinispan.HotRod.Config.FailOverRequestBalancingStrategyProducerDelegate d)
+    {
+            SWIGGen.FailOverRequestBalancingStrategyProducerDelegate id = delegate () { return (new InternalFailOverRequestBalancingStrategy(d())).myHandle(); };
+            balancingStrategyProducer(id);
+            return this;
+    }
+
     %}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
@@ -82,6 +89,14 @@
         return port(_port);
     }
     %}
+
+%typemap(cscode) infinispan::hotrod::FailOverRequestBalancingStrategy %{
+        public IntPtr myHandle()
+        {
+
+            return swigCPtr.Handle;
+        }
+%}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ConnectionPoolConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConnectionPoolConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConnectionPoolConfigurationBuilder %{
@@ -275,6 +290,13 @@ public Infinispan.HotRod.SWIG.ClusterConfigurationBuilder AddClusterNode(string 
 %}
 %typemap(csinterfaces) infinispan::hotrod::Configuration "IDisposable, Infinispan.HotRod.SWIG.Configuration"
 %typemap(cscode) infinispan::hotrod::Configuration %{
+
+FailOverRequestBalancingStrategyProducerDelegate failOverStrategyProducerDelegate;
+internal void balancingStrategyProducer(FailOverRequestBalancingStrategyProducerDelegate failOverStrategyProducerDelegate)
+{
+  this.failOverStrategyProducerDelegate = failOverStrategyProducerDelegate;
+}
+
 public System.Collections.Generic.IList<Infinispan.HotRod.SWIG.ServerConfiguration> Servers() {
         System.Collections.Generic.List<Infinispan.HotRod.SWIG.ServerConfiguration> result
             = new System.Collections.Generic.List<Infinispan.HotRod.SWIG.ServerConfiguration>();

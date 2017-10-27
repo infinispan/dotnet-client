@@ -1,5 +1,10 @@
 using System;
+using Infinispan.HotRod.SWIGGen;
 
+namespace Infinispan.HotRod.SWIGGen
+{
+    internal delegate IntPtr FailOverRequestBalancingStrategyProducerDelegate();
+}
 namespace Infinispan.HotRod.SWIG
 {
     internal interface ConfigurationBuilder
@@ -22,5 +27,6 @@ namespace Infinispan.HotRod.SWIG
         ConfigurationBuilder TcpNoDelay(bool tcpNoDelay);
         ConfigurationBuilder ValueSizeEstimate(int valueSizeEstimate);
         ConfigurationBuilder MaxRetries(int maxRetries);
+        ConfigurationBuilder BalancingStrategyProducer(Infinispan.HotRod.Config.FailOverRequestBalancingStrategyProducerDelegate bsp);
     }
 }

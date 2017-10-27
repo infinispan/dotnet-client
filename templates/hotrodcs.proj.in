@@ -28,6 +28,7 @@
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Config\*.cs"/>
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\SWIG\*.cs"/>
     <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Event\*.cs"/>
+    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Transport\*.cs"/>
   </ItemGroup>
 
   <ItemGroup>

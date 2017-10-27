@@ -2,28 +2,65 @@ using Infinispan.HotRod.Config;
 using NUnit.Framework;
 using System;
 using Infinispan.HotRod.TestSuites;
+using Infinispan.HotRod.Transport;
+using System.Collections.Generic;
+using Infinispan.HotRod.Tests;
+using Infinispan.HotRod.Tests.Util;
 
 namespace Infinispan.HotRod.Tests
 {
-    public class XSiteFailoverTest
+    public class BS : Infinispan.HotRod.Transport.FailOverRequestBalancingStrategy
     {
+        IList<InetSocketAddress> servers;
+        public InetSocketAddress nextServer(IList<InetSocketAddress> failedServer)
+        {
+            // Choose the first server not in the failedServer list
+            foreach(var server in servers)
+            {
+                if (!failedServer.Contains(server))
+                    return server;
+            }
+            throw new Exception("No transport");
+        }
+
+        public void setServers(IList<InetSocketAddress> servers)
+        {
+            this.servers = servers;
+        }
+    }
+public class XSiteFailoverTest
+    {
+        RemoteCacheManager remoteManager;
         private RemoteCacheManager manager1;
         private IRemoteCache<String, String> cache1;
         private IRemoteCache<String, String> cache2;
+        ConfigurationBuilder conf1;
+        ConfigurationBuilder conf2;
+        Configuration configu1;
+        Configuration configu2;
 
         [TestFixtureSetUp]
         public void BeforeClass()
         {
-            ConfigurationBuilder conf1 = new ConfigurationBuilder();
+            BS b;
+            FailOverRequestBalancingStrategyProducerDelegate d = delegate ()
+            {
+                b = new BS();
+                return b;
+            };
+            conf1 = new ConfigurationBuilder();
             conf1.AddServer().Host("127.0.0.1").Port(11222);
             conf1.AddCluster("nyc").AddClusterNode("127.0.0.1", 11322);
-            manager1 = new RemoteCacheManager(conf1.Build(), true);
+            conf1.BalancingStrategyProducer(d);
+            configu1 = conf1.Build();
+            manager1 = new RemoteCacheManager(configu1, true);
             cache1 = manager1.GetCache<String, String>();
 
-            ConfigurationBuilder conf2 = new ConfigurationBuilder();
+            conf2 = new ConfigurationBuilder();
             conf2.AddServer().Host("127.0.0.1").Port(11322);
             conf2.AddCluster("lon").AddClusterNode("127.0.0.1", 11222);
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf2.Build(), true);
+            configu2 = conf2.Build();
+            remoteManager = new RemoteCacheManager(configu2, true);
             cache2 = remoteManager.GetCache<String, String>();
         }
 
