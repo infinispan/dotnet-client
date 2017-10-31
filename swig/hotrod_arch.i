@@ -259,7 +259,7 @@
     }
 
     public Infinispan.HotRod.SWIG.NearCacheConfigurationBuilder MaxEntries(int maxEntries) {
-        return this.maxEntries(maxEntries);
+        return this.maxEntries((uint)maxEntries);
     }
 
     public int GetMaxEntries() {
