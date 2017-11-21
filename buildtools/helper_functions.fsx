@@ -44,8 +44,15 @@ let rec directoryCopy srcPath dstPath copySubDirs =
 ///**Exceptions**
 ///
 let downloadArtifact (url:string) (downloadLocation:string) =
-    let client = new WebClient()
-    client.DownloadFile(url, downloadLocation)
+    if isLinux then
+        ExecProcess (fun p ->
+            p.FileName <- "wget"
+            p.Arguments <- sprintf "-O %s %s" downloadLocation url
+            p.WorkingDirectory <- ".") (TimeSpan.FromMinutes 5.0)
+        |> ignore
+    else
+        let client = new WebClient()
+        client.DownloadFile(url, downloadLocation)
 
 ///**Description**
 /// Downloads 7-zip from NuGet.org
@@ -65,6 +72,51 @@ let download7zipIfNonexist () =
                 ExcludeVersion = true}) "7-Zip.CommandLine"
     zipPath
 
+
+///**Description**
+/// Unzips file - using tar on linux, and 7zip on windows
+///
+///**Output Type**
+///  * `int`
+///
+///**Exceptions**
+///
+let unzipFile file where =
+    if isWindows then
+        let zipPath = download7zipIfNonexist ()
+        ExecProcess (fun p ->
+            p.FileName <- zipPath
+            p.Arguments <- sprintf "x %s" file
+            p.WorkingDirectory <- where) (TimeSpan.FromMinutes 5.0)
+    else
+        ExecProcess (fun p ->
+            p.FileName <- "unzip"
+            p.Arguments <- file
+            p.WorkingDirectory <- where) (TimeSpan.FromMinutes 5.0)
+
+///**Description**
+/// Unzips file - using tar on linux, and 7zip on windows
+///
+///**Output Type**
+///  * `int`
+///
+///**Exceptions**
+///
+let unzipRpmFile file where folder =
+    ExecProcess (fun p ->
+        p.FileName <- "rpm2archive"
+        p.Arguments <- file
+        p.WorkingDirectory <- where) (TimeSpan.FromMinutes 5.0) |> ignore
+    ExecProcess (fun p ->
+        p.FileName <- "mkdir"
+        p.Arguments <- folder
+        p.WorkingDirectory <- where) (TimeSpan.FromMinutes 5.0)  |> ignore
+    ExecProcess (fun p ->
+        p.FileName <- "tar"
+        p.Arguments <- sprintf "xvf %s.%s -C %s" file "tgz" folder
+        p.WorkingDirectory <- where) (TimeSpan.FromMinutes 5.0) |> ignore
+    
+
 ///**Description**
 /// Downloads HotRod cpp-client release from jboss.org
 ///**Parameters**
@@ -79,20 +131,27 @@ let downloadCppClientIfNonexist cppClientVersion =
     // FAKE uses ICSharpLibZip which is capable of extracting zips, but cpp-client.zip is corrupted for it
     // java is known to create invalid headers. 7zip can extract it without checking it
     // more info at http://community.sharpdevelop.net/forums/t/9055.aspx
-    let zipPath = download7zipIfNonexist ()
     let cppClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-WIN-x86_64" cppClientVersion
     if not (Directory.Exists cppClientDirectory) then
         let cppClientUrl = sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion;
         trace (sprintf "downloading cpp-client version %s" cppClientVersion)
         downloadArtifact cppClientUrl "tmp/cpp-client.zip"
         trace "client downloaded, unziping"
-        let unzip = ExecProcess (fun p ->
-            p.FileName <- zipPath
-            p.Arguments <- "x cpp-client.zip"
-            p.WorkingDirectory <- "tmp") (TimeSpan.FromMinutes 5.0)
+        if unzipFile "cpp-client.zip" "tmp" <> 0 then failwith "cannot unzip cpp-client.zip"
         trace "client unziped"
     else
         trace "cpp client already downloaded, skipping"
+    if isLinux then
+        let cppLinuxClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-RHEL-x86_64" cppClientVersion
+        if not (Directory.Exists cppLinuxClientDirectory) then
+            let cppClientUrl = sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion;
+            trace (sprintf "downloading cpp-linux-client version %s" cppClientVersion)
+            downloadArtifact cppClientUrl "tmp/cpp-linux-client.rpm"
+            trace "client downloaded, unziping"
+            unzipRpmFile "cpp-linux-client.rpm" "tmp" "cpp-linux-client"
+            trace "client unziped"
+        else
+            trace "cpp linux client already downloaded, skipping"
     cppClientDirectory
 
 ///**Description**
@@ -106,17 +165,13 @@ let downloadCppClientIfNonexist cppClientVersion =
 ///**Exceptions**
 ///
 let downloadInfinispanIfNeeded infinispanServerVersion =
-    let zipPath = download7zipIfNonexist ()
     let infinispanPath = sprintf "tmp/infinispan-server-%s" infinispanServerVersion
     if not (Directory.Exists infinispanPath) then
         let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/infinispan-server-%s-bin.zip" infinispanServerVersion infinispanServerVersion
         trace (sprintf "downloading infinispan server version %s" infinispanServerVersion)
         downloadArtifact infinispanServerUrl "tmp/infinispan.zip"
         trace "infinispan downloaded, unziping"
-        let unzip = ExecProcess (fun p ->
-            p.FileName <- zipPath
-            p.Arguments <- "x infinispan.zip"
-            p.WorkingDirectory <- "tmp") (TimeSpan.FromMinutes 5.0)
+        if unzipFile "infinispan.zip" "tmp" <> 0 then failwith "cannot unzip infinispan.zip"
         trace "infinispan unziped"
     infinispanPath
 
@@ -131,17 +186,20 @@ let downloadInfinispanIfNeeded infinispanServerVersion =
 ///**Exceptions**
 ///
 let downloadSwigToolsIfNonexist swigVersion =
-    let swigLocation = sprintf "tmp/swigwintools/tools/swigwin-%s/swig.exe" swigVersion
-    if not (File.Exists swigLocation) then
-        NugetInstall (fun p ->
-            {p with
-                Version = swigVersion;
-                ToolPath = nugetPath;
-                OutputDirectory = "tmp";
-                ExcludeVersion = true}) "swigwintools"
+    if isWindows then
+        let swigLocation = sprintf "tmp/swigwintools/tools/swigwin-%s/swig.exe" swigVersion
+        if not (File.Exists swigLocation) then
+            NugetInstall (fun p ->
+                {p with
+                    Version = swigVersion;
+                    ToolPath = nugetPath;
+                    OutputDirectory = "tmp";
+                    ExcludeVersion = true}) "swigwintools"
+        else
+            trace "swig tools already exists, skipping"
+        swigLocation
     else
-        trace "swig tools already exists, skipping"
-    swigLocation
+        "swig"
     
 ///**Description**
 /// downloads protoc compiler from public nuget repository
@@ -180,10 +238,11 @@ let downloadProtocIfNonexist protocVersion =
 ///
 let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
     trace (sprintf "running C# generation from proto files in %s to %s" sourceDir targetDir)
+    let location = if isLinux then "tmp/Google.Protobuf.Tools/tools/linux_x64/protoc" else protocLocation
     DirectoryInfo(sourceDir).GetFiles "*.proto"
         |> Seq.map (fun protoFile ->
             ExecProcess (fun p ->
-                p.FileName <- protocLocation
+                p.FileName <- location
                 p.Arguments <- sprintf "%s --csharp_out=%s" protoFile.Name targetDir
                 p.WorkingDirectory <- sourceDir) (TimeSpan.FromMinutes 5.0))
         |> Seq.iter (fun returnCode ->
@@ -204,9 +263,16 @@ let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
 ///**Exceptions**
 ///
 let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _namespace targetDir =
+    let swigLocation = if isLinux then "swig" else swigToolPath
     let swigResult = ExecProcess (fun p ->
-        p.FileName <- swigToolPath
+        p.FileName <- swigLocation
         p.Arguments <- sprintf "-csharp -c++ -dllimport hotrod_wrap -I%s -Iinclude -v -namespace %s -outdir %s hotrodcs.i" includePath _namespace targetDir
         p.WorkingDirectory <- sourceDir) (TimeSpan.FromMinutes 5.0)
     if swigResult <> 0 then failwith "could not process swig files"
  
+let buildSwig () =
+    if isWindows then
+        build (fun p -> { p with Properties = [
+                                                "Configuration", "Release"
+                                                "Platform", "x64"
+                                              ]}) "../swig/hotrod_wrap.vcxproj"

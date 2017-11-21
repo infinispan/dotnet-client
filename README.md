@@ -4,19 +4,23 @@
 
 Hot Rod client enables you to connect to [infinispan](http://infinispan.org).
 
-> Currently it builds only on windows x64
-
 ## Usage
 
 To use this client, simply add nuget package `Infinispan.HotRod`. Sample of such usage is part of this repo at `samples\Infinispan.HotRod.SimpleSample`. In order to use it, you need to create `.NET Core 2+` app or `.NET Framework 4.6.1+`.
 
-## Build
+## Build on windows
 
 You need to have [.NET Core SDK](http://dot.net/core) installed. Tools other than that are downloaded from internet to `./buildtools`. It uses [FAKE](http://fake.build) internally, bootstrapped from `.\build.ps1`.
 
 Once you run `.\build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
 
 For running tests, you also need to have Java installed (JDK tested). You may install JAVA using [chocolatey](https://chocolatey.org) by running `choco install jdk8`.
+
+## Build on Linux
+
+The client can be consumed from any linux x64 where with [.NET Core SDK](http://dot.net/core) and [Mono](http://mono-project.com) (guide for CentOS 7 works OK on Fedora 26) installed. Build was tested on Fedora 26, but theoretically can run anywhere. It requires `swig`, `unzip` and `wget` installed.
+
+To build make build.sh executable (chmod +x build.sh) and run `./build.sh Build` (any command mentioned here should work with `build.sh` instead of `build.ps1`).
 
 ### IDE
 
