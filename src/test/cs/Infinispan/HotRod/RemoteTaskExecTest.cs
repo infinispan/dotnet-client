@@ -32,11 +32,33 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<string, string> scriptCache = remoteManager.GetCache<string, string>(PROTOBUF_SCRIPT_CACHE_NAME, new JBasicMarshaller());
             const string scriptName = "put-get.js";
             scriptCache.Put(scriptName, script);
-            Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
+            Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
             scriptArgs.Add("k", "mykey");
             scriptArgs.Add("v", "myvalue");
             object v = testCache.Execute(scriptName, scriptArgs);
             Assert.AreEqual("myvalue", v);
+        }
+
+        [Test]
+        public void RemoteTaskWithIntArgs()
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222);
+            conf.ConnectionTimeout(90000).SocketTimeout(6000);
+            remoteManager = new RemoteCacheManager(conf.Build(), true);
+            string script = "// mode=local,language=javascript \n"
+            + "var x = k+v; \n"
+            + "x; \n";
+            LoggingEventListener<string> listener = new LoggingEventListener<string>();
+            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>();
+            IRemoteCache<string, string> scriptCache = remoteManager.GetCache<string, string>(PROTOBUF_SCRIPT_CACHE_NAME, new JBasicMarshaller());
+            const string scriptName = "putit-get.js";
+            scriptCache.Put(scriptName, script);
+            Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
+            scriptArgs.Add("k", (int)1);
+            scriptArgs.Add("v", (int)2);
+            object v = testCache.Execute(scriptName, scriptArgs);
+            Assert.AreEqual(3, v);
         }
 
         [Test]
@@ -58,7 +80,7 @@ namespace Infinispan.HotRod.Tests
             ConfigurationBuilder conf = new ConfigurationBuilder();
             conf.AddServer().Host("127.0.0.1").Port(11222);
             conf.ConnectionTimeout(90000).SocketTimeout(6000);
-            remoteManager = new RemoteCacheManager(conf.Build(), true);
+            remoteManager = new RemoteCacheManager(conf.Build(),  true);
             RemoteTaskTest();
         }
 
@@ -75,7 +97,7 @@ namespace Infinispan.HotRod.Tests
             try
             {
                 scriptCache.Put(scriptName, script);
-                Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
+                Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
                 scriptArgs.Add("argsKey1", "argValue1");
                 string ret1 = (string)testCache.Execute(scriptName, scriptArgs);
                 Assert.AreEqual("argValue1", ret1);
@@ -147,7 +169,7 @@ namespace Infinispan.HotRod.Tests
                 ScriptUtils.LoadTestCache(testCache, "macbeth.txt");
                 ScriptUtils.LoadScriptCache(scriptCache, scriptName, scriptName);
 
-                Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
+                Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
 
                 var result = (System.Int64)testCache.Execute(scriptName, scriptArgs);
                 const int expectedMacbethCount = 287;

@@ -8,7 +8,7 @@ namespace Infinispan.HotRod.Impl
      * on the server side. */
     class JBasicMarshaller : IMarshaller
     {
-        public enum Defs : byte { MARSHALL_VERSION = 0x03, EMPTY_STRING = 0x3d, SMALL_STRING = 0x3e, MEDIUM_STRING = 0x3f, INTEGER = 0x4b, LONG = 0x4c};
+        public enum Defs : byte { MARSHALL_VERSION = 0x03, EMPTY_STRING = 0x3d, SMALL_STRING = 0x3e, MEDIUM_STRING = 0x3f, INTEGER = 0x4b, LONG = 0x4c, DOUBLE = 0x4f};
         public bool IsMarshallable(object o)
         {
             throw new NotImplementedException();
@@ -42,6 +42,14 @@ namespace Infinispan.HotRod.Impl
                             resultLong ^= ((int)buf[i + 2]) & 0xFF;
                         }
                         return resultLong;
+                    case (byte)Defs.DOUBLE:
+                        long tmpLong = 0;
+                        for (int i = 0; i < 8; i++)
+                        {
+                            tmpLong <<= 8;
+                            tmpLong ^= ((int)buf[i + 2]) & 0xFF;
+                        }
+                        return BitConverter.Int64BitsToDouble(tmpLong);
                 }
             }
             throw new NotImplementedException();

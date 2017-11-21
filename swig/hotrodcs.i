@@ -291,6 +291,7 @@ namespace hotrod {
 /* %template(ByteArrayPairSet) std::set<ByteArrayPair>; */
 
 %template(StringMap) std::map<std::string, std::string>;
+%template(VectorMap) std::map<std::vector<char>, std::vector<char> >;
 %template(ByteArrayVector) std::vector<std::shared_ptr<infinispan::hotrod::ByteArray> >;
 %template(ServerConfigurationVector) std::vector<infinispan::hotrod::ServerConfiguration>;
 %template(ServerConfigurationMap) std::map<std::string,std::vector<infinispan::hotrod::ServerConfiguration> >;
