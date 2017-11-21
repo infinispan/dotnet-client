@@ -105,6 +105,7 @@ Target "CppPackage" (fun _ ->
     let binsPath = "tmp/Infinispan.HotRod.Cpp-Client/runtimes/win7-x64/native"
     ensureDirectory binsPath
     let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    directoryCopy "../swig/build/Release" binsPath false
     Copy binsPath (Directory.EnumerateFiles (sprintf "%s/lib" cppClientLocation))
     Copy packageRoot ["Infinispan.HotRod.Cpp-client.win7-x64.nuspec"]
     NuGetPack (fun p ->
@@ -126,6 +127,6 @@ Target "CppPackagePublish" (fun _ ->
     ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
-"CppPackage" ==> "CppPackagePublish"
+"BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"
 
 RunParameterTargetOrDefault "target" "Build"

@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <package >
   <metadata>
-    <id>Infinispan.HotRod.Cpp-Client.win7-x64</id>
+    <id>Infinispan.HotRod.Cpp-Client</id>
     <version>@build.number@</version>
     <authors>Infinispan.org</authors>
     <owners>Infinispan.org</owners>
     <licenseUrl>https://github.com/infinispan/dotnet-client/blob/master/License.txt</licenseUrl>
     <projectUrl>http://github.com/infinispan/dotnet-client</projectUrl>
-    <iconUrl>https://pbs.twimg.com/profile_images/495451796/infinispan_iconupdate_64x_400x400.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/jfojtl/dotnet-client/master/buildtools/nuget-ispn-logo.jpg</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>c++ native HotRod client for connecting to infinispan server instance</description>
     <releaseNotes>New release</releaseNotes>

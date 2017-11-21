@@ -7,8 +7,7 @@ namespace Infinispan.HotRod.SimpleSample
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            (var key, var value) = ("1", "hello");
+            (var key, var value) = ("hello", "world!");
             var configurationBuilder = new ConfigurationBuilder();
             configurationBuilder.AddServer().Host("127.0.0.1").Port(11222);
             configurationBuilder.ConnectionTimeout(90000).SocketTimeout(6000);
@@ -17,6 +16,7 @@ namespace Infinispan.HotRod.SimpleSample
             cache.PutIfAbsent(key, value);
             var outOfCache = cache.Get(key);
             Console.WriteLine($"{key}: {outOfCache}");
+            Console.ReadKey();
         }
     }
 }
