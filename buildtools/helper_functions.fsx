@@ -238,7 +238,9 @@ let downloadProtocIfNonexist protocVersion =
 ///
 let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
     trace (sprintf "running C# generation from proto files in %s to %s" sourceDir targetDir)
-    let location = if isLinux then "tmp/Google.Protobuf.Tools/tools/linux_x64/protoc" else protocLocation
+    let location = if isLinux then "tmp/Google.Protobuf.Tools/tools/linux_x64/protoc"
+                   else if isMacOS then "tmp/Google.Protobuf.Tools/tools/macosx_x64/protoc"
+                   else protocLocation
     DirectoryInfo(sourceDir).GetFiles "*.proto"
         |> Seq.map (fun protoFile ->
             ExecProcess (fun p ->
