@@ -124,7 +124,7 @@ Target "CppPackagePublish" (fun _ ->
 
 // main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
-    ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
+    ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"

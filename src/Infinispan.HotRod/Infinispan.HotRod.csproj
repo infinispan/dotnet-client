@@ -10,6 +10,7 @@
     <PackageReleaseNotes>First release</PackageReleaseNotes>
     <Copyright>Copyright 2017 (c) RedHat. All rights reserved.</Copyright>
     <PackageTags>hotrod infinispan</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/jfojtl/dotnet-client/master/buildtools/nuget-ispn-logo.jpg</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
