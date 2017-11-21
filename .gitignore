@@ -15,5 +15,9 @@ test/Infinispan.HotRod.Tests/generated/
 .vs/
 buildtools/tmp
 buildtools/.fake
+swig/build
+swig/hotrodcs_wrap.dir
+swig/include
+swig/native_client
 swig/hotrodcs_wrap.cxx
 swig/hotrodcs_wrap.h

@@ -11,6 +11,27 @@ open Fake.ArchiveHelper.Tar.GZip
 
 let nugetPath = "./tmp/nuget/nuget.exe"
 
+// Copy directory function
+let rec directoryCopy srcPath dstPath copySubDirs =
+
+    if not <| System.IO.Directory.Exists(srcPath) then
+        let msg = System.String.Format("Source directory does not exist or could not be found: {0}", srcPath)
+        raise (System.IO.DirectoryNotFoundException(msg))
+
+    if not <| System.IO.Directory.Exists(dstPath) then
+        System.IO.Directory.CreateDirectory(dstPath) |> ignore
+
+    let srcDir = new System.IO.DirectoryInfo(srcPath)
+
+    for file in srcDir.GetFiles() do
+        let temppath = System.IO.Path.Combine(dstPath, file.Name)
+        file.CopyTo(temppath, true) |> ignore
+
+    if copySubDirs then
+        for subdir in srcDir.GetDirectories() do
+            let dstSubDir = System.IO.Path.Combine(dstPath, subdir.Name)
+            directoryCopy subdir.FullName dstSubDir copySubDirs
+
 ///**Description**
 /// Downloads file from internet
 ///**Parameters**
@@ -185,7 +206,7 @@ let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
 let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _namespace targetDir =
     let swigResult = ExecProcess (fun p ->
         p.FileName <- swigToolPath
-        p.Arguments <- sprintf "-csharp -c++ -I%s -Iinclude -v -namespace %s -outdir %s hotrodcs.i" includePath _namespace targetDir
+        p.Arguments <- sprintf "-csharp -c++ -dllimport hotrod_wrap -I%s -Iinclude -v -namespace %s -outdir %s hotrodcs.i" includePath _namespace targetDir
         p.WorkingDirectory <- sourceDir) (TimeSpan.FromMinutes 5.0)
     if swigResult <> 0 then failwith "could not process swig files"
  

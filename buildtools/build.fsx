@@ -49,6 +49,17 @@ Target "GenerateSwig" (fun _ ->
     trace "swig generated"
 )
 
+Target "BuildSwigWraper" (fun _ ->
+    trace "running swig wraper build"
+    let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    directoryCopy (cppClientLocation @@ "include") "../swig/include" true
+    directoryCopy (cppClientLocation @@ "lib") "../swig/native_client/lib" true
+    build (fun p -> { p with Properties = [
+                                            "Configuration", "Release"
+                                            "Platform", "x64"
+                                          ]}) "../swig/hotrod_wrap.vcxproj"
+)
+
 Target "Generate" (fun _ ->
     trace "proto files and swig files generated"
 )
@@ -111,7 +122,7 @@ Target "CppPackagePublish" (fun _ ->
 )
 
 // main targets chain
-"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "Generate" ==> "Build"
+"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
     ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
