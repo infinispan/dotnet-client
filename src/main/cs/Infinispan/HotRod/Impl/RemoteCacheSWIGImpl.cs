@@ -260,19 +260,19 @@ namespace Infinispan.HotRod.Impl
             return QueryResponse.Parser.ParseFrom(respBytes);
         }
 
-        public object Execute(string scriptName, IDictionary<string, string> dict = null)
+        public object Execute(string scriptName, IDictionary<string, Object> dict = null)
         {
-            StringMap sm = new StringMap();
+            VectorMap vm = new VectorMap();
             if (dict != null)
             {
-                foreach (KeyValuePair<string, string> p in dict)
+                foreach (KeyValuePair<string, Object> p in dict)
                 {
-                    byte[] bvalue = argMarshaller.ObjectToByteBuffer(p.Value);
-                    string svalue = System.Text.Encoding.UTF8.GetString(bvalue);
-                    sm.Add(p.Key, svalue);
+                    VectorChar vcKey = toVectorChar(p.Key);
+                    VectorChar vcValue = toVectorChar(argMarshaller.ObjectToByteBuffer(p.Value));
+                    vm.Add(vcKey, vcValue);
                 }
             }
-            VectorByte vb = cache.execute(scriptName, sm);
+            VectorByte vb = cache.execute(scriptName, vm);
             byte[] ret = new byte[vb.Count];
             vb.CopyTo(ret);
             return argMarshaller.ObjectFromByteBuffer(ret);

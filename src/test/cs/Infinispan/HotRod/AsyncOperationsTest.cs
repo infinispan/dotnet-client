@@ -50,7 +50,7 @@ namespace Infinispan.HotRod.Tests
             IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("default");
             scriptCache.Put(script_name, script);
 
-            Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
+            Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
             Task<string> futureExec = Task.Factory.StartNew<string>(() => (string)testCache.Execute(script_name, scriptArgs));
 
             // Do something in the meanwhile

@@ -463,7 +463,7 @@ namespace Infinispan.HotRod.Tests
                             + "cache.put(\"k1\", value);\n"
                             + "cache.get(\"k1\");\n";
             scriptCache.Put(scriptName, script);
-            Dictionary<string, string> scriptArgs = new Dictionary<string, string>();
+            Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
             scriptArgs.Add("value", "v1");
             string ret1 = (string)cache.Execute(scriptName, scriptArgs);
             Assert.AreEqual("v1", ret1);

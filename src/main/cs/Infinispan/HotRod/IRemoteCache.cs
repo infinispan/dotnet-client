@@ -396,7 +396,7 @@ namespace Infinispan.HotRod
         /// <param name="scriptName">script name</param>
         /// <param name="dict">map of the arguments</param>
         /// <returns>a stream of byte containing the result</returns>
-        object Execute(String scriptName, IDictionary<String, String> dict = null);
+        object Execute(String scriptName, IDictionary<String, Object> dict = null);
         /// <summary>
         ///   Async version of the Get method
         /// </summary>
