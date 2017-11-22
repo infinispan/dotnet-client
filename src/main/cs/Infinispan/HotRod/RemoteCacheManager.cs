@@ -33,22 +33,6 @@ namespace Infinispan.HotRod
         private IMarshaller argMarshaller;
         private Configuration configuration;
         /// <summary>
-        /// Marshaller for the remote execution arguments. Defaulted to JBasicMarshaller class.
-        /// </summary>
-        public IMarshaller ArgMarshaller
-        {
-            get
-            {
-                return argMarshaller;
-            }
-
-            set
-            {
-                argMarshaller = value;
-            }
-        }
-
-        /// <summary>
         /// Construct an instance with default configuration and marshaller.
         /// </summary>
         /// <param name="start"></param>
@@ -92,7 +76,7 @@ namespace Infinispan.HotRod
         public RemoteCacheManager(Configuration configuration, IMarshaller marshaller, bool start = true, IMarshaller argMarshaller = null)
         {
             this.marshaller = marshaller;
-            this.ArgMarshaller = argMarshaller;
+            this.argMarshaller = argMarshaller;
             this.configuration = configuration;
 
             if (Infinispan.HotRod.SWIG.Util.Use64())
@@ -114,7 +98,7 @@ namespace Infinispan.HotRod
         public RemoteCacheManager(IMarshaller marshaller, bool start = true, IMarshaller argMarshaller = null)
         {
             this.marshaller = marshaller;
-            this.ArgMarshaller = argMarshaller;
+            this.argMarshaller = argMarshaller;
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
                 manager = new Infinispan.HotRod.SWIGGen.RemoteCacheManager(start);
@@ -161,10 +145,10 @@ namespace Infinispan.HotRod
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, ArgMarshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, ArgMarshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
         }
 
@@ -181,10 +165,10 @@ namespace Infinispan.HotRod
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, ArgMarshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, ArgMarshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(cacheName), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
         }
 
@@ -200,10 +184,10 @@ namespace Infinispan.HotRod
         {
             if (Infinispan.HotRod.SWIG.Util.Use64())
             {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller, ArgMarshaller, configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller, argMarshaller, configuration);
             }
             else {
-                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller,  ArgMarshaller,configuration);
+                return new RemoteCacheSWIGGenImpl<K, V>(manager, manager.GetByteArrayCache(forceReturnValue), (m != null) ? m : marshaller,  argMarshaller,configuration);
             }
         }
 
