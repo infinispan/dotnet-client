@@ -13,6 +13,7 @@ obj
 src/Infinispan.HotRod/generated
 test/Infinispan.HotRod.Tests/generated/
 .vs/
+.vscode/
 buildtools/tmp
 buildtools/.fake
 swig/build

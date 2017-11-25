@@ -142,7 +142,7 @@ let downloadCppClientIfNonexist cppClientVersion =
     else
         trace "cpp client already downloaded, skipping"
     if isLinux then
-        let cppLinuxClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-RHEL-x86_64" cppClientVersion
+        let cppLinuxClientDirectory = sprintf "tmp/cpp-linux-client"
         if not (Directory.Exists cppLinuxClientDirectory) then
             let cppClientUrl = sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion;
             trace (sprintf "downloading cpp-linux-client version %s" cppClientVersion)
@@ -278,3 +278,12 @@ let buildSwig () =
                                                 "Configuration", "Release"
                                                 "Platform", "x64"
                                               ]}) "../swig/hotrod_wrap.vcxproj"
+    else
+        ExecProcess (fun p ->
+            p.FileName <- "g++"
+            p.Arguments <- "-std=c++11 -I include/ hotrodcs_wrap.cxx -shared -fPIC -o hotrodcs_wrap.so"
+            p.WorkingDirectory <- "../swig") (TimeSpan.FromMinutes 5.0) |> ignore
+        ExecProcess (fun p ->
+            p.FileName <- "g++"
+            p.Arguments <- "-std=c++11 -I include/ hotrodcs_wrap.cxx -c"
+            p.WorkingDirectory <- "../swig") (TimeSpan.FromMinutes 5.0) |> ignore
