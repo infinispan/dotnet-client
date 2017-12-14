@@ -1,6 +1,7 @@
-﻿using Infinispan.HotRod.Tests;
+using Infinispan.HotRod.Tests;
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
+using System;
 using System.Collections;
 
 namespace Infinispan.HotRod.TestSuites
@@ -15,7 +16,8 @@ namespace Infinispan.HotRod.TestSuites
         {
             server1 = new HotRodServer("clustered-xsite1.xml");
             server1.StartHotRodServer();
-            server2 = new HotRodServer("clustered-xsite2.xml", "-Djboss.socket.binding.port-offset=100", 11322);
+            string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
+            server2 = new HotRodServer("clustered-xsite2.xml", "-Djboss.socket.binding.port-offset=100 -Djboss.server.data.dir=" + jbossHome + "/standalone/data100", 11322);
             server2.StartHotRodServer();
         }
 
