@@ -1,0 +1,9 @@
+image: Visual Studio 2017
+install:
+  - cinst jdk8
+build_script:
+  - ps: .\build.ps1 Publish
+test: off
+artifacts:
+  - path: 'src\Infinispan.HotRod\bin\Release\*.nupkg'
+    type: NuGetPackage

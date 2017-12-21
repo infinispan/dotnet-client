@@ -35,7 +35,7 @@ namespace event {
 class ClientCacheEventData {
 public:
     ClientCacheEventData() {}
-    ClientCacheEventData(std::vector<char>& cData) : data(cData.begin(),cData.end()) {}
+    ClientCacheEventData(const std::vector<char>& cData) : data(cData.begin(),cData.end()) {}
     ClientCacheEventData(void *) : eventType(0xff) {}
     uint8_t eventType;
     bool isCustom;

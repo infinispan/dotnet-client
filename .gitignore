@@ -1,7 +1,6 @@
 # ignore files
 TestResults
 *.vsmdi
-*.sln
 *.testsettings
 *.suo
 *.zip
@@ -11,3 +10,14 @@ bin
 obj
 *.dll
 *.*~
+src/Infinispan.HotRod/generated
+test/Infinispan.HotRod.Tests/generated/
+.vs/
+.vscode/
+buildtools/tmp
+buildtools/.fake
+swig/build
+swig/hotrod_wrap.dir
+swig/native_client
+swig/hotrodcs_wrap.cxx
+swig/hotrodcs_wrap.h
