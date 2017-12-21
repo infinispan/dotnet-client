@@ -44,13 +44,13 @@ namespace Infinispan.HotRod.Event
                 }
                 switch (t)
                 {
-                    case ContinuousQueryResult.Types.ResultType.JOINING:
+                    case ContinuousQueryResult.Types.ResultType.Joining:
                         JoiningCallback(k, v);
                         break;
-                    case ContinuousQueryResult.Types.ResultType.LEAVING:
+                    case ContinuousQueryResult.Types.ResultType.Leaving:
                         LeavingCallback(k, v);
                         break;
-                    case ContinuousQueryResult.Types.ResultType.UPDATED:
+                    case ContinuousQueryResult.Types.ResultType.Updated:
                         UpdatedCallback(k, v);
                         break;
                     default:
