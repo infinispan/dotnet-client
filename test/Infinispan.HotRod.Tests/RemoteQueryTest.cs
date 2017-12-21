@@ -615,7 +615,7 @@ namespace Infinispan.HotRod.Tests
             user1.Id = 1;
             user1.Name = "John";
             user1.Surname = "Doe";
-            user1.Gender = User.Types.Gender.MALE;
+            user1.Gender = User.Types.Gender.Male;
             user1.Age = 22;
             user1.Notes = "Lorem ipsum dolor sit amet";
             List<Int32> accountIds = new List<Int32>();
@@ -636,7 +636,7 @@ namespace Infinispan.HotRod.Tests
             user2.Id = 2;
             user2.Name = "Spider";
             user2.Surname = "Man";
-            user2.Gender = User.Types.Gender.MALE;
+            user2.Gender = User.Types.Gender.Male;
             accountIds = new List<Int32>();
             accountIds.Add(3);
             user2.AccountIds.Add(accountIds);
@@ -659,7 +659,7 @@ namespace Infinispan.HotRod.Tests
             user3.Id = 3;
             user3.Name = "Spider";
             user3.Surname = "Woman";
-            user3.Gender = User.Types.Gender.FEMALE;
+            user3.Gender = User.Types.Gender.Female;
 
             remoteCache.Put(3, user3);
             accountIds = new List<Int32>();

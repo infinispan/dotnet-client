@@ -55,7 +55,7 @@ namespace Infinispan.HotRod.Tests.Util
 
         void StartHotrodServerInternal()
         {
-            string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
+            var jbossHome = Environment.GetEnvironmentVariable("JBOSS_HOME");
             if (jbossHome == null)
             {
                 throw new Exception("JBOSS_HOME env variable not set.");
@@ -64,9 +64,15 @@ namespace Infinispan.HotRod.Tests.Util
             Assert.IsTrue(IsStopped(),
                           "Another process already listening on the same ip/port.");
 
-            hrServer = new Process();
-            hrServer.StartInfo.FileName = buildStartCommand(jbossHome);
-            hrServer.StartInfo.Arguments = "-c " + configurationFile;
+            hrServer = new Process
+            {
+                StartInfo =
+                {
+                    FileName = buildStartCommand(jbossHome),
+                    Arguments = "-c " + configurationFile,
+                    UseShellExecute = false
+                }
+            };
             if (arguments.Length != 0)
             {
                 hrServer.StartInfo.Arguments = hrServer.StartInfo.Arguments + " " + arguments;
