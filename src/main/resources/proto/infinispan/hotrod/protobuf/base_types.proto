@@ -1,7 +1,0 @@
-syntax = "proto3";
-package infinispan.hotrod.protobuf;
-message base_types {
-     int64 i64  = 3;
-     int32 i32  = 5;                                                                                                                                                                                                                                                   
-     string str = 9;                                                                                                                                                                                                                                                   
-}
