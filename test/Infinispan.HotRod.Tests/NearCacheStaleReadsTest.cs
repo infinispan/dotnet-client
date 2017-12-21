@@ -21,6 +21,11 @@ namespace Infinispan.HotRod.Tests
             conf.Marshaller(marshaller);
             remoteManager = new RemoteCacheManager(conf.Build(), true);
         }
+        [TestFixtureTearDown]
+        public void AfterClass()
+        {
+          remoteManager.Stop();
+        }
 
         [Test]
         public void AvoidStaleReadAfterPutRemoveTest()

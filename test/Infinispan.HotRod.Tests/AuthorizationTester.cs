@@ -400,6 +400,7 @@ namespace Infinispan.HotRod.Tests
         {
             string scriptName = "script.js";
             string script = "//mode=local,language=javascript\n "
+		            + "var cache = cacheManager.getCache(\"default\");\n "
                             + "cache.put(\"k1\", value);\n"
                             + "cache.get(\"k1\");\n";
             scriptCache.Put(scriptName, script);
