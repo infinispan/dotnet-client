@@ -89,7 +89,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 class AuthenticationStringCallback {
 public:
     AuthenticationStringCallback() { }
-    AuthenticationStringCallback(const const char* s) : c_string(s) { }
+    AuthenticationStringCallback(const char* s) : c_string(s) { }
     virtual ~AuthenticationStringCallback() { }
     virtual std::string getString() { return c_string; };
     const char* getCString() { return c_string.data(); };
@@ -106,7 +106,7 @@ static int getrealm(void* context, int id, const char** result, unsigned int *le
 
 static int getsecret(void* /* conn */, void* context, int id, sasl_secret_t **psecret) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    std::string& s = asc->getString();
+    const std::string& s = asc->getString();
     size_t len = s.length();
     sasl_secret_t * p= (sasl_secret_t*)malloc(sizeof(sasl_secret_t)+len);
     p->len=len;

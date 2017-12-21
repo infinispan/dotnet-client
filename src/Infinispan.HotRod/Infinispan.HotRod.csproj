@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Infinispan.HotRod</PackageId>
+    <PackageVersion>8.2.0-Alpha2</PackageVersion>
+    <Authors>infinispan.org</Authors>
+    <Description>.NET binding of C++ HotRod client for connecting to infinispan</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Copyright>Copyright 2017 (c) RedHat. All rights reserved.</Copyright>
+    <PackageTags>hotrod infinispan</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/jfojtl/dotnet-client/master/buildtools/nuget-ispn-logo.jpg</PackageIconUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.4.1" />
+    <PackageReference Include="Infinispan.HotRod.Cpp-Client" Version="8.2.0-Alpha1" />
+    <PackageReference Include="NLog" Version="5.0.0-beta11">
+      <NoWarn>NU1701</NoWarn>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
