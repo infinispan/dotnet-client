@@ -21,14 +21,14 @@
     <Compile Include="${W_SWIG_BUILD}\*.cs"/>
     
     <!-- API source files. -->
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Org\Infinispan\Query\Remote\Client\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Impl\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Exceptions\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Config\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\SWIG\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Event\*.cs"/>
-    <Compile Include="${W_S}\src\main\cs\Infinispan\HotRod\Transport\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Org\Infinispan\Query\Remote\Client\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Impl\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Exceptions\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Config\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\SWIG\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Event\*.cs"/>
+    <Compile Include="${W_S}src\Infinispan.HotRod\Transport\*.cs"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -41,7 +41,6 @@
     <Reference Include="System.Xml"/>
     <Reference Include="${NLOG_DLL}"/>
 
-    <!-- <None Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\resources\App.config"/> -->
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>

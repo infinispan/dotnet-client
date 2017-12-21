@@ -87,9 +87,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\*.cs"/>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Util\*.cs"/>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\src\test\cs\Infinispan\HotRod\Wrappers\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Util\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Wrappers\*.cs"/>
 
     <Reference Include="hotrodcs.dll"/>
     <Reference Include="${NLOG_DLL}"/>
@@ -102,7 +102,6 @@
     <Reference Include="System.Core"/>
     <Reference Include="System.Management"/>
   
-    <!-- <None Include="${CMAKE_CURRENT_SOURCE_DIR}\src\main\resources\App.config"/> -->
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

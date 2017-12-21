@@ -152,14 +152,14 @@ file (COPY "${CMAKE_CPP_HOME}/lib/" DESTINATION "${NATIVE_LIB_DIR}" PATTERN "*")
 file (COPY "${CMAKE_CPP_HOME}/include/" DESTINATION "${NATIVE_DIR}/include" PATTERN "*")
 
 hr_protobuf_generate_csharp(PROTO_SRCS  
-  src/main/resources/proto/infinispan/hotrod/protobuf/base_types.proto
-  src/main/resources/proto/org/infinispan/protostream/message-wrapping.proto
-  src/main/resources/proto/org/infinispan/query/remote/client/query.proto
+  src/resources/proto/base_types.proto
+  src/resources/proto/message-wrapping.proto
+  src/resources/proto/query.proto
 )
 
 hr_protobuf_generate_csharp(TEST_PROTO_SRCS  
-  src/test/resources/proto3/addressbook.proto
-  src/test/resources/proto3/bank.proto
+  test/resources/proto3/addressbook.proto
+  test/resources/proto3/bank.proto
 )
 
 
@@ -417,27 +417,27 @@ endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   file(COPY ${JBOSS_HOME}/docs/examples/configs/standalone-compatibility-mode.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
   #use the specific clustered-indexing.xml until ISPN-6912 is resolved, then use docs/examples/configs/clustered-indexing.xml
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/clustered-indexing.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/clustered-xsite1.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/clustered-xsite2.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/standalone-hotrod-ssl.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/clustered-sasl-cs.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/truststore.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_server_sni1_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_server_sni2_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_server_sni3_untrusted_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/application-roles.properties DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/application-users.properties DESTINATION "${JBOSS_HOME}/standalone/configuration")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/infinispan-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_client.p12 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/malicious_client.p12 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_server_sni1_rsa.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/keystore_server_sni2_rsa.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/certificates/malicious.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/proto2" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION}" PATTERN "*")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/wordCountStream.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/src/test/resources/macbeth.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-indexing.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-xsite1.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-xsite2.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/standalone-hotrod-ssl.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-sasl-cs.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/truststore.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni1_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni2_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni3_untrusted_rsa.jks DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/application-roles.properties DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/application-users.properties DESTINATION "${JBOSS_HOME}/standalone/configuration")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/infinispan-ca.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_client.p12 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/malicious_client.p12 DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni1_rsa.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni2_rsa.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/malicious.pem DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/test/resources/proto2" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION}" PATTERN "*")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/wordCountStream.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/macbeth.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
       
   if (WIN32)
     # Pass the updated path using an external script.

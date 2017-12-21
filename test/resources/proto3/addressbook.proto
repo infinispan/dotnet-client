@@ -1,0 +1,17 @@
+// See README.txt for information and build instructions.
+syntax = "proto3";
+package tutorial;
+
+option java_package = "com.example.tutorial";
+option java_outer_classname = "AddressBookProtos";
+
+message Person {
+  string name = 1;
+  int32 id = 2;        // Unique ID number for this person.
+  string email = 3;
+}
+
+// Our address book file is just one of these.
+message AddressBook {
+  repeated Person person = 1;
+}
