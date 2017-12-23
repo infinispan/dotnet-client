@@ -1,9 +1,11 @@
 ﻿using NUnit.Framework;
 using Infinispan.HotRod.Config;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
-    class AuthenticationTest
+    [TestFixture]
+    [Category("clustered_sasl_cs_xml_2")]
+    public class AuthenticationTest
     {
         private const string USER = "supervisor";
         private const string PASS = "lessStrongPassword";
@@ -57,27 +59,24 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void PlainAutheticationWrongPasswordTest()
         {
             IRemoteCache<string, string> testCache = InitCache("PLAIN", "node0", USER, "mallicious_password");
-            TestPut(testCache);
+            Assert.Throws<Infinispan.HotRod.Exceptions.HotRodClientException>(() => TestPut(testCache));
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void DigestAutheticationWrongPasswordTest()
         {
             IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "node0", USER, "mallicious_password");
-            TestPut(testCache);
+            Assert.Throws<Infinispan.HotRod.Exceptions.HotRodClientException>(() => TestPut(testCache));
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.HotRodClientException))]
         public void WrongServerNameDigestAuthTest()
         {
             IRemoteCache<string, string> testCache = InitCache("DIGEST-MD5", "nonExistentNode", USER, PASS);
-            TestPut(testCache);
+            Assert.Throws<Infinispan.HotRod.Exceptions.HotRodClientException>(() => TestPut(testCache));
         }
 
         private void TestPut(IRemoteCache<string, string> testCache)

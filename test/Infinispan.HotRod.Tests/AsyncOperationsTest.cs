@@ -3,16 +3,23 @@ using Infinispan.HotRod.Exceptions;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using Infinispan.HotRod.Tests.Util;
 
-namespace Infinispan.HotRod.Tests
+
+namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
-    class AsyncOperationsTest
+    [TestFixture]
+    [Category("clustered_sasl_cs_xml_2")]
+    public class AsyncOperationsTest 
     {
         RemoteCacheManager remoteManager;
 
         const string ERRORS_KEY_SUFFIX = ".errors";
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
+
+        HotRodServer server1;
+        HotRodServer server2;
 
         private void InitializeRemoteCacheManager(bool started)
         {
@@ -73,13 +80,11 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(RemoteCacheManagerNotStartedException))]
         public void PutAsyncExceptionTest()
         {
             InitializeRemoteCacheManager(false);
             IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("default");
-            testCache.PutAsync("kasync", "vasync");
-            Assert.Fail("Should not get here");
+            Assert.Throws<RemoteCacheManagerNotStartedException>(() => testCache.PutAsync("kasync", "vasync"));
         }
     }
 }

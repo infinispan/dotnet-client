@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Infinispan.HotRod.Config;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
     public abstract class BaseAuthorizationTest
     {
@@ -24,7 +24,7 @@ namespace Infinispan.HotRod.Tests
 
         public abstract string GetMech();
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             readerCache = InitCache("reader", "password");

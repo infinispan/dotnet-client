@@ -19,7 +19,7 @@ using System.Collections.ObjectModel;
  * No queries use pagination as JPQL itself does not support it.
  * 
  */
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 {
     class ProtobufMarshaller : BasicTypesProtoStreamMarshaller
     {
@@ -100,6 +100,8 @@ namespace Infinispan.HotRod.Tests
 
         }
     }
+    [TestFixture]
+    [Category("clustered_indexing_xml")]
     class ContinuousQueryTest
     {
         RemoteCacheManager remoteManager;
@@ -107,7 +109,7 @@ namespace Infinispan.HotRod.Tests
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
         const String NAMED_CACHE = "InMemoryNonSharedIndex";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
@@ -126,7 +128,7 @@ namespace Infinispan.HotRod.Tests
 
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
         }
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterClass()
         {
             remoteManager.Stop();

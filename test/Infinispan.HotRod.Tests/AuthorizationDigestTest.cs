@@ -1,6 +1,9 @@
-﻿namespace Infinispan.HotRod.Tests
+﻿using NUnit.Framework;
+namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
-    class AuthorizationDigestTest : BaseAuthorizationTest
+    [TestFixture]
+    [Category("clustered_sasl_cs_xml_2")]
+    public class AuthorizationDigestTest : BaseAuthorizationTest
     {
         public override string GetMech()
         {

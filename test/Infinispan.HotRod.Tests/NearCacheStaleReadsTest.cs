@@ -3,14 +3,16 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
-    class NearCacheStaleReadsTest
+    [TestFixture]
+    [Category("standalone_xml")]
+    public class NearCacheStaleReadsTest
     {
         RemoteCacheManager remoteManager;
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

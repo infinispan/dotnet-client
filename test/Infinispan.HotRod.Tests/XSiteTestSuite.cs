@@ -11,7 +11,7 @@ namespace Infinispan.HotRod.TestSuites
         internal static HotRodServer server1;
         internal static HotRodServer server2;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server1 = new HotRodServer("clustered-xsite1.xml");
@@ -21,24 +21,13 @@ namespace Infinispan.HotRod.TestSuites
             server2.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             if (server1.IsRunning(2000))
                 server1.ShutDownHotrodServer();
             if (server2.IsRunning(2000))
                 server2.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new XSiteFailoverTest());
-                return suite;
-            }
         }
     }
 }

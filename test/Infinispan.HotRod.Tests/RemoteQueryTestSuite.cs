@@ -3,36 +3,24 @@ using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System.Collections;
 
-namespace Infinispan.HotRod.TestSuites
+namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 {
+    [SetUpFixture]
     public class RemoteQueryTestSuite
     {
         HotRodServer server;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server = new HotRodServer("clustered-indexing.xml");
             server.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             server.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new RemoteQueryTest());
-                suite.Add(new RemoteFullTextQueryTest());
-                suite.Add(new ContinuousQueryTest());
-                return suite;
-            }
         }
     }
 }

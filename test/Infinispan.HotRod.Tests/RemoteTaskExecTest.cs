@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneCompatibilityModeXml
 {
+    [TestFixture]
+    [Category("standalone_compatibility_mode_xml")]
     class RemoteTaskExecTest
     {
         RemoteCacheManager remoteManager;
@@ -12,7 +14,7 @@ namespace Infinispan.HotRod.Tests
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
         }
