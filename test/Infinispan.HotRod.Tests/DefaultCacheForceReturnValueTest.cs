@@ -4,13 +4,15 @@ using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
+    [TestFixture]
+    [Category("standalone_xml")]
     public class DefaultCacheForceReturnValueTest
     {
         private IRemoteCache<String, String> cache;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

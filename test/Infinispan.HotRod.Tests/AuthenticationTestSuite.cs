@@ -4,14 +4,15 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 
-namespace Infinispan.HotRod.TestSuites
+namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
+    [SetUpFixture]
     public class AuthenticationTestSuite
     {
         HotRodServer server1;
         HotRodServer server2;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server1 = new HotRodServer("clustered-sasl-cs.xml");
@@ -21,26 +22,13 @@ namespace Infinispan.HotRod.TestSuites
             server2.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             if (server1.IsRunning(2000))
                 server1.ShutDownHotrodServer();
             if (server2.IsRunning(2000))
                 server2.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new AuthenticationTest());
-                suite.Add(new AuthorizationPlainTest());
-                suite.Add(new AuthorizationDigestTest());
-                return suite;
-            }
         }
     }
 }

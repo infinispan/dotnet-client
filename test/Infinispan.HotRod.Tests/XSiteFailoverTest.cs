@@ -28,7 +28,9 @@ namespace Infinispan.HotRod.Tests
             this.servers = servers;
         }
     }
-public class XSiteFailoverTest
+    [TestFixture]
+    [Category("clustered_xsite_xml_2")]
+public class XSiteFailoverTest : XSiteTestSuite
     {
         RemoteCacheManager remoteManager;
         private RemoteCacheManager manager1;
@@ -39,7 +41,7 @@ public class XSiteFailoverTest
         Configuration configu1;
         Configuration configu2;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             BS b;

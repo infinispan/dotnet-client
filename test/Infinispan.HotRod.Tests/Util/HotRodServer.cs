@@ -89,6 +89,7 @@ namespace Infinispan.HotRod.Tests.Util
             }
             hrServer.Start();
 
+
             Assert.IsTrue(IsRunning(),
                           "Server not listening on the expected ip/port.");
         }
@@ -98,8 +99,18 @@ namespace Infinispan.HotRod.Tests.Util
             Console.WriteLine("Shutting down Infinispan Server ...");
             if (hrServer != null)
             {
-                PlatformUtils.killServer(hrServer);
-
+                if (PlatformUtils.isUnix()) {
+                /* Kill the process and subprocesses. */
+                    Process killProcess = new Process();
+                    killProcess.StartInfo.FileName = "bash";
+                    killProcess.StartInfo.Arguments = String.Format("-c \"ps h --format pid --pid {0} --ppid {0} | xargs kill\"", hrServer.Id);
+                    killProcess.Start();
+                    killProcess.WaitForExit();
+                }
+                else
+                {
+                    hrServer.Kill();
+                }
                 Assert.IsTrue(IsStopped(),
                               "A process is still listening on the ip/port. Kill failed?");
             }

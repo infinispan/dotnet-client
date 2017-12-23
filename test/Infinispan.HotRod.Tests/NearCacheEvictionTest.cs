@@ -1,14 +1,16 @@
 ﻿using Infinispan.HotRod.Config;
 using NUnit.Framework;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
-    class NearCacheEvictionTest
+    [TestFixture]
+    [Category("standalone_xml")]
+    public class NearCacheEvictionTest
     {
         RemoteCacheManager remoteManager;
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

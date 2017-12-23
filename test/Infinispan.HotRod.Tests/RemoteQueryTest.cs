@@ -13,8 +13,10 @@ using NUnit.Framework;
  * No queries use pagination as JPQL itself does not support it.
  * 
  */
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 {
+    [TestFixture]
+    [Category("clustered_indexing_xml")]
     class RemoteQueryTest
     {
         RemoteCacheManager remoteManager;
@@ -22,7 +24,7 @@ namespace Infinispan.HotRod.Tests
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
         const String NAMED_CACHE = "InMemoryNonSharedIndex";
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
@@ -263,7 +265,6 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void InvalidEmbeddedAttributeTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
@@ -273,11 +274,10 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "select u.addresses from sample_bank_account.User u";
             qr.QueryString = "select u.addresses from sample_bank_account.User u";
 
-            userCache.Query(qr);
+            Assert.Throws<HotRodClientException>(() => userCache.Query(qr));
         }
 
         [Test]
-        [ExpectedException(typeof(HotRodClientException))]
         public void RejectProjectionOfRepeatedPropertyTest()
         {
             IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
@@ -287,7 +287,7 @@ namespace Infinispan.HotRod.Tests
 	    // qr.JpqlString = "select u.addresses.postcode from sample_bank_account.User u";
             qr.QueryString = "select u.addresses.postcode from sample_bank_account.User u";
 
-            userCache.Query(qr);
+            Assert.Throws<HotRodClientException>(() => userCache.Query(qr));
         }
 
         [Test]

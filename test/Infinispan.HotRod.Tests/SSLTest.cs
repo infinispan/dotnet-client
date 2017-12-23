@@ -56,12 +56,11 @@ namespace Infinispan.HotRod.Tests
         }
 
         [Test]
-        [ExpectedException(typeof(Infinispan.HotRod.Exceptions.TransportException), ExpectedMessage = "**** The server certificate did not validate correctly.\n")]
         public void SNIUntrustedTest()
         {
             ConfigureSecuredCaches("malicious.pem", "keystore_client.p12", "sni3-untrusted");
-            tester.TestWriterSuccess(testCache); //this should actually fail
-            Assert.Fail("Should not get here");
+            var ex = Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => tester.TestWriterSuccess(testCache));
+            Assert.AreEqual("**** The server certificate did not validate correctly.\n",ex.Message);
         }
 
         private void ConfigureSecuredCaches(string serverCAFile, string clientCertFile, string sni = "")

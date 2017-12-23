@@ -9,28 +9,17 @@ namespace Infinispan.HotRod.TestSuites
     {
         HotRodServer server;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeSuite()
         {
             server = new HotRodServer("standalone-hotrod-ssl.xml");
             server.StartHotRodServer();
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterSuite()
         {
             server.ShutDownHotrodServer();
-        }
-
-        [Suite]
-        public static IEnumerable Suite
-        {
-            get
-            {
-                var suite = new ArrayList();
-                suite.Add(new SSLTest());
-                return suite;
-            }
         }
     }
 }

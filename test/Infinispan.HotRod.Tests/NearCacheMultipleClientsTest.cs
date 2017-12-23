@@ -2,15 +2,17 @@ using Infinispan.HotRod.Config;
 using NUnit.Framework;
 using Infinispan.HotRod.Tests.Util;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
-    class NearCacheMultipleClientsTest
+    [TestFixture]
+    [Category("standalone_xml")]
+    public class NearCacheMultipleClientsTest
     {
         RemoteCacheManager remoteManager1;
         RemoteCacheManager remoteManager2;
         IMarshaller marshaller;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();

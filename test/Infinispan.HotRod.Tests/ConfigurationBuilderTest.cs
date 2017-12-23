@@ -2,9 +2,10 @@ using System.Collections.Generic;
 using Infinispan.HotRod.Config;
 using NUnit.Framework;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
+    [Category("standalone_xml")]
     public class ConfigurationBuilderTest
     {
         private ConfigurationBuilder builder;
