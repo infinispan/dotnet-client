@@ -3,6 +3,7 @@ using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System;
 using System.Collections;
+using System;
 
 namespace Infinispan.HotRod.TestSuites
 {
@@ -14,6 +15,7 @@ namespace Infinispan.HotRod.TestSuites
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             server1 = new HotRodServer("clustered-xsite1.xml");
             server1.StartHotRodServer();
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");

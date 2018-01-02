@@ -2,7 +2,7 @@
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System.Collections;
-
+using System;
 namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 {
     [SetUpFixture]
@@ -13,6 +13,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             server = new HotRodServer("clustered-indexing.xml");
             server.StartHotRodServer();
         }

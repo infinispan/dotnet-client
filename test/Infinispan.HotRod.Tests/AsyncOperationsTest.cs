@@ -6,10 +6,11 @@ using NUnit.Framework;
 using Infinispan.HotRod.Tests.Util;
 
 
-namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
+namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
-    [Category("clustered_sasl_cs_xml_2")]
+    [Category("standalone_xml")]
+    [Category("DefaultTestSuite")]
     public class AsyncOperationsTest 
     {
         RemoteCacheManager remoteManager;

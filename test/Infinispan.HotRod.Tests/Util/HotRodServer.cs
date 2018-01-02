@@ -109,7 +109,12 @@ namespace Infinispan.HotRod.Tests.Util
                 }
                 else
                 {
-                    hrServer.Kill();
+                /* Kill the process and subprocesses. */
+                    Process killProcess = new Process();
+                    killProcess.StartInfo.FileName = "taskkill";
+                    killProcess.StartInfo.Arguments = String.Format("/PID {0} /T /F", hrServer.Id);
+                    killProcess.Start();
+                    killProcess.WaitForExit();
                 }
                 Assert.IsTrue(IsStopped(),
                               "A process is still listening on the ip/port. Kill failed?");

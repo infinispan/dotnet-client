@@ -2,6 +2,7 @@
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System.Collections;
+using System;
 
 namespace Infinispan.HotRod.Tests.StandaloneXml
 {
@@ -13,6 +14,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             server = new HotRodServer("standalone.xml");
             server.StartHotRodServer();
         }

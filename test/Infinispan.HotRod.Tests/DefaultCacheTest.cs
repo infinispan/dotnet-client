@@ -11,6 +11,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
     [Category("standalone_xml")]
+    [Category("DefaultTestSuite")]
     public class DefaultCacheTest
     {
         private IRemoteCache<String, String> cache;
