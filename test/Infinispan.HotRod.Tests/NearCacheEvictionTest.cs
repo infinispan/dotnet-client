@@ -5,6 +5,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
     [Category("standalone_xml")]
+    [Category("DefaultTestSuite")]
     public class NearCacheEvictionTest
     {
         RemoteCacheManager remoteManager;

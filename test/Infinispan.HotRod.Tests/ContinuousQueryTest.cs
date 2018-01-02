@@ -102,6 +102,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
     }
     [TestFixture]
     [Category("clustered_indexing_xml")]
+    [Category("RemoteQueryTestSuite")]
     class ContinuousQueryTest
     {
         RemoteCacheManager remoteManager;

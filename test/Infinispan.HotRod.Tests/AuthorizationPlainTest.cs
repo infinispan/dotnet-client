@@ -3,6 +3,7 @@ namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
     [TestFixture]
     [Category("clustered_sasl_cs_xml_2")]
+    [Category("AuthenticationTestSuite")]
     public class AuthorizationPlainTest : BaseAuthorizationTest
     {
         public override string GetMech()

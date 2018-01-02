@@ -2,6 +2,7 @@
 using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System.Collections;
+using System;
 
 namespace Infinispan.HotRod.TestSuites
 {
@@ -12,6 +13,7 @@ namespace Infinispan.HotRod.TestSuites
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             server = new HotRodServer("standalone-hotrod-ssl.xml");
             server.StartHotRodServer();
         }

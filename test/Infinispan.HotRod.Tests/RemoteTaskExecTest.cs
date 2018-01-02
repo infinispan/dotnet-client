@@ -7,6 +7,7 @@ namespace Infinispan.HotRod.Tests.StandaloneCompatibilityModeXml
 {
     [TestFixture]
     [Category("standalone_compatibility_mode_xml")]
+    [Category("CompatibilityModeTestSuite")]
     class RemoteTaskExecTest
     {
         RemoteCacheManager remoteManager;

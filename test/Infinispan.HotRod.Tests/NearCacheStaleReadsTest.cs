@@ -7,6 +7,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
     [Category("standalone_xml")]
+    [Category("DefaultTestSuite")]
     public class NearCacheStaleReadsTest
     {
         RemoteCacheManager remoteManager;

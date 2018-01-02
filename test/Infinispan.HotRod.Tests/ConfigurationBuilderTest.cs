@@ -6,6 +6,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 {
     [TestFixture]
     [Category("standalone_xml")]
+    [Category("DefaultTestSuite")]
     public class ConfigurationBuilderTest
     {
         private ConfigurationBuilder builder;

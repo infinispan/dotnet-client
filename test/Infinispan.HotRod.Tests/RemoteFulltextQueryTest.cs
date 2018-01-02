@@ -16,6 +16,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 {
     [TestFixture]
     [Category("clustered_indexing_xml")]
+    [Category("RemoteQueryTestSuite")]
     class RemoteFullTextQueryTest
     {
         RemoteCacheManager remoteManager;

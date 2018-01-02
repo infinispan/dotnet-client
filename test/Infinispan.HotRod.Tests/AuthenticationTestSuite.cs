@@ -3,6 +3,7 @@ using Infinispan.HotRod.Tests.Util;
 using NUnit.Framework;
 using System;
 using System.Collections;
+using System;
 
 namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
 {
@@ -15,6 +16,7 @@ namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
         [OneTimeSetUp]
         public void BeforeSuite()
         {
+            Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
             server1 = new HotRodServer("clustered-sasl-cs.xml");
             server1.StartHotRodServer();
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");

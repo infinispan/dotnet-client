@@ -30,6 +30,7 @@ namespace Infinispan.HotRod.Tests
     }
     [TestFixture]
     [Category("clustered_xsite_xml_2")]
+    [Category("XSiteTestSuite")]
 public class XSiteFailoverTest : XSiteTestSuite
     {
         RemoteCacheManager remoteManager;
