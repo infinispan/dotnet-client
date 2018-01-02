@@ -6,7 +6,7 @@ set ORIG_PATH=%PATH%
 set PATH=${UT_PATH}
 set JBOSS_HOME=${HOTROD_JBOSS_HOME}
 
-"${NUNIT_NATIVE_BINARY}" %TEST_ASSEMBLY_DIR%hotrodcs-tests.dll /fixture=%SUITE% /result=%OUTPUT_XML%
+"${NUNIT_NATIVE_BINARY}" %TEST_ASSEMBLY_DIR%hotrodcs-tests.dll --where:cat=%SUITE% --result=%OUTPUT_XML%
 if %ERRORLEVEL% NEQ 0 goto FAIL
 goto SUCCESS
 
