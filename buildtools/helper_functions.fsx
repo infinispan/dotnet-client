@@ -142,7 +142,9 @@ let downloadCppClientIfNonexist cppClientVersion =
         let cppLinuxClientDirectory = sprintf "infinispan-hotrod-cpp-%s-RHEL-x86_64" cppClientVersion
         let cppLinuxClientRpmName = sprintf "infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion
         if not (Directory.Exists cppLinuxClientDirectory) then
-            let cppClientUrl = sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion;
+            let cppClientUrl = if cppClientVersion.Contains("SNAPSHOT")
+                               then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build/_CPack_Packages/RHEL-x86_64/RPM/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion)
+                               else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion)
             trace (sprintf "downloading cpp-linux-client version %s" cppClientVersion)
             downloadArtifact cppClientUrl "tmp"
             trace "client downloaded, unziping"
@@ -199,7 +201,7 @@ let downloadInfinispanIfNeeded infinispanServerVersion =
         let infinispanServerFileName = sprintf "infinispan-server-%s-bin.zip" infinispanServerVersion
         let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/%s" infinispanServerVersion infinispanServerFileName
         trace (sprintf "downloading infinispan server version %s" infinispanServerVersion)
-        downloadArtifact infinispanServerUrl ( "tmp" @@ infinispanServerFileName )
+        downloadArtifact infinispanServerUrl ( "tmp" )
         trace "infinispan downloaded, unziping"
         if unzipFile infinispanServerFileName "tmp" <> 0 then failwith ("cannot unzip " @@ infinispanServerFileName)
         trace "infinispan unziped"

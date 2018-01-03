@@ -121,9 +121,14 @@ Target "CppPackagePublish" (fun _ ->
     trace "cpp-client package published"
 )
 
+Target "CopyResourcesToInfinispan" (fun _ ->
+    Copy ((environVar "JBOSS_HOME") @@ "/standalone/configuration") (Directory.EnumerateFiles("../test/resources"))
+    trace "resources copied to infinispan"
+)
+
 // main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
-    ==> "ObtainInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
+    ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"
