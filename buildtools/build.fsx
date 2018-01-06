@@ -64,19 +64,22 @@ Target "Generate" (fun _ ->
 )
 
 Target "Build" (fun _ ->
-    Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
+    Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"
+                             Configuration = "RelWithDebInfo"})
     trace "solution built"
 )
 
 Target "ObtainInfinispan" (fun _ ->
     let infinispanLocation = downloadInfinispanIfNeeded infinispanServerVersion
-    setEnvironVar "JBOSS_HOME" "/home/rigazilla/git/dotnet-client/buildtools/tmp/infinispan-server-9.1.1.Final"
+    if (environVar "JBOSS_HOME") = null then
+       setEnvironVar "JBOSS_HOME" infinispanLocation
     trace "Infinispan obtained"
 )
 
 Target "UnitTest" (fun _ ->
     Test (fun p -> { p with Project = "../test/Infinispan.HotRod.Tests/Infinispan.HotRod.Tests.csproj"
-                            AdditionalArgs = ["--logger \"trx;LogFileName=TestResults.trx\""; "--no-build"] } )
+                            AdditionalArgs = ["--logger \"trx;LogFileName=TestResults.trx\""; "--no-build";]
+                            Configuration = "RelWithDebInfo" } )
     trace "unit tests done"
 )
 
@@ -104,7 +107,7 @@ Target "CppPackage" (fun _ ->
     let binsPath = "tmp/Infinispan.HotRod.Cpp-Client/runtimes/win7-x64/native"
     ensureDirectory binsPath
     let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
-    directoryCopy "../swig/build/Release" binsPath false
+    directoryCopy "../swig/build/RelWithDebInfo" binsPath false
     Copy binsPath (Directory.EnumerateFiles (sprintf "%s/lib" cppClientLocation))
     Copy packageRoot ["Infinispan.HotRod.Cpp-client.win7-x64.nuspec"]
     NuGetPack (fun p ->

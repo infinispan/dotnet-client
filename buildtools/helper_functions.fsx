@@ -43,7 +43,7 @@ let rec directoryCopy srcPath dstPath copySubDirs =
 ///
 ///**Exceptions**
 ///
-let downloadArtifact (url:string) (downloadLocation:string) =
+let downloadArtifact (url:string) (downloadLocation:string) (fileName:string) =
     if isLinux then
         ExecProcess (fun p ->
             p.FileName <- "wget"
@@ -52,7 +52,7 @@ let downloadArtifact (url:string) (downloadLocation:string) =
         |> ignore
     else
         let client = new WebClient()
-        client.DownloadFile(url, downloadLocation)
+        client.DownloadFile(url, downloadLocation @@ "\\" @@ fileName)
 
 ///**Description**
 /// Downloads 7-zip from NuGet.org
@@ -131,7 +131,7 @@ let downloadCppClientIfNonexist cppClientVersion =
                                then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion)
                                else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion)
             trace (sprintf "downloading cpp-client version %s" cppClientVersion)
-            downloadArtifact cppClientUrl ( "tmp/" @@ cppClientZipName )
+            downloadArtifact cppClientUrl  "tmp" cppClientZipName
             trace "client downloaded, unziping"
             if unzipFile cppClientZipName "tmp" <> 0 then failwith (sprintf "cannot unzip %s" cppClientZipName) 
             trace "client unziped"
@@ -146,7 +146,7 @@ let downloadCppClientIfNonexist cppClientVersion =
                                then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build/_CPack_Packages/RHEL-x86_64/RPM/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion)
                                else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion)
             trace (sprintf "downloading cpp-linux-client version %s" cppClientVersion)
-            downloadArtifact cppClientUrl "tmp"
+            downloadArtifact cppClientUrl "tmp" cppLinuxClientRpmName
             trace "client downloaded, unziping"
             unzipRpmFile cppLinuxClientRpmName "tmp" cppLinuxClientDirectory
             trace "client unziped"
@@ -201,7 +201,7 @@ let downloadInfinispanIfNeeded infinispanServerVersion =
         let infinispanServerFileName = sprintf "infinispan-server-%s-bin.zip" infinispanServerVersion
         let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/%s" infinispanServerVersion infinispanServerFileName
         trace (sprintf "downloading infinispan server version %s" infinispanServerVersion)
-        downloadArtifact infinispanServerUrl ( "tmp" )
+        downloadArtifact infinispanServerUrl "tmp" infinispanServerFileName
         trace "infinispan downloaded, unziping"
         if unzipFile infinispanServerFileName "tmp" <> 0 then failwith ("cannot unzip " @@ infinispanServerFileName)
         trace "infinispan unziped"
@@ -307,7 +307,7 @@ let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _nam
 let buildSwig () =
     if isWindows then
         build (fun p -> { p with Properties = [
-                                                "Configuration", "Release"
+                                                "Configuration", "RelWithDebInfo"
                                                 "Platform", "x64"
                                               ]}) "../swig/hotrod_wrap.vcxproj"
     else
