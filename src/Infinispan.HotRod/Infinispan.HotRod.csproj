@@ -15,7 +15,6 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.4.1" />
-    <PackageReference Include="Infinispan.HotRod.Cpp-Client" Version="8.2.0-Alpha1" />
     <PackageReference Include="NLog" Version="5.0.0-beta11">
       <NoWarn>NU1701</NoWarn>
     </PackageReference>

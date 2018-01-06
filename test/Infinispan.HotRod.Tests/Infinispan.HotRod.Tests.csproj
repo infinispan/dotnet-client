@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.3.0" />
     <PackageReference Include="NUnit" Version="3.8.0" />
@@ -13,5 +12,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Infinispan.HotRod\Infinispan.HotRod.csproj" />
   </ItemGroup>
-
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec command="xcopy /Y $(projectDir)..\resources\proto2\*.proto $(targetDir)\proto2\" />
+    <Exec command="xcopy /Y $(projectDir)..\resources\*.txt $(targetDir)" />
+    <Exec command="xcopy /Y $(projectDir)..\resources\*.js $(targetDir)" />
+  </Target>
 </Project>
