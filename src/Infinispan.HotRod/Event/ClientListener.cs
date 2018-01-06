@@ -13,7 +13,7 @@ namespace Infinispan.HotRod.Event
         public string filterFactoryName;
         public string converterFactoryName;
         public bool useRawData = false;
-        public char[] listenerId;
+        public byte[] listenerId;
         public byte interestFlag = 0;
         public void AddListener(Action<Event.ClientCacheEntryCreatedEvent<K>> e)
         {

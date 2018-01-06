@@ -420,7 +420,7 @@ namespace Infinispan.HotRod.Impl
             int i = 0;
             foreach (char c in v)
             {
-                cc.SetValue(c, i++);
+                cc.SetValue((char)(c & 0x00ff), i++);
             }
             return new string(cc);
         }
@@ -432,6 +432,17 @@ namespace Infinispan.HotRod.Impl
             foreach (char c in v)
             {
                 bytes[i++] = (byte)c;
+            }
+            return bytes;
+        }
+
+        byte[] toByteArray(VectorByte v)
+        {
+            byte[] bytes = new byte[v.Count];
+            int i = 0;
+            foreach (byte b in v)
+            {
+                bytes[i++] = b;
             }
             return bytes;
         }
@@ -451,7 +462,7 @@ namespace Infinispan.HotRod.Impl
             }
             InternalClientEventListenerCallback<K,V> cb = new InternalClientEventListenerCallback<K,V>(cl, marshaller);
             DotNetClientListener listener =cache.addClientListener(cb, toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams, cl.useRawData, cl.interestFlag);
-            cl.listenerId = toString(listener.getListenerId()).ToCharArray();
+            cl.listenerId = toByteArray(listener.getUListenerId());
             addListener(cl.listenerId, listener);
         }
 
@@ -470,7 +481,7 @@ namespace Infinispan.HotRod.Impl
             }
             InternalClientEventListenerCallback<CQK, CQV> cb = new InternalClientEventListenerCallback<CQK, CQV>(cl, marshaller);
             DotNetClientListener listener = cache.addClientListener(cb, toVectorChar(cl.filterFactoryName), toVectorChar(cl.converterFactoryName), cl.includeCurrentState, vvcFilterParams, vvcConverterParams, cl.useRawData, cl.interestFlag);
-            cl.listenerId = toString(listener.getListenerId()).ToCharArray();
+            cl.listenerId = toByteArray(listener.getUListenerId());
             addListener(cl.listenerId, listener);
         }
 
@@ -486,13 +497,13 @@ namespace Infinispan.HotRod.Impl
             this.AddClientListener(cql.clientEventListener, new string[] { cql.query }, new string[] { }, null);
         }
 
-        public static IDictionary<char[], DotNetClientListener > runnningListeners = new Dictionary<char[], DotNetClientListener>();
+        public static IDictionary<byte[], DotNetClientListener > runnningListeners = new Dictionary<byte[], DotNetClientListener>();
 
-        static void addListener(char[] listenerId, DotNetClientListener tuple)
+        static void addListener(byte[] listenerId, DotNetClientListener tuple)
         {
             runnningListeners.Add(listenerId, tuple);
         }
-        public static void stopAndRemoveTask(char[] listenerId)
+        public static void stopAndRemoveTask(byte[] listenerId)
         {
             runnningListeners.Remove(listenerId);
         }
@@ -502,15 +513,15 @@ namespace Infinispan.HotRod.Impl
         public void RemoveClientListener(ClientListener<K, V> cl)
         {
             stopAndRemoveTask(cl.listenerId);
-            VectorChar vc = new VectorChar(cl.listenerId);
-            cache.removeClientListener(vc);
+            VectorByte vb = new VectorByte(cl.listenerId);
+            cache.removeClientListener(vb);
         }
 
         public void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql)
 
         {
             stopAndRemoveTask(cql.clientEventListener.listenerId);
-            VectorChar vc = new VectorChar(cql.clientEventListener.listenerId);
+            VectorByte vc = new VectorByte(cql.clientEventListener.listenerId);
             cache.removeClientListener(vc);
         }
 

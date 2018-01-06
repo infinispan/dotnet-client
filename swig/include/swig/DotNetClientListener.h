@@ -60,6 +60,16 @@ public:
 class DotNetClientListener : public ClientListener
 {
 public:
+  std::vector<unsigned char>& getUListenerId()
+  {
+    uListenerId.clear();
+    for (auto c : this->getListenerId())
+    {
+       uListenerId.push_back((unsigned char) c);
+    }
+    return uListenerId;
+  }
+
   std::function<void()> getFailoverFunction()
   {
     auto &cListenerId = this->getListenerId();
@@ -70,7 +80,7 @@ public:
     this->cb->processEvent(eData);
     };
   }
-
+  
   virtual void processEvent(ClientCacheEntryCreatedEvent<std::vector<char> > e, std::vector<char >listId, uint8_t isCustom) const
   {
     ClientCacheEventData eData;
@@ -142,6 +152,7 @@ public:
 private:
   ClientListenerCallback* cb=nullptr;
   bool shutdown=false;
+  std::vector<unsigned char> uListenerId;
 
 };
 
