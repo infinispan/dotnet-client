@@ -10,6 +10,8 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
     public class RemoteEventTest
     {
         RemoteCacheManager remoteManager;
+        ConfigurationBuilder confBuilder;
+        Configuration conf;
         const string ERRORS_KEY_SUFFIX = ".errors";
         const string PROTOBUF_SCRIPT_CACHE_NAME = "___script_cache";
         static IMarshaller marshaller;
@@ -17,12 +19,13 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         [OneTimeSetUp]
         public void BeforeClass()
         {
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222);
-            conf.ConnectionTimeout(90000).SocketTimeout(6000);
+            confBuilder = new ConfigurationBuilder();
+            confBuilder.AddServer().Host("127.0.0.1").Port(11222);
+            confBuilder.ConnectionTimeout(90000).SocketTimeout(6000);
             marshaller = new JBasicMarshaller();
-            conf.Marshaller(marshaller);
-            remoteManager = new RemoteCacheManager(conf.Build(), true);
+            confBuilder.Marshaller(marshaller);
+            conf=confBuilder.Build();
+            remoteManager = new RemoteCacheManager(conf, true);
         }
 
         [Test]

@@ -368,10 +368,15 @@ namespace hotrod {
        return cl;
     }
 
-    void removeClientListener(std::vector<char> listenerId)
+    void removeClientListener(std::vector<unsigned char> uListenerId)
     {
        DotNetClientListener cl;
-       cl.setListenerId(listenerId);
+       std::vector<char> v;
+       for (auto b : uListenerId)
+       {
+         v.push_back((char)b);
+       }
+       cl.setListenerId(v);
        $self->removeClientListener(cl);
     }
     
