@@ -20,7 +20,7 @@ namespace Infinispan.HotRod.Tests
                 if (!failedServer.Contains(server))
                     return server;
             }
-            throw new Exception("No transport");
+            return servers[0];
         }
 
         public void setServers(IList<InetSocketAddress> servers)
@@ -41,19 +41,28 @@ public class XSiteFailoverTest : XSiteTestSuite
         ConfigurationBuilder conf2;
         Configuration configu1;
         Configuration configu2;
+        BS b;
+        FailOverRequestBalancingStrategyProducerDelegate d;
 
+        ClusterConfigurationBuilder ccb, ccb1;
         [OneTimeSetUp]
         public void BeforeClass()
         {
-            BS b;
-            FailOverRequestBalancingStrategyProducerDelegate d = delegate ()
+            d = delegate ()
             {
                 b = new BS();
                 return b;
             };
+            BS b2;
+            FailOverRequestBalancingStrategyProducerDelegate d2 = delegate ()
+            {
+                b2 = new BS();
+                return b2;
+            };
             conf1 = new ConfigurationBuilder();
             conf1.AddServer().Host("127.0.0.1").Port(11222);
-            conf1.AddCluster("nyc").AddClusterNode("127.0.0.1", 11322);
+            ccb=conf1.AddCluster("nyc");
+            ccb1= ccb.AddClusterNode("127.0.0.1", 11322);
             conf1.BalancingStrategyProducer(d);
             configu1 = conf1.Build();
             manager1 = new RemoteCacheManager(configu1, true);
@@ -62,6 +71,7 @@ public class XSiteFailoverTest : XSiteTestSuite
             conf2 = new ConfigurationBuilder();
             conf2.AddServer().Host("127.0.0.1").Port(11322);
             conf2.AddCluster("lon").AddClusterNode("127.0.0.1", 11222);
+            conf2.BalancingStrategyProducer(d2);
             configu2 = conf2.Build();
             remoteManager = new RemoteCacheManager(configu2, true);
             cache2 = remoteManager.GetCache<String, String>();
