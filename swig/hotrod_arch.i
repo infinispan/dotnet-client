@@ -1,6 +1,8 @@
 %typemap(csinterfaces) infinispan::hotrod::ConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ConfigurationBuilder"
 %typemap(cscode) infinispan::hotrod::ConfigurationBuilder %{
 
+    private SWIGGen.FailOverRequestBalancingStrategyProducerDelegate id;
+
     public Infinispan.HotRod.SWIG.Configuration Create() {
         return create();
     }
@@ -67,7 +69,7 @@
 
     public Infinispan.HotRod.SWIG.ConfigurationBuilder BalancingStrategyProducer(Infinispan.HotRod.Config.FailOverRequestBalancingStrategyProducerDelegate d)
     {
-            SWIGGen.FailOverRequestBalancingStrategyProducerDelegate id = delegate () { return (new InternalFailOverRequestBalancingStrategy(d())).myHandle(); };
+            id = delegate () { return (new InternalFailOverRequestBalancingStrategy(d())).myHandle(); };
             balancingStrategyProducer(id);
             return this;
     }

@@ -52,7 +52,7 @@ namespace Infinispan.HotRod
     namespace Transport
     {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-        public class InetSocketAddress
+        public class InetSocketAddress : IEquatable<InetSocketAddress>
         {
             private string hostname;
             private int port;
@@ -81,6 +81,11 @@ namespace Infinispan.HotRod
                 {
                     port = value;
                 }
+            }
+
+            bool IEquatable<InetSocketAddress>.Equals(InetSocketAddress other)
+            {
+                return port.Equals(other.port) && hostname.Equals(other.hostname);
             }
         }
         public interface FailOverRequestBalancingStrategy
