@@ -12,9 +12,4 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Infinispan.HotRod\Infinispan.HotRod.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec command="xcopy /Y $(projectDir)..\resources\proto2\*.proto $(targetDir)\proto2\" />
-    <Exec command="xcopy /Y $(projectDir)..\resources\*.txt $(targetDir)" />
-    <Exec command="xcopy /Y $(projectDir)..\resources\*.js $(targetDir)" />
-  </Target>
 </Project>

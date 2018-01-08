@@ -129,9 +129,17 @@ Target "CopyResourcesToInfinispan" (fun _ ->
     trace "resources copied to infinispan"
 )
 
+// TODO: Remove hardcoded files destination
+Target "CopyResourcesToRuntime" (fun _ ->
+    Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/proto2/" (Directory.EnumerateFiles("../test/resources/proto2"))
+    Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/" (Directory.EnumerateFiles("../test/resources/", "*.txt"))
+    Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/" (Directory.EnumerateFiles("../test/resources/", "*.js"))
+    trace "resources copied to infinispan"
+)
+
 // main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
-    ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
+    ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "CopyResourcesToRuntime" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"
