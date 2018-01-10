@@ -310,6 +310,7 @@ let buildSwig () =
                                                 "Configuration", "RelWithDebInfo"
                                                 "Platform", "x64"
                                               ]}) "../swig/hotrod_wrap.vcxproj"
+        Copy "../swig/native_client/lib" ["../swig/build/RelWithDebInfo/hotrod_wrap.dll"]
     else
         let cppResult = ExecProcess (fun p ->
             p.FileName <- "g++"
