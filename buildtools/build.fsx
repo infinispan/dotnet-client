@@ -41,7 +41,10 @@ Target "GenerateProtoForTests" (fun _ ->
 
 Target "GenerateSwig" (fun _ ->
     trace "running swig generation"
-    let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    let cppClientLocation =
+        if (environVar "HOTROD_PREBUILT_DIR" <> null)
+            then environVar "HOTROD_PREBUILT_DIR"
+            else (downloadCppClientIfNonexist cppClientVersion)
     let swigToolPath = downloadSwigToolsIfNonexist swigVersion
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
     let cppClientInclude = @"native_client/include" // remember, it's gonna run from ../swig folder
@@ -53,7 +56,10 @@ Target "GenerateSwig" (fun _ ->
 
 Target "BuildSwigWraper" (fun _ ->
     trace "running swig wraper build"
-    let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    let cppClientLocation =
+        if (environVar "HOTROD_PREBUILT_DIR" <> null)
+            then environVar "HOTROD_PREBUILT_DIR"
+            else (downloadCppClientIfNonexist cppClientVersion)
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
     copyLibForSwig cppClientLocation "../swig/native_client/lib"
     buildSwig ()
@@ -106,7 +112,10 @@ Target "CppPackage" (fun _ ->
     let packageRoot = "tmp/Infinispan.HotRod.Cpp-Client/"
     let binsPath = "tmp/Infinispan.HotRod.Cpp-Client/runtimes/win7-x64/native"
     ensureDirectory binsPath
-    let cppClientLocation = downloadCppClientIfNonexist cppClientVersion
+    let cppClientLocation =
+        if (environVar "HOTROD_PREBUILT_DIR" <> null)
+            then environVar "HOTROD_PREBUILT_DIR"
+            else (downloadCppClientIfNonexist cppClientVersion)
     directoryCopy "../swig/build/RelWithDebInfo" binsPath false
     Copy binsPath (Directory.EnumerateFiles (sprintf "%s/lib" cppClientLocation))
     Copy packageRoot ["Infinispan.HotRod.Cpp-client.win7-x64.nuspec"]
