@@ -17,7 +17,6 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 
 %{
 #define HR_PROTO_EXPORT
-#define _WIN64
 #include <infinispan/hotrod/BasicMarshaller.h>
 #include <infinispan/hotrod/FailOverRequestBalancingStrategy.h>
 #include <infinispan/hotrod/ClientEvent.h>
@@ -91,14 +90,15 @@ public:
     AuthenticationStringCallback() { }
     AuthenticationStringCallback(const char* s) : c_string(s) { }
     virtual ~AuthenticationStringCallback() { }
-    virtual std::string getString() { return c_string; };
-    const char* getCString() { return c_string.data(); };
+    virtual const std::string& getString() { return c_string; };
+    const std::string& getStringCopy() { c_string = getString(); return c_string; };
     std::string c_string;
 };
 
 static int getrealm(void* context, int id, const char** result, unsigned int *len) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    *result=asc->getCString();
+    const std::string& s=asc->getStringCopy();
+    *result=s.data();
     *len = strlen(*result);
     return SASL_OK;
 }
@@ -117,7 +117,8 @@ static int getsecret(void* /* conn */, void* context, int id, sasl_secret_t **ps
 
 static int simple(void* context, int id, const char **result, unsigned int *len) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    *result=asc->getCString();
+    const std::string& s=asc->getStringCopy();
+    *result=s.data();
     if (len)
     {
         *len = strlen(*result);
@@ -127,7 +128,8 @@ static int simple(void* context, int id, const char **result, unsigned int *len)
 
 static int getpath(void *context, const char ** path) {
     AuthenticationStringCallback * asc = (AuthenticationStringCallback *) context;
-    *path=asc->getCString();
+    const std::string& s=asc->getStringCopy();
+    *path=s.data();
     if (!path)
         return SASL_BADPARAM;
     return SASL_OK;
@@ -324,26 +326,23 @@ namespace hotrod {
     void setupCallback(std::map<int, AuthenticationStringCallback *> mAsc)
     {
        int index = 0;
-       std::vector<sasl_callback_t> p_callbackHandler(mAsc.size()+1);
+       std::vector<sasl_callback_t> p_callbackHandler(mAsc.size()+2);
        for(auto&& iter: mAsc)
        {
-           AuthenticationStringCallback *asc;
            switch (iter.first) 
            {
                case SASL_CB_GETPATH:
-                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
-                  p_callbackHandler[index++]= {SASL_CB_GETPATH, (sasl_callback_ft) &getpath, (void*) asc};
+                  p_callbackHandler[index++]= {SASL_CB_GETPATH, (sasl_callback_ft) &getpath, (void*) iter.second};
                   break;
                case SASL_CB_USER:
-                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
-                  p_callbackHandler[index++]= {SASL_CB_USER, (sasl_callback_ft) &simple, (void*) asc};
+                  p_callbackHandler[index++]= {SASL_CB_USER, (sasl_callback_ft) &simple, (void*) iter.second};
+                  p_callbackHandler[index++]= {SASL_CB_AUTHNAME, (sasl_callback_ft) &simple, (void*) iter.second};
                   break;
                case SASL_CB_PASS:
                   p_callbackHandler[index++]= {SASL_CB_PASS, (sasl_callback_ft) &getsecret, (void*) iter.second};
                   break;
                case SASL_CB_GETREALM:
-                  asc= new AuthenticationStringCallback(iter.second->getString().c_str());
-                  p_callbackHandler[index++]= {SASL_CB_GETREALM, (sasl_callback_ft) &getrealm, (void*) asc};
+                  p_callbackHandler[index++]= {SASL_CB_GETREALM, (sasl_callback_ft) &getrealm, (void*) iter.second};
                   break;
                default:
                break;
