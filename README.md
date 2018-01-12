@@ -1,23 +1,23 @@
 # C# Hot Rod Client #
 
-## Build ##
+Two build modes are available:
+
+* Build mode 1 produces an .msi package to be used on Windows
+* Build mode 2 produces a multiplatform .NET Core artifact
+
+## Build mode 1
 Build prerequisites:
 
-* C++ HotRod Client 8.1.0 (www.infinispan.org/hotrod-clients/)
+* C++ HotRod Client (www.infinispan.org/hotrod-clients/)
 * CMake 3.x (www.cmake.org)
 * C++11
 * SWIG 2.0.x (http://www.swig.org)
 * .NET Framework 4.5
 * NLog 2.1.0 (http://nlog-project.org/)
-* NUnit 2.6.3 (https://launchpad.net/nunitv2)
+* Google.Protobuf 3.4.0 .NET assembly with protoc
+* NUnit 3.8.0 (https://github.com/nunit/nunit)
 * IKVM.NET 8.1.5717.0 (http://www.ikvm.net/)
-* Google.Protobuf 3.x .net assembly with protoc
-    
-    Example installation using Nuget:
-  
-       current_dir> nuget install Google.Protobuf -Pre -Version 3.0.0-beta2
-        
-* OpenSSL 1.x
+* For running tests, you also need to have Java 8 installed (JDK tested).
 
 Note: after unpacking IKVM please edit the .exe.config files in <ikvm-root>/bin
 and comment-out the "\<supportedRuntime version="v2.0.50727"/\>" element from all
@@ -77,6 +77,24 @@ the build is complete you cand find the package in build_windows/ with a name en
 
 Support for building the client using Mono (http://www.mono-project.com) will
 be coming soon.
+
+## Build mode 2
+
+Requirements:
+
+* .NET Core SDK and Runtime. Tools other than that are downloaded from internet to `./buildtools`. It uses [FAKE](http://fake.build) internally, bootstrapped from `.\build.ps1`.
+
+* mono, unzip and wget on Linux.
+* the C++ native client. This is automatically downloaded from the build script or a local version can be used pointing the env var HOTROD_PREBUILT_DIR to the root of the unpacked package (cmake/cpack usually put these files under /build_dir/_CPack_Packages)
+
+### On windows
+
+Once you run `.\build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
+
+### On Linux
+
+To build make build.sh executable (chmod +x build.sh) and run `./build.sh Build` (any command mentioned here should work with `build.sh` instead of `build.ps1`).
+
 
 ## Reporting Issues ##
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org
