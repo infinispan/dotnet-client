@@ -44,14 +44,14 @@ namespace Infinispan.HotRod.Tests
         [Test]
         public void SNI1CorrectCredentialsTest()
         {
-            ConfigureSecuredCaches("keystore_server_sni1.pem", "keystore_client.p12", "sni1");
+            ConfigureSecuredCaches("keystore_server_sni1_rsa.pem", "keystore_client.p12", "sni1");
             tester.TestWriterSuccess(testCache);
         }
 
         [Test]
         public void SNI2CorrectCredentialsTest()
         {
-            ConfigureSecuredCaches("keystore_server_sni2.pem", "keystore_client.p12", "sni2");
+            ConfigureSecuredCaches("keystore_server_sni2_rsa.pem", "keystore_client.p12", "sni2");
             tester.TestWriterSuccess(testCache);
         }
 
