@@ -50,7 +50,7 @@
                 </authentication>
                 <server-identities>
                     <ssl>
-                        <keystore path="keystore_server_sni1.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                        <keystore path="keystore_server_sni1_rsa.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     </ssl>
                 </server-identities>
             </security-realm>
@@ -62,7 +62,7 @@
                 </authentication> 
                 <server-identities>
                     <ssl>
-                        <keystore path="keystore_server_sni2.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                        <keystore path="keystore_server_sni2_rsa.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     </ssl>
                 </server-identities>
             </security-realm>
@@ -74,7 +74,7 @@
                 </authentication>
                 <server-identities>
                     <ssl>
-                        <keystore path="keystore_server_sni3_untrusted.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
+                        <keystore path="keystore_server_sni3_untrusted_rsa.jks" relative-to="jboss.server.config.dir" keystore-password="secret"/>
                     </ssl>
                 </server-identities>
             </security-realm>
