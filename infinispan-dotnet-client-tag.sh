@@ -11,18 +11,16 @@ if [ "$#" == "1" ]; then
   echo HOTROD_VERSION_PATCH=$MIC
   echo HOTROD_VERSION_LABEL=$QUAL
   if [ -n "$MAJ" ] && [ -n "$MIN" ] && [ -n "$PAT" ] && [ -z "$EXTRA" ]; then
-    git checkout -b __tmp origin/master
     sed -i -e 's/set (HOTROD_VERSION_MAJOR *".*")/set (HOTROD_VERSION_MAJOR "'"$MAJ"'")/' \
     -e 's/set (HOTROD_VERSION_MINOR *".*")/set (HOTROD_VERSION_MINOR "'"$MIN"'")/' \
     -e 's/set (HOTROD_VERSION_PATCH *".*")/set (HOTROD_VERSION_PATCH "'"$MIC"'")/' \
     -e 's/set (HOTROD_VERSION_LABEL *".*")/set (HOTROD_VERSION_LABEL "'"$QUAL"'")/' CMakeLists.txt
     sed -i -e 's/ branches: \[\[name: '\''master'\''/ branches: \[\[name: '\''refs\/tags\/'$MAJ.$MIN.$PAT\''/' Jenkinsfile
-    git add CMakeLists.txt Jenkinsfile
-    git commit -m  "$MAJ.$MIN.$PAT"
-    git tag -a "$MAJ.$MIN.$PAT" -m "$MAJ.$MIN.$PAT"
-    git push origin "$MAJ.$MIN.$PAT"
-    git checkout master
-    git branch -D __tmp
+    sed -i "s/cppTag.*/cppTag = '$1'/" Jenkinsfile
+    sed -i "s/version_1major.*/version_1major = '$MAJ'/" Jenkinsfile
+    sed -i "s/version_2minor.*/version_2minor = '$MIN'/" Jenkinsfile
+    sed -i "s/version_3micro.*/version_3micro = '$MIC'/" Jenkinsfile
+    sed -i "s/version_4qualifier.*/version_4qualifier = '$QUAL'/" Jenkinsfile
     exit 0
   fi
 fi
