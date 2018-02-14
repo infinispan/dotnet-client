@@ -23,6 +23,13 @@ namespace Infinispan.HotRod.Tests
             remoteManager2 = new RemoteCacheManager(conf.Build(), true);
         }
 
+        [TestFixtureTearDown]
+        public void AfterClass()
+        {
+            remoteManager1.Stop();
+            remoteManager2.Stop();
+        }
+
         [Test]
         public void ClientsInvalidatedTest()
         {
