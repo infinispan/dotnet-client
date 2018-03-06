@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build C++ core') {
             environment {
-                cppTag = '8.1.0.Final'
+                cppTag = '8.2.0.Final'
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
                 INFINISPAN_VERSION = '9.0.0.Final'
@@ -24,7 +24,7 @@ pipeline {
                 test32 = 'empty'
                 test64 = 'empty'
                 version_1major = '8'
-                version_2minor = '1'
+                version_2minor = '2'
                 version_3micro = '0'
                 version_4qualifier = 'Final'
                 HOTROD_LOG_LEVEL = 'TRACE'
@@ -33,7 +33,7 @@ pipeline {
                 dir('cpp-client') {
                     checkout scm: [$class: 'GitSCM',
                        userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
-                       branches: [[name: 'master']]], changelog: false, poll: false
+                       branches: [[name: 'refs/tags/8.2.0.Final']]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
@@ -76,11 +76,11 @@ pipeline {
                 SWIG_EXECUTABLE  = 'C:\\\\PROGRA~1\\\\SWIGWI~1.12\\\\SWIG.EXE'
                 test32  = 'skip'
                 test64  = 'run'
-                version_1major  = '8'
-                version_2minor  = '1'
-                version_3micro  = '0'
-                version_4qualifier  = 'Final'
-                cppTag  = '8.1.0.Final'
+                version_1major = '8'
+                version_2minor = '2'
+                version_3micro = '0'
+                version_4qualifier = 'Final'
+                cppTag = '8.2.0.Final'
             }
             steps {
                 script {
