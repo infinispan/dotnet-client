@@ -24,7 +24,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             conf.Marshaller(marshaller);
             remoteManager = new RemoteCacheManager(conf.Build(), true);
         }
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterClass()
         {
           remoteManager.Stop();
