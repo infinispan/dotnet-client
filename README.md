@@ -95,6 +95,9 @@ Once you run `.\build.ps1`, it will create a cache with all tools necessary, so 
 
 To build make build.sh executable (chmod +x build.sh) and run `./build.sh Build` (any command mentioned here should work with `build.sh` instead of `build.ps1`).
 
+#### Configuration
+The C++ client library must match the compiler version in use for the swig wrapper. If the libraries download by the script (from ci.infinispan.org) do not fit your needs just compile the C++ client from the source and point the HOTROD_PREBUILT_DIR to the dist directory (the dir containing the unpacked .rpm), thus:
+    HOTROD_PREBUILD_DIR=<path to unpacked rpm> ./build.sh
 
 ## Reporting Issues ##
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org

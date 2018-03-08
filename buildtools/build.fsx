@@ -17,12 +17,13 @@ let infinispanServerVersion = "9.1.1.Final"
 let generateDir = "../../../src/Infinispan.HotRod/generated"
 let generateSwigDir = "../src/Infinispan.HotRod/generated"
 let generateTestDir = "../test/Infinispan.HotRod.Tests/generated"
+let copiedNativeLibDir = "../swig/native_client/lib"
 
 Target "Clean" (fun _ ->
     // git will not preserve empty folders, so ensure they exist because the tools expect them to exist and clean them
     [generateDir; generateTestDir]
         |> Seq.iter ensureDirectory
-    CleanDirs [generateDir; generateTestDir]
+    CleanDirs [generateDir; generateTestDir; generateSwigDir; copiedNativeLibDir]
 )
 
 Target "GenerateProto" (fun _ ->
