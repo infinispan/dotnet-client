@@ -26,7 +26,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             remoteManager2 = new RemoteCacheManager(conf.Build(), true);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterClass()
         {
             remoteManager1.Stop();

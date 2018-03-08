@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.ClusteredXml2
 {
     class StickyBalancingStragegy : Infinispan.HotRod.Transport.FailOverRequestBalancingStrategy
     {
@@ -32,6 +32,9 @@ namespace Infinispan.HotRod.Tests
         }
     }
 
+    [TestFixture]
+    [Category("clustered_xml_2")]
+    [Category("ClusterTestSuite")]
     public class NearCacheFailoverTest
     {
         RemoteCacheManager remoteManager;
@@ -46,7 +49,7 @@ namespace Infinispan.HotRod.Tests
             return b;
         };
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void BeforeClass()
         {
             // Servers startup
@@ -68,7 +71,7 @@ namespace Infinispan.HotRod.Tests
             remoteManager = new RemoteCacheManager(conf.Build(), true);
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void AfterClass()
         {
             remoteManager.Stop();
