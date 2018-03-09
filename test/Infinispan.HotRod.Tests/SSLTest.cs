@@ -2,8 +2,10 @@
 using NUnit.Framework;
 using Infinispan.HotRod.Config;
 
-namespace Infinispan.HotRod.Tests
+namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
 {
+    [Category("SecurityTestSuite")]
+    [Category("standalone_hotrod_ssl_xml")]
     class SSLTest
     {
         private AuthorizationTester tester = new AuthorizationTester();
@@ -108,11 +110,7 @@ namespace Infinispan.HotRod.Tests
 
         private void CheckFileExists(string filename)
         {
-            if (!System.IO.File.Exists(filename))
-            {
-                Console.WriteLine("File not found: " + filename);
-                Environment.Exit(-1);
-            }
+            Assert.IsTrue(filename!="" && System.IO.File.Exists(filename));
         }
     }   
 }

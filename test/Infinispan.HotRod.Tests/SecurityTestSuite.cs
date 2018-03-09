@@ -4,8 +4,9 @@ using NUnit.Framework;
 using System.Collections;
 using System;
 
-namespace Infinispan.HotRod.TestSuites
+namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
 {
+    [SetUpFixture]
     public class SecurityTestSuite
     {
         HotRodServer server;
