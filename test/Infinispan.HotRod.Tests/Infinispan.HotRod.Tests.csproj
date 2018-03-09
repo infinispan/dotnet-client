@@ -12,4 +12,12 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Infinispan.HotRod\Infinispan.HotRod.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <MySourceFiles Include="..\resources\certificates\keystore_client.p12;..\resources\certificates\infinispan-ca.pem;
+     ..\resources\certificates\keystore_server_sni1_rsa.pem;..\resources\certificates\keystore_server_sni2_rsa.pem;..\resources\certificates\malicious.pem;
+     ..\resources\certificates\malicious_client.p12;"/>
+  </ItemGroup>
+  <Target Name="CopyResources" AfterTargets="AfterBuild">
+    <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>
