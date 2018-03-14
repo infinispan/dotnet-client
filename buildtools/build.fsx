@@ -99,7 +99,8 @@ Target "Test" (fun _ ->
 )
 
 Target "Pack" (fun _ ->
-    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"})
+    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"
+                            Configuration = "RelWithDebInfo" })
     trace "packages created"
 )
 
