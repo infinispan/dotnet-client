@@ -48,7 +48,7 @@ let downloadArtifact (url:string) (downloadLocation:string) (fileName:string) =
         ExecProcess (fun p ->
             p.FileName <- "wget"
             p.Arguments <- sprintf "-N -P %s %s" downloadLocation url
-            p.WorkingDirectory <- ".") (TimeSpan.FromMinutes 5.0)
+            p.WorkingDirectory <- ".") (TimeSpan.FromMinutes 15.0)
         |> ignore
     else
         let client = new WebClient()
