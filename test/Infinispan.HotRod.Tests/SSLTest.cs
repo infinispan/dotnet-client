@@ -60,7 +60,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         [Test]
         public void SNIUntrustedTest()
         {
-            ConfigureSecuredCaches("malicious.pem", "keystore_client.p12", "sni3-untrusted");
+            Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => ConfigureSecuredCaches("malicious.pem", "keystore_client.p12", "sni3-untrusted"));
             var ex = Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => tester.TestWriterSuccess(testCache));
             Assert.AreEqual("**** The server certificate did not validate correctly.\n",ex.Message);
         }
