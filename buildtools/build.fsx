@@ -138,6 +138,7 @@ Target "CppPackagePublish" (fun _ ->
 Target "CopyResourcesToInfinispan" (fun _ ->
     Copy ((environVar "JBOSS_HOME") @@ "/standalone/configuration") (Directory.EnumerateFiles("../test/resources"))
     Copy ((environVar "JBOSS_HOME") @@ "/standalone/configuration") (Directory.EnumerateFiles("../test/resources/certificates"))
+    Copy ((environVar "JBOSS_HOME") @@ "/standalone/deployments") (Directory.EnumerateFiles("../test/resources/libs"))
     trace "resources copied to infinispan"
 )
 
