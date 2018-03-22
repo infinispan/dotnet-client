@@ -27,36 +27,37 @@ Target "Clean" (fun _ ->
 )
 
 Target "GenerateProto" (fun _ ->
-    trace "running generation of proto files"
+    trace "Target GenerateProto: running generation of proto files"
     let protocLocation = downloadProtocIfNonexist protobufVersion
     generateCSharpFromProtoFiles protocLocation "../src/resources/proto" generateDir
-    trace "proto files generated"
+    trace "Target GenerateProto: proto files generated"
 )
 
 Target "GenerateProtoForTests" (fun _ ->
-    trace "running generation of proto files for tests"
+    trace "Target GenerateProtoForTests: running generation of proto files for tests"
     let protocLocation = downloadProtocIfNonexist protobufVersion
     generateCSharpFromProtoFiles protocLocation "../test/resources/proto3" ("../../" + generateTestDir)
-    trace "proto files for tests generated"
+    trace "Target GenerateProtoForTests: proto files for tests generated"
 )
 
 Target "GenerateSwig" (fun _ ->
-    trace "running swig generation"
+    trace "Target GenerateSwig: running swig generation"
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
             then environVar "HOTROD_PREBUILT_DIR"
             else (downloadCppClientIfNonexist cppClientVersion)
+    trace ("Target GenerateSwig: cpp client location is: " <+ cppClientLocation)
     let swigToolPath = downloadSwigToolsIfNonexist swigVersion
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
     let cppClientInclude = @"native_client/include" // remember, it's gonna run from ../swig folder
     let sourceDir = "../swig"
     let _namespace = "Infinispan.HotRod.SWIGGen"
     generateCSharpFilesFromSwigTemplates swigToolPath cppClientInclude sourceDir _namespace generateSwigDir
-    trace "swig generated"
+    trace "Target GenerateSwig: swig generated"
 )
 
 Target "BuildSwigWraper" (fun _ ->
-    trace "running swig wraper build"
+    trace "Target BuildSwigWrapper: running swig wraper build"
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
             then environVar "HOTROD_PREBUILT_DIR"
@@ -67,45 +68,45 @@ Target "BuildSwigWraper" (fun _ ->
 )
 
 Target "Generate" (fun _ ->
-    trace "proto files and swig files generated"
+    trace "Target Generate: proto files and swig files generated"
 )
 
 Target "Build" (fun _ ->
     Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"
                              Configuration = "RelWithDebInfo"})
-    trace "solution built"
+    trace "Target Generate: solution built"
 )
 
 Target "ObtainInfinispan" (fun _ ->
     let infinispanLocation = downloadInfinispanIfNeeded infinispanServerVersion
     if (environVar "JBOSS_HOME") = null then
        setEnvironVar "JBOSS_HOME" infinispanLocation
-    trace "Infinispan obtained"
+    trace "Target ObtainInfinispan: Infinispan obtained"
 )
 
 Target "UnitTest" (fun _ ->
     Test (fun p -> { p with Project = "../test/Infinispan.HotRod.Tests/Infinispan.HotRod.Tests.csproj"
                             AdditionalArgs = ["--logger \"trx;LogFileName=TestResults.trx\""; "--no-build";]
                             Configuration = "RelWithDebInfo" } )
-    trace "unit tests done"
+    trace "Target UnitTest: unit tests done"
 )
 
 Target "IntegrationTest" (fun _ ->
-    trace "integration tests done"
+    trace "Target IntegrationTest: integration tests done"
 )
 
 Target "Test" (fun _ ->
-    trace "tests done"
+    trace "Target Test: tests done"
 )
 
 Target "Pack" (fun _ ->
     Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"
                             Configuration = "RelWithDebInfo" })
-    trace "packages created"
+    trace "Target Pack: packages created"
 )
 
 Target "Publish" (fun _ ->
-    trace "published"
+    trace "Target Publish: published"
 )
 
 // CPP client targets
@@ -128,18 +129,18 @@ Target "CppPackage" (fun _ ->
                         ToolPath = "tmp/nuget/nuget.exe"
                         Version = cppClientPackageVersion
                         Publish = false }) "Infinispan.HotRod.Cpp-client.win7-x64.nuspec"
-    trace "cpp-client package created"
+    trace "Target CppPackage: cpp-client package created"
 )
 
 Target "CppPackagePublish" (fun _ ->
-    trace "cpp-client package published"
+    trace "Target CppPackagePublish: cpp-client package published"
 )
 
 Target "CopyResourcesToInfinispan" (fun _ ->
     Copy ((environVar "JBOSS_HOME") @@ "/standalone/configuration") (Directory.EnumerateFiles("../test/resources"))
     Copy ((environVar "JBOSS_HOME") @@ "/standalone/configuration") (Directory.EnumerateFiles("../test/resources/certificates"))
     Copy ((environVar "JBOSS_HOME") @@ "/standalone/deployments") (Directory.EnumerateFiles("../test/resources/libs"))
-    trace "resources copied to infinispan"
+    trace "Target CopyResourcesToInfinispan: resources copied to infinispan"
 )
 
 // TODO: Remove hardcoded files destination
@@ -147,7 +148,7 @@ Target "CopyResourcesToRuntime" (fun _ ->
     Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/proto2/" (Directory.EnumerateFiles("../test/resources/proto2"))
     Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/" (Directory.EnumerateFiles("../test/resources/", "*.txt"))
     Copy "../test/Infinispan.HotRod.Tests/bin/RelWithDebInfo/netcoreapp2.0/" (Directory.EnumerateFiles("../test/resources/", "*.js"))
-    trace "resources copied to infinispan"
+    trace "Target CopyResourcesToRuntime: resources copied to infinispan"
 )
 
 // main targets chain
