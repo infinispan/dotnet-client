@@ -85,7 +85,7 @@ Requirements:
 * .NET Core SDK and Runtime. Tools other than that are downloaded from internet to `./buildtools`. It uses [FAKE](http://fake.build) internally, bootstrapped from `.\build.ps1`.
 
 * mono, unzip and wget on Linux.
-* the C++ native client. This is automatically downloaded from the build script or a local version can be used pointing the env var HOTROD_PREBUILT_DIR to the root of the unpacked package (cmake/cpack usually put these files under /build_dir/_CPack_Packages)
+* the C++ native client. This is automatically downloaded from the build script or a local version can be used pointing the env var HOTROD_PREBUILT_DIR to the root of the unpacked package (cmake/cpack usually puts these files under /build_dir/_CPack_Packages)
 
 ### On windows
 

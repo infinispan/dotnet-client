@@ -17,7 +17,15 @@
      ..\resources\certificates\keystore_server_sni1_rsa.pem;..\resources\certificates\keystore_server_sni2_rsa.pem;..\resources\certificates\malicious.pem;
      ..\resources\certificates\malicious_client.p12;"/>
   </ItemGroup>
+  <ItemGroup>
+    <MySourceProtoFiles Include="..\resources\proto2\*"/>
+  </ItemGroup>
+  <ItemGroup>
+    <MyDataFiles Include="..\resources\macbeth.txt;..\resources\wordCountStream.js"/>
+  </ItemGroup>
   <Target Name="CopyResources" AfterTargets="AfterBuild">
     <Copy SourceFiles="@(MySourceFiles)" DestinationFolder="$(OutDir)" />
+    <Copy SourceFiles="@(MySourceProtoFiles)" DestinationFolder="$(OutDir)\proto2" />
+    <Copy SourceFiles="@(MyDataFiles)" DestinationFolder="$(OutDir)" />
   </Target>
 </Project>
