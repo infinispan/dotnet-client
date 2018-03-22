@@ -11,6 +11,8 @@ open Fake.ArchiveHelper.Tar.GZip
 
 let nugetPath = "./tmp/nuget/nuget.exe"
 
+let (<+) l r = sprintf "%s%s" l r
+
 // Copy directory function
 let rec directoryCopy srcPath dstPath copySubDirs =
 
@@ -130,13 +132,13 @@ let downloadCppClientIfNonexist cppClientVersion =
             let cppClientUrl = if cppClientVersion.Contains("SNAPSHOT")
                                then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion)
                                else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion)
-            trace (sprintf "downloading cpp-client version %s" cppClientVersion)
+            trace ("downloadCppClientIfNonexist: downloading cpp-client version " <+ cppClientVersion)
             downloadArtifact cppClientUrl  "tmp" cppClientZipName
-            trace "client downloaded, unziping"
+            trace "downloadCppClientIfNonexist: client downloaded, unziping"
             if unzipFile cppClientZipName "tmp" <> 0 then failwith (sprintf "cannot unzip %s" cppClientZipName) 
-            trace "client unziped"
+            trace "downloadCppClientIfNonexist: client unziped"
         else
-            trace "cpp client already downloaded, skipping"
+            trace "downloadCppClientIfNonexist: cpp client already downloaded, skipping"
         cppClientDirectory
     else
         let cppLinuxClientDirectory = sprintf "infinispan-hotrod-cpp-%s-RHEL-x86_64" cppClientVersion
@@ -145,13 +147,13 @@ let downloadCppClientIfNonexist cppClientVersion =
             let cppClientUrl = if cppClientVersion.Contains("SNAPSHOT")
                                then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build/_CPack_Packages/RHEL-x86_64/RPM/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion)
                                else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-RHEL-x86_64.rpm" cppClientVersion cppClientVersion)
-            trace (sprintf "downloading cpp-linux-client version %s" cppClientVersion)
+            trace ("downloadCppClientIfNonexist: downloading cpp-linux-client version " <+ cppClientVersion)
             downloadArtifact cppClientUrl "tmp" cppLinuxClientRpmName
-            trace "client downloaded, unziping"
+            trace "downloadCppClientIfNonexist: client downloaded, unziping"
             unzipRpmFile cppLinuxClientRpmName "tmp" cppLinuxClientDirectory
-            trace "client unziped"
+            trace "downloadCppClientIfNonexist: client unziped"
         else
-            trace "cpp linux client already downloaded, skipping"
+            trace "downloadCppClientIfNonexist: cpp linux client already downloaded, skipping"
         "tmp/" @@ cppLinuxClientDirectory
 
 
@@ -168,6 +170,7 @@ let copyIncludeForSwig cppClientLocation swigTargetDir =
             (cppClientLocation @@ "include")
         else
             (cppClientLocation @@ "usr/include")
+    trace ("copyIncludeForSwig cpp client include file location is: " <+ sourceDir)
     directoryCopy sourceDir swigTargetDir true
 
 ///**Description**
@@ -183,6 +186,7 @@ let copyLibForSwig cppClientLocation swigTargetDir =
             (cppClientLocation @@ "lib")
         else
             (cppClientLocation @@ "usr/lib")
+    trace ("copyLibForSwig cpp client include file location is: " <+ sourceDir)
     directoryCopy sourceDir swigTargetDir true
 
 ///**Description**
@@ -200,11 +204,11 @@ let downloadInfinispanIfNeeded infinispanServerVersion =
     if not (Directory.Exists infinispanPath) then
         let infinispanServerFileName = sprintf "infinispan-server-%s-bin.zip" infinispanServerVersion
         let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/%s" infinispanServerVersion infinispanServerFileName
-        trace (sprintf "downloading infinispan server version %s" infinispanServerVersion)
+        trace ("downloadInfinispanIfNeeded: downloading infinispan server version " <+ infinispanServerVersion)
         downloadArtifact infinispanServerUrl "tmp" infinispanServerFileName
-        trace "infinispan downloaded, unziping"
-        if unzipFile infinispanServerFileName "tmp" <> 0 then failwith ("cannot unzip " @@ infinispanServerFileName)
-        trace "infinispan unziped"
+        trace "downloadInfinispanIfNeeded: infinispan downloaded, unziping"
+        if unzipFile infinispanServerFileName "tmp" <> 0 then failwith ("cannot unzip " <+ infinispanServerFileName)
+        trace "downloadInfinispanIfNeeded: infinispan unziped"
     infinispanPath
 
 ///**Description**
@@ -228,7 +232,7 @@ let downloadSwigToolsIfNonexist swigVersion =
                     OutputDirectory = "tmp";
                     ExcludeVersion = true}) "swigwintools"
         else
-            trace "swig tools already exists, skipping"
+            trace "downloadSwigToolsIfNonexist swig tools already exists, skipping"
         swigLocation
     else
         "swig"
@@ -253,7 +257,7 @@ let downloadProtocIfNonexist protocVersion =
                 OutputDirectory = "tmp";
                 ExcludeVersion = true}) "Google.Protobuf.Tools"
     else
-        trace "protoc already exists, skipping"
+        trace "downloadProtocIfNonexist: protoc already exists, skipping"
     protocLocation
 
 ///**Description**
@@ -269,7 +273,7 @@ let downloadProtocIfNonexist protocVersion =
 ///**Exceptions**
 ///
 let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
-    trace (sprintf "running C# generation from proto files in %s to %s" sourceDir targetDir)
+    trace ("downloadProtocIfNonexist: running C# generation from proto files in " <+ sourceDir <+ " to " <+ targetDir)
     let location = if isLinux then "tmp/Google.Protobuf.Tools/tools/linux_x64/protoc"
                    else if isMacOS then "tmp/Google.Protobuf.Tools/tools/macosx_x64/protoc"
                    else protocLocation
@@ -298,6 +302,10 @@ let generateCSharpFromProtoFiles protocLocation sourceDir targetDir =
 ///
 let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _namespace targetDir =
     let swigLocation = if isLinux then "swig" else swigToolPath
+    trace ("generateCSharpFilesFromSwigTemplates: swig location is " <+ swigLocation)
+    trace ("generateCSharpFilesFromSwigTemplate: namespace is " <+ _namespace)
+    trace ("generateCSharpFilesFromSwigTemplate: include path is " <+ includePath)
+    trace ("generateCSharpFilesFromSwigTemplate: target dir is " <+ targetDir)
     let swigResult = ExecProcess (fun p ->
         p.FileName <- swigLocation
         p.Arguments <- sprintf "-csharp -v -namespace %s -c++ -dllimport hotrod_wrap -DSWIG2_CSHARP -I%s -Iinclude -outdir %s hotrodcs.i" _namespace includePath targetDir
