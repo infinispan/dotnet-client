@@ -88,16 +88,19 @@ Requirements:
 * the C++ native client. This is automatically downloaded from the build script or a local version can be used pointing the env var HOTROD_PREBUILT_DIR to the root of the unpacked package (cmake/cpack usually puts these files under /build_dir/_CPack_Packages)
 
 ### On windows
-
 Once you run `.\build.ps1`, it will create a cache with all tools necessary, so that it is not downloaded all the time. If you want to wipe that, simply delete folder `buildtools/tmp`.
 
 ### On Linux
-
 To build make build.sh executable (chmod +x build.sh) and run `./build.sh Build` (any command mentioned here should work with `build.sh` instead of `build.ps1`).
 
-#### Configuration
+#### Link the correct C++ core
 The C++ client library must match the compiler version in use for the swig wrapper. If the libraries download by the script (from ci.infinispan.org) do not fit your needs just compile the C++ client from the source and point the HOTROD_PREBUILT_DIR to the dist directory (the dir containing the unpacked .rpm), thus:
     HOTROD_PREBUILD_DIR=<path to unpacked rpm> ./build.sh
+    & { $env:HOTROD_PREBUILT_DIR="<path to unpacked zip> ; .\build.ps1 }
+
+### Run the test suite
+The system must be able to find the native libraries under the swig/native_client/lib folder so add it either to the LD_LIBRARY_PATH (linux) or to the PATH (win) variable. Define a JBOSS_HOME pointing to your Infinispan server location (in Windows use the Unix file separator '/') and then run the test suite with dotnet:
+	dotnet test 
 
 ## Reporting Issues ##
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org
