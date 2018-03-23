@@ -29,6 +29,24 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             remoteManager.Stop();
         }
 
+        void checkIsNearWithRetry(IRemoteCache<string,string> cache, string key)
+        {
+
+            ServerStatistics stats0 = cache.Stats();
+            ServerStatistics stats1 = null;
+            for (var i = 0; i < 10; i++)
+            {
+                cache.Get(key);
+                stats1 = cache.Stats();
+                if (stats0.GetIntStatistic("nearHits") + 1 == stats1.GetIntStatistic("nearHits"))
+                {
+                    break;
+                }
+                System.Threading.Thread.Sleep(200);
+            }
+            Assert.AreEqual(stats0.GetIntStatistic("nearHits") + 1, stats1.GetIntStatistic("nearHits"));
+        }
+
         [Test]
         public void PutGetTest()
         {
@@ -38,19 +56,17 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             cache.Get("key1");
             cache.Put("key1", "value1");
             cache.Get("key1");
-            // key1 is near now
-            cache.Get("key1");
+            // Check and ensure key1 is near
+            checkIsNearWithRetry(cache, "key1");
             var stats1 = cache.Stats();
-            // Retrieve stats form the server and do some checks
-            // counters don't consider hit and miss on the near cache
-            Assert.AreEqual(stats0.GetIntStatistic("hits")+1, stats1.GetIntStatistic("hits"));
+            // Check also the misses counter
             Assert.AreEqual(stats0.GetIntStatistic("misses")+1, stats1.GetIntStatistic("misses"));
             // now fill the near cache
             for (int i=0; i<10; i++)
             {
                 cache.Put("key" + (i+2), "value" + (i+2));
-                //call Get to populate the near cache
-                cache.Get("key" + (i+2));
+                // populate the near cache
+                checkIsNearWithRetry(cache, "key" + (i + 2));
             }
             var stats2 = cache.Stats();
             // key1 is now far
