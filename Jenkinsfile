@@ -65,7 +65,7 @@ pipeline {
                 MVN_PROGRAM  = 'C:\\\\APACHE~1.9\\\\BIN\\\\MVN'
                 NLOG_DLL  = 'c:\\\\data\\\\NLog-2.1.0\\\\net40\\\\NLog.dll'
                 NLOG_LICENSE  = 'c:\\\\data\\\\NLog_License.txt'
-                NUNIT_DLL  = 'C:\\\\Users\\\\Administrator\\\\NUnit.Runners.Net4.2.6.4\\\\tools\\\\nunit.framework.dll'
+                NUNIT_DLL  = 'C:\\\\Users\\\\Administrator\\\\NUnit.3.8.0\\\\lib\\\\net45\\\\nunit.framework.dll'
                 OPENSSL_ROOT_DIR  = 'c:/OpenSSL-Win64'
                 PROTOBUF_INCLUDE_DIR  = 'C:\\\\protobuf-2.6.1-pack\\\\include'
                 PROTOBUF_LIBRARY  = 'C:\\\\protobuf-2.6.1-pack\\\\lib\\\\libprotobuf-static.lib'
