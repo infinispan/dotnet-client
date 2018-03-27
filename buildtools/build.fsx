@@ -52,6 +52,8 @@ Target "GenerateSwig" (fun _ ->
     let cppClientInclude = @"native_client/include" // remember, it's gonna run from ../swig folder
     let sourceDir = "../swig"
     let _namespace = "Infinispan.HotRod.SWIGGen"
+    if not <| System.IO.Directory.Exists(generateSwigDir) then
+        System.IO.Directory.CreateDirectory(generateSwigDir) |> ignore
     generateCSharpFilesFromSwigTemplates swigToolPath cppClientInclude sourceDir _namespace generateSwigDir
     trace "Target GenerateSwig: swig generated"
 )
@@ -100,7 +102,14 @@ Target "Test" (fun _ ->
 )
 
 Target "Pack" (fun _ ->
-    Pack (fun p -> { p with Project = "../Infinispan.HotRod.sln"
+    Pack (fun p -> { p with Project = "../src/Infinispan.HotRod/Infinispan.HotRod.csproj"
+                            Configuration = "RelWithDebInfo" })
+    trace "Target Pack: packages created"
+)
+
+// This target is just to speed up devs
+Target "QuickPack" (fun _ ->
+    Pack (fun p -> { p with Project = "../src/Infinispan.HotRod/Infinispan.HotRod.csproj"
                             Configuration = "RelWithDebInfo" })
     trace "Target Pack: packages created"
 )
@@ -152,10 +161,17 @@ Target "CopyResourcesToRuntime" (fun _ ->
 )
 
 // main targets chain
-"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
-    ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "CopyResourcesToRuntime" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
+"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "Generate" ==> "Build"
+"GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
+"Build" ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "CopyResourcesToRuntime" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
 "BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"
+
+// Quick package skipping test
+
+"Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "Generate" ==> "Build" ==> "QuickPack"
+"GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build" ==> "QuickPack"
+
 
 RunParameterTargetOrDefault "target" "Build"
