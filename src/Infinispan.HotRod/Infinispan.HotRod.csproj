@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>Infinispan.HotRod</PackageId>
     <PackageVersion>8.2.0-Alpha2</PackageVersion>
     <Authors>infinispan.org</Authors>
     <Description>.NET core binding of C# HotRod client for connecting to infinispan</Description>
@@ -21,7 +20,41 @@
   </ItemGroup>
 
   <ItemGroup>
-     <Content Include="../../License.rtf"/>
-     <Content Include="../../templates/README.txt.in"/>
+     <Content Include="../../License.rtf;../../templates/README.txt.in">
+         <PackagePath>docs</PackagePath>
+     </Content>
   </ItemGroup>
+
+
+    <Choose>
+        <When Condition="'$(ARCH)' == ''">
+            <PropertyGroup>
+                <PackageId>Infinispan.HotRod</PackageId>
+            </PropertyGroup>
+              <ItemGroup>
+     <Content Include="../../swig/**/*.i">
+         <PackagePath>swig</PackagePath>
+     </Content>
+     <Content Include="../../swig/include/**/*.h">
+         <PackagePath>swig/include</PackagePath>
+     </Content>
+     <Content Include="../../buildtools/*.fsx">
+         <PackagePath>buildtools/</PackagePath>
+     </Content>
+     <Content Include="../../build.sh">
+         <PackagePath>/</PackagePath>
+     </Content>
+              </ItemGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <PackageId>Infinispan.HotRod.$(ARCH)</PackageId>
+            </PropertyGroup>
+            <ItemGroup>
+                <Content Include="../../swig/native_client/lib/**">
+                    <PackagePath>runtimes/$(ARCH)/native/</PackagePath>
+                </Content>
+            </ItemGroup>
+        </Otherwise>
+    </Choose>
 </Project>
