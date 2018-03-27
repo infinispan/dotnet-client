@@ -94,9 +94,23 @@ Once you run `.\build.ps1`, it will create a cache with all tools necessary, so 
 To build make build.sh executable (chmod +x build.sh) and run `./build.sh Build` (any command mentioned here should work with `build.sh` instead of `build.ps1`).
 
 #### Link the correct C++ core
-The C++ client library must match the compiler version in use for the swig wrapper. If the libraries download by the script (from ci.infinispan.org) do not fit your needs just compile the C++ client from the source and point the HOTROD_PREBUILT_DIR to the dist directory (the dir containing the unpacked .rpm), thus:
-    HOTROD_PREBUILD_DIR=<path to unpacked rpm> ./build.sh
+The C++ client library must match the compiler version in use for the swig wrapper. If the libraries download by the script (from ci.infinispan.org) do not fit your needs just compile the C++ client from the source and point HOTROD_PREBUILT_DIR to the dist directory (the dir containing the unpacked .rpm), thus:
+
+    HOTROD_PREBUILT_DIR=<path to unpacked rpm> ./build.sh
     & { $env:HOTROD_PREBUILT_DIR="<path to unpacked zip> ; .\build.ps1 }
+
+### Packaging
+To produce the .nupkg package just run the build with the *Pack* or *QuickPack* (if the project has already been built) argument.
+The toolchain produces two types of assembly with or without the natives:
+
+* if HOTROD_ARCH env var is not empty an Infinispan.HotRod.$HOTROD_ARCH.nupkg containing the natives dll is produced;
+* if HOTROD_ARCH env var is empty (or undef) an Inifnispan.HotRod.nupkg containing the toolchaing to build the natives is produced.
+
+
+### Building the native wrapper
+Install the Infinispan.Hotrod.nupkg and set HOTROD_PREBUILT_DIR to the C++ client install path then run:
+
+    build.[sh|ps1] BuildSwigWrapper
 
 ### Run the test suite
 The system must be able to find the native libraries under the swig/native_client/lib folder so add it either to the LD_LIBRARY_PATH (linux) or to the PATH (win) variable. Define a JBOSS_HOME pointing to your Infinispan server location (in Windows use the Unix file separator '/') and then run the test suite with dotnet:
