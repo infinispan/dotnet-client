@@ -58,7 +58,7 @@ Target "GenerateSwig" (fun _ ->
     trace "Target GenerateSwig: swig generated"
 )
 
-Target "BuildSwigWraper" (fun _ ->
+Target "BuildSwigWrapper" (fun _ ->
     trace "Target BuildSwigWrapper: running swig wraper build"
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
@@ -76,7 +76,7 @@ Target "Generate" (fun _ ->
 Target "Build" (fun _ ->
     Build (fun p -> { p with Project = "../Infinispan.HotRod.sln"
                              Configuration = "RelWithDebInfo"})
-    trace "Target Generate: solution built"
+    trace "Target Build: solution built"
 )
 
 Target "ObtainInfinispan" (fun _ ->
@@ -162,16 +162,16 @@ Target "CopyResourcesToRuntime" (fun _ ->
 
 // main targets chain
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "Generate" ==> "Build"
-"GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build"
+"GenerateSwig" ==> "BuildSwigWrapper" ==> "Generate" ==> "Build"
 "Build" ==> "ObtainInfinispan" ==> "CopyResourcesToInfinispan" ==> "CopyResourcesToRuntime" ==> "UnitTest" ==> "IntegrationTest" ==> "Test" ==> "Pack" ==> "Publish"
 
 // CPP client chain - run with each new cpp-client release
-"BuildSwigWraper" ==> "CppPackage" ==> "CppPackagePublish"
+"BuildSwigWrapper" ==> "CppPackage" ==> "CppPackagePublish"
 
 // Quick package skipping test
 
 "Clean" ==> "GenerateProto" ==> "GenerateProtoForTests" ==> "Generate" ==> "Build" ==> "QuickPack"
-"GenerateSwig" ==> "BuildSwigWraper" ==> "Generate" ==> "Build" ==> "QuickPack"
+"GenerateSwig" ==> "BuildSwigWrapper" ==> "Generate" ==> "Build" ==> "QuickPack"
 
 
 RunParameterTargetOrDefault "target" "Build"
