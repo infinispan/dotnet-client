@@ -239,5 +239,15 @@ namespace Infinispan.HotRod
         {
             return manager.GetCounterManager();
         }
+
+        /// <summary>
+        /// Return an instance of RemoteCacheManagerAdmin related to this remote cache manager
+        /// </summary>
+        /// <returns>an instance of RemoteCacheManagerAdmin</returns>
+        public RemoteCacheManagerAdmin Administration()
+        {
+            return new RemoteCacheManagerAdmin(this, manager.administration());
+        }
+
     }
 }

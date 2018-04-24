@@ -14,5 +14,6 @@ namespace Infinispan.HotRod.SWIG
         bool SwitchToCluster(string clusterName);
         bool SwitchToDefaultCluster();
         RemoteCounterManager GetCounterManager();
+        Infinispan.HotRod.SWIGGen.RemoteCacheManagerAdmin administration();
     }
 }
