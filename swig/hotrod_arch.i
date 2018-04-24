@@ -504,3 +504,20 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
         decrement();
     }
 %}
+
+%typemap(cscode) infinispan::hotrod::RemoteCacheManagerAdmin %{
+        public void withFlags(System.Collections.Generic.ISet<Infinispan.HotRod.AdminFlag> flags)
+        {
+            var aSet = new AdminFlagSet();
+            foreach(var i in flags)
+            {
+                switch(i)
+                {
+                    case Infinispan.HotRod.AdminFlag.PERMANENT:
+                        aSet.setitem(Infinispan.HotRod.SWIGGen.AdminFlag.PERMANENT);
+                        break;
+                }
+            }
+            withFlags(aSet);
+        }
+    %}

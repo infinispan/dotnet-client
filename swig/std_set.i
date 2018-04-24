@@ -110,6 +110,10 @@
       void destroy_iterator(std::set< V >::iterator *swigiterator) {
         delete swigiterator;
       }
+
+      void setitem(const value_type& x) {
+        (*$self).insert(x);
+      }
     }
 
 
