@@ -1,9 +1,11 @@
-﻿using Infinispan.HotRod.Config;
+﻿using Infinispan.HotRod;
+using Infinispan.HotRod.Config;
 using Infinispan.HotRod.Tests.Util;
 using Infinispan.HotRod.Transport;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
+using Infinispan.HotRod.Tests.ClusteredXml2;
 
 namespace Infinispan.HotRod.Tests.ClusteredXml2
 {
@@ -37,49 +39,42 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
     [Category("ClusterTestSuite")]
     public class NearCacheFailoverTest
     {
-        RemoteCacheManager remoteManager;
-        IMarshaller marshaller;
-        static StickyBalancingStragegy b;
-        HotRodServer server1;
-        HotRodServer server2;
 
-        FailOverRequestBalancingStrategyProducerDelegate d = delegate ()
+        [SetUp]
+        public void BeforeAnyTest()
+        {
+            ClusterTestSuite.EnsureServersUp();
+            remoteManager = getRemoteCacheManager();
+        }
+
+        [TearDown]
+        public void AfterAnyTest()
+        {
+            remoteManager.Stop();
+        }
+
+        public static RemoteCacheManager getRemoteCacheManager()
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222);
+            conf.AddServer().Host("127.0.0.1").Port(11322)
+                .ConnectionTimeout(90000).SocketTimeout(6000)
+                .NearCache().Mode(NearCacheMode.INVALIDATED).MaxEntries(10);
+            conf.BalancingStrategyProducer(d);
+            marshaller = new JBasicMarshaller();
+            conf.Marshaller(marshaller);
+            return ClusterTestSuite.getRemoteCacheManager(conf.Build());
+        }
+
+        RemoteCacheManager remoteManager;
+        static IMarshaller marshaller;
+        static StickyBalancingStragegy b;
+
+        static FailOverRequestBalancingStrategyProducerDelegate d = delegate ()
         {
             b = new StickyBalancingStragegy();
             return b;
         };
-
-        [OneTimeSetUp]
-        public void BeforeClass()
-        {
-            // Servers startup
-            server1 = new HotRodServer("clustered.xml");
-            server1.StartHotRodServer();
-            string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
-            server2 = new HotRodServer("clustered.xml", "-Djboss.socket.binding.port-offset=100 -Djboss.server.data.dir=" + jbossHome + "/standalone/data100", 11322);
-            server2.StartHotRodServer();
-
-            // Client configuration
-            ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222);
-            conf.AddServer().Host("127.0.0.1").Port(11322)
-            .ConnectionTimeout(90000).SocketTimeout(6000)
-            .NearCache().Mode(NearCacheMode.INVALIDATED).MaxEntries(10);
-            conf.BalancingStrategyProducer(d);
-            marshaller = new JBasicMarshaller();
-            conf.Marshaller(marshaller);
-            remoteManager = new RemoteCacheManager(conf.Build(), true);
-        }
-
-        [OneTimeTearDown]
-        public void AfterClass()
-        {
-            remoteManager.Stop();
-            if (server1.IsRunning(2000))
-                server1.ShutDownHotrodServer();
-            if (server2.IsRunning(2000))
-                server2.ShutDownHotrodServer();
-        }
 
         [Test]
         public void NearCacheWithFailoverTest()
@@ -95,7 +90,7 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
             Assert.AreEqual("value1", retVal);
             var stats2 = cache.Stats();
             Assert.AreEqual(int.Parse(stats1.GetStatsMap()["nearHits"]) + 1, int.Parse(stats2.GetStatsMap()["nearHits"]));
-            server2.ShutDownHotrodServer();
+            ClusterTestSuite.server2.ShutDownHotrodServer();
             // After the shutdown the client failover on the 11222 server and reset the near cache
             // let's verify that the get operation goes remotes
             ServerStatistics stats3 =null;

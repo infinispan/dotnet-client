@@ -118,6 +118,7 @@ namespace Infinispan.HotRod.Tests.Util
                 }
                 Assert.IsTrue(IsStopped(),
                               "A process is still listening on the ip/port. Kill failed?");
+                hrServer.Close();
             }
         }
 
