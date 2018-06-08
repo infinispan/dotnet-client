@@ -15,6 +15,13 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 
 %cs_callback(infinispan::hotrod::FailOverRequestBalancingStrategy::ProducerFn, FailOverRequestBalancingStrategyProducerDelegate)
 
+%include "std_shared_ptr.i"
+%shared_ptr(infinispan::hotrod::ByteArray)
+%shared_ptr(infinispan::hotrod::Counter)
+%shared_ptr(infinispan::hotrod::WeakCounter)
+%shared_ptr(infinispan::hotrod::StrongCounter)
+
+
 %{
 #define HR_PROTO_EXPORT
 #include <infinispan/hotrod/BasicMarshaller.h>
@@ -49,6 +56,10 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/exceptions.h>
 #include <infinispan/hotrod/InetSocketAddress.h>
 #include <infinispan/hotrod/CacheTopologyInfo.h>
+#include <infinispan/hotrod/CounterConfiguration.h>
+#include <infinispan/hotrod/CounterEvent.h>
+#include <infinispan/hotrod/Counters.h>
+#include <infinispan/hotrod/RemoteCounterManager.h>
 #include <swig/DotNetClientListener.h>
 %}
 
@@ -74,14 +85,12 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %template (VectorVectorChar) std::vector<std::vector<char> >;
 %template (VectorByte) std::vector<unsigned char>;
 
-%include "std_shared_ptr.i"
-%shared_ptr(infinispan::hotrod::ByteArray)
-
 %feature("director") AuthenticationStringCallback;
 %feature("director") ClientListenerCallback;
 %feature("director") FailOverRequestBalancingStrategy;
 %feature("director") FailOverRequestBalancingStrategyProducer;
 %feature("director") FailOverRequestBalancingStrategyProducerDelegate;
+%feature("director") CounterListener;
 
 
 %inline{
@@ -189,6 +198,10 @@ static int getpath(void *context, const char ** path) {
 %include "infinispan/hotrod/RemoteCacheBase.h"
 %include "infinispan/hotrod/RemoteCache.h"
 %include "infinispan/hotrod/RemoteCacheManager.h"
+%include "infinispan/hotrod/CounterConfiguration.h"
+%include "infinispan/hotrod/CounterEvent.h"
+%include "infinispan/hotrod/Counters.h"
+%include "infinispan/hotrod/RemoteCounterManager.h"
 %include "swig/DotNetClientListener.h" 
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}

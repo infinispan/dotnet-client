@@ -351,6 +351,12 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
 %typemap(csinterfaces) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> "IDisposable, Infinispan.HotRod.SWIG.RemoteByteArrayCache"
 
 %typemap(csinterfaces) infinispan::hotrod::RemoteCacheManager "IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
+%typemap(csinterfaces) infinispan::hotrod::RemoteCounterManager "IDisposable, Infinispan.HotRod.RemoteCounterManager"
+%typemap(csinterfaces) infinispan::hotrod::Counter "IDisposable, Infinispan.HotRod.Counter"
+%typemap(csinterfaces_derived) infinispan::hotrod::StrongCounter "IDisposable, Infinispan.HotRod.StrongCounter"
+%typemap(csinterfaces_derived) infinispan::hotrod::WeakCounter "IDisposable, Infinispan.HotRod.WeakCounter"
+%typemap(csinterfaces) infinispan::hotrod::CounterConfiguration "IDisposable, Infinispan.HotRod.ICounterConfiguration"
+
 %typemap(cscode) infinispan::hotrod::RemoteCacheManager %{
     public void Start() {
         start();
@@ -387,4 +393,114 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
     public bool SwitchToDefaultCluster() {
         return switchToDefaultCluster();
     }
+
+    public Infinispan.HotRod.RemoteCounterManager GetCounterManager() {
+        return getCounterManager();
+    }
     %}
+
+%typemap(cscode) infinispan::hotrod::RemoteCounterManager %{
+    public Infinispan.HotRod.StrongCounter GetStrongCounter(string name) {
+        return getStrongCounter(name);
+    }
+    public Infinispan.HotRod.WeakCounter GetWeakCounter(string name) {
+        return getWeakCounter(name);
+    }
+    public bool DefineCounter(string name, Infinispan.HotRod.ICounterConfiguration conf) {
+        CounterConfiguration swigConf = new CounterConfiguration(conf.GetInitialValue(), conf.GetLowerBound(), conf.GetUpperBound(),
+                                      conf.GetConcurrencyLevel(), (CounterType) conf.GetType(), 
+                                      (Storage) conf.GetStorage());
+        return defineCounter(name, swigConf);
+    }
+    public bool IsDefined(string name) {
+        return isDefined(name);
+    }
+    public Infinispan.HotRod.ICounterConfiguration GetConfiguration(string counterName) {
+        return getConfiguration(counterName);
+    }
+    public void Remove(string counterName) {
+        remove(counterName);
+    }
+%}
+
+%typemap(cscode) infinispan::hotrod::CounterConfiguration %{
+    public int GetInitialValue() {
+        return getInitialValue();
+    }
+    public int GetUpperBound() {
+        return getUpperBound();
+    }
+    public int GetLowerBound() {
+        return getLowerBound();
+    }
+    public Infinispan.HotRod.CounterType GetType() {
+        return (Infinispan.HotRod.CounterType)getType();
+    }
+    public int GetConcurrencyLevel() {
+        return getConcurrencyLevel();
+    }
+    public Infinispan.HotRod.Storage GetStorage() {
+        return (Infinispan.HotRod.Storage)getStorage();
+    }
+    public string ToString() {
+        return toString();
+    }
+%}
+
+
+%typemap(cscode) infinispan::hotrod::Counter %{
+    public string GetName() {
+        return getName();
+    }
+    public Infinispan.HotRod.ICounterConfiguration GetConfiguration() {
+        return getConfiguration();
+    } 
+    public void Reset() {
+        reset();
+    }
+    public void Remove() {
+        remove();
+    }
+    public object AddListener(Infinispan.HotRod.Event.CounterListener listener) {
+            return addListener(listener.cli);
+    }
+    public void RemoveListener(object handler) {
+            removeListener((Infinispan.HotRod.SWIGGen.SWIGTYPE_p_void) handler);
+    }
+%}
+
+%typemap(cscode) infinispan::hotrod::StrongCounter %{
+    public int GetValue() {
+        return getValue();
+    }
+    public int AddAndGet(int delta) {
+        return addAndGet(delta);
+    }
+    public int IncrementAndGet() {
+        return incrementAndGet();
+    }
+    public int DecrementAndGet() {
+        return decrementAndGet();
+    }
+    public int CompareAndSwap(int expect, int update) {
+        return compareAndSwap(expect, update);
+    }
+    public bool CompareAndSet(int expect, int update) {
+        return compareAndSet(expect, update);
+    }
+%}
+
+%typemap(cscode) infinispan::hotrod::WeakCounter %{
+    public int GetValue() {
+        return getValue();
+    }
+    public void Add(int delta) {
+        add(delta);
+    }
+    public void Increment() {
+        increment();
+    }
+    public void Decrement() {
+        decrement();
+    }
+%}
