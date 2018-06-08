@@ -230,5 +230,14 @@ namespace Infinispan.HotRod
         {
             return manager.SwitchToDefaultCluster();
         }
+
+        /// <summary>
+        /// Get a reference to the counter manager object
+        /// </summary>
+        /// <returns>a reference to the counter manager</returns>
+        public RemoteCounterManager GetCounterManager()
+        {
+            return manager.GetCounterManager();
+        }
     }
 }
