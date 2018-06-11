@@ -570,7 +570,25 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             Assert.AreEqual("John" ,projections.ElementAt(0)[0]);
             Assert.AreEqual(1, projections.ElementAt(0)[1]);
             Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
-            Assert.AreEqual(2, projections.ElementAt(1)[1]);
+        }
+
+        [Test]
+        public void CountTestWithNull()
+        {
+            IRemoteCache<int, User> userCache = remoteManager.GetCache<int, User>(NAMED_CACHE);
+
+            QueryRequest qr = new QueryRequest();
+            qr.QueryString = "select u.name, count(u.age) from sample_bank_account.User u group by u.name";
+
+            QueryResponse result = userCache.Query(qr);
+
+            List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
+
+            Assert.AreEqual(2, projections.Count);
+            Assert.AreEqual("John" ,projections.ElementAt(0)[0]);
+            Assert.AreEqual(1, projections.ElementAt(0)[1]);
+            Assert.AreEqual("Spider", projections.ElementAt(1)[0]);
+            Assert.AreEqual(0, projections.ElementAt(1)[1]);
         }
 
         [Test]
