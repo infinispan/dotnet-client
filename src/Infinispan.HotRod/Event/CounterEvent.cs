@@ -21,7 +21,7 @@
             swigEvent = e;
         }
         /// <summary>
-        /// counter name
+        /// Counter name
         /// </summary>
         public string GetCounterName
         {
@@ -29,33 +29,33 @@
         }
 
         /// <summary>
-        /// the previous value
+        /// The previous value
         /// </summary>
-        public long oldValue
+        public long OldValue
         {
             get { return swigEvent.oldValue; }
         }
 
         /// <summary>
-        /// the previous state
+        /// The previous state
         /// </summary>
-        public CounterState oldState
+        public CounterState OldState
         {
             get { return (CounterState)swigEvent.oldState; }
         }
 
         /// <summary>
-        /// the counter value
+        /// The counter value
         /// </summary>
-        public long newValue
+        public long NewValue
         {
             get { return swigEvent.newValue; }
         }
 
         /// <summary>
-        /// the counter state
+        /// The counter state
         /// </summary>
-        public CounterState newState
+        public CounterState NewState
         {
             get { return (CounterState)swigEvent.newState; }
         }

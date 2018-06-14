@@ -33,14 +33,14 @@ namespace Infinispan.HotRod
         /// <returns> the handler to the registered listener. Needed by the RemoveListener method</returns>
         object AddListener(Event.CounterListener listener);
         /// <summary>
-        /// Remove the listener
+        /// Remove the listener. The counter will be recreated if accessed after a remove.
         /// </summary>
         /// <param name="handler"> the handler to the listener returned by the AddListener operation</param>
         void RemoveListener(object handler);
     }
 
     /// <summary>
-    /// Strong counter 
+    /// The strong counter provides higher consistency. Its value is known during the update and its updates are applied atomically. This allows to set boundaries and provides conditional operation (as compare-and-set). 
     /// </summary>
     public interface StrongCounter : Counter
     {
@@ -81,7 +81,7 @@ namespace Infinispan.HotRod
     }
 
     /// <summary>
-    /// 
+    ///The weak counter provides eventual consistency and its value is not known during updates. It provides faster writes when comparing with the strong counter. 
     /// </summary>
     public interface WeakCounter : Counter
     {
