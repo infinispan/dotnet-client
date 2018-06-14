@@ -39,7 +39,7 @@ namespace Infinispan.HotRod
         /// <returns>return the configuration</returns>
         ICounterConfiguration GetConfiguration(string name);
         /// <summary>
-        /// Remove a counter.
+        /// Remove a counter by name. This is equivalent to call <see cref="M:Counter.Remove()"/>
         /// The counter will be recreated if accessed after a remove
         /// </summary>
         /// <param name="counterName">counter's name</param>

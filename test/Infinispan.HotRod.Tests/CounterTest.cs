@@ -158,6 +158,10 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             { counter.CompareAndSet(20, -1); });
             Assert.Throws<Infinispan.HotRod.Exceptions.CounterUpperBoundException>(() =>
             { counter.CompareAndSet(20, 21); });
+            Assert.Throws<Infinispan.HotRod.Exceptions.CounterLowerBoundException>(() =>
+            { counter.CompareAndSwap(20, -1); });
+            Assert.Throws<Infinispan.HotRod.Exceptions.CounterUpperBoundException>(() =>
+            { counter.CompareAndSwap(20, 21); });
             rcm.Remove(counterName);
         }
 
@@ -252,10 +256,10 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             {
                 if (!secondEvent)
                 {
-                    Assert.AreEqual(5, e.oldValue);
-                    Assert.AreEqual(15, e.newValue);
-                    Assert.AreEqual(Event.CounterState.VALID, e.newState);
-                    Assert.AreEqual(Event.CounterState.VALID, e.oldState);
+                    Assert.AreEqual(5, e.OldValue);
+                    Assert.AreEqual(15, e.NewValue);
+                    Assert.AreEqual(Event.CounterState.VALID, e.NewState);
+                    Assert.AreEqual(Event.CounterState.VALID, e.OldState);
                     secondEvent = true;
                 }
                 s.Release();
@@ -263,13 +267,12 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
 
             Action<Event.CounterEvent> a2 = (Event.CounterEvent e) =>
             {
-                Assert.AreEqual(6, e.oldValue);
-                Assert.AreEqual(16, e.newValue);
-                Assert.AreEqual(Event.CounterState.VALID, e.newState);
-                Assert.AreEqual(Event.CounterState.VALID, e.oldState);
+                Assert.AreEqual(6, e.OldValue);
+                Assert.AreEqual(16, e.NewValue);
+                Assert.AreEqual(Event.CounterState.VALID, e.NewState);
+                Assert.AreEqual(Event.CounterState.VALID, e.OldState);
                 s.Release();
             };
-
 
             string counterName = "weakTestAddRemoveListener";
             Event.CounterListener cl = new Event.CounterListener(counterName, a);
@@ -293,6 +296,54 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("ISPN-9296")]
+        public void AddRemoveCounterWithListenerWeakTest()
+        {
+            Semaphore s = new Semaphore(0, 1);
+            Action<Event.CounterEvent> a = (Event.CounterEvent e) =>
+            {
+                s.Release();
+            };
+
+            string counterName = "weak1TestAddRemoveListener";
+            Event.CounterListener cl = new Event.CounterListener(counterName, a);
+            var rcm = remoteManager.GetCounterManager();
+            var cc = new CounterConfiguration(5, 0, 20, 8, CounterType.WEAK, Storage.VOLATILE);
+            rcm.DefineCounter(counterName, cc);
+            var counter = rcm.GetWeakCounter(counterName);
+            object o = counter.AddListener(cl);
+            counter.Add(10);
+            Assert.True(s.WaitOne(5000));
+            counter.Remove();
+
+            // After the remove no events should arrive
+            changeCounterFromAnotherCacheManager();
+            Assert.False(s.WaitOne(5000));
+
+            // if the counter is recreated, events should come again
+            var counter1 = rcm.GetWeakCounter(counterName);
+            counter1.Add(10);
+            Assert.AreEqual(15, counter1.GetValue());
+            Assert.True(s.WaitOne(5000));
+            counter.RemoveListener(o);
+        }
+
+        void changeCounterFromAnotherCacheManager()
+        {
+            ConfigurationBuilder conf = new ConfigurationBuilder();
+            conf.AddServer().Host("127.0.0.1").Port(11222);
+            conf.ConnectionTimeout(90000).SocketTimeout(6000);
+            conf.ProtocolVersion("2.7");
+            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
+
+            var rcm = remoteManager.GetCounterManager();
+            string counterName = "weak1TestAddRemoveListener";
+            var counter = rcm.GetWeakCounter(counterName);
+            counter.Increment();
+            remoteManager.Stop();
+        }
+
+        [Test]
         public void BasicListenerStrongTest()
         {
             int step = 0;
@@ -302,24 +353,24 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
                 switch (step)
                 {
                     case 0:
-                        Assert.AreEqual(5, e.oldValue);
-                        Assert.AreEqual(15, e.newValue);
-                        Assert.AreEqual(Event.CounterState.VALID, e.newState);
-                        Assert.AreEqual(Event.CounterState.VALID, e.oldState);
+                        Assert.AreEqual(5, e.OldValue);
+                        Assert.AreEqual(15, e.NewValue);
+                        Assert.AreEqual(Event.CounterState.VALID, e.NewState);
+                        Assert.AreEqual(Event.CounterState.VALID, e.OldState);
                         s.Release();
                         break;
                     case 1:
-                        Assert.AreEqual(15, e.oldValue);
-                        Assert.AreEqual(0, e.newValue);
-                        Assert.AreEqual(Event.CounterState.LOWER_BOUND_REACHED, e.newState);
-                        Assert.AreEqual(Event.CounterState.VALID, e.oldState);
+                        Assert.AreEqual(15, e.OldValue);
+                        Assert.AreEqual(0, e.NewValue);
+                        Assert.AreEqual(Event.CounterState.LOWER_BOUND_REACHED, e.NewState);
+                        Assert.AreEqual(Event.CounterState.VALID, e.OldState);
                         s.Release();
                         break;
                     case 2:
-                        Assert.AreEqual(0, e.oldValue);
-                        Assert.AreEqual(20, e.newValue);
-                        Assert.AreEqual(Event.CounterState.UPPER_BOUND_REACHED, e.newState);
-                        Assert.AreEqual(Event.CounterState.LOWER_BOUND_REACHED, e.oldState);
+                        Assert.AreEqual(0, e.OldValue);
+                        Assert.AreEqual(20, e.NewValue);
+                        Assert.AreEqual(Event.CounterState.UPPER_BOUND_REACHED, e.NewState);
+                        Assert.AreEqual(Event.CounterState.LOWER_BOUND_REACHED, e.OldState);
                         s.Release();
                         break;
                     default:
