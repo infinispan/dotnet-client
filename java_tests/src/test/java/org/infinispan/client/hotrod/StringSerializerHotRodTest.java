@@ -96,48 +96,6 @@ public class StringSerializerHotRodTest extends SingleCacheManagerTest implement
       return new URL[] { target.toURI().toURL() };
    }
 
-
-   @AfterMethod(alwaysRun=true)
-   public void release() {
-      killCacheManagers(cacheManager);
-      try {
-         if (dotnetRemoteCacheManager != null) {
-            dotnetRemoteCacheManager.stop();
-         }
-      } catch (Exception e) {
-         log.error("Failed to stop dotnet RCM", e);
-      }
-      try {
-         if (javaRemoteCacheManager != null) {
-            javaRemoteCacheManager.stop();
-         }
-      } catch (Exception e) {
-         log.error("Failed to stop dotnet RCM", e);
-      }
-      killServers(hotrodServer);
-      //Close the ClassLoader or the JVM process won't exit
-      if (dotnetClassLoader != null) {
-         try {
-            dotnetClassLoader.close();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      }
-      if (javaClassLoader != null) {
-         try {
-            javaClassLoader.close();
-         } catch (IOException e) {
-            e.printStackTrace();
-         }
-      }
-   }
-
-   @BeforeMethod
-   public void setUp() throws Exception {
-      log.info("setUp()");
-      this.setup();
-   }
-
    private void initEmptyCaches() throws InvocationTargetException, IllegalAccessException, NoSuchMethodException, ClassNotFoundException {
       dotnetCache = dotnetRemoteCacheManager.getCache(DEFAULT_CACHE);
       javaCache = javaRemoteCacheManager.getCache(DEFAULT_CACHE);
