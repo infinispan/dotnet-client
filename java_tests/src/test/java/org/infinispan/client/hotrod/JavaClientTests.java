@@ -9,11 +9,6 @@ import java.util.TreeSet;
 
 import static org.testng.Assert.assertEquals;
 
-import org.infinispan.client.hotrod.BulkGetKeysDistTest;
-import org.infinispan.client.hotrod.BulkGetKeysReplTest;
-import org.infinispan.client.hotrod.BulkGetKeysSimpleTest;
-import org.infinispan.client.hotrod.BulkGetReplTest;
-import org.infinispan.client.hotrod.BulkGetSimpleTest;
 import org.infinispan.client.hotrod.CacheManagerStoppedTest;
 import org.infinispan.client.hotrod.CacheManagerNotStartedTest;
 import org.infinispan.client.hotrod.DefaultExpirationTest;
@@ -90,11 +85,7 @@ public class JavaClientTests implements IMethodSelector {
       testng.run();
 
       Set<String> expectedTestFailures = new TreeSet<String>(Arrays.asList( 
-            //see HRCPP-190
-            "RemoteCacheManagerTest.testMarshallerInstance",
-            //see HRCPP-189
-            "RemoteCacheManagerTest.testGetUndefinedCache",
- 	    "ForceReturnValuesTest.testSameInstanceForSameForceReturnValues"
+            "RemoteCacheManagerTest.testStartStopAsync"
       ));
       Set<String> expectedSkips = Collections.emptySet();
 
