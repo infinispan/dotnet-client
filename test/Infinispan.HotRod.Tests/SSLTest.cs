@@ -1,6 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 using Infinispan.HotRod.Config;
+using System.Runtime.InteropServices;
 
 namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
 {
@@ -12,25 +13,46 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         private IRemoteCache<string, string> testCache;
         private IRemoteCache<string, string> scriptCache;
         private IMarshaller marshaller;
+        private RemoteCacheManager remoteManager;
+
+        [TearDown]
+        public void stopRemoteManager()
+        {
+            if ( remoteManager !=null ) {
+                remoteManager.Stop();
+            }
+        }
 
         [Test]
         public void WriterSuccessTest()
         {
-            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            ConfigureSecuredCaches("infinispan-ca.pem", "truststore_client.pem");
             tester.TestWriterSuccess(testCache);
         }
 
         [Test]
         public void WriterPerformsReadsTest()
         {
-            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("infinispan-ca.pem", clientCertName);
             tester.TestWriterPerformsReads(testCache);
         }
 
         [Test]
         public void WriterPerformsSupervisorOpsTest()
         {
-            ConfigureSecuredCaches("infinispan-ca.pem", "keystore_client.p12");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("infinispan-ca.pem", clientCertName);
             tester.TestWriterPerformsSupervisorOps(testCache, scriptCache, marshaller);
         }
 
@@ -38,7 +60,13 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         [Test]
         public void ClientAuthFailureTest()
         {
-            ConfigureSecuredCaches("infinispan-ca.pem", "malicious_client.p12");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("infinispan-ca.pem", clientCertName);
             tester.TestWriterSuccess(testCache);
             Assert.Fail("Should not get here");
         }
@@ -46,23 +74,43 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         [Test]
         public void SNI1CorrectCredentialsTest()
         {
-            ConfigureSecuredCaches("keystore_server_sni1_rsa.pem", "keystore_client.p12", "sni1");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("keystore_server_sni1_rsa.pem", clientCertName, "sni1");
             tester.TestWriterSuccess(testCache);
         }
 
         [Test]
         public void SNI2CorrectCredentialsTest()
         {
-            ConfigureSecuredCaches("keystore_server_sni2_rsa.pem", "keystore_client.p12", "sni2");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("keystore_server_sni2_rsa.pem", clientCertName, "sni2");
             tester.TestWriterSuccess(testCache);
         }
 
         [Test]
         public void SNIUntrustedTest()
         {
-            Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => ConfigureSecuredCaches("malicious.pem", "keystore_client.p12", "sni3-untrusted"));
-            var ex = Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => tester.TestWriterSuccess(testCache));
-            Assert.AreEqual("**** The server certificate did not validate correctly.\n",ex.Message);
+            string clientCertName;
+            string errMessage;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+                errMessage = "**** The server certificate did not validate correctly.\n";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+                errMessage = "SSL_get_peer_certificate";
+            }  else { Assert.Fail(); return; }
+            var ex = Assert.Throws<Infinispan.HotRod.Exceptions.TransportException>(() => ConfigureSecuredCaches("malicious.pem", clientCertName, "sni3-untrusted"));
+            Assert.AreEqual(errMessage, ex.Message);
         }
 
         private void ConfigureSecuredCaches(string serverCAFile, string clientCertFile, string sni = "")
@@ -80,7 +128,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             RegisterServerCAFile(sslConf, serverCAFile, sni);
             RegisterClientCertificateFile(sslConf, clientCertFile);
 
-            RemoteCacheManager remoteManager = new RemoteCacheManager(conf.Build(), true);
+            remoteManager = new RemoteCacheManager(conf.Build(), true);
 
             testCache = remoteManager.GetCache<string, string>();
             scriptCache = remoteManager.GetCache<string, string>("___script_cache");
