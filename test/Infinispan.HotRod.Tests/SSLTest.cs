@@ -26,7 +26,13 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         [Test]
         public void WriterSuccessTest()
         {
-            ConfigureSecuredCaches("infinispan-ca.pem", "truststore_client.pem");
+            string clientCertName;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                clientCertName = "keystore_client.p12";
+            }  else  if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                clientCertName = "truststore_client.pem";
+            }  else { Assert.Fail(); return; }
+            ConfigureSecuredCaches("infinispan-ca.pem", clientCertName);
             tester.TestWriterSuccess(testCache);
         }
 
