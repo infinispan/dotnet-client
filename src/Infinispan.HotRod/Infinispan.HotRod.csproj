@@ -36,7 +36,7 @@
 
 
     <Choose>
-        <When Condition="'$(ARCH)' == ''">
+        <When Condition="'$(HOTROD_CLIENT_ARCH)' == ''">
             <PropertyGroup>
                 <PackageId>Infinispan.HotRod</PackageId>
             </PropertyGroup>
@@ -57,7 +57,7 @@
         </When>
         <Otherwise>
             <PropertyGroup>
-                <PackageId>Infinispan.HotRod.$(ARCH)</PackageId>
+                <PackageId>Infinispan.HotRod.$(HOTROD_CLIENT_ARCH)</PackageId>
             </PropertyGroup>
             <ItemGroup>
                 <Content Include="../../swig/native_client/lib/**">
@@ -66,7 +66,7 @@
             </ItemGroup>
             <ItemGroup>
                 <Content Include="../../nupkg/build/Infinispan.HotRod.targets">
-                    <PackagePath>build/Infinispan.HotRod.$(ARCH).targets</PackagePath>
+                    <PackagePath>build/Infinispan.HotRod.$(HOTROD_CLIENT_ARCH).targets</PackagePath>
                 </Content>
             </ItemGroup>
         </Otherwise>
