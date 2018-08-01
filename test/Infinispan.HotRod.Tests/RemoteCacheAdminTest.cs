@@ -80,5 +80,17 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
             { remoteManager.Administration().CreateCache<string, string>(cacheName, "template"); });
             StringAssert.Contains("ISPN000507:", ex.Message);
         }
+        [Test]
+        public void removeCache()
+        {
+            String cacheName = "RemoveTest";
+            remoteManager.Administration().CreateCacheWithXml<object, object>(cacheName,
+               "<infinispan><cache-container><distributed-cache name=\"" + cacheName + "\"/></cache-container></infinispan>");
+            var cache = remoteManager.GetCache<object, object>(cacheName);
+            Assert.NotNull(cache);
+            Assert.IsTrue(remoteManager.GetCacheNames().Contains(cacheName));
+            remoteManager.Administration().RemoveCache(cacheName);
+            Assert.IsFalse(remoteManager.GetCacheNames().Contains(cacheName));
+        }
     }
 }
