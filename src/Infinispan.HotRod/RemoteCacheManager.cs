@@ -249,5 +249,12 @@ namespace Infinispan.HotRod
             return new RemoteCacheManagerAdmin(this, manager.administration());
         }
 
+        /// Get the names of all the configured caches
+        /// </summary>
+        /// <returns>a set with the names of all the caches</returns>
+        public ISet<String> GetCacheNames()
+        {
+            return manager.GetCacheNames();
+        }
     }
 }

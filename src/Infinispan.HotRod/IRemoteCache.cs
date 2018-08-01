@@ -532,6 +532,5 @@ namespace Infinispan.HotRod
         /// </summary>
         /// <param name="cql">ContinuousQueryListener to be removed</param>
         void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql);
-
     }
 }

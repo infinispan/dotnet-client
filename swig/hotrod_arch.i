@@ -397,7 +397,19 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
     public Infinispan.HotRod.RemoteCounterManager GetCounterManager() {
         return getCounterManager();
     }
-    %}
+
+    public System.Collections.Generic.ISet<string> GetCacheNames() {
+            System.Collections.Generic.ISet<string> retSet = new System.Collections.Generic.HashSet<string>();
+            var v = getCacheNames();
+            var it = v.create_iterator_begin();
+            while (v.has_next(it))
+            {
+                retSet.Add(v.get_next_key(it));
+            }
+            v.destroy_iterator(it);
+        return retSet;
+    }
+%}
 
 %typemap(cscode) infinispan::hotrod::RemoteCounterManager %{
     public Infinispan.HotRod.StrongCounter GetStrongCounter(string name) {

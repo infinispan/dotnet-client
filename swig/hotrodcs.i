@@ -335,6 +335,7 @@ namespace hotrod {
 %template(InetSocketAddressVector) std::vector<infinispan::hotrod::transport::InetSocketAddress>;
 %template(InetSocketAddressSet) std::set<infinispan::hotrod::transport::InetSocketAddress>;
 %template(AdminFlagSet) std::set<infinispan::hotrod::AdminFlag>;
+%template(StringSet) std::set<std::string>;
 %extend infinispan::hotrod::RemoteCacheManager {
     %template(getByteArrayCache) getCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 };
