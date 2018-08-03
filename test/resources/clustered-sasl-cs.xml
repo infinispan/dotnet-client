@@ -176,7 +176,7 @@
                         <role name="admin" permissions="ALL"/>
                         <role name="reader" permissions="READ"/>
                         <role name="writer" permissions="WRITE"/>
-                        <role name="supervisor" permissions="READ WRITE EXEC BULK_READ BULK_WRITE LISTEN"/>
+                        <role name="supervisor" permissions="READ WRITE BULK_READ BULK_WRITE EXEC"/>
                     </authorization>
                 </security>
                 <global-state/>
