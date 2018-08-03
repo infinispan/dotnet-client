@@ -13,6 +13,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
     %typemap(csin) TYPE, TYPE& "$csinput"
 %enddef
 
+%typemap(csbase) infinispan::hotrod::TransactionRemoteStatus "uint"
+
 %cs_callback(infinispan::hotrod::FailOverRequestBalancingStrategy::ProducerFn, FailOverRequestBalancingStrategyProducerDelegate)
 
 %include "std_shared_ptr.i"
@@ -44,6 +46,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/MetadataValue.h>
 #include <infinispan/hotrod/RemoteCache.h>
 #include <infinispan/hotrod/RemoteCacheBase.h>
+#include <infinispan/hotrod/TransactionManager.h>
+#include <infinispan/hotrod/Transactions.h>
 #include <infinispan/hotrod/RemoteCacheManager.h>
 #include <infinispan/hotrod/RemoteCacheManagerAdmin.h>
 #include <infinispan/hotrod/ServerConfiguration.h>
@@ -68,6 +72,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %pragma(csharp) moduleclassmodifiers="internal class"
 %typemap(csclassmodifiers) SWIGTYPE, SWIGTYPE *, SWIGTYPE &, SWIGTYPE [], SWIGTYPE (CLASS::*) "internal class"
 %typemap(csclassmodifiers) enum SWIGTYPE "internal enum"
+
 
 /* Force a common interface between the 32 and 64 bit wrapper code. */
 %include "hotrod_arch.i"
@@ -179,6 +184,11 @@ static int getpath(void *context, const char ** path) {
 %ignore infinispan::hotrod::event::ClientCacheEntryCustomEvent;
 %ignore infinispan::hotrod::event::DotNetClientListener::getFailoverFunction;
 %ignore getBalancingStrategy;
+%ignore infinispan::hotrod::TransactionContext;
+%ignore infinispan::hotrod::SynchronizationAdapter;
+%ignore infinispan::hotrod::XID;
+%ignore infinispan::hotrod::TransactionTable;
+
 
 %include "infinispan/hotrod/ClientEvent.h"
 %include "infinispan/hotrod/ClientListener.h"
@@ -202,6 +212,8 @@ static int getpath(void *context, const char ** path) {
 
 %include "infinispan/hotrod/RemoteCacheBase.h"
 %include "infinispan/hotrod/RemoteCache.h"
+%include "infinispan/hotrod/TransactionManager.h"
+%include "infinispan/hotrod/Transactions.h"
 %include "infinispan/hotrod/RemoteCacheManager.h"
 %include "infinispan/hotrod/CounterConfiguration.h"
 %include "infinispan/hotrod/CounterEvent.h"

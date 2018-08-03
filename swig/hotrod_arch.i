@@ -74,6 +74,10 @@
             return this;
     }
 
+    public Infinispan.HotRod.SWIG.ConfigurationBuilder SetTransactional(bool t) {
+        return setTransactional(t);
+    }
+    
     %}
 
 %typemap(csinterfaces_derived) infinispan::hotrod::ServerConfigurationBuilder "IDisposable, Infinispan.HotRod.SWIG.ServerConfigurationBuilder"
@@ -351,12 +355,26 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
 %typemap(csinterfaces) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray> "IDisposable, Infinispan.HotRod.SWIG.RemoteByteArrayCache"
 
 %typemap(csinterfaces) infinispan::hotrod::RemoteCacheManager "IDisposable, Infinispan.HotRod.SWIG.RemoteCacheManager"
+%typemap(csinterfaces) infinispan::hotrod::TransactionManager "IDisposable, Infinispan.HotRod.SWIG.TransactionManager"
 %typemap(csinterfaces) infinispan::hotrod::RemoteCounterManager "IDisposable, Infinispan.HotRod.RemoteCounterManager"
 %typemap(csinterfaces) infinispan::hotrod::Counter "IDisposable, Infinispan.HotRod.Counter"
 %typemap(csinterfaces_derived) infinispan::hotrod::StrongCounter "IDisposable, Infinispan.HotRod.StrongCounter"
 %typemap(csinterfaces_derived) infinispan::hotrod::WeakCounter "IDisposable, Infinispan.HotRod.WeakCounter"
 %typemap(csinterfaces) infinispan::hotrod::CounterConfiguration "IDisposable, Infinispan.HotRod.ICounterConfiguration"
 
+%typemap(cscode) infinispan::hotrod::TransactionManager %{
+    public void Begin() {
+        begin();
+    }
+
+    public void Commit() {
+        commit();
+    }
+
+    public void Rollback() {
+        rollback();
+    }
+%}
 %typemap(cscode) infinispan::hotrod::RemoteCacheManager %{
     public void Start() {
         start();
@@ -409,6 +427,11 @@ public System.Collections.Generic.Dictionary<string, System.Collections.Generic.
             v.destroy_iterator(it);
         return retSet;
     }
+
+    public Infinispan.HotRod.SWIG.TransactionManager GetTransactionManager() {
+        return (Infinispan.HotRod.SWIG.TransactionManager)getTransactionManager();
+    }
+
 %}
 
 %typemap(cscode) infinispan::hotrod::RemoteCounterManager %{

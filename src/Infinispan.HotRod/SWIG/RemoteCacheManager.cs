@@ -16,5 +16,6 @@ namespace Infinispan.HotRod.SWIG
         RemoteCounterManager GetCounterManager();
         Infinispan.HotRod.SWIGGen.RemoteCacheManagerAdmin administration();
         System.Collections.Generic.ISet<string> GetCacheNames();
+        TransactionManager GetTransactionManager();
     }
 }

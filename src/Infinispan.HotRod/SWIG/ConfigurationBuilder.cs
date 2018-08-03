@@ -28,5 +28,6 @@ namespace Infinispan.HotRod.SWIG
         ConfigurationBuilder ValueSizeEstimate(int valueSizeEstimate);
         ConfigurationBuilder MaxRetries(int maxRetries);
         ConfigurationBuilder BalancingStrategyProducer(Infinispan.HotRod.Config.FailOverRequestBalancingStrategyProducerDelegate bsp);
+        ConfigurationBuilder SetTransactional(bool t);
     }
 }
