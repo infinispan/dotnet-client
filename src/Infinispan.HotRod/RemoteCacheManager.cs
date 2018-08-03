@@ -256,5 +256,14 @@ namespace Infinispan.HotRod
         {
             return manager.GetCacheNames();
         }
+
+        /// <summary>
+        /// Return the transaction manager
+        /// </summary>
+        /// <returns></returns>
+        public Infinispan.HotRod.SWIG.TransactionManager GetTransactionManager()
+        {
+            return manager.GetTransactionManager();
+        }
     }
 }

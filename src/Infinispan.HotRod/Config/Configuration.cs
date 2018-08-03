@@ -130,5 +130,23 @@ namespace Infinispan.HotRod.Config
         {
             return marshaller;
         }
+
+        /// <summary>
+        /// Check if this configuration enables transactional operation
+        /// </summary>
+        /// <returns></returns>
+        public bool IsTransactional()
+        {
+            return config.isTransactional();
+        }
+
+        /// <summary>
+        /// Enable disable transactional operations
+        /// </summary>
+        /// <param name="t">true enables transactional operations</param>
+        public void SetTransactional(bool t)
+        {
+            config.setTransactional(t);
+        }
     }
 }

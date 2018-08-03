@@ -135,7 +135,12 @@ namespace Infinispan.HotRod.Config
             this.marshaller = marshaller;
             return this;
         }
- 
+
+        public ConfigurationBuilder Transactional(bool t)
+        {
+            builder.SetTransactional(t);
+            return this;
+        }
     }
 #pragma warning restore 1591
 }

@@ -21,5 +21,7 @@ namespace Infinispan.HotRod.SWIG
 
         IList<ServerConfiguration> Servers();
         Dictionary<string,IList<ServerConfiguration>> GetServersMapConfiguration();
+        bool isTransactional();
+        void setTransactional(bool t);
     }
 }
