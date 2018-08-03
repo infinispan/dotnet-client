@@ -139,6 +139,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         }
 
         [Test]
+        [Ignore("ISPN-9409")]
         public void CustomEventsTest()
         {
             LoggingEventListener<string> listener = new LoggingEventListener<string>();
@@ -169,6 +170,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         }
 
         [Test]
+        [Ignore("ISPN-9409")]
         public void FilterEventsTest()
         {
             LoggingEventListener<string> listener = new LoggingEventListener<string>();
