@@ -19,15 +19,14 @@ pipeline {
                 PROTOBUF_LIBRARY = 'C:\\\\protobuf-2.6.1-pack\\\\lib\\\\libprotobuf-static.lib'
                 PROTOBUF_PROTOC_EXECUTABLE = 'C:\\\\protobuf-2.6.1-pack\\\\bin\\\\protoc.exe'
                 PROTOBUF_PROTOC_LIBRARY = 'C:\\\\protobuf-2.6.1-pack\\\\lib\\\\libprotoc.lib'
-                SWIG_DIR = 'C:\\\\PROGRA~1\\\\SWIGWI~1.12'
-                SWIG_EXECUTABLE = 'C:\\\\PROGRA~1\\\\SWIGWI~1.12\\\\SWIG.EXE'
+                SWIG_DIR = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12'
+                SWIG_EXECUTABLE = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12\\\\SWIG.EXE'
                 test32 = 'empty'
                 test64 = 'empty'
                 version_1major = '8'
                 version_2minor = '1'
                 version_3micro = '0'
                 version_4qualifier = 'Final'
-                HOTROD_LOG_LEVEL = 'TRACE'
             }
             steps {
                 dir('cpp-client') {
@@ -72,7 +71,7 @@ pipeline {
                 PROTOBUF_PROTOC_EXECUTABLE  = 'C:\\\\protobuf-2.6.1-pack\\\\bin\\\\protoc.exe'
                 PROTOBUF_PROTOC_EXECUTABLE_CS  = 'C:\\\\Users\\\\Administrator\\\\Google.Protobuf.Tools.3.4.0\\\\tools\\\\windows_x64\\\\protoc.exe'
                 PROTOBUF_PROTOC_LIBRARY  = 'C:\\\\protobuf-2.6.1-pack\\\\lib\\\\libprotoc.lib'
-                SWIG_DIR  = 'C:\\\\PROGRA~1\\\\SWIGWI~1.12'
+                SWIG_DIR  = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12'
                 SWIG_EXECUTABLE  = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12\\\\SWIG.EXE'
                 test32  = 'skip'
                 test64  = 'run'
