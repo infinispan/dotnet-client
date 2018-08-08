@@ -9,6 +9,7 @@
         HotRod_HotRodClientException,
         HotRod_CounterLowerBoundException,
         HotRod_CounterUpperBoundException,
+        HotRod_HotRodClientRollbackException,
         HotRod_Exception,
 
     } HotRodExceptionCodes;
@@ -66,6 +67,9 @@
                  SWIGPendingException.Set(new Infinispan.HotRod.Exceptions.CounterUpperBoundException(message));
                  break;
              case 9:
+                 SWIGPendingException.Set(new Infinispan.HotRod.Exceptions.HotRodClientRollbackException(message));
+                 break;
+             case 10:
              default:
                  SWIGPendingException.Set(new Infinispan.HotRod.Exceptions.Exception(message));
                  break;
@@ -100,14 +104,17 @@
     } catch (const infinispan::hotrod::UnsupportedOperationException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_UnsupportedOperationException, e.what());
         return $null;
-    } catch (const infinispan::hotrod::HotRodClientException& e) {
-        SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientException, e.what());
-        return $null;
     } catch (const infinispan::hotrod::CounterLowerBoundException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_CounterLowerBoundException, e.what());
         return $null;
     } catch (const infinispan::hotrod::CounterUpperBoundException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_CounterUpperBoundException, e.what());
+        return $null;
+    } catch (const infinispan::hotrod::HotRodClientRollbackException& e) {
+        SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientRollbackException, e.what());
+        return $null;
+    } catch (const infinispan::hotrod::HotRodClientException& e) {
+        SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientException, e.what());
         return $null;
     } catch (const infinispan::hotrod::Exception& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_Exception, e.what());
