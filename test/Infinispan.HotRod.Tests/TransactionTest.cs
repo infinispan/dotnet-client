@@ -19,9 +19,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         IMarshaller marshaller;
         IMarshaller nonTxMarshaller;
 
-        HotRodServer server1;
-        HotRodServer server2;
-
         private void InitializeRemoteCacheManager(bool started)
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
@@ -44,7 +41,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             nonTxRemoteManager = new RemoteCacheManager(conf.Build(), started);
         }
 
-
         [Test]
         public void ReadCommitted()
         {
@@ -54,15 +50,24 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             string k1 = "key13";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
-
-            txManager.Begin();
-            cache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            txManager.Commit();
+            try
+            {
+                txManager.Begin();
+                cache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                txManager.Commit();
+            }
+            catch (Exception ex)
+            {
+                // try to release the tx resources
+                txManager.Rollback();
+                throw ex;
+            }
             // Check the correct value from remote cache
             rv1 = cache.Get(k1);
             Assert.AreEqual(rv1, v1);
@@ -77,15 +82,20 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             string k1 = "key13";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
-
-            txManager.Begin();
-            cache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            txManager.Rollback();
+            try
+            {
+                txManager.Begin();
+                cache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+            }
+            finally {
+                txManager.Rollback();
+            }
             // Check the correct value from remote cache
             rv1 = cache.Get(k1);
             Assert.IsNull(rv1);
@@ -103,15 +113,25 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             string k1 = "key13";
             string v0 = "carbon";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
             cache.Put(k1, v0);
-            txManager.Begin();
-            cache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            txManager.Commit();
+            try
+            {
+                txManager.Begin();
+                cache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                txManager.Commit();
+            }
+            catch (Exception ex)
+            {
+                // try to release the tx resources
+                txManager.Rollback();
+                throw ex;
+            }
             // Check the correct value from remote cache
             rv1 = cache.Get(k1);
             Assert.AreEqual(rv1, v1);
@@ -129,19 +149,22 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             string k1 = "key13";
             string oldv = "oxygen";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
-
             string oldrv1 = cache.Put(k1, oldv);
             Assert.IsNull(oldrv1);
-
-            txManager.Begin();
-            oldrv1 = cache.Put(k1, v1);
-            Assert.AreEqual(oldrv1, oldv);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            txManager.Rollback();
+            try
+            {
+                txManager.Begin();
+                oldrv1 = cache.Put(k1, v1);
+                Assert.AreEqual(oldrv1, oldv);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+            } finally {
+                txManager.Rollback();
+            }
             // Check the correct value from remote cache
             rv1 = cache.Get(k1);
             Assert.AreEqual(oldrv1, oldv);
@@ -157,19 +180,23 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             string k1 = "key13";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
+            try
+            {
+                txManager.Begin();
 
-            txManager.Begin();
-
-            string oldv1 = cache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            cache.Remove(k1);
-            rv1 = cache.Get(k1);
-            Assert.IsNull(rv1);
-            txManager.Rollback();
+                string oldv1 = cache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                cache.Remove(k1);
+                rv1 = cache.Get(k1);
+                Assert.IsNull(rv1);
+            } finally {
+                txManager.Rollback();
+            }
         }
 
         // TX Client must read last value during the tx (from the context)
@@ -185,19 +212,28 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             string k1 = "key13";
             string v1 = "boron";
+            string rv1;
+            string nontxrv1;
 
             cache.Clear();
+            try
+            {
+                txManager.Begin();
 
-            txManager.Begin();
-
-            cache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-
-            string nontxrv1 = nonTxCache.Get(k1);
-            Assert.IsNull(nontxrv1);
-            txManager.Commit();
+                cache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                nontxrv1 = nonTxCache.Get(k1);
+                Assert.IsNull(nontxrv1);
+                txManager.Commit();
+            }
+            catch (Exception ex)
+            {
+                // try to release the tx resources
+                txManager.Rollback();
+                throw ex;
+            }
             // Check the correct value from remote cache
             rv1 = cache.Get(k1);
             Assert.AreEqual(rv1, v1);
@@ -217,19 +253,22 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             string k1 = "key13";
             string v1 = "boron";
+            string rv1;
 
             cache.Clear();
-
-            txManager.Begin();
-            string oldv1 = nonTxCache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = nonTxCache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-            rv1 = cache.Remove(k1);
-            rv1 = cache.Get(k1);
-            Assert.IsNull(rv1);
-            txManager.Rollback();
-
+            try
+            {
+                txManager.Begin();
+                string oldv1 = nonTxCache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = nonTxCache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                rv1 = cache.Remove(k1);
+                rv1 = cache.Get(k1);
+                Assert.IsNull(rv1);
+            } finally {
+                txManager.Rollback();
+            }
             rv1 = nonTxCache.Get(k1);
             Assert.AreEqual(rv1, v1);
         }
@@ -247,28 +286,28 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             string k1 = "key13";
             string v1 = "boron";
             string v2 = "helium";
+            string rv1;
 
             cache.Clear();
+            try
+            {
+                txManager.Begin();
 
-            txManager.Begin();
-
-            string oldv1 = nonTxCache.Put(k1, v1);
-            // Check the correct value from the tx context
-            string rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-
-            // This goes to the server
-            oldv1 = nonTxCache.Put(k1, v2);
-
-            // But this values comes from the tx context
-            rv1 = cache.Get(k1);
-            Assert.AreEqual(rv1, v1);
-
-            cache.Remove(k1);
-            rv1 = cache.Get(k1);
-            Assert.IsNull(rv1);
-            txManager.Rollback();
-
+                string oldv1 = nonTxCache.Put(k1, v1);
+                // Check the correct value from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                // This goes to the server
+                oldv1 = nonTxCache.Put(k1, v2);
+                // But this values comes from the tx context
+                rv1 = cache.Get(k1);
+                Assert.AreEqual(rv1, v1);
+                cache.Remove(k1);
+                rv1 = cache.Get(k1);
+                Assert.IsNull(rv1);
+            } finally {
+                txManager.Rollback();
+            }
             rv1 = nonTxCache.Get(k1);
             Assert.AreEqual(rv1, v2);
         }
@@ -286,22 +325,31 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             string v1 = "boron";
             string k2 = "key14";
             string v2 = "helium";
-
             string vx = "calcium";
 
             cache.Clear();
+            try
+            {
+                txManager.Begin();
 
-            txManager.Begin();
-
-            string oldv1 = cache.Put(k1, v1);
-            string oldv2 = cache.Put(k2, v2);
-            // Check the correct value from the tx context
-            string rv1 = nonTxCache.Put(k1, vx);
-            Assert.IsNull(rv1);
-            txManager.Commit();
+                string oldv1 = cache.Put(k1, v1);
+                string oldv2 = cache.Put(k2, v2);
+                // Check the correct value from the tx context
+                string rv1 = nonTxCache.Put(k1, vx);
+                Assert.IsNull(rv1);
+                Assert.Throws<Infinispan.HotRod.Exceptions.HotRodClientRollbackException>(() =>
+                {
+                    txManager.Commit();
+                });
+            }
+            catch (Exception ex)
+            {
+                // try to release the tx resources
+                txManager.Rollback();
+                throw ex;
+            }
             Assert.AreEqual(cache.Get(k1), vx);
             Assert.IsNull(cache.Get(k2));
         }
-
     }
 }
