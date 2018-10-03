@@ -518,7 +518,6 @@ namespace Infinispan.HotRod.Impl
         }
 
         public void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql)
-
         {
             stopAndRemoveTask(cql.clientEventListener.listenerId);
             VectorByte vc = new VectorByte(cql.clientEventListener.listenerId);
@@ -529,6 +528,12 @@ namespace Infinispan.HotRod.Impl
         {
             byte[] barray = marshaller.ObjectToByteBuffer(input);
             return new ByteArray(barray, barray.Length);
+        }
+
+        public IRemoteCache<K,V> WithDataFormat(DataFormat df)
+        {
+            Infinispan.HotRod.SWIG.RemoteByteArrayCache c = cache.withDataFormat(df.df);
+            return new RemoteCacheSWIGGenImpl<K, V>(this.manager, c, (df.Marshaller != null) ? df.Marshaller : this.marshaller, (df.ArgMarshaller != null) ? df.ArgMarshaller : this.argMarshaller, this.configuration);
         }
 
         private Object unwrap(ByteArray input)
