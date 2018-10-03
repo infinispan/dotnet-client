@@ -391,24 +391,27 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     "org.infinispan.client.hotrod.CrossLanguageHotRodTest")
   set_tests_properties(cross_language_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
   
-  add_test(NAME compatibility_serializer_test
-    WORKING_DIRECTORY ${java_tests_dir}
-    COMMAND ${java_tests_dir}/run_ikvm.bat
-    -enableassertions
-    -Dorg.jboss.logging.provider=jdk
-    # -DVERBOSE_HOTROD_JAVA_TESTS=true
-    -Djava.net.preferIPv4Stack=true
-    -Dinfinispan.client.hotrod.java=${java_tests_dir}/target/infinispan-client-hotrod
-    -Dinfinispan.client.hotrod.dotnet=${java_tests_dir}/hotrodcs.jar
-    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll
-    -Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/$<CONFIG>/hotrodcs-tests.dll
-    "org.infinispan.client.hotrod.StringSerializerHotRodTest")
-  set_tests_properties(compatibility_serializer_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
+##
+#### NO MORE COMPATIBILITY MODE WITH 9.4.0
+##
+##add_test(NAME compatibility_serializer_test
+    ##WORKING_DIRECTORY ${java_tests_dir}
+    ##COMMAND ${java_tests_dir}/run_ikvm.bat
+    ##-enableassertions
+    ##-Dorg.jboss.logging.provider=jdk
+    ### -DVERBOSE_HOTROD_JAVA_TESTS=true
+    ##-Djava.net.preferIPv4Stack=true
+    ##-Dinfinispan.client.hotrod.java=${java_tests_dir}/target/infinispan-client-hotrod
+    ##-Dinfinispan.client.hotrod.dotnet=${java_tests_dir}/hotrodcs.jar
+    ##-Xreference:${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.dll
+    ##-Xreference:${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/$<CONFIG>/hotrodcs-tests.dll
+    ##"org.infinispan.client.hotrod.StringSerializerHotRodTest")
+  ##set_tests_properties(compatibility_serializer_test PROPERTIES ENVIRONMENT "HOTROD_IPSTACK=IPV4;JAVA_TESTS_DIR=${java_tests_dir}" TIMEOUT 1200)
     
 endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
-  file(COPY ${JBOSS_HOME}/docs/examples/configs/standalone-compatibility-mode.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
+	##file(COPY ${JBOSS_HOME}/docs/examples/configs/standalone-compatibility-mode.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
   #use the specific clustered-indexing.xml until ISPN-6912 is resolved, then use docs/examples/configs/clustered-indexing.xml
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-indexing.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-xsite1.xml DESTINATION "${JBOSS_HOME}/standalone/configuration")
@@ -442,7 +445,7 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
     add_test(NAME csharp_tests_default COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ DefaultTestSuite TestResult-default.xml)
     add_test(NAME csharp_tests_security COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ SecurityTestSuite TestResult-security.xml)
     add_test(NAME csharp_tests_authentication COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ AuthenticationTestSuite TestResult-authentication.xml)
-    add_test(NAME csharp_tests_compatibility COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CompatibilityModeTestSuite TestResult-compatibility.xml)
+    ##add_test(NAME csharp_tests_compatibility COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CompatibilityModeTestSuite TestResult-compatibility.xml)
     add_test(NAME csharp_tests_query COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ RemoteQueryTestSuite TestResult-query.xml)
     add_test(NAME csharp_tests_counter COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CounterTestSuite TestResult-counter.xml)
     add_test(NAME csharp_tests_cluster COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ ClusterTestSuite TestResult-cluster.xml)
