@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 
-<server xmlns="urn:jboss:domain:5.0">
+<server xmlns="urn:jboss:domain:8.0">
     <extensions>
         <extension module="org.infinispan.extension"/>
         <extension module="org.infinispan.server.endpoint"/>
@@ -73,7 +73,7 @@
         </access-control>
     </management>
     <profile>
-        <subsystem xmlns="urn:jboss:domain:logging:3.0">
+        <subsystem xmlns="urn:jboss:domain:logging:6.0">
             <console-handler name="CONSOLE">
                 <level name="INFO"/>
                 <formatter>
@@ -164,7 +164,7 @@
                 </drivers>
             </datasources>
         </subsystem>
-        <subsystem xmlns="urn:wildfly:elytron:1.2" final-providers="combined-providers" disallowed-providers="OracleUcrypto">
+        <subsystem xmlns="urn:wildfly:elytron:4.0" final-providers="combined-providers" disallowed-providers="OracleUcrypto">
             <providers>
                 <aggregate-providers name="combined-providers">
                     <providers name="elytron"/>
@@ -213,14 +213,14 @@
                 </constant-role-mapper>
             </mappers>
             <http>
-                <http-authentication-factory name="management-http-authentication" http-server-mechanism-factory="global" security-domain="ManagementDomain">
+                <http-authentication-factory name="management-http-authentication" security-domain="ManagementDomain" http-server-mechanism-factory="global">
                     <mechanism-configuration>
                         <mechanism mechanism-name="DIGEST">
                             <mechanism-realm realm-name="ManagementRealm"/>
                         </mechanism>
                     </mechanism-configuration>
                 </http-authentication-factory>
-                <http-authentication-factory name="application-http-authentication" http-server-mechanism-factory="global" security-domain="ApplicationDomain">
+                <http-authentication-factory name="application-http-authentication" security-domain="ApplicationDomain" http-server-mechanism-factory="global">
                     <mechanism-configuration>
                         <mechanism mechanism-name="BASIC">
                             <mechanism-realm realm-name="Application Realm"/>
@@ -260,7 +260,7 @@
                 <provider-sasl-server-factory name="global"/>
             </sasl>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:core:9.2">
+        <subsystem xmlns="urn:infinispan:server:core:9.4" default-cache-container="clustered">
             <cache-container name="clustered" default-cache="default" statistics="true">
                 <!-- template configurations -->
                 <local-cache-configuration name="template">
@@ -268,14 +268,13 @@
                 </local-cache-configuration>
                 <transport lock-timeout="60000"/>
                 <global-state/>
-                <replicated-cache-configuration name="replicated"/>
-                <replicated-cache name="repl" configuration="replicated"/>
                 <distributed-cache-configuration name="transactional">
                     <transaction mode="NON_XA" locking="PESSIMISTIC"/>
                 </distributed-cache-configuration>
                 <distributed-cache-configuration name="async" mode="ASYNC"/>
+                <replicated-cache-configuration name="replicated"/>
                 <distributed-cache-configuration name="persistent-file-store">
-                    <file-store shared="false" passivation="false" fetch-state="true"/>
+                    <file-store shared="false" fetch-state="true" passivation="false"/>
                 </distributed-cache-configuration>
                 <distributed-cache-configuration name="indexed">
                     <indexing index="LOCAL" auto-config="true"/>
@@ -289,40 +288,41 @@
                     <memory>
                         <object size="10000"/>
                     </memory>
-                    <file-store shared="false" passivation="true" fetch-state="true">
+                    <file-store shared="false" fetch-state="true" passivation="true">
                         <write-behind modification-queue-size="1024" thread-pool-size="1"/>
                     </file-store>
                 </distributed-cache-configuration>
                 <distributed-cache-configuration name="persistent-file-store-write-behind">
-                    <file-store shared="false" passivation="false" fetch-state="true">
+                    <file-store shared="false" fetch-state="true" passivation="false">
                         <write-behind modification-queue-size="1024" thread-pool-size="1"/>
                     </file-store>
                 </distributed-cache-configuration>
                 <distributed-cache-configuration name="persistent-rocksdb-store">
-                    <rocksdb-store shared="false" passivation="false" fetch-state="true"/>
+                    <rocksdb-store shared="false" fetch-state="true" passivation="false"/>
                 </distributed-cache-configuration>
                 <distributed-cache-configuration name="persistent-jdbc-string-keyed">
-                    <string-keyed-jdbc-store name="STRING_KEYED_JDBC_STORE" datasource="java:jboss/datasources/ExampleDS" shared="false" preload="false" passivation="false" fetch-state="true" purge="false">
-                        <write-behind modification-queue-size="1024" thread-pool-size="1"/>
+                    <string-keyed-jdbc-store datasource="java:jboss/datasources/ExampleDS" fetch-state="true" preload="false" purge="false" shared="false" passivation="false">
                         <string-keyed-table prefix="ISPN">
                             <id-column name="id" type="VARCHAR"/>
                             <data-column name="datum" type="BINARY"/>
                             <timestamp-column name="version" type="BIGINT"/>
                         </string-keyed-table>
+                        <write-behind modification-queue-size="1024" thread-pool-size="1"/>
                     </string-keyed-jdbc-store>
                 </distributed-cache-configuration>
                 <distributed-cache name="default"/>
+                <replicated-cache name="repl" configuration="replicated"/>
             </cache-container>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:endpoint:9.2">
-            <hotrod-connector cache-container="clustered" socket-binding="hotrod">
+        <subsystem xmlns="urn:infinispan:server:endpoint:9.4">
+            <hotrod-connector socket-binding="hotrod" cache-container="clustered">
                 <topology-state-transfer lazy-retrieval="false" lock-timeout="1000" replication-timeout="5000"/>
             </hotrod-connector>
-            <rest-connector cache-container="clustered" socket-binding="rest">
+            <rest-connector socket-binding="rest" cache-container="clustered">
                 <authentication security-realm="ApplicationRealm" auth-method="BASIC"/>
             </rest-connector>
         </subsystem>
-        <subsystem xmlns="urn:infinispan:server:jgroups:9.0">
+        <subsystem xmlns="urn:infinispan:server:jgroups:9.4">
             <channels default="cluster">
                 <channel name="cluster"/>
             </channels>
@@ -350,9 +350,7 @@
                     <protocol type="FD_ALL"/>
                     <protocol type="VERIFY_SUSPECT"/>
                     <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">
-                            false
-                        </property>
+                        <property name="use_mcast_xmit">false</property>
                     </protocol>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
@@ -363,18 +361,14 @@
                 <stack name="tcp-gossip">
                     <transport type="TCP" socket-binding="jgroups-tcp"/>
                     <protocol type="TCPGOSSIP">
-                        <property name="initial_hosts">
-                            ${jgroups.gossip.initial_hosts:}
-                        </property>
+                        <property name="initial_hosts">${jgroups.gossip.initial_hosts:}</property>
                     </protocol>
                     <protocol type="MERGE3"/>
                     <protocol type="FD_SOCK" socket-binding="jgroups-tcp-fd"/>
                     <protocol type="FD_ALL"/>
                     <protocol type="VERIFY_SUSPECT"/>
                     <protocol type="pbcast.NAKACK2">
-                        <property name="use_mcast_xmit">
-                            false
-                        </property>
+                        <property name="use_mcast_xmit">false</property>
                     </protocol>
                     <protocol type="UNICAST3"/>
                     <protocol type="pbcast.STABLE"/>
@@ -384,7 +378,7 @@
                 </stack>
             </stacks>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:io:2.0">
+        <subsystem xmlns="urn:jboss:domain:io:3.0">
             <worker name="default"/>
             <buffer-pool name="default"/>
         </subsystem>
@@ -417,7 +411,6 @@
             <remote-naming/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:remoting:4.0">
-            <endpoint/>
             <http-connector name="http-remoting-connector" connector-ref="default" security-realm="ApplicationRealm"/>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:security:2.0">
@@ -452,8 +445,8 @@
                 </security-domain>
             </security-domains>
         </subsystem>
-        <subsystem xmlns="urn:jboss:domain:transactions:4.0">
-            <core-environment>
+        <subsystem xmlns="urn:jboss:domain:transactions:5.0">
+            <core-environment node-identifier="${jboss.tx.node.id:1}">
                 <process-id>
                     <uuid/>
                 </process-id>
