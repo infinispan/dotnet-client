@@ -65,6 +65,7 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 #include <infinispan/hotrod/CounterEvent.h>
 #include <infinispan/hotrod/Counters.h>
 #include <infinispan/hotrod/RemoteCounterManager.h>
+#include <infinispan/hotrod/DataFormat.h>
 #include <swig/DotNetClientListener.h>
 %}
 
@@ -188,6 +189,7 @@ static int getpath(void *context, const char ** path) {
 %ignore infinispan::hotrod::SynchronizationAdapter;
 %ignore infinispan::hotrod::XID;
 %ignore infinispan::hotrod::TransactionTable;
+%ignore infinispan::hotrod::IdsMediaTypes;
 
 
 %include "infinispan/hotrod/ClientEvent.h"
@@ -220,6 +222,7 @@ static int getpath(void *context, const char ** path) {
 %include "infinispan/hotrod/Counters.h"
 %include "infinispan/hotrod/RemoteCounterManager.h"
 %include "infinispan/hotrod/RemoteCacheManagerAdmin.h"
+%include "infinispan/hotrod/DataFormat.h"
 %include "swig/DotNetClientListener.h" 
 %include "arrays_csharp.i"
 %apply unsigned char INPUT[] {unsigned char* _bytes}
@@ -238,7 +241,6 @@ static int getpath(void *context, const char ** path) {
 %ignore clearAsync;
 %ignore base_query;
 %ignore query(const QueryRequest &qr);
-
 %inline{
 
 #include <exception>
@@ -329,6 +331,7 @@ namespace hotrod {
  }
 
 %template(RemoteByteArrayCache) infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
+%template(ByteArrayDataFormat) infinispan::hotrod::DataFormat<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>;
 
 %template(ValueMetadataPair) std::pair<std::shared_ptr<infinispan::hotrod::ByteArray>, infinispan::hotrod::MetadataValue>;
 %template(ValueVersionPair) std::pair<std::shared_ptr<infinispan::hotrod::ByteArray>, infinispan::hotrod::VersionedValue>;

@@ -532,5 +532,14 @@ namespace Infinispan.HotRod
         /// </summary>
         /// <param name="cql">ContinuousQueryListener to be removed</param>
         void RemoveContinuousQueryListener<CQK, CQV>(Event.ContinuousQueryListener<CQK, CQV> cql);
+
+        /// <summary>
+        /// Create a new IRemoteCache instance decorated with mediatypes and marshallers specified in <paramref name="df"/>.
+        /// The current cache will be used as default if <paramref name="df"/> contains null values.
+        /// </summary>
+        /// <param name="df"></param>
+        /// <returns></returns>
+        IRemoteCache<K, V> WithDataFormat(DataFormat df);
+
     }
 }
