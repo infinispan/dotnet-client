@@ -17,13 +17,15 @@
     <description>Infinispan HotRod IKVM Wrapper</description>
 
     <properties>
-        <version.org.infinispan>9.3.1.Final</version.org.infinispan>
+        <version.org.infinispan>9.4.1.Final</version.org.infinispan>
         <version.org.jboss.logging.processor>1.2.1.Final</version.org.jboss.logging.processor>
         <version.org.jboss.narayana.jta>5.0.4.Final</version.org.jboss.narayana.jta>
-        <version.org.testng>6.9.9</version.org.testng>
+        <version.org.testng>6.10</version.org.testng>
         <version.io.netty>4.1.22.Final</version.io.netty>
         <version.jcipannotations>1.0</version.jcipannotations>
         <maven.test.skip.exec>true</maven.test.skip.exec>
+      <maven.compiler.source>1.8</maven.compiler.source>
+      <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <build>
