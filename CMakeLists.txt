@@ -31,18 +31,31 @@ else (ISWIN64)
 endif (ISWIN64)
 
 # Map from version label to assembly revision.
-set (REVISION_Alpha1 "0")
-set (REVISION_Alpha2 "1")
-set (REVISION_Alpha3 "2")
-set (REVISION_Alpha4 "3")
+set (REVISION_SNAPSHOT "0")
+set (REVISION_Alpha1 "1")
+set (REVISION_DR0 "0")
+set (REVISION_DR1 "1")
+set (REVISION_DR2 "2")
+set (REVISION_DR3 "3")
+set (REVISION_DR4 "4")
+set (REVISION_DR5 "5")
+set (REVISION_DR6 "6")
+set (REVISION_DR7 "7")
+set (REVISION_DR8 "8")
+set (REVISION_DR9 "9")
 set (REVISION_Beta1 "10")
-set (REVISION_Beta2 "11")
-set (REVISION_Beta3 "12")
-set (REVISION_Beta4 "13")
-set (REVISION_CR1 "20")
-set (REVISION_CR2 "21")
-set (REVISION_CR3 "22")
-set (REVISION_CR4 "23")
+set (REVISION_ER1 "11")
+set (REVISION_ER2 "12")
+set (REVISION_ER3 "13")
+set (REVISION_ER4 "14")
+set (REVISION_ER5 "15")
+set (REVISION_ER6 "16")
+set (REVISION_ER7 "17")
+set (REVISION_ER8 "18")
+set (REVISION_ER9 "19")
+set (REVISION_CR1 "21")
+set (REVISION_CR2 "22")
+set (REVISION_CR3 "23")
 set (REVISION_Final "30")
 string(TIMESTAMP REVISION_SNAPSHOT "%y%j" UTC)
 
@@ -131,6 +144,8 @@ endfunction()
 
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
+if (WIN32) # Needed for prebuild on windows
+
 ### Generated and build the SWIG wrapper ###
 if (NOT DEFINED HOTRODCPP_HOME AND DEFINED ENV{HOTRODCPP_HOME})
   set (HOTRODCPP_HOME $ENV{HOTRODCPP_HOME})
@@ -163,8 +178,6 @@ hr_protobuf_generate_csharp(TEST_PROTO_SRCS
 )
 
 
-if (WIN32)
-
   add_custom_target(
     swig ALL
     COMMAND cmake -G "${CMAKE_GENERATOR}" "-DHOTRODCPP_HOME=${NATIVE_DIR}" "-DSWIG_DIR=${SWIG_DIR}" "-DSWIG_EXECUTABLE=${SWIG_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/swig"
@@ -173,9 +186,6 @@ if (WIN32)
     DEPENDS ${PROTO_SRCS} ${TEST_PROTO_SRCS}
     )
 
-else (WIN32)
-#TODO: mono
-endif (WIN32)
 ### Compile the C# code ###
 if (NOT DEFINED NLOG_DLL AND DEFINED ENV{NLOG_DLL})
   set (NLOG_DLL $ENV{NLOG_DLL})
@@ -203,9 +213,13 @@ if (NOT DEFINED NLOG_LICENSE)
 endif (NOT DEFINED NLOG_LICENSE)
 
 file (COPY "${NLOG_DLL}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
+file (COPY "${NLOG_LICENSE}" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
 get_filename_component (NLOG_DLL_NAME "${NLOG_DLL}" NAME)
+get_filename_component (NLOG_LICENSE_NAME "${NLOG_LICENSE}" NAME)
 set (NLOG_DLL_LOCAL "${CMAKE_CURRENT_BINARY_DIR}/NLog.dll")
+set (NLOG_LICENSE_LOCAL "${CMAKE_CURRENT_BINARY_DIR}/NLog_License.txt")
 file (RENAME "${CMAKE_CURRENT_BINARY_DIR}/${NLOG_DLL_NAME}" "${NLOG_DLL_LOCAL}")
+file (RENAME "${CMAKE_CURRENT_BINARY_DIR}/${NLOG_LICENSE_NAME}" "${NLOG_LICENSE_LOCAL}")
 
 # GAC requires strong names
 if (NOT DEFINED HOTROD_SNK AND DEFINED ENV{HOTROD_SNK})
@@ -230,7 +244,6 @@ configure_file(templates/AssemblyInfo.cs.in AssemblyInfo.cs)
 set (ARCH 64)
 #configure_file(src/main/cs/Infinispan/HotRod/Impl/RemoteCacheSWIGImpl.cs.i "${SWIG_BUILD}/RemoteCacheSWIGImpl.cs")
 
-if (WIN32)
   find_program(MSBUILD_BINARY MSBuild.exe HINTS "[HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\MSBuild\\ToolsVersions\\4.0;MSBuildToolsPath]")
   if (NOT MSBUILD_BINARY)
     message (FATAL_ERROR "Failed to find MSBuild.exe")
@@ -247,25 +260,25 @@ if (WIN32)
 				PLATFORM ${PLATFORM}
 				vs-hotrodcs-bin)
   add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin hotrod-java-events-jar)
-else (WIN32)
-  find_program(XBUILD_BINARY xbuild)
-  if (NOT XBUILD_BINARY)
-    message (FATAL_ERROR "Please make sure xbuild is on the PATH.")
-  endif (NOT XBUILD_BINARY)
-
-  find_program(MONO_BINARY mono)
-  if (NOT MONO_BINARY)
-    message (FATAL_ERROR "Please make sure mono is on the PATH.")
-  endif (NOT MONO_BINARY)
-
-  add_custom_target(hotrodcs-bin ALL
-    COMMAND ${XBUILD_BINARY} "/tv:4.5" "hotrodcs.proj"
-    DEPENDS hotrodcs_wrap)
-  
-  add_custom_target(hotrodcs-tests-bin ALL
-    COMMAND ${XBUILD_BINARY} "/tv:4.5" "hotrodcs-tests.csproj"
-    DEPENDS hotrodcs-bin)
-endif (WIN32)
+#else (WIN32)
+#  find_program(XBUILD_BINARY xbuild)
+#  if (NOT XBUILD_BINARY)
+#    message (FATAL_ERROR "Please make sure xbuild is on the PATH.")
+#  endif (NOT XBUILD_BINARY)
+#
+#  find_program(MONO_BINARY mono)
+#  if (NOT MONO_BINARY)
+#    message (FATAL_ERROR "Please make sure mono is on the PATH.")
+#  endif (NOT MONO_BINARY)
+#
+#  add_custom_target(hotrodcs-bin ALL
+#    COMMAND ${XBUILD_BINARY} "/tv:4.5" "hotrodcs.proj"
+#    DEPENDS hotrodcs_wrap)
+#  
+#  add_custom_target(hotrodcs-tests-bin ALL
+#    COMMAND ${XBUILD_BINARY} "/tv:4.5" "hotrodcs-tests.csproj"
+#    DEPENDS hotrodcs-bin)
+#endif (WIN32)
 
 
 ### Run the tests. ###
@@ -321,7 +334,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
   set(java_events_dir ${CMAKE_CURRENT_BINARY_DIR}/java_events)
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/java_tests DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/java_events DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
-
+  file(COPY ${CMAKE_SOURCE_DIR}/maven-settings.xml DESTINATION "${CMAKE_CURRENT_BINARY_DIR}")
   # Pass the updated path using an external script.
   file (TO_NATIVE_PATH "${IKVM_BINARY}" IKVM_NATIVE_BINARY)
   configure_file(templates/run_ikvm.bat.in ${java_tests_dir}/run_ikvm.bat)
@@ -352,6 +365,7 @@ if (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
     -DhotrodIKVMStubJar=${java_tests_dir}/hotrodcs.jar
     -DhotrodTestsIKVMStubJar=${java_tests_dir}/hotrodcs-tests.jar
     -DmscorlibIKVMStubJar=${java_tests_dir}/mscorlib.jar
+    --settings ../maven-settings.xml
     "clean" "package"
 
     WORKING_DIRECTORY ${java_tests_dir}
@@ -457,12 +471,15 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   endif (WIN32)
 endif (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   
+endif (WIN32) #/ Needed for prebuild on windows
+ 
 ### Packaging. ###
 set (CPACK_GENERATOR "WIX")
 set (CPACK_SOURCE_GENERATOR "ZIP")
 
 # Native client.
 
+if (WIN32)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.dll" DESTINATION lib/)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.lib" DESTINATION lib/)
 
@@ -477,12 +494,11 @@ install (FILES "${CMAKE_CURRENT_BINARY_DIR}/hotrodcs.xml" DESTINATION lib/)
 # Dependencies.
 file(TO_CMAKE_PATH ${GOOGLE_PROTOBUF_NUPKG} CM_GOOGLE_PROTOBUF_NUPKG)
 file(TO_CMAKE_PATH ${PROTOBUF_PROTOC_EXECUTABLE_CS} CM_PROTOBUF_PROTOC_EXECUTABLE_CS)
-file(TO_CMAKE_PATH ${OPENSSL_ROOT_DIR} CM_OPENSSL_ROOT_DIR)
 install (FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
 install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
 install (FILES "${CM_GOOGLE_PROTOBUF_NUPKG}/Google.Protobuf.3.4.0/lib/netstandard1.0/Google.Protobuf.dll" DESTINATION lib/)
 install (FILES "${CM_PROTOBUF_PROTOC_EXECUTABLE_CS}" DESTINATION bin/)
-install (DIRECTORY "${CM_OPENSSL_ROOT_DIR}/lib" "${CM_OPENSSL_ROOT_DIR}/bin" "${CM_OPENSSL_ROOT_DIR}/include" DESTINATION .)
+endif (WIN32)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/License.txt" License.txt NEWLINE_STYLE CRLF)
@@ -492,6 +508,7 @@ install (FILES
   "${CMAKE_CURRENT_BINARY_DIR}/License.txt"
   "${CMAKE_CURRENT_BINARY_DIR}/README.txt"
   DESTINATION .)
+install (DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/docs DESTINATION ${SHARE_INSTALL_PREFIX}/)
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/wix.xml.in" wix.xml)
 set (CPACK_WIX_TEMPLATE "wix.xml")
