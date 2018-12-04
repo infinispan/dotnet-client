@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licenseSummary>
+    <dependencies>
+        <dependency>
+            <packageName>Google Protocol Buffers</packageName>
+            <version>3.0.0</version>
+            <licenses>
+                <license>
+                    <name>BSD-3-Clause-Style Google Protocol Buffers License</name>
+                    <url>https://raw.githubusercontent.com/google/protobuf/master/LICENSE</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>NLog</packageName>
+            <version>2.1.0</version>
+            <licenses>
+                <license>
+                    <name>BSD 3-Clause License</name>
+                    <url>https://raw.githubusercontent.com/NLog/NLog/master/LICENSE.txt</url>
+                </license>
+            </licenses>
+        </dependency>
+        <dependency>
+            <packageName>OpenSSL+SSLeay</packageName>
+            <version>1.0.2k</version>
+            <licenses>
+                <license>
+                    <name>OpenSSL+SSLeay</name>
+                    <url>https://www.openssl.org/source/license.txt</url>
+                </license>
+            </licenses>
+        </dependency>
+    </dependencies>
+</licenseSummary>
