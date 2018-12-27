@@ -3,19 +3,19 @@ cmake_minimum_required(VERSION 2.8)
 project(infinispan-hotrod-dotnet)
 
 if (NOT DEFINED HOTROD_VERSION_MAJOR OR "${HOTROD_VERSION_MAJOR}" STREQUAL "")
-	set (HOTROD_VERSION_MAJOR "8")
+	set (HOTROD_VERSION_MAJOR "7")
 endif (NOT DEFINED HOTROD_VERSION_MAJOR OR "${HOTROD_VERSION_MAJOR}" STREQUAL "")
 
 if (NOT DEFINED HOTROD_VERSION_MINOR OR "${HOTROD_VERSION_MINOR}" STREQUAL "")
-	set (HOTROD_VERSION_MINOR "1")
+	set (HOTROD_VERSION_MINOR "3")
 endif (NOT DEFINED HOTROD_VERSION_MINOR OR "${HOTROD_VERSION_MINOR}" STREQUAL "")
 
 if (NOT DEFINED HOTROD_VERSION_PATCH OR "${HOTROD_VERSION_PATCH}" STREQUAL "")
-	set (HOTROD_VERSION_PATCH "1")
+	set (HOTROD_VERSION_PATCH "0")
 endif (NOT DEFINED HOTROD_VERSION_PATCH OR "${HOTROD_VERSION_PATCH}" STREQUAL "")
 
 if (NOT DEFINED HOTROD_VERSION_LABEL OR "${HOTROD_VERSION_LABEL}" STREQUAL "")
-  set (HOTROD_VERSION_LABEL "SNAPSHOT")
+  set (HOTROD_VERSION_LABEL "DR4")
 endif (NOT DEFINED HOTROD_VERSION_LABEL OR "${HOTROD_VERSION_LABEL}" STREQUAL "")
 
 if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
@@ -546,21 +546,19 @@ endif()
 
 include (CPack)
 
-if (ENABLE_DOXYGEN)
-  ### Documentation ###
-  find_package(Doxygen)
-  if (DOXYGEN_FOUND)
-    #-- Configure the Template Doxyfile for our specific project
-    configure_file(templates/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
-    # Delete any previously generated docs
-    if(EXISTS ${CMAKE_BINARY_DIR}/api_docs)
-        file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/api_docs)
-    endif(EXISTS ${CMAKE_BINARY_DIR}/api_docs)
-    #-- Add a custom target to run Doxygen when ever the project is built
-    add_custom_target (docs ALL
-                       COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
-                       SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
-    #Include the API docs in the package.
-    install (FILES ${CMAKE_BINARY_DIR}/api_docs/html/ DESTINATION docs/api)
-  endif (DOXYGEN_FOUND)
-endif (ENABLE_DOXYGEN)
+### Documentation ###
+find_package(Doxygen)
+if (DOXYGEN_FOUND)
+  #-- Configure the Template Doxyfile for our specific project
+  configure_file(templates/Doxyfile.in ${PROJECT_BINARY_DIR}/Doxyfile  @ONLY IMMEDIATE)
+  # Delete any previously generated docs
+  if(EXISTS ${CMAKE_BINARY_DIR}/api_docs)
+      file(REMOVE_RECURSE ${CMAKE_BINARY_DIR}/api_docs)
+  endif(EXISTS ${CMAKE_BINARY_DIR}/api_docs)
+  #-- Add a custom target to run Doxygen when ever the project is built
+  add_custom_target (docs ALL
+                     COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/Doxyfile
+                     SOURCES ${PROJECT_BINARY_DIR}/Doxyfile)
+  #Include the API docs in the package.
+  install (FILES ${CMAKE_BINARY_DIR}/api_docs/html/ DESTINATION docs/api)
+endif (DOXYGEN_FOUND)
