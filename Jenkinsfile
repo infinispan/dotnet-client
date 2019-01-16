@@ -59,7 +59,7 @@ pipeline {
                 IKVM_CUSTOM_BIN_PATH  = 'C:\\\\Users\\\\Administrator\\\\ikvm-8.1.5717.0\\\\bin'
                 INFINISPAN_VERSION  = '9.0.0.Final'
                 JBOSS_HOME  = 'Y:\\\\cpp-client\\\\infinispan-server-9.0.0.Final'
-                JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_7'
+                JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME  = 'C:\\\\APACHE~1.9'
                 MAVEN_OPTS  = '"-Dmaven.multiModuleProjectDirectory=C:\\\\APACHE~1.9"'
                 MVN_PROGRAM  = 'C:\\\\APACHE~1.9\\\\BIN\\\\MVN'
