@@ -112,6 +112,8 @@ namespace org { namespace infinispan { namespace query { namespace remote { name
 %apply unsigned char INPUT[] {unsigned char* _bytes}
 %apply unsigned char OUTPUT[] {unsigned char* dest_bytes}
 %newobject infinispan::hotrod::BasicMarchaller<ByteArray>::unmarshall;
+%newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::get;
+%newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::put;
 
 %ignore getAsync;
 %ignore putAsync;
@@ -192,10 +194,7 @@ namespace hotrod {
 
         ByteArray* unmarshall(const std::vector<char>& sbuf) {
             int size = sbuf.size();
-            unsigned char *bytes = new unsigned char[size];
-            memcpy(bytes, sbuf.data(), size);
-
-            return new ByteArray(bytes, size);
+            return new ByteArray((unsigned char*)const_cast<char*>(sbuf.data()), size);
         }
     };
 }}
