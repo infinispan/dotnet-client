@@ -12,7 +12,7 @@ pipeline {
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
                 INFINISPAN_VERSION = '9.4.1.Final'
-                JAVA_HOME = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_7'
+                JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME = 'C:\\\\APACHE~1.9'
                 MVN_PROGRAM = 'C:\\\\APACHE~1.9\\\\BIN\\\\MVN.BAT'
                 PROTOBUF_INCLUDE_DIR = 'C:\\\\protobuf-2.6.1-pack\\\\include'
@@ -56,9 +56,15 @@ pipeline {
                 GOOGLE_PROTOBUF_NUPKG  = 'C:\\\\Users\\\\Administrator'
                 HOTROD_SNK  = 'c:\\\\data\\\\hotrod_cs.key'
                 IKVM_CUSTOM_BIN_PATH  = 'C:\\\\Users\\\\Administrator\\\\ikvm-8.1.5717.0\\\\bin'
+<<<<<<< HEAD
                 INFINISPAN_VERSION  = '9.4.1.Final'
                 JBOSS_HOME  = 'Y:\\\\cpp-client\\\\infinispan-server-9.4.1.Final'
                 JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_7'
+=======
+                INFINISPAN_VERSION  = '9.0.0.Final'
+                JBOSS_HOME  = 'Y:\\\\cpp-client\\\\infinispan-server-9.0.0.Final'
+                JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
+>>>>>>> b38b922... updated java home
                 M2_HOME  = 'C:\\\\APACHE~1.9'
                 MAVEN_OPTS  = '"-Dmaven.multiModuleProjectDirectory=C:\\\\APACHE~1.9"'
                 MVN_PROGRAM  = 'C:\\\\APACHE~1.9\\\\BIN\\\\MVN'
