@@ -194,6 +194,9 @@ static int getpath(void *context, const char ** path) {
 %newobject infinispan::hotrod::BasicMarchaller<ByteArray>::unmarshall;
 %newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::get;
 %newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::put;
+%newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::putIfAbsent;
+%newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::replace;
+%newobject infinispan::hotrod::RemoteCache<infinispan::hotrod::ByteArray, infinispan::hotrod::ByteArray>::remove;
 
 %ignore getAsync;
 %ignore putAsync;
