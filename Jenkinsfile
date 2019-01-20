@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build C++ core') {
             environment {
-                cppTag = '8.2.1.SNAPSHOT'
+                cppTag = '8.2.x.SNAPSHOT'
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
                 INFINISPAN_VERSION = '9.0.0.Final'
@@ -80,7 +80,7 @@ pipeline {
                 version_2minor = '2'
                 version_3micro = '0'
                 version_4qualifier = 'Final'
-                cppTag = '8.2.x'
+                cppTag = '8.2.x.SNAPSHOT'
             }
             steps {
                 script {
