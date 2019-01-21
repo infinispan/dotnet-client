@@ -25,8 +25,8 @@ pipeline {
                 test64 = 'empty'
                 version_1major = '8'
                 version_2minor = '2'
-                version_3micro = '0'
-                version_4qualifier = 'Final'
+                version_3micro = 'x'
+                version_4qualifier = 'SNAPSHOT'
                 HOTROD_LOG_LEVEL = 'TRACE'
             }
             steps {
@@ -78,8 +78,8 @@ pipeline {
                 test64  = 'run'
                 version_1major = '8'
                 version_2minor = '2'
-                version_3micro = '0'
-                version_4qualifier = 'Final'
+                version_3micro = 'x'
+                version_4qualifier = 'SNAPSHOT'
                 cppTag = '8.2.x.SNAPSHOT'
             }
             steps {
