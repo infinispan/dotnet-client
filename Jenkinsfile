@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build C++ core') {
             environment {
-                cppTag = '8.2.x.SNAPSHOT'
+                cppTag = '8.2.1.Final'
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
                 INFINISPAN_VERSION = '9.0.0.Final'
@@ -25,15 +25,15 @@ pipeline {
                 test64 = 'empty'
                 version_1major = '8'
                 version_2minor = '2'
-                version_3micro = 'x'
-                version_4qualifier = 'SNAPSHOT'
+                version_3micro = '1'
+                version_4qualifier = 'Final'
                 HOTROD_LOG_LEVEL = 'TRACE'
             }
             steps {
                 dir('cpp-client') {
                     checkout scm: [$class: 'GitSCM',
                        userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
-                       branches: [[name: '8.2.x']]], changelog: false, poll: false
+                       branches: [[name: 'refs/tags/8.2.1.Final']]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
@@ -78,9 +78,9 @@ pipeline {
                 test64  = 'run'
                 version_1major = '8'
                 version_2minor = '2'
-                version_3micro = 'x'
-                version_4qualifier = 'SNAPSHOT'
-                cppTag = '8.2.x.SNAPSHOT'
+                version_3micro = '1'
+                version_4qualifier = 'Final'
+                cppTag = '8.2.1.Final'
             }
             steps {
                 script {
