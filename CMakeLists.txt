@@ -57,6 +57,7 @@ set (REVISION_CR1 "21")
 set (REVISION_CR2 "22")
 set (REVISION_CR3 "23")
 set (REVISION_Final "30")
+set (REVISION_GA "30")
 string(TIMESTAMP REVISION_SNAPSHOT "%y%j" UTC)
 
 # CPack version.
