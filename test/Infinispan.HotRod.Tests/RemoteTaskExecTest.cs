@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace Infinispan.HotRod.Tests.StandaloneCompatibilityModeXml
 {
     [TestFixture]
-    [Category("standalone_compatibility_mode_xml")]
+    [Category("standalone_xml")]
     [Category("CompatibilityModeTestSuite")]
     class RemoteTaskExecTest
     {

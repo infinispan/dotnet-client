@@ -246,12 +246,6 @@
                 <local-cache name="indexLocking" start="EAGER">
                     <indexing index="NONE"/>
                 </local-cache>
-                <!-- Indexes are shared between all nodes, stored on infinispan itself -->
-                <distributed-cache name="InfinispanSharedIndex" mode="SYNC" start="EAGER">
-                    <indexing index="LOCAL">
-                        <property name="default.indexmanager">org.infinispan.query.indexmanager.InfinispanIndexManager</property>
-                    </indexing>
-                </distributed-cache>
                 <!-- Auto config based on cache type -->
                 <distributed-cache name="sharedIndexInfinispanDirectory" mode="SYNC" start="EAGER">
                     <indexing index="LOCAL" auto-config="true"/>
