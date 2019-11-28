@@ -10,6 +10,7 @@
         HotRod_CounterLowerBoundException,
         HotRod_CounterUpperBoundException,
         HotRod_HotRodClientRollbackException,
+        HotRod_NoSuchElementException,
         HotRod_Exception,
 
     } HotRodExceptionCodes;
@@ -112,6 +113,9 @@
         return $null;
     } catch (const infinispan::hotrod::HotRodClientRollbackException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientRollbackException, e.what());
+        return $null;
+    } catch (const infinispan::hotrod::NoSuchElementException& e) {
+        SWIG_CSharpSetPendingExceptionCustom(HotRod_NoSuchElementException, e.what());
         return $null;
     } catch (const infinispan::hotrod::HotRodClientException& e) {
         SWIG_CSharpSetPendingExceptionCustom(HotRod_HotRodClientException, e.what());
