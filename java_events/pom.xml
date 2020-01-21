@@ -4,7 +4,7 @@
   <artifactId>java-filter</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <properties>
-    <version.org.infinispan>9.2.3.Final</version.org.infinispan>
+    <version.org.infinispan>10.0.0.Final</version.org.infinispan>
   </properties>
   <build>
     <finalName>java-filters-converters</finalName>
