@@ -14,9 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.4.1" />
-    <PackageReference Include="NLog" Version="5.0.0-beta11">
-      <NoWarn>NU1701</NoWarn>
-    </PackageReference>
+    <PackageReference Include="NLog" Version="4.5.11" />
   </ItemGroup>
 
   <ItemGroup>
