@@ -11,7 +11,8 @@ if [ "$#" == "1" ]; then
   echo HOTROD_VERSION_PATCH=$MIC
   echo HOTROD_VERSION_LABEL=$QUAL
   if [ -n "$MAJ" ] && [ -n "$MIN" ] && [ -n "$PAT" ] && [ -z "$EXTRA" ]; then
-    git checkout -b __tmp origin/master
+    CURR_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    git checkout -b __tmp
     sed -i -e 's/set (HOTROD_VERSION_MAJOR *".*")/set (HOTROD_VERSION_MAJOR "'"$MAJ"'")/' \
     -e 's/set (HOTROD_VERSION_MINOR *".*")/set (HOTROD_VERSION_MINOR "'"$MIN"'")/' \
     -e 's/set (HOTROD_VERSION_PATCH *".*")/set (HOTROD_VERSION_PATCH "'"$MIC"'")/' \
@@ -26,7 +27,7 @@ if [ "$#" == "1" ]; then
     git commit -m  "$MAJ.$MIN.$PAT"
     git tag -a "$MAJ.$MIN.$PAT" -m "$MAJ.$MIN.$PAT"
     git push origin "$MAJ.$MIN.$PAT"
-    git checkout master
+    git checkout $CURR_BRANCH
     git branch -D __tmp
     exit 0
   fi
