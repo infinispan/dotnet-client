@@ -25,7 +25,7 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
         private void InitializeRemoteCacheManager(bool started)
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer().Host("127.0.0.1").Port(11222);
+            conf.AddServer().Host("127.0.0.1").Port(11222).ProtocolVersion("2.8");
             conf.ConnectionTimeout(90000).SocketTimeout(6000);
             marshaller = new JBasicMarshaller();
             conf.Marshaller(marshaller);
@@ -54,8 +54,14 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
                             + "}; "
                             + "cache.get(\"a\");";
 
-            IRemoteCache<string, string> scriptCache = remoteManager.GetCache<string, string>(PROTOBUF_SCRIPT_CACHE_NAME);
-            IRemoteCache<string, string> testCache = remoteManager.GetCache<string, string>("default");
+            IRemoteCache<string, string> sCache = remoteManager.GetCache<string, string>(PROTOBUF_SCRIPT_CACHE_NAME);
+            IRemoteCache<string, string> cache = remoteManager.GetCache<string, string>("default");
+            var df = new DataFormat();
+            df.KeyMediaType = "application/x-jboss-marshalling";
+            df.ValueMediaType = "application/x-jboss-marshalling";
+            var testCache = cache.WithDataFormat(df);
+            var scriptCache = sCache.WithDataFormat(df);
+
             scriptCache.Put(script_name, script);
 
             Dictionary<string, object> scriptArgs = new Dictionary<string, object>();

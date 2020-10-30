@@ -126,11 +126,11 @@ namespace Infinispan.HotRod.Tests.Util
         {
             if (PlatformUtils.isUnix())
             {
-                return Path.Combine(homePath, "bin/standalone.sh");
+                return Path.Combine(homePath, "bin/server.sh");
             }
             else
             {
-                return Path.Combine(homePath, "bin\\standalone.bat");
+                return Path.Combine(homePath, "bin\\server.bat");
             }
         }
 

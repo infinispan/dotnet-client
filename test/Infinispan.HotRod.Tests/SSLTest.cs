@@ -13,6 +13,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         private IRemoteCache<string, string> scriptCache;
         private IMarshaller marshaller;
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void WriterSuccessTest()
         {
@@ -20,6 +21,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             tester.TestWriterSuccess(testCache);
         }
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void WriterPerformsReadsTest()
         {
@@ -27,6 +29,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             tester.TestWriterPerformsReads(testCache);
         }
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void WriterPerformsSupervisorOpsTest()
         {
@@ -43,6 +46,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             Assert.Fail("Should not get here");
         }
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void SNI1CorrectCredentialsTest()
         {
@@ -50,6 +54,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             tester.TestWriterSuccess(testCache);
         }
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void SNI2CorrectCredentialsTest()
         {
@@ -57,6 +62,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
             tester.TestWriterSuccess(testCache);
         }
 
+        [Ignore("ALPN setup on Windows doesn't work")]
         [Test]
         public void SNIUntrustedTest()
         {
