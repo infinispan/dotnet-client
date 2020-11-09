@@ -56,6 +56,8 @@ namespace Infinispan.HotRod.Tests.Util
         void StartHotrodServerInternal()
         {
             var jbossHome = Environment.GetEnvironmentVariable("JBOSS_HOME");
+            var path = Environment.GetEnvironmentVariable("PATH");
+            Console.WriteLine("PATH= "+path);
             if (jbossHome == null)
             {
                 throw new Exception("JBOSS_HOME env variable not set.");
