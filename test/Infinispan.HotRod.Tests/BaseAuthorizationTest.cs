@@ -34,10 +34,11 @@ namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
             scriptCache = InitCache("admin", "strongPassword", PROTOBUF_SCRIPT_CACHE_NAME);
         }
 
+
         private IRemoteCache<String, String> InitCache(string user, string password, string cacheName = AUTH_CACHE)
         {
             ConfigurationBuilder conf = new ConfigurationBuilder();
-            conf.AddServer()
+            conf.ProtocolVersion("2.8").AddServer()
                     .Host(HOTROD_HOST)
                     .Port(HOTROD_PORT)
                     .ConnectionTimeout(90000)

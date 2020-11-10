@@ -15,7 +15,7 @@ namespace Infinispan.HotRod.Tests.StandaloneCompatibilityModeXml
         public void BeforeSuite()
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
-            server = new HotRodServer("standalone.xml");
+            server = new HotRodServer("infinispan.xml");
             server.StartHotRodServer();
         }
 
