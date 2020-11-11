@@ -80,13 +80,13 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
                 case WrappedMessage.ScalarOrMessageOneofCase.WrappedMessageBytes:
                     switch (wm.WrappedDescriptorId)
                     {
-                        case 42:
+                        case 1000042:
                             o = User.Parser.ParseFrom(wm.WrappedMessageBytes);
                             break;
-                        case 43:
+                        case 1000044:
                             o = Account.Parser.ParseFrom(wm.WrappedMessageBytes);
                             break;
-                        case 44:
+                        case 1000045:
                             o = Transaction.Parser.ParseFrom(wm.WrappedMessageBytes);
                             break;
                         default:

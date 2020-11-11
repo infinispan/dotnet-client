@@ -1,23 +1,19 @@
-syntax = "proto3";
+syntax="proto3";
 package sample_bank_account;
-
-option java_package = "com.example.generated_by_protoc";
-option java_outer_classname = "BankProtos";
 
 /**
  * @Indexed
- * @TypeId(42)
+ * @TypeId(1000042)
  */
 message User {
 
    /**
-    * @Field(store = Store.YES)
+    * @Field(index = Index.YES, store = Store.YES)
     */
    int32 id = 1;
 
    /**
-    * @Field(store = Store.YES)    
-    * Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled
+    * @Field(store = Store.YES)
     */
    repeated int32 accountIds = 2 [packed=false];
 
@@ -31,11 +27,21 @@ message User {
     */
    string surname = 4;
 
-   message Address {
+message Address {
+   /**
+    * @Field(store = Store.YES)
+    */
       string street = 1;
+   /**
+    * @Field(store = Store.YES)
+    */
       string postCode = 2;
+   /**
+    * @Field(store = Store.YES)
+    */
       int32 number = 3;
    }
+
 
    /**
     * @Field(store = Store.YES)
@@ -43,11 +49,13 @@ message User {
    repeated Address addresses = 5 [packed=false];     //a repeated field cannot be marked required
 
    /**
-    * @Field(store = Store.YES,  indexNullAs = "-1")
+    * @Field(store = Store.YES, indexNullAs = "-1")
     */
    int32 age = 6;   // persisting age instead of birth date is not ideal but is ok for our sample code
 
-   /* @TypeId(41) */
+/**
+ * @TypeId(1000043)
+ */
    enum Gender {
       MALE = 0;    //NOTE: It seems negative values are accepted too!
       FEMALE = 1;
@@ -60,22 +68,21 @@ message User {
 
    string notes = 8;
 }
-
 /**
  * @Indexed
- * @TypeId(43) 
+ * @TypeId(1000044)
  */
 message Account {
 
    /**
     * @Field(store = Store.YES)
     */
-   int32 id = 1;
+   int32 id = 1 ;
 
    /**
     * @Field(store = Store.YES)
     */
-   string description = 2; 
+   string description = 2;
 
    /**
     * @Field(store = Store.YES)
@@ -84,7 +91,7 @@ message Account {
 
    message Limits {
        double maxDailyLimit = 1;
-       double maxTransactionLimit = 2; 
+       double maxTransactionLimit = 2;
    }
 
    /**
@@ -100,29 +107,29 @@ message Account {
 
 /**
  * @Indexed
- * @TypeId(44) 
+ * @TypeId(1000045)
  */
 message Transaction {
 
    /**
     * @Field(store = Store.YES)
     */
-   int32 id = 1;
+   int32 id = 1 ;
 
    /**
     * @Field
     */
    string description = 2;
-   
+
    /**
-    * @Field(store = Store.YES, analyze = Analyze.YES)
+    * @Field(store = Store.YES, analyze = Analyze.YES, index = Index.YES)
     */
    string longDescription = 3;
 
    /**
     * @Field(store = Store.YES)
     */
-   int32 accountId = 4;
+   int32 accountId = 4 ;
 
    /**
     * @Field(store = Store.YES)
@@ -146,7 +153,6 @@ message Transaction {
  *
  */
 message int_array {
-    /* Protobuf 3 by default packs repeated fields. Packing needs to be explicitly disabled */
    repeated int32 theArray = 1 [packed=false];
 }
 

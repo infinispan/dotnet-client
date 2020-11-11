@@ -14,7 +14,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         public void BeforeSuite()
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
-            server = new HotRodServer("clustered-indexing.xml");
+            server = new HotRodServer("infinispan.xml");
             server.StartHotRodServer();
         }
 
