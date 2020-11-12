@@ -31,9 +31,19 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
         [Test]
         public void alreadyExistingCacheTest()
         {
-            remoteManager.Administration().CreateCache<string, string>("alreadyExistingCache", "template");
+            // Remove cache if exists
+            string cacheName = "alreadyExistingCache";
+            try
+            {
+                remoteManager.Administration().RemoveCache(cacheName);
+            }
+            catch (Exception)
+            {
+
+            }
+            remoteManager.Administration().CreateCache<string, string>(cacheName, "template");
             var ex = Assert.Throws<Infinispan.HotRod.Exceptions.HotRodClientException>(() =>
-                { remoteManager.Administration().CreateCache<string, string>("alreadyExistingCache", "template"); });
+                { remoteManager.Administration().CreateCache<string, string>(cacheName, "template"); });
             StringAssert.Contains("ISPN000507:", ex.Message);
         }
 
@@ -56,6 +66,13 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
         public void cacheCreateWithXMLConfigurationAndGetCacheTest()
         {
             String cacheName = "cache4XmlCreateAndGetTest";
+            // Remove cache if exists
+            try {
+                remoteManager.Administration().RemoveCache(cacheName);
+            }
+            catch (Exception ) {
+
+            }
             remoteManager.Administration().CreateCacheWithXml<object, object>(cacheName,
                "<infinispan><cache-container><distributed-cache name=\""+cacheName+"\"/></cache-container></infinispan>");
             var cache = remoteManager.GetCache<object, object>(cacheName);

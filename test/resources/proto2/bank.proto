@@ -8,6 +8,7 @@ message User {
 
    /**
     * @Field(index = Index.YES, store = Store.YES)
+    * @SortableField
     */
    required int32 id = 1;
 

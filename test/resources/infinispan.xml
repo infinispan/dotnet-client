@@ -7,9 +7,9 @@
 
    <cache-container name="default" statistics="true" default-cache="default">
       <transport cluster="${infinispan.cluster.name}" stack="${infinispan.cluster.stack:tcp}"/>
-      <local-cache name="default">
+      <distributed-cache name="default">
          <expiration interval="1000"/>
-      </local-cache>
+      </distributed-cache>
       <local-cache name="namedCache"/>
       <local-cache name="queryCache"/>
       <local-cache name="transcodingCache">
@@ -29,20 +29,13 @@
       <distributed-cache name="distributed">
          <expiration interval="1000"/>
       </distributed-cache>
-      <replicated-cache name="InMemoryNonSharedIndex" mode="SYNC" start="EAGER">
-	 <indexing>
-            <indexed-entities>
-               <indexed-entity>sample_bank_account.User</indexed-entity>
-            </indexed-entities>
-         </indexing>
+      <replicated-cache name="InMemoryNonSharedIndex">
       </replicated-cache>
       <replicated-cache name="InMemoryNonSharedIndexFullText">
-         <indexing>
-            <indexed-entities>
-	       <indexed-entity>sample_bank_account.Transaction</indexed-entity>
-            </indexed-entities>
-         </indexing>
       </replicated-cache>
+      <local-cache-configuration name="template">
+         <expiration interval="10000" lifespan="10" max-idle="10"/>
+      </local-cache-configuration>
    </cache-container>
 
    <server xmlns="urn:infinispan:server:10.0">
