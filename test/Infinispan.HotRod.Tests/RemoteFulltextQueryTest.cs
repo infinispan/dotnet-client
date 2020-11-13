@@ -34,11 +34,11 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             remoteManager = new RemoteCacheManager(conf.Build(), true);
 
             IRemoteCache<String, String> metadataCache = remoteManager.GetCache<String, String>(PROTOBUF_METADATA_CACHE_NAME);
+            metadataCache.Clear();
             metadataCache.Put("sample_bank_account/bank.proto", File.ReadAllText("proto2/bank.proto"));
             if (metadataCache.ContainsKey(ERRORS_KEY_SUFFIX))
             {
-                Console.WriteLine("fail: error in registering .proto model");
-                Environment.Exit(-1);
+                Assert.Fail("fail: error in registering .proto model");
             }
 
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
