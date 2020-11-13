@@ -60,6 +60,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextTerm()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -89,6 +90,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextTermBoost()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -103,6 +105,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextPhrase()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -117,6 +120,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextWithAggregation()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -145,6 +149,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         //}
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextTermOccur()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -174,6 +179,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextRange()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -188,6 +194,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextPrefix()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -202,6 +209,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextWildcard()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -216,6 +224,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextWildcardFuzzyNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -227,6 +236,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextFuzzy()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -241,6 +251,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextRegexp()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -255,6 +266,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Non index setup")]
         public void TestFullTextRegexpFuzzyNotAllowed()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
