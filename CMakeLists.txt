@@ -427,13 +427,12 @@ endif (NOT DEFINED ENABLE_JAVA_TESTING OR ENABLE_JAVA_TESTING)
 
 if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   #use the specific clustered-indexing.xml until ISPN-6912 is resolved, then use docs/examples/configs/clustered-indexing.xml
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-indexing.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-xsite1.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-xsite2.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/standalone-hotrod-ssl.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered-sasl-cs.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/clustered.xml DESTINATION "${JBOSS_HOME}/server/conf")
-  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/standalone.xml DESTINATION "${JBOSS_HOME}/server/conf")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/infinispan.xml DESTINATION "${JBOSS_HOME}/server/conf")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/infinispan-sasl.xml DESTINATION "${JBOSS_HOME}/server/conf")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/infinispan-ssl.xml DESTINATION "${JBOSS_HOME}/server/conf")
+  file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/hotrod_service.keytab DESTINATION "${JBOSS_HOME}/server/conf")
+
+
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore.jks DESTINATION "${JBOSS_HOME}/server/conf")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/truststore.jks DESTINATION "${JBOSS_HOME}/server/conf")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/certificates/keystore_server_sni1_rsa.jks DESTINATION "${JBOSS_HOME}/server/conf")
@@ -450,6 +449,9 @@ if (NOT DEFINED ENABLE_CSHARP_TESTING OR ENABLE_CSHARP_TESTING)
   file(COPY "${CMAKE_CURRENT_SOURCE_DIR}/test/resources/proto2" DESTINATION "${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION}" PATTERN "*")
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/wordCountStream.js DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
   file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/test/resources/macbeth.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin/${PLATFORM}/${CONFIGURATION})
+
+  file(MAKE_DIRECTORY  "${JBOSS_HOME}/server1")
+  file(COPY "${JBOSS_HOME}/server/conf" DESTINATION "${JBOSS_HOME}/server1")
       
   if (WIN32)
     # Pass the updated path using an external script.
