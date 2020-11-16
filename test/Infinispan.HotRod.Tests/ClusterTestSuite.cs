@@ -42,7 +42,7 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
             if (server2.IsStopped())
             {
                 string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
-                server2 = new HotRodServer("infinispan.xml", "-o 100 -s " + jbossHome + "/server1", 11322);
+                server2 = new HotRodServer("infinispan.xml", "-o 100 -s " + jbossHome + "/server1", "server1", 11322);
                 server2.StartHotRodServer();
             }
         }
@@ -54,7 +54,7 @@ namespace Infinispan.HotRod.Tests.ClusteredXml2
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
             server1 = new HotRodServer("infinispan.xml");
             server1.StartHotRodServer();
-            server2 = new HotRodServer("infinispan.xml", "-o 100 -s " + jbossHome + "/server1", 11322);
+            server2 = new HotRodServer("infinispan.xml", "-o 100 -s " + jbossHome + "/server1", "server1", 11322);
             server2.StartHotRodServer();
         }
 

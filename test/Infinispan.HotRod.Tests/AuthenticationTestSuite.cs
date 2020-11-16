@@ -20,7 +20,7 @@ namespace Infinispan.HotRod.Tests.ClusteredSaslCsXml2
             server1 = new HotRodServer("infinispan-sasl.xml");
             server1.StartHotRodServer();
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
-            server2 = new HotRodServer("infinispan-sasl.xml", "-o 100 -s " + jbossHome + "/server1", 11322);
+            server2 = new HotRodServer("infinispan-sasl.xml", "-o 100 -s " + jbossHome + "/server1", "server1", 11322);
             server2.StartHotRodServer();
         }
 
