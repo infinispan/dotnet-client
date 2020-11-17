@@ -31,8 +31,8 @@ pipeline {
             steps {
                 dir('cpp-client') {
                     checkout scm: [$class: 'GitSCM',
-                       userRemoteConfigs: [[url: 'https://github.com/rigazilla/cpp-client.git']],
-                       branches: [[name: 'HRCPP-497/update_10']]], changelog: false, poll: false
+                       userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
+                       branches: [[name: 'master']]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
