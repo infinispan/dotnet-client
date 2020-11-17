@@ -15,7 +15,7 @@ namespace Infinispan.HotRod.Tests.StandaloneHotrodSSLXml
         public void BeforeSuite()
         {
             Environment.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
-            server = new HotRodServer("standalone-hotrod-ssl.xml");
+            server = new HotRodServer("infinispan-ssl.xml");
             server.StartHotRodServer();
         }
 

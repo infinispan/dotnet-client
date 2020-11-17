@@ -19,12 +19,14 @@ namespace Infinispan.HotRod.Tests.Util
         string configurationFile;
         private Process hrServer;
         private string arguments;
+        private string serverHome;
 
-        public HotRodServer(string configurationFile, string arguments = "", int port = 11222)
+        public HotRodServer(string configurationFile, string arguments = "", string serverHome="server",  int port = 11222)
         {
             this.configurationFile = configurationFile;
             this.arguments = arguments;
             this.port = port;
+            this.serverHome = serverHome;
         }
 
         public void StartHotRodServer()
@@ -56,6 +58,8 @@ namespace Infinispan.HotRod.Tests.Util
         void StartHotrodServerInternal()
         {
             var jbossHome = Environment.GetEnvironmentVariable("JBOSS_HOME");
+            var path = Environment.GetEnvironmentVariable("PATH");
+            Console.WriteLine("PATH= "+path);
             if (jbossHome == null)
             {
                 throw new Exception("JBOSS_HOME env variable not set.");
@@ -63,7 +67,15 @@ namespace Infinispan.HotRod.Tests.Util
 
             Assert.IsTrue(IsStopped(),
                           "Another process already listening on the same ip/port.");
-
+            // Cleanup data dir
+            if (PlatformUtils.isUnix())
+            {
+                Directory.Delete(Path.Combine(jbossHome, serverHome+"/data"), true);
+            }
+            else
+            {
+                Directory.Delete(Path.Combine(jbossHome, serverHome+"\\data"), true);
+            }
             hrServer = new Process
             {
                 StartInfo =
@@ -126,11 +138,11 @@ namespace Infinispan.HotRod.Tests.Util
         {
             if (PlatformUtils.isUnix())
             {
-                return Path.Combine(homePath, "bin/standalone.sh");
+                return Path.Combine(homePath, "bin/server.sh");
             }
             else
             {
-                return Path.Combine(homePath, "bin\\standalone.bat");
+                return Path.Combine(homePath, "bin\\server.bat");
             }
         }
 

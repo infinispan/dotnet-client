@@ -49,15 +49,15 @@ namespace Infinispan.HotRod.Tests
             }
             if (obj is User)
             {
-                return ObjectToByteBuffer(42, obj);
+                return ObjectToByteBuffer(1000042, obj);
             }
             if (obj is Account)
             {
-                return ObjectToByteBuffer(43, obj);
+                return ObjectToByteBuffer(1000044, obj);
             }
             if (obj is Transaction)
             {
-                return ObjectToByteBuffer(44, obj);
+                return ObjectToByteBuffer(1000045, obj);
             }
             throw new NotImplementedException();
         }

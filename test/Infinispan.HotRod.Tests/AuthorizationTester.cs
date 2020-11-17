@@ -403,10 +403,15 @@ namespace Infinispan.HotRod.Tests
 		            + "var cache = cacheManager.getCache(\"default\");\n "
                             + "cache.put(\"k1\", value);\n"
                             + "cache.get(\"k1\");\n";
-            scriptCache.Put(scriptName, script);
+            DataFormat df = new DataFormat();
+            df.KeyMediaType= "application/x-jboss-marshalling";
+            df.ValueMediaType = "application/x-jboss-marshalling";
+            IRemoteCache<String, String> dfScriptCache = scriptCache.WithDataFormat(df);
+            dfScriptCache.Put(scriptName, script);
+            IRemoteCache<String, String> dfCache = cache.WithDataFormat(df);
             Dictionary<string, object> scriptArgs = new Dictionary<string, object>();
             scriptArgs.Add("value", "v1");
-            string ret1 = (string)cache.Execute(scriptName, scriptArgs);
+            string ret1 = (string)dfCache.Execute(scriptName, scriptArgs);
             Assert.AreEqual("v1", ret1);
         }
     }

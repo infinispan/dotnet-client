@@ -16,13 +16,29 @@
            <role name="executor" permissions="READ WRITE BULK_READ EXEC ADMIN"/>
          </authorization>
       </security>
-      <global-state/>
-      <distributed-cache name="default"/>
-      <distributed-cache name="authCache">
-         <security>
-            <authorization enabled="true" roles="admin reader writer supervisor"/>
-         </security>
+      <local-cache name="default">
+         <expiration interval="1000"/>
+      </local-cache>
+      <local-cache name="namedCache"/>
+      <local-cache name="queryCache"/>
+      <local-cache name="transcodingCache">
+         <encoding>
+            <key media-type="application/x-jboss-marshalling"/>
+            <value media-type="application/x-jboss-marshalling"/>
+         </encoding>
+      </local-cache>
+      <local-cache name="non_xa">
+         <locking isolation="REPEATABLE_READ"/>
+         <transaction mode="NON_XA" locking="PESSIMISTIC"/>
+      </local-cache>
+      <distributed-cache name="distributed">
+         <expiration interval="1000"/>
       </distributed-cache>
+      <local-cache name="authCache">
+         <security>
+            <authorization roles="admin reader writer supervisor" enabled="true"/>
+         </security>
+      </local-cache> 
    </cache-container>
 
    <server xmlns="urn:infinispan:server:11.0">

@@ -1,15 +1,15 @@
 <infinispan
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="urn:infinispan:config:10.0 http://www.infinispan.org/schemas/infinispan-config-10.0.xsd
+        xsi:schemaLocation="urn:infinispan:config:11.0 http://www.infinispan.org/schemas/infinispan-config-11.0.xsd
                             urn:infinispan:server:10.0 http://www.infinispan.org/schemas/infinispan-server-10.0.xsd"
-        xmlns="urn:infinispan:config:10.0"
+        xmlns="urn:infinispan:config:11.0"
         xmlns:server="urn:infinispan:server:10.0">
 
    <cache-container name="default" statistics="true" default-cache="default">
       <transport cluster="${infinispan.cluster.name}" stack="${infinispan.cluster.stack:tcp}"/>
-      <local-cache name="default">
+      <distributed-cache name="default">
          <expiration interval="1000"/>
-      </local-cache>
+      </distributed-cache>
       <local-cache name="namedCache"/>
       <local-cache name="queryCache"/>
       <local-cache name="transcodingCache">
@@ -29,15 +29,13 @@
       <distributed-cache name="distributed">
          <expiration interval="1000"/>
       </distributed-cache>
-      <replicated-cache name="InMemoryNonSharedIndex" mode="SYNC" start="EAGER">
-         <indexing index="ALL">
-           <property name="default.directory_provider">ram</property>
-         </indexing>
+      <replicated-cache name="InMemoryNonSharedIndex">
       </replicated-cache>
-      <local-cache name="memcachedCache">
-         <locking acquire-timeout="30000" concurrency-level="1000" striping="false"/>
-           <transaction mode="NONE"/>
-      </local-cache>
+      <replicated-cache name="InMemoryNonSharedIndexFullText">
+      </replicated-cache>
+      <local-cache-configuration name="template">
+         <expiration interval="10000" lifespan="10" max-idle="10"/>
+      </local-cache-configuration>
    </cache-container>
 
    <server xmlns="urn:infinispan:server:10.0">

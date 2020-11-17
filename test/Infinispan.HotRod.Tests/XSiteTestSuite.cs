@@ -19,7 +19,7 @@ namespace Infinispan.HotRod.TestSuites
             server1 = new HotRodServer("clustered-xsite1.xml");
             server1.StartHotRodServer();
             string jbossHome = System.Environment.GetEnvironmentVariable("JBOSS_HOME");
-            server2 = new HotRodServer("clustered-xsite2.xml", "-Djboss.socket.binding.port-offset=100 -Djboss.server.data.dir=" + jbossHome + "/standalone/data100", 11322);
+            server2 = new HotRodServer("clustered-xsite2.xml", "-o 100 -s " + jbossHome + "/server1", "server1", 11322);
             server2.StartHotRodServer();
         }
 
