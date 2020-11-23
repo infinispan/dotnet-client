@@ -218,12 +218,7 @@
                     </indexing>
                 </replicated-cache>
                 <!-- Indexes are local to each node, stored in memory -->
-                <replicated-cache name="InMemoryNonSharedIndex" mode="SYNC" start="EAGER">
-                    <indexing index="ALL">
-                        <property name="default.directory_provider">ram</property>
-                    </indexing>
-                </replicated-cache>
-                <replicated-cache name="InMemoryNonSharedIndexFullText" mode="SYNC" start="EAGER">
+                <replicated-cache name="CacheForQueryTest" mode="SYNC" start="EAGER">
                     <indexing index="ALL">
                         <property name="default.directory_provider">ram</property>
                     </indexing>

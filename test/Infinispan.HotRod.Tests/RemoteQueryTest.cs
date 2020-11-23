@@ -23,7 +23,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         RemoteCacheManager remoteManager;
         const String ERRORS_KEY_SUFFIX = ".errors";
         const String PROTOBUF_METADATA_CACHE_NAME = "___protobuf_metadata";
-        const String NAMED_CACHE = "InMemoryNonSharedIndex";
+        const String NAMED_CACHE = "CacheForQueryTest";
 
         [OneTimeSetUp]
         public void BeforeClass()
@@ -35,7 +35,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             remoteManager = new RemoteCacheManager(conf.Build(), true);
 
             IRemoteCache<String, String> metadataCache = remoteManager.GetCache<String, String>(PROTOBUF_METADATA_CACHE_NAME);
-            metadataCache.Clear();
+            metadataCache.Remove(ERRORS_KEY_SUFFIX);
             metadataCache.Put("sample_bank_account/bank.proto", File.ReadAllText("proto2/bank.proto"));
             if (metadataCache.ContainsKey(ERRORS_KEY_SUFFIX))
             {

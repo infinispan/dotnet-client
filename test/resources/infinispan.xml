@@ -29,9 +29,7 @@
       <distributed-cache name="distributed">
          <expiration interval="1000"/>
       </distributed-cache>
-      <replicated-cache name="InMemoryNonSharedIndex">
-      </replicated-cache>
-      <replicated-cache name="InMemoryNonSharedIndexFullText">
+      <replicated-cache name="CacheForQueryTest">
       </replicated-cache>
       <local-cache-configuration name="template">
          <expiration interval="10000" lifespan="10" max-idle="10"/>
