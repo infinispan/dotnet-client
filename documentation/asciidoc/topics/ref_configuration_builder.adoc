@@ -1,0 +1,55 @@
+[id='configuration_builder-{context}']
+= Configuration and Remote Cache Manager APIs
+Use the `ConfigurationBuilder` API to configure {hr_dotnet} client connections and the `RemoteCacheManager` API to obtain and configure remote caches.
+
+.Configuration builder
+[source,c#,options="nowrap"]
+----
+using Infinispan.HotRod;
+using Infinispan.HotRod.Config;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+namespace simpleapp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            ConfigurationBuilder builder = new ConfigurationBuilder();
+            // Connect to a server at localhost with the default port.
+            builder.AddServer()
+                .Host(args.Length > 1 ? args[0] : "127.0.0.1")
+                .Port(args.Length > 2 ? int.Parse(args[1]) : 11222);
+            Configuration config = builder.Build();
+            // Create and start a RemoteCacheManager to interact with caches.
+            RemoteCacheManager remoteManager = new RemoteCacheManager(conf);
+            remoteManager.Start();
+            IRemoteCache<string,string> cache=remoteManager.GetCache<string, string>();
+            cache.Put("key", "value");
+            Console.WriteLine("key = {0}", cache.Get("key"));
+            remoteManager.Stop();
+        }
+    }
+}
+----
+
+.Cross-site replication
+[source,c#,options="nowrap"]
+----
+ConfigurationBuilder builder = new ConfigurationBuilder();
+  builder.AddServer().Host("127.0.0.1").Port(11222);
+  // Configure a remote cluster and node when using cross-site replication.
+  builder.AddCluster("nyc").AddClusterNode("192.0.2.0", 11322);
+----
+
+.Near caching
+[source,c#,options="nowrap"]
+----
+ConfigurationBuilder builder = new ConfigurationBuilder();
+  builder.AddServer().Host("127.0.0.1").Port(11222);
+  // Enable near-caching for the client.
+  builder.NearCache().Mode(NearCacheMode.INVALIDATED).MaxEntries(10);
+----
