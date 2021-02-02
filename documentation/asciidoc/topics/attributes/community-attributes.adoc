@@ -1,0 +1,15 @@
+//
+// Special characters
+//
+:hash: #
+:underscores: ___
+
+:brandname: Infinispan
+:hr_dotnet: Hot Rod .NET/C{hash}
+:rhel_long: Red Hat Enterprise Linux
+:rhel_short: RHEL
+:win_long: Microsoft Windows
+:win_short: Windows
+
+:doc_home: https://infinispan.org/documentation/
+:client_downloads: https://infinispan.org/hotrod-clients

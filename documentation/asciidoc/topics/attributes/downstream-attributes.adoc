@@ -1,0 +1,15 @@
+//
+// Special characters
+//
+:hash: #
+:underscores: ___
+
+:brandname: Data Grid
+:hr_dotnet: Hot Rod .NET/C{hash}
+:rhel_long: Red Hat Enterprise Linux (RHEL)
+:rhel_short: RHEL
+:win_long: Microsoft Windows
+:win_short: Windows
+
+:doc_home: https://access.redhat.com/documentation/en-us/red_hat_data_grid/
+:download_url: https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?product=data.grid&downloadType=distributions
