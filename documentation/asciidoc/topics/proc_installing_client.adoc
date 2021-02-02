@@ -1,0 +1,21 @@
+[id='installing_client_win-{context}']
+= Installing {hr_dotnet} clients
+{brandname} provides an installation package to install the {hr_dotnet} client on {win_short}.
+
+.Prerequisites
+
+* Any operating system on which Microsoft supports the .NET Framework
+* .NET Framework 4.6.2 or later
+* {win_short} Visual Studio 2015
+
+.Procedure
+
+//Community
+ifdef::community[]
+. Download the installation package for the {hr_dotnet} from the link:{download_url}[Hot Rod client downloads].
+endif::community[]
+//Downstream
+ifdef::downstream[]
+. Download `redhat-datagrid-<version>-hotrod-dotnet-client.msi` from the link:{download_url}[{brandname} Software Downloads].
+endif::downstream[]
+. Launch the MSI installer for the {hr_dotnet} client and follow the interactive wizard through the installation process.
