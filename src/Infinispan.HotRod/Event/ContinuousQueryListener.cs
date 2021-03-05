@@ -1,7 +1,7 @@
 ﻿using Google.Protobuf;
 using Org.Infinispan.Protostream;
 using Org.Infinispan.Query.Remote.Client;
-using Infinispan.Hotrod.Protobuf;
+using Infinispan.HotRod.Protobuf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
