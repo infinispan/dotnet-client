@@ -1,5 +1,6 @@
 syntax = "proto3";
 package infinispan.hotrod.protobuf;
+option csharp_namespace = "Infinispan.HotRod.Protobuf";
 message base_types {
      int64 i64  = 3;
      int32 i32  = 5;                                                                                                                                                                                                                                                   
