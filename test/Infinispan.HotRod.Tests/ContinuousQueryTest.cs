@@ -9,7 +9,7 @@ using Org.Infinispan.Protostream;
 using SampleBankAccount;
 using NUnit.Framework;
 using System.Threading;
-using Infinispan.Hotrod.Protobuf;
+using Infinispan.HotRod.Protobuf;
 using System.Collections.ObjectModel;
 
 /**

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SampleBankAccount;
 using Infinispan.HotRod;
 using Google.Protobuf;
-using Infinispan.Hotrod.Protobuf;
+using Infinispan.HotRod.Protobuf;
 using Org.Infinispan.Protostream;
 
 namespace Infinispan.HotRod.Tests
