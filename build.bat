@@ -22,9 +22,10 @@ for /f "tokens=1,2,3,4 delims=." %%a in ("%V1%") do (
    set v_4qualifier=%%d
 )
 
-if [%version_2minor%] eq [] set version_2minor=0
-if [%version_3micro%] eq [] set version_3micro=0
-if [%version_4qualifier%] eq [] set version_4qualifier=SNAPSHOT
+if 0%v_1major% neq +%v_1major% set v_1major=0
+if 0%v_2minor% neq +%v_2minor% set v_2minor=1
+if 0%v_3micro% neq +%v_3micro% set v_3micro=0
+if [%v_4qualifier%] equ [] set v_4qualifier=SNAPSHOT
 
 set package_name=%v_1major%.%v_2minor%.%v_3micro%.%v_4qualifier%
 
