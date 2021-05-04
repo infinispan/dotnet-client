@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Build C++ core') {
             environment {
-                cppTag = ${GIT_BRANCH}
+                cppTag = "${GIT_BRANCH}"
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
                 INFINISPAN_VERSION = '11.0.4.Final'
@@ -72,7 +72,7 @@ pipeline {
                 SWIG_EXECUTABLE  = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12\\\\SWIG.EXE'
                 test32  = 'skip'
                 test64  = 'run'
-                cppTag = ${GIT_BRANCH}
+                cppTag = "${GIT_BRANCH}"
                 CLIENT_VERSION= "${GIT_BRANCH}"
             }
             steps {
