@@ -73,7 +73,7 @@ pipeline {
                 test32  = 'skip'
                 test64  = 'run'
                 cppTag = "${GIT_BRANCH}"
-                CLIENT_VERSION= "${GIT_BRANCH}"
+                CLIENT_VERSION = "${GIT_BRANCH}"
             }
             steps {
                 script {
