@@ -33,7 +33,8 @@ pipeline {
                 }
                 script {
                     dir ('cpp-client') {
-:                    }
+                       bat ".\\build.bat"
+                    }
                 }
             }
         }
