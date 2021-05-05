@@ -22,10 +22,15 @@ for /f "tokens=1,2,3,4 delims=." %%a in ("%V1%") do (
    set v_4qualifier=%%d
 )
 
-if 0%v_1major% neq +%v_1major% set v_1major=0
-if 0%v_2minor% neq +%v_2minor% set v_2minor=1
-if 0%v_3micro% neq +%v_3micro% set v_3micro=0
+rem If empty or not a numnber, set values to default
+if [%v_1major%] equ [] set v_1major=0
+if [%v_2minor%] equ [] set v_2minor=1
+if [%v_3micro%] equ [] set v_3micro=0
 if [%v_4qualifier%] equ [] set v_4qualifier=SNAPSHOT
+
+if 1%v_1major% neq +1%v_1major% set v_1major=0
+if 1%v_2minor% neq +1%v_2minor% set v_2minor=1
+if 1%v_3micro% neq +1%v_3micro% set v_3micro=0
 
 set package_name=%v_1major%.%v_2minor%.%v_3micro%.%v_4qualifier%
 
