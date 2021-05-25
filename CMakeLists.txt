@@ -162,10 +162,13 @@ set (SWIG_BUILD "${CMAKE_CURRENT_BINARY_DIR}/swig")
 set (NATIVE_DIR "${SWIG_BUILD}/native_client")
 set (NATIVE_LIB_DIR "${NATIVE_DIR}/lib")
 
-file (MAKE_DIRECTORY "${SWIG_BUILD}" "${NATIVE_DIR}")
-file (TO_CMAKE_PATH "${HOTRODCPP_HOME}" CMAKE_CPP_HOME)
-file (COPY "${CMAKE_CPP_HOME}/lib/" DESTINATION "${NATIVE_LIB_DIR}" PATTERN "*")
-file (COPY "${CMAKE_CPP_HOME}/include/" DESTINATION "${NATIVE_DIR}/include" PATTERN "*")
+
+if (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+  file (MAKE_DIRECTORY "${SWIG_BUILD}" "${NATIVE_DIR}")
+  file (TO_CMAKE_PATH "${HOTRODCPP_HOME}" CMAKE_CPP_HOME)
+  file (COPY "${CMAKE_CPP_HOME}/lib/" DESTINATION "${NATIVE_LIB_DIR}" PATTERN "*")
+  file (COPY "${CMAKE_CPP_HOME}/include/" DESTINATION "${NATIVE_DIR}/include" PATTERN "*")
+endif (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 
 hr_protobuf_generate_csharp(PROTO_SRCS  
   src/resources/proto/base_types.proto
@@ -260,7 +263,12 @@ set (ARCH 64)
 				GUID 97560E9D-C7BA-40D6-9728-B39B1333EF49
 				PLATFORM ${PLATFORM}
 				vs-hotrodcs-bin)
-  add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin hotrod-java-events-jar)
+
+  if (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+    add_custom_target(hotrodcs-test-bin DEPENDS vs-hotrodcs-test-bin hotrod-java-events-jar)
+  else (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+    add_custom_target(hotrodcs-test-bin DEPENDS hotrodcs-bin vs-hotrodcs-test-bin hotrod-java-events-jar)
+  endif (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 #else (WIN32)
 #  find_program(XBUILD_BINARY xbuild)
 #  if (NOT XBUILD_BINARY)
@@ -298,9 +306,11 @@ if (NOT NUNIT_BINARY)
 endif (NOT NUNIT_BINARY)
 
 if (WIN32)
-  # Add the native libs to the path.
-  file (TO_NATIVE_PATH "${NATIVE_LIB_DIR}" native_dir)
-  set (UT_PATH "${native_dir};$ENV{PATH}")
+  if (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+    # Add the native libs to the path.
+    file (TO_NATIVE_PATH "${NATIVE_LIB_DIR}" native_dir)
+    set (UT_PATH "${native_dir};$ENV{PATH}")
+  endif (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 
   # Add the wrapper libs to the path.
   foreach (loop_var ${CMAKE_CONFIGURATION_TYPES})
@@ -482,7 +492,7 @@ set (CPACK_SOURCE_GENERATOR "ZIP")
 
 # Native client.
 
-if (WIN32)
+if (WIN32 AND NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.dll" DESTINATION lib/)
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/swig/native_client/lib/hotrod.lib" DESTINATION lib/)
 
@@ -501,7 +511,7 @@ install (FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
 install (FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
 install (FILES "${CM_GOOGLE_PROTOBUF_NUPKG}/Google.Protobuf.3.4.0/lib/netstandard1.0/Google.Protobuf.dll" DESTINATION lib/)
 install (FILES "${CM_PROTOBUF_PROTOC_EXECUTABLE_CS}" DESTINATION bin/)
-endif (WIN32)
+endif (WIN32 AND NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/templates/README.txt.in" README.txt NEWLINE_STYLE CRLF)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/License.txt" License.txt NEWLINE_STYLE CRLF)
