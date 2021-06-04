@@ -22,13 +22,7 @@ if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
   message (FATAL_ERROR "You are calling cmake from the source directory. Please create a separate build directory and call cmake from there. See README.md for details.")
 endif ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_SOURCE_DIR}")
 
-string(REGEX MATCH "Win64" ISWIN64 "${CMAKE_GENERATOR}")
-
-if (ISWIN64)
-	set(PLATFORM "x64")
-else (ISWIN64)
-	set(PLATFORM "x86")
-endif (ISWIN64)
+set(PLATFORM "x64")
 
 # Map from version label to assembly revision.
 set (REVISION_SNAPSHOT "0")
@@ -87,7 +81,12 @@ message ("HotRod Assembly Version: ${HOTROD_ASSEMBLY_VERSION}")
 
 message (STATUS "HOTRODCPP_HOME value is :" ${HOTRODCPP_HOME} )
 
-find_package(Protobuf REQUIRED)
+if (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+  find_package(Protobuf)
+else (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+	find_package(Protobuf REQUIRED)
+endif (DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
+
 
 function(HR_PROTOBUF_GENERATE_CSHARP SRCS)
   if(NOT ARGN)
@@ -306,10 +305,11 @@ if (NOT NUNIT_BINARY)
 endif (NOT NUNIT_BINARY)
 
 if (WIN32)
+  set (UT_PATH "$ENV{PATH}")
   if (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
     # Add the native libs to the path.
     file (TO_NATIVE_PATH "${NATIVE_LIB_DIR}" native_dir)
-    set (UT_PATH "${native_dir};$ENV{PATH}")
+    set (UT_PATH "${native_dir};${UT_PATH}")
   endif (NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 
   # Add the wrapper libs to the path.
