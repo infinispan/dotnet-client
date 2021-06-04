@@ -9,7 +9,7 @@ Prerequisites:
 Procedure:
 1. Prepare the environment with the following settings:
 ```
-set HOTROD_PREBUILT_LIB_DIR= your path to the installed  infinispan-hotrod-dotnet.smi package
+set HOTROD_PREBUILT_LIB_DIR= path to the installed infinispan-hotrod-dotnet.smi libraries (ends with /lib)
 set NLOG_DLL= your path to the NLog.2.1.0\lib\net45\NLog.dll
 set NLOG_LICENSE=path to project\dotnet-client\license.txt
 set JBOSS_HOME= path to infinispan server home dir
