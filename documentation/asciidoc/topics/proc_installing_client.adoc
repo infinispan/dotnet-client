@@ -6,7 +6,7 @@
 
 * Any operating system on which Microsoft supports the .NET Framework
 * .NET Framework 4.6.2 or later
-* {win_short} Visual Studio 2015
+* {win_short} Visual Studio 2015 or later
 
 .Procedure
 
