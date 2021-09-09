@@ -91,11 +91,11 @@
     <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Util\*.cs"/>
     <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Wrappers\*.cs"/>
 
-    <Reference Include="hotrodcs.dll"/>
+    <Reference Include="$ENV{HOTRODCSDLL}"/>
     <Reference Include="${NLOG_DLL}"/>
     <Reference Include="${NUNIT_DLL}"/>
     <Reference Include="Google.Protobuf">
-      <HintPath>${GOOGLE_PROTOBUF_NUPKG}\Google.Protobuf.3.4.0\lib\net451\Google.Protobuf.dll</HintPath>
+      <HintPath>$ENV{PROTOBUFDLL}</HintPath>
     </Reference>
 
     <Reference Include="System"/>

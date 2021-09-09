@@ -37,11 +37,22 @@ set package_name=%v_1major%.%v_2minor%.%v_3micro%.%v_4qualifier%
 if [%HOTRODCPP_HOME%] == [] set HOTRODCPP_HOME=%checkoutDir%/cpp-client/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%package_name%-WIN-x86_64
 echo Using HOTRODCPP_HOME=%HOTRODCPP_HOME%
 
+if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
+  set HOTRODCSDLL=hotrodcs.dll
+  set PROTOBUFDLL=%GOOGLE_PROTOBUF_NUPKG%\Google.Protobuf.3.4.0\lib\net451\Google.Protobuf.dll
+) else (
+  set HOTRODCSDLL=%HOTROD_PREBUILT_LIB_DIR%\hotrodcs.dll
+  set PROTOBUFDLL=%HOTROD_PREBUILT_LIB_DIR%\Google.Protobuf.dll
+)
+
 call :unquote u_generator %generator%
 cmake -G "%u_generator%" -DHOTRODCPP_HOME=%HOTRODCPP_HOME% -DHOTROD_VERSION_MAJOR=%v_1major% -DHOTROD_VERSION_MINOR=%v_2minor% -DHOTROD_VERSION_PATCH=%v_3micro% -DHOTROD_VERSION_LABEL=%v_4qualifier% -DSWIG_DIR=%SWIG_DIR% -DSWIG_EXECUTABLE=%SWIG_EXECUTABLE% -DPROTOBUF_PROTOC_EXECUTABLE_CS="%PROTOBUF_PROTOC_EXECUTABLE_CS%" -DGOOGLE_PROTOBUF_NUPKG="%GOOGLE_PROTOBUF_NUPKG%" -DPROTOBUF_INCLUDE_DIR=%PROTOBUF_INCLUDE_DIR% -DJBOSS_HOME=%JBOSS_HOME% -DIKVM_CUSTOM_BIN_PATH=%IKVM_CUSTOM_BIN_PATH% -DOPENSSL_ROOT_DIR=%OPENSSL_ROOT_DIR% -DCONFIGURATION=RelWithDebInfo -DENABLE_DOXYGEN=1 -DENABLE_JAVA_TESTING=FALSE %~4 ..
 if %errorlevel% neq 0 goto fail
-
-cmake --build . --config RelWithDebInfo
+if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
+  cmake --build . --config RelWithDebInfo
+) else (
+  cmake --build . --config RelWithDebInfo --target hotrodcs-test-bin
+)
 if %errorlevel% neq 0 goto fail
 
 if  not "%buildTest%"=="skip" ( 
@@ -50,17 +61,18 @@ ctest -V -C RelWithDebInfo
 
 if %errorlevel% neq 0 goto fail
 
-cpack -G ZIP --config CPackSourceConfig.cmake
-if %errorlevel% neq 0 goto fail
+if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
+  cpack -G ZIP --config CPackSourceConfig.cmake
+  if %errorlevel% neq 0 goto fail
 
-cpack -G ZIP --config CPackConfig.cmake
-if %errorlevel% neq 0 goto fail
+  cpack -G ZIP --config CPackConfig.cmake
+  if %errorlevel% neq 0 goto fail
 
-cpack -G WIX -C RelWithDebInfo
-if %errorlevel% neq 0 goto fail
+  cpack -G WIX -C RelWithDebInfo
+  if %errorlevel% neq 0 goto fail
 
-cmake %* -P ../wix-bundle.cmake
-
+  cmake %* -P ../wix-bundle.cmake
+)
 if %errorlevel% neq 0 goto fail
 endlocal
 goto eof
