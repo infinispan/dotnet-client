@@ -11,7 +11,7 @@ pipeline {
                 cppTag = "${GIT_BRANCH}"
                 CMAKE_HOME = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator = '"Visual Studio 14 2015 Win64"'
-                INFINISPAN_VERSION = '13.0.0.Dev04'
+                INFINISPAN_VERSION = '13.0.5.Final'
                 JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME = 'C:\\\\APACHE~1.9'
                 MVN_PROGRAM = 'C:\\\\APACHE~1.9\\\\BIN\\\\MVN.BAT'
@@ -53,7 +53,7 @@ pipeline {
                 GOOGLE_PROTOBUF_NUPKG  = 'C:\\\\Users\\\\Administrator'
                 HOTROD_SNK  = 'c:\\\\data\\\\hotrod_cs.key'
                 IKVM_CUSTOM_BIN_PATH  = 'C:\\\\Users\\\\Administrator\\\\ikvm-8.1.5717.0\\\\bin'
-                INFINISPAN_VERSION  = '13.0.0.Dev04'
+                INFINISPAN_VERSION  = '13.0.5.Final'
                 JBOSS_HOME  = 'Y:\\\\cpp-client\\\\infinispan-server-11.0.9.Final'
                 JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME  = 'C:\\\\APACHE~1.9'
