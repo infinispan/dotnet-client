@@ -54,18 +54,16 @@
       </security>
 
       <endpoints socket-binding="default" security-realm="ApplicationRealm">
-         <hotrod-connector name="hotrod">
-           <authentication security-realm="ApplicationRealm">
-             <sasl server-name="node0" mechanisms="GSSAPI DIGEST-MD5 PLAIN" qop="auth" server-principal="hotrod/node0@INFINISPAN.ORG">
-               <policy>
-                 <no-anonymous value="false"/>
-               </policy>
-             </sasl>
-           </authentication>
-         </hotrod-connector>
-         <rest-connector name="rest"/>
-         <!-- Uncomment to enable the memcached connector -->
-         <!-- memcached-connector socket-binding="memcached" / -->
+        <endpoint>
+          <hotrod-connector name="hotrod">
+            <authentication security-realm="ApplicationRealm">
+              <sasl server-name="node0" mechanisms="GSSAPI DIGEST-MD5 PLAIN" qop="auth" server-principal="hotrod/node0@INFINISPAN.ORG"/>
+            </authentication>
+          </hotrod-connector>
+          <rest-connector name="rest"/>
+          <!-- Uncomment to enable the memcached connector -->
+          <!-- memcached-connector socket-binding="memcached" / -->
+        </endpoint>
       </endpoints>
    </server>
 </infinispan>

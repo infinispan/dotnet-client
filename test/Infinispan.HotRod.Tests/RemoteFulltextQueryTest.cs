@@ -134,6 +134,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("ISPN-13104")]
         public void TestFullTextWithAggregation()
         {
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
@@ -144,7 +145,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             QueryResponse result = transactionCache.Query(qr);
 
             List<Object[]> projections = RemoteQueryUtils.unwrapWithProjection(result);
-            Assert.AreEqual(1, projections.Count);
+            Assert.AreEqual(2, projections.Count);
             Assert.AreEqual(2, projections.ElementAt(0)[0]);
             Assert.AreEqual(149.0, (double)projections.ElementAt(0)[1], 0.001d);
             Assert.AreEqual("Expensive shoes 9", projections.ElementAt(0)[2]);

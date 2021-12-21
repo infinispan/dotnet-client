@@ -357,8 +357,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             /* Gather the initial stats. */
             stats = cache.Stats();
             int initialTimeSinceStart = stats.GetIntStatistic(ServerStatistics.TIME_SINCE_START);
-            int initialEntries = stats.GetIntStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES);
-            int initialTotalEntries = stats.GetIntStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES);
             int initialStores = stats.GetIntStatistic(ServerStatistics.STORES);
             int initialRetrievals = stats.GetIntStatistic(ServerStatistics.RETRIEVALS);
             int initialHits = stats.GetIntStatistic(ServerStatistics.HITS);
@@ -368,8 +366,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
 
             /* Check that all are present. */
             Assert.IsTrue(initialTimeSinceStart >= 0);
-            Assert.IsTrue(initialEntries >= 0);
-            Assert.IsTrue(initialTotalEntries >= 0);
             Assert.IsTrue(initialStores >= 0);
             Assert.IsTrue(initialRetrievals >= 0);
             Assert.IsTrue(initialHits >= 0);
@@ -387,8 +383,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             cache.Put(key3, "v");
 
             stats = cache.Stats();
-            Assert.AreEqual(initialEntries + 3, stats.GetIntStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
-            Assert.AreEqual(initialTotalEntries + 3, stats.GetIntStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
             Assert.AreEqual(initialStores + 3, stats.GetIntStatistic(ServerStatistics.STORES));
 
             /* Get hit/misses. */
@@ -415,8 +409,6 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             cache.Clear();
 
             stats = cache.Stats();
-            Assert.AreEqual(0, stats.GetIntStatistic(ServerStatistics.CURRENT_NR_OF_ENTRIES));
-            Assert.AreEqual(initialTotalEntries + 3, stats.GetIntStatistic(ServerStatistics.TOTAL_NR_OF_ENTRIES));
         }
     }
 }
