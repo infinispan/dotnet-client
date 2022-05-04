@@ -2,7 +2,7 @@
 = Configuration and Remote Cache Manager APIs
 Use the `ConfigurationBuilder` API to configure {hr_dotnet} client connections and the `RemoteCacheManager` API to obtain and configure remote caches.
 
-.Basic configuration.
+.Basic configuration
 [source,c#,options="nowrap"]
 ----
 using Infinispan.HotRod;
@@ -48,6 +48,7 @@ builder.Security().Authentication().Enable().ServerFQDN("node0")
     .SaslMechanism("PLAIN").SetupCallback("supervisor", "aPassword", "aRealm");
 Configuration c = conf.Build();
 ----
+
 .Encryption
 [source,c#,options="nowrap"]
 ----
@@ -61,6 +62,7 @@ sslBuilder.Enable().ClientCertificateFile("clientCertFilename");
 sslBuilder.ServerCAFile("serverCertFilename");
 Configuration c = conf.Build();
 ----
+
 .Cross-site failover
 [source,c#,options="nowrap"]
 ----
