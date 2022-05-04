@@ -2,7 +2,7 @@
 = Configuration and Remote Cache Manager APIs
 Use the `ConfigurationBuilder` API to configure {hr_dotnet} client connections and the `RemoteCacheManager` API to obtain and configure remote caches.
 
-.Configuration builder
+.Basic configuration.
 [source,c#,options="nowrap"]
 ----
 using Infinispan.HotRod;
@@ -35,13 +35,38 @@ namespace simpleapp
     }
 }
 ----
-
-.Cross-site replication
+.Authentication
+[source,c#,options="nowrap"]
+----
+ConfigurationBuilder builder = new ConfigurationBuilder();
+// Add a server with specific connection timeouts
+builder.AddServer().Host("127.0.0.1").Port(11222).ConnectionTimeout(90000).SocketTimeout(900);
+// ConfigurationBuilder has fluent interface, options can be appended in chain.
+// Enabling authentication with server name "node0",
+// sasl mech "PLAIN", user "supervisor", password "aPassword", security realm "aRealm"
+builder.Security().Authentication().Enable().ServerFQDN("node0")
+    .SaslMechanism("PLAIN").SetupCallback("supervisor", "aPassword", "aRealm");
+Configuration c = conf.Build();
+----
+.Encryption
+[source,c#,options="nowrap"]
+----
+ConfigurationBuilder builder = new ConfigurationBuilder();
+builder.AddServer().Host("127.0.0.1").Port(11222);
+// Get configuration builder for encryption
+SslConfigurationBuilder sslBuilder = conf.Ssl();
+// Enable encryption and provide client certificate
+sslBuilder.Enable().ClientCertificateFile("clientCertFilename");
+// Provide server cert if server needs to be verified
+sslBuilder.ServerCAFile("serverCertFilename");
+Configuration c = conf.Build();
+----
+.Cross-site failover
 [source,c#,options="nowrap"]
 ----
 ConfigurationBuilder builder = new ConfigurationBuilder();
   builder.AddServer().Host("127.0.0.1").Port(11222);
-  // Configure a remote cluster and node when using cross-site replication.
+  // Configure a remote cluster and node when using cross-site failover.
   builder.AddCluster("nyc").AddClusterNode("192.0.2.0", 11322);
 ----
 
