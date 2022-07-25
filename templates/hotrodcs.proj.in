@@ -21,14 +21,14 @@
     <Compile Include="${W_SWIG_BUILD}\*.cs"/>
     
     <!-- API source files. -->
-    <Compile Include="${W_S}src\Infinispan.HotRod\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Org\Infinispan\Query\Remote\Client\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Impl\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Exceptions\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Config\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\SWIG\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Event\*.cs"/>
-    <Compile Include="${W_S}src\Infinispan.HotRod\Transport\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Org\Infinispan\Query\Remote\Client\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Impl\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Exceptions\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Config\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\SWIG\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Event\*.cs"/>
+    <Compile Include="${W_S}\src\Infinispan.HotRod\Transport\*.cs"/>
   </ItemGroup>
 
   <ItemGroup>
