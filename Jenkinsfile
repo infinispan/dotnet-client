@@ -48,14 +48,14 @@ pipeline {
 
         stage('Build') {
             environment {
-                checkoutDir  = ${env.WORKSPACE}
+                checkoutDir  = "${env.WORKSPACE}"
                 CMAKE_HOME  = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator  = '"Visual Studio 14 2015 Win64"'
                 GOOGLE_PROTOBUF_NUPKG  = 'C:\\\\Users\\\\Administrator'
                 HOTROD_SNK  = 'c:\\\\data\\\\hotrod_cs.key'
                 IKVM_CUSTOM_BIN_PATH  = 'C:\\\\Users\\\\Administrator\\\\ikvm-8.1.5717.0\\\\bin'
                 INFINISPAN_VERSION  = '13.0.5.Final'
-                JBOSS_HOME  = ${env.WORKSPACE}'\\\\cpp-client\\\\infinispan-server-13.0.5.Final'
+                JBOSS_HOME  = "${env.WORKSPACE}\\\\cpp-client\\\\infinispan-server-13.0.5.Final"
                 JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME  = 'C:\\\\APACHE~1.9'
                 MAVEN_OPTS  = '"-Dmaven.multiModuleProjectDirectory=C:\\\\APACHE~1.9"'
