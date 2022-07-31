@@ -24,12 +24,13 @@ pipeline {
                 test32 = 'empty'
                 test64 = 'empty'
                 CLIENT_VERSION= "${GIT_BRANCH}"
+                buildTest = 'skip'
             }
             steps {
                 dir('cpp-client') {
                     checkout scm: [$class: 'GitSCM',
                        userRemoteConfigs: [[url: 'https://github.com/infinispan/cpp-client.git']],
-                       branches: [[name: "${GIT_BRANCH}"]]], changelog: false, poll: false
+                       branches: [[name: "main"]]], changelog: false, poll: false
                 }
                 script {
                     dir ('cpp-client') {
@@ -47,14 +48,14 @@ pipeline {
 
         stage('Build') {
             environment {
-                checkoutDir  = 'Y:'
+                checkoutDir  = "${env.WORKSPACE}"
                 CMAKE_HOME  = 'C:\\\\PROGRA~2\\\\CMake\\\\bin'
                 generator  = '"Visual Studio 14 2015 Win64"'
                 GOOGLE_PROTOBUF_NUPKG  = 'C:\\\\Users\\\\Administrator'
                 HOTROD_SNK  = 'c:\\\\data\\\\hotrod_cs.key'
                 IKVM_CUSTOM_BIN_PATH  = 'C:\\\\Users\\\\Administrator\\\\ikvm-8.1.5717.0\\\\bin'
                 INFINISPAN_VERSION  = '13.0.5.Final'
-                JBOSS_HOME  = 'Y:\\\\cpp-client\\\\infinispan-server-13.0.5.Final'
+                JBOSS_HOME  = "${env.WORKSPACE}\\\\cpp-client\\\\infinispan-server-13.0.5.Final"
                 JAVA_HOME  = 'C:\\\\PROGRA~1\\\\JAVA\\\\JDK18~1.0_1'
                 M2_HOME  = 'C:\\\\APACHE~1.9'
                 MAVEN_OPTS  = '"-Dmaven.multiModuleProjectDirectory=C:\\\\APACHE~1.9"'
@@ -72,8 +73,8 @@ pipeline {
                 SWIG_EXECUTABLE  = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12\\\\SWIG.EXE'
                 test32  = 'skip'
                 test64  = 'run'
-                cppTag = "${GIT_BRANCH}"
-                CLIENT_VERSION = "${GIT_BRANCH}"
+                cppTag = "0.1.0.SNAPSHOT"
+                CLIENT_VERSION = "0.1.0.SNAPSHOT"
             }
             steps {
                 script {

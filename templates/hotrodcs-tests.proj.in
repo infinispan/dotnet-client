@@ -87,9 +87,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\*.cs"/>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Util\*.cs"/>
-    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}test\Infinispan.HotRod.Tests\Wrappers\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\test\Infinispan.HotRod.Tests\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\test\Infinispan.HotRod.Tests\Util\*.cs"/>
+    <Compile Include="${W_CMAKE_CURRENT_SOURCE_DIR}\test\Infinispan.HotRod.Tests\Wrappers\*.cs"/>
 
     <Reference Include="$ENV{HOTRODCSDLL}"/>
     <Reference Include="${NLOG_DLL}"/>
