@@ -73,8 +73,8 @@ pipeline {
                 SWIG_EXECUTABLE  = 'C:\\\\PROGRA~1\\\\SWIGWI~2.12\\\\SWIG.EXE'
                 test32  = 'skip'
                 test64  = 'run'
-                cppTag = "0.1.0.SNAPTSHOT"
-                CLIENT_VERSION = "0.1.0.SNAPTSHOT"
+                cppTag = "0.1.0.SNAPSHOT"
+                CLIENT_VERSION = "0.1.0.SNAPSHOT"
             }
             steps {
                 script {
