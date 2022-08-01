@@ -108,6 +108,7 @@ jobs:
           set SWIG_DIR=${{ github.workspace }}\nupkg\swigwin.3.0.9\tools\swigwin-3.0.9\Lib
           set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwin.3.0.9\tools\swigwin-3.0.9\swig.exe
           set CLIENT_VERSION=%GITHUB_REF_NAME%
+          set packNuget=true
           build.bat
       - uses: ncipollo/release-action@v1
         with:

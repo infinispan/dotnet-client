@@ -69,9 +69,10 @@ if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
   if %errorlevel% neq 0 goto fail
 
   cmake %* -P ../wix-bundle.cmake
-
-  cpack -G NuGet -R %nuget_package_name% -C RelWithDebInfo
-  if %errorlevel% neq 0 goto fail
+  if  "%packNuget%"=="true" (
+    cpack -G NuGet -R %nuget_package_name% -C RelWithDebInfo
+    if %errorlevel% neq 0 goto fail
+  )
 )
 if %errorlevel% neq 0 goto fail
 endlocal
