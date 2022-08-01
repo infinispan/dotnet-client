@@ -111,6 +111,6 @@ jobs:
           build.bat
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "build_windows/*.msi"
+          artifacts: "build_windows/*.msi,build_windows/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true

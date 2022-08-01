@@ -29,6 +29,7 @@ if 1%v_2minor% neq +1%v_2minor% set v_2minor=1
 if 1%v_3micro% neq +1%v_3micro% set v_3micro=0
 
 set package_name=%v_1major%.%v_2minor%.%v_3micro%.%v_4qualifier%
+set nuget_package_name=%v_1major%.%v_2minor%.%v_3micro%-%v_4qualifier%
 
 if [%HOTRODCPP_HOME%] == [] set HOTRODCPP_HOME=%checkoutDir%/cpp-client/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%package_name%-WIN-x86_64
 echo Using HOTRODCPP_HOME=%HOTRODCPP_HOME%
@@ -68,6 +69,9 @@ if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
   if %errorlevel% neq 0 goto fail
 
   cmake %* -P ../wix-bundle.cmake
+
+  cpack -G NuGet -R %nuget_package_name% -C RelWithDebInfo
+  if %errorlevel% neq 0 goto fail
 )
 if %errorlevel% neq 0 goto fail
 endlocal
