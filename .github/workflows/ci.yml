@@ -76,6 +76,15 @@ jobs:
           cd cpp-client
           set buildTest=skip
           build.bat
+      - name: Strong Names Setup
+        shell: pwsh
+        env:
+          SECRET_DATA1: ${{ secrets.STRONG_NAMES_KEY }}
+        run: |
+          $Base64String = $env:SECRET_DATA1
+          $StrongNamesKey = "strongNames.key"
+          [byte[]]$Bytes = [convert]::FromBase64String($Base64String)
+          [System.IO.File]::WriteAllBytes($StrongNamesKey,$Bytes)
       - uses: nuget/setup-nuget@v1
       - name: Build C#
         shell: cmd
@@ -84,6 +93,7 @@ jobs:
           where swig
           where mvn
           where java
+          dir
           set generator="Visual Studio 17 2022"
           set checkoutDir=${{ github.workspace }}
           set INFINISPAN_VERSION=13.0.10.Final
@@ -92,6 +102,7 @@ jobs:
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
           set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\libs\include
+          set HOTROD_SNK=${{ github.workspace }}\strongNames.key
           mkdir nupkg
           nuget install NLog -Version 2.1.0 -OutputDirectory nupkg
           set NLOG_DLL=${{ github.workspace }}\nupkg\NLog.2.1.0\lib\net40\NLog.dll
