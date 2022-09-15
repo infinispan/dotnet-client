@@ -101,7 +101,7 @@ jobs:
           set PROTOBUF_LIBRARY=${{ github.workspace }}\libs\lib\libprotobuf.lib
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
-          set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\libs\include
+          set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\protobuf\src
           set HOTROD_SNK=${{ github.workspace }}\strongNames.key
           mkdir nupkg
           nuget install NLog -Version 2.1.0 -OutputDirectory nupkg
