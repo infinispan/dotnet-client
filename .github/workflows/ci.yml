@@ -1,6 +1,6 @@
 name: infinispan-netcore-tests
 env:
-  ISPN_VER: "13.0.10.Final"
+  ISPN_VER: "11.0.9.Final"
   cppTag: "0.1.3.Dev1"
   CLIENT_VERSION: ${{ github.event.release.tag_name }}
 on:
@@ -50,7 +50,7 @@ jobs:
         with:
           path: |
             ${{ github.workspace }}\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP
-            ${{ github.workspace }}\cpp-client\infinispan-server-13.0.10.Final
+            ${{ github.workspace }}\cpp-client\infinispan-server-11.0.9.Final
           key: cache-cpp-${{ github.ref_name }}
       - name: Build C++
         shell: cmd
@@ -96,7 +96,7 @@ jobs:
           dir
           set generator="Visual Studio 17 2022"
           set checkoutDir=${{ github.workspace }}
-          set INFINISPAN_VERSION=13.0.10.Final
+          set INFINISPAN_VERSION=11.0.9.Final
           set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-11.0.9.Final
           set PROTOBUF_LIBRARY=${{ github.workspace }}\libs\lib\libprotobuf.lib
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
