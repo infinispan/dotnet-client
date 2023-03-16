@@ -10,7 +10,7 @@ on:
     branches:
       - '9.2.x'
 jobs:
-  run-ci-tests-win:
+  run-ci-nupkg:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,6 +19,8 @@ jobs:
       - run: echo $GITHUB_REF_NAME
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
       #        with:
       #          vs-version: "[17.0,17.2)"
       - name: Set up JDK 11
