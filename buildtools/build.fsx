@@ -14,7 +14,7 @@ let cppClientUrl = sprintf "https://github.com/infinispan/cpp-client/releases/do
 //let cppClientUrl = "file://C:\Users\rigazilla\git\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP\infinispan-hotrod-cpp-8.1.1.SNAPSHOT-WIN-x86_64.zip"
 let cppClientPackageVersion = "9.2.1-Alpha3" // nuget does not support string values after.
 let swigVersion = "3.0.12"
-let protobufVersion = "3.7.1" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
+let protobufVersion = "3.8.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"
 let infinispanServerVersion = "14.0.6.Final"
 
