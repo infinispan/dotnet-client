@@ -53,6 +53,8 @@ let downloadArtifact (url:string) (downloadLocation:string) (fileName:string) =
             p.WorkingDirectory <- ".") (TimeSpan.FromMinutes 15.0)
         |> ignore
     else
+        ServicePointManager.SecurityProtocol <- SecurityProtocolType.Tls12
+        ServicePointManager.ServerCertificateValidationCallback <- Security.RemoteCertificateValidationCallback (fun _ _ _ _ -> true)
         let client = new WebClient()
         client.DownloadFile(url, downloadLocation @@ "\\" @@ fileName)
 
@@ -121,7 +123,7 @@ let unzipRpmFile file where folder =
 ///
 ///**Exceptions**
 ///
-let downloadCppClientIfNonexist cppClientVersion =
+let downloadCppClientIfNonexist cppClientUrl cppClientVersion =
     // FAKE uses ICSharpLibZip which is capable of extracting zips, but cpp-client.zip is corrupted for it
     // java is known to create invalid headers. 7zip can extract it without checking it
     // more info at http://community.sharpdevelop.net/forums/t/9055.aspx
@@ -129,9 +131,6 @@ let downloadCppClientIfNonexist cppClientVersion =
         let cppClientDirectory = sprintf "tmp/infinispan-hotrod-cpp-%s-WIN-x86_64" cppClientVersion
         let cppClientZipName = sprintf "infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion
         if not (Directory.Exists cppClientDirectory) then
-            let cppClientUrl = if cppClientVersion.Contains("SNAPSHOT")
-                               then (sprintf "http://ci.infinispan.org/job/Infinispan%%20C++%%20Client/job/master/lastSuccessfulBuild/artifact/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion)
-                               else (sprintf "http://downloads.jboss.org/infinispan/HotRodCPP/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion)
             trace ("downloadCppClientIfNonexist: downloading cpp-client version " <+ cppClientVersion)
             downloadArtifact cppClientUrl  "tmp" cppClientZipName
             trace "downloadCppClientIfNonexist: client downloaded, unziping"
@@ -202,8 +201,8 @@ let copyLibForSwig cppClientLocation swigTargetDir =
 let downloadInfinispanIfNeeded infinispanServerVersion =
     let infinispanPath = sprintf "tmp/infinispan-server-%s" infinispanServerVersion
     if not (Directory.Exists infinispanPath) then
-        let infinispanServerFileName = sprintf "infinispan-server-%s-bin.zip" infinispanServerVersion
-        let infinispanServerUrl = sprintf "http://downloads.jboss.org/infinispan/%s/%s" infinispanServerVersion infinispanServerFileName
+        let infinispanServerFileName = sprintf "infinispan-server-%s.zip" infinispanServerVersion
+        let infinispanServerUrl = sprintf "https://downloads.jboss.org/infinispan/%s/%s" infinispanServerVersion infinispanServerFileName
         trace ("downloadInfinispanIfNeeded: downloading infinispan server version " <+ infinispanServerVersion)
         downloadArtifact infinispanServerUrl "tmp" infinispanServerFileName
         trace "downloadInfinispanIfNeeded: infinispan downloaded, unziping"

@@ -7,12 +7,16 @@ open Fake
 open Fake.NuGet.Install
 open Fake.DotNetCli
 
-let cppClientVersion = "8.1.0.SNAPSHOT"
-let cppClientPackageVersion = "8.2.0-Alpha2" // nuget does not support string values after.
+let cppClientVersion = "9.2.1.Alpha3"
+let cppClientUrlTemplate = "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip"
+//#Can't use cppClientUrlTemplate below. TODO fix this
+let cppClientUrl = sprintf "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion
+//let cppClientUrl = "file://C:\Users\rigazilla\git\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP\infinispan-hotrod-cpp-8.1.1.SNAPSHOT-WIN-x86_64.zip"
+let cppClientPackageVersion = "9.2.1-Alpha3" // nuget does not support string values after.
 let swigVersion = "3.0.12"
-let protobufVersion = "3.4.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
+let protobufVersion = "3.7.1" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"
-let infinispanServerVersion = "9.1.1.Final"
+let infinispanServerVersion = "14.0.6.Final"
 
 let generateDir = "../../../src/Infinispan.HotRod/generated"
 let generateSwigDir = "../src/Infinispan.HotRod/generated"
@@ -45,7 +49,7 @@ Target "GenerateSwig" (fun _ ->
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
             then environVar "HOTROD_PREBUILT_DIR"
-            else (downloadCppClientIfNonexist cppClientVersion)
+            else (downloadCppClientIfNonexist cppClientUrl cppClientVersion)
     trace ("Target GenerateSwig: cpp client location is: " <+ cppClientLocation)
     let swigToolPath = downloadSwigToolsIfNonexist swigVersion
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
@@ -63,7 +67,7 @@ Target "BuildSwigWrapper" (fun _ ->
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
             then environVar "HOTROD_PREBUILT_DIR"
-            else (downloadCppClientIfNonexist cppClientVersion)
+            else (downloadCppClientIfNonexist cppClientUrl cppClientVersion)
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
     copyLibForSwig cppClientLocation "../swig/native_client/lib"
     buildSwig ()
@@ -127,7 +131,7 @@ Target "CppPackage" (fun _ ->
     let cppClientLocation =
         if (environVar "HOTROD_PREBUILT_DIR" <> null)
             then environVar "HOTROD_PREBUILT_DIR"
-            else (downloadCppClientIfNonexist cppClientVersion)
+            else (downloadCppClientIfNonexist cppClientUrl cppClientVersion)
     directoryCopy "../swig/build/RelWithDebInfo" binsPath false
     Copy binsPath (Directory.EnumerateFiles (sprintf "%s/lib" cppClientLocation))
     Copy packageRoot ["Infinispan.HotRod.Cpp-client.win7-x64.nuspec"]
