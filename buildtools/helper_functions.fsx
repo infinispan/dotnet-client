@@ -313,6 +313,7 @@ let generateCSharpFilesFromSwigTemplates swigToolPath includePath sourceDir _nam
  
 let buildSwig () =
     if isWindows then
+        trace ("VALUE VCTargetsPath: " <+ Environment.GetEnvironmentVariable("VCTargetsPath"))
         build (fun p -> { p with Properties = [
                                                 "Configuration", "RelWithDebInfo"
                                                 "Platform", "x64"
