@@ -36,7 +36,7 @@ jobs:
         uses: nuget/setup-nuget@v1
       - name: Build C#
         shell: pwsh
-        run: build.ps1 QuickPack
+        run: .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
       #  run: |
