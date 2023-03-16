@@ -17,6 +17,7 @@ jobs:
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
       - run: echo $GITHUB_REF_NAME
+      - uses: seanmiddleditch/gha-setup-vsdevenv@master
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
         with:
