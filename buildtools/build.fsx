@@ -70,7 +70,7 @@ Target "BuildSwigWrapper" (fun _ ->
             else (downloadCppClientIfNonexist cppClientUrl cppClientVersion)
     copyIncludeForSwig cppClientLocation "../swig/native_client/include"
     copyLibForSwig cppClientLocation "../swig/native_client/lib"
-    EnvironmentHelper.setBuildParam "VisualStudioVersion" "15.0"
+    EnvironmentHelper.setBuildParam "VisualStudioVersion" "17.0"
     buildSwig ()
 )
 
