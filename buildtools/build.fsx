@@ -7,7 +7,7 @@ open Fake
 open Fake.NuGet.Install
 open Fake.DotNetCli
 
-let cppClientVersion = "9.2.1.Alpha4"
+let cppClientVersion = "9.2.1.Alpha5"
 let cppClientUrlTemplate = "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip"
 //#Can't use cppClientUrlTemplate below. TODO fix this
 let cppClientUrl = sprintf "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion
