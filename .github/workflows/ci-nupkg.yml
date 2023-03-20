@@ -34,8 +34,8 @@ jobs:
       - name: Build C#
         shell: pwsh
         run: |
-          $Env:cppTag = ${{ env.GITHUB_REF_NAME }}-latest
-          $Env:CLIENT_VERSION = ${{ env.GITHUB_REF_NAME }}-latest
+          $Env:cppTag = "${{ env.GITHUB_REF_NAME }}-latest"
+          $Env:CLIENT_VERSION = "${{ env.GITHUB_REF_NAME }}-latest"
           .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
