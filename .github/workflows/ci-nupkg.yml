@@ -1,8 +1,8 @@
 name: infinispan-nupkg
 env:
   ISPN_VER: "13.0.10.Final"
-  cppTag: "0.1.3.Dev1"
-  CLIENT_VERSION: ${{ github.event.release.tag_name }}
+  cppTag: ${{ env.GITHUB_REF_NAME }}-latest
+  CLIENT_VERSION: ${{ env.GITHUB_REF_NAME }}-latest
 on:
   push:
     tags:
