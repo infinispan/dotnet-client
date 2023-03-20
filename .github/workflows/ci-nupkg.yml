@@ -54,7 +54,7 @@ jobs:
       #    set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
       #    set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\protobuf\src
       #    set HOTROD_SNK=${{ github.workspace }}\strongNames.key
-      #    powershell -file "build.ps1" "QuickPack"
+      #    powershell -file "build.ps1" "QuickPack" --envvar buildTag 9.2.x-latest
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"

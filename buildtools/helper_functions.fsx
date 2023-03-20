@@ -132,6 +132,7 @@ let downloadCppClientIfNonexist cppClientUrl cppClientVersion =
         let cppClientZipName = sprintf "infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion
         if not (Directory.Exists cppClientDirectory) then
             trace ("downloadCppClientIfNonexist: downloading cpp-client version " <+ cppClientVersion)
+            trace ("downloadCppClientIfNonexist: from URL " <+ cppClientUrl)
             downloadArtifact cppClientUrl  "tmp" cppClientZipName
             trace "downloadCppClientIfNonexist: client downloaded, unziping"
             if unzipFile cppClientZipName "tmp" <> 0 then failwith (sprintf "cannot unzip %s" cppClientZipName) 
@@ -317,7 +318,7 @@ let buildSwig () =
         build (fun p -> { p with Properties = [
                                                 "Configuration", "RelWithDebInfo"
                                                 "Platform", "x64"
-                                              ]}) "../swig/hotrod_wrap.vcxproj"
+                                              ]}diw) "../swig/hotrod_wrap.vcxproj"
         Copy "../swig/native_client/lib" ["../swig/build/RelWithDebInfo/hotrod_wrap.dll"]
     else
         let cppResult = ExecProcess (fun p ->
