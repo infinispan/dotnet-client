@@ -57,7 +57,7 @@ jobs:
       #    powershell -file "build.ps1" "QuickPack"
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "build_windows/*.msi,build_windows/*.nupkg"
+          artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           tag: ${{ env.GITHUB_REF_NAME }}-latest
