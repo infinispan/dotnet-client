@@ -1,8 +1,6 @@
 name: infinispan-nupkg
 env:
   ISPN_VER: "13.0.10.Final"
-  cppTag: ${{ env.GITHUB_REF_NAME }}-latest
-  CLIENT_VERSION: ${{ env.GITHUB_REF_NAME }}-latest
 on:
   push:
     tags:
@@ -35,7 +33,10 @@ jobs:
         uses: nuget/setup-nuget@v1
       - name: Build C#
         shell: pwsh
-        run: .\build.ps1 QuickPack
+        run: |
+          $Env:cppTag = ${{ env.GITHUB_REF_NAME }}-latest
+          $Env:CLIENT_VERSION = ${{ env.GITHUB_REF_NAME }}-latest
+          .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
       #  run: |
