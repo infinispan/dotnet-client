@@ -318,7 +318,7 @@ let buildSwig () =
         build (fun p -> { p with Properties = [
                                                 "Configuration", "RelWithDebInfo"
                                                 "Platform", "x64"
-                                              ]}diw) "../swig/hotrod_wrap.vcxproj"
+                                              ]}) "../swig/hotrod_wrap.vcxproj"
         Copy "../swig/native_client/lib" ["../swig/build/RelWithDebInfo/hotrod_wrap.dll"]
     else
         let cppResult = ExecProcess (fun p ->
