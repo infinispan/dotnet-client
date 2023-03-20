@@ -60,3 +60,4 @@ jobs:
           artifacts: "build_windows/*.msi,build_windows/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
