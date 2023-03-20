@@ -7,12 +7,12 @@ open Fake
 open Fake.NuGet.Install
 open Fake.DotNetCli
 
-let cppClientVersion = "9.2.1.Alpha5"
+let cppClientVersion = Environment.environVar "buildTag"
 let cppClientUrlTemplate = "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip"
 //#Can't use cppClientUrlTemplate below. TODO fix this
 let cppClientUrl = sprintf "https://github.com/infinispan/cpp-client/releases/download/%s/infinispan-hotrod-cpp-%s-WIN-x86_64.zip" cppClientVersion cppClientVersion
 //let cppClientUrl = "file://C:\Users\rigazilla\git\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP\infinispan-hotrod-cpp-8.1.1.SNAPSHOT-WIN-x86_64.zip"
-let cppClientPackageVersion = "9.2.1-Alpha4" // nuget does not support string values after.
+let cppClientPackageVersion = Environment.environVar "buildTag" // nuget does not support string values after.
 let swigVersion = "3.0.12"
 let protobufVersion = "3.8.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"

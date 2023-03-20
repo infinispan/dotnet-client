@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageVersion>8.2.0-Alpha2</PackageVersion>
+    <PackageVersion>${buildTag}</PackageVersion>
     <Authors>infinispan.org</Authors>
     <Description>.NET core binding of C# HotRod client for connecting to infinispan</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
