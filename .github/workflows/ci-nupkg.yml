@@ -34,9 +34,9 @@ jobs:
       - name: Build C#
         shell: pwsh
         run: |
-          $Env:cppTag = "${{ env.GITHUB_REF_NAME }}-latest"
-          $Env:CLIENT_VERSION = "${{ env.GITHUB_REF_NAME }}-latest"
-          .\build.ps1 QuickPack
+          $Env:cppTag = "${{ env.GITHUB_REF_NAME }}.latest"
+          $Env:CLIENT_VERSION = "${{ env.GITHUB_REF_NAME }}.latest"
+          .\build.ps1 QuickPack --envvar buildTag 9.2.x.latest
       #- name: Build C#
       #  shell: cmd
       #  run: |
@@ -54,10 +54,10 @@ jobs:
       #    set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
       #    set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\protobuf\src
       #    set HOTROD_SNK=${{ github.workspace }}\strongNames.key
-      #    powershell -file "build.ps1" "QuickPack" --envvar buildTag 9.2.x-latest
+      #    powershell -file "build.ps1" "QuickPack"
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-          tag: ${{ env.GITHUB_REF_NAME }}-latest
+          tag: ${{ env.GITHUB_REF_NAME }}.latest
