@@ -37,6 +37,7 @@ jobs:
           cppTag: "${{ env.GITHUB_REF_NAME }}.latest"
           CLIENT_VERSION: "${{ env.GITHUB_REF_NAME }}.latest"
         run: |
+          echo $env.cppTag
           .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
