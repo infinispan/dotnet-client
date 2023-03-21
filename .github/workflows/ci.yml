@@ -1,7 +1,7 @@
 name: infinispan-netcore-tests
 env:
   ISPN_VER: "14.0.6.Final"
-  cppTag: "0.1.3.Dev1"
+  cppTag: "9.2.x"
   CLIENT_VERSION: ${{ github.event.release.tag_name }}
 on:
   push:
@@ -19,20 +19,11 @@ jobs:
       - run: echo $GITHUB_REF_NAME
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      #        with:
-      #          vs-version: "[17.0,17.2)"
-      - name: Cache Protobuf
-        id: cache-protobuf
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}\libs
-          key: cache-protobuf
       - name: Build Protobuf
         shell: cmd
-        if: steps.cache-protobuf.outputs.cache-hit != 'true'
         run: |
           cd ${{ github.workspace }}
-          git clone -b v3.5.0 https://github.com/protocolbuffers/protobuf.git
+          git clone -b v3.8.0 https://github.com/protocolbuffers/protobuf.git
           mkdir libs
           cd protobuf
           mkdir build && cd build
@@ -46,17 +37,8 @@ jobs:
         with:
           python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
-      - name: Cache C++
-        id: cache-cpp
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ github.workspace }}\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP
-            ${{ github.workspace }}\cpp-client\infinispan-server-14.0.6.Final
-          key: cache-cpp-${{ github.ref_name }}
       - name: Build C++
         shell: cmd
-        if: steps.cache-cpp.outputs.cache-hit != 'true'
         run: |
           echo '::echo::on'
           where swig
