@@ -33,8 +33,10 @@ jobs:
         uses: nuget/setup-nuget@v1
       - name: Set tag
         run: |
+          pwd
+          git describe --tag
           $tg = & git describe --tag
-           "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Build C#
         shell: pwsh
         env:
