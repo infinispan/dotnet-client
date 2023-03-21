@@ -78,4 +78,5 @@ jobs:
           artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
+          removeArtifacts: true
           tag: ${{ env.GITHUB_REF_NAME }}.latest
