@@ -35,8 +35,8 @@ jobs:
         shell: pwsh
         env:
           buildTag: "${{ env.GITHUB_REF_NAME }}.latest"
-          CLIENT_VERSION: "${{ env.GITHUB_REF_NAME }}-latest"
         run: |
+          $CLIENT_VERSION= & "git" "describe" "--tag"
           .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
