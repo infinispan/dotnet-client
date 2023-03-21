@@ -31,12 +31,15 @@ jobs:
       #    architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Setup nuget
         uses: nuget/setup-nuget@v1
+      - name: Set tag
+        run: |
+          $tg = & git describe --tag
+           "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Build C#
         shell: pwsh
         env:
           buildTag: "${{ env.GITHUB_REF_NAME }}.latest"
         run: |
-          $CLIENT_VERSION= & "git" "describe" "--tag"
           .\build.ps1 QuickPack
       #- name: Build C#
       #  shell: cmd
