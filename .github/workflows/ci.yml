@@ -89,19 +89,19 @@ jobs:
           set HOTROD_SNK=${{ github.workspace }}\strongNames.key
           mkdir nupkg
           nuget install NLog -Version 2.1.0 -OutputDirectory nupkg
-          set NLOG_DLL=${{ github.workspace }}\nupkg\NLog.2.1.0\lib\net40\NLog.dll
+          set NLOG_DLL=${{ github.workspace }}\dotnet-client\nupkg\NLog.2.1.0\lib\net40\NLog.dll
           nuget install NUnit -Version 3.8.0 -OutputDirectory nupkg
-          set NUNIT_DLL=${{ github.workspace }}\nupkg\NUnit.3.8.0\lib\net45\nunit.framework.dll
+          set NUNIT_DLL=${{ github.workspace }}\dotnet-client\nupkg\NUnit.3.8.0\lib\net45\nunit.framework.dll
           set NLOG_LICENSE=${{ github.workspace }}\License.txt
           nuget install NUnit.ConsoleRunner -Version 3.8.0 -OutputDirectory nupkg
-          set PATH=%PATH%;${{ github.workspace }}\nupkg\Nunit.ConsoleRunner.3.8.0\tools
+          set PATH=%PATH%;${{ github.workspace }}\dotnet-client\nupkg\Nunit.ConsoleRunner.3.8.0\tools
           nuget install Google.Protobuf.Tools -Version 3.8.0 -OutputDirectory nupkg
           nuget install Google.Protobuf -Version 3.8.0 -OutputDirectory nupkg
-          set PROTOBUF_PROTOC_EXECUTABLE_CS=${{ github.workspace }}\nupkg\Google.Protobuf.Tools.3.8.0\tools\windows_x64\protoc.exe
-          set GOOGLE_PROTOBUF_NUPKG=${{ github.workspace }}\nupkg
+          set PROTOBUF_PROTOC_EXECUTABLE_CS=${{ github.workspace }}\dotnet-client\nupkg\Google.Protobuf.Tools.3.8.0\tools\windows_x64\protoc.exe
+          set GOOGLE_PROTOBUF_NUPKG=${{ github.workspace }}\dotnet-client\nupkg
           nuget install swigwin -Version 3.0.12 -OutputDirectory nupkg
-          set SWIG_DIR=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\Lib
-          set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\swig.exe
+          set SWIG_DIR=${{ github.workspace }}\dotnet-client\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\Lib
+          set SWIG_EXECUTABLE=${{ github.workspace }}\dotnet-client\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\swig.exe
           set CLIENT_VERSION=%GITHUB_REF_NAME%
           set packNuget=true
           build.bat
