@@ -33,18 +33,18 @@ jobs:
       #    architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
       - name: Setup nuget
         uses: nuget/setup-nuget@v1
-      - name: Find Tag
-        id: tagger
-        uses: jimschubert/query-tag-action@v1
-        with:
-          include: '9.2.*'
-          skip-unshallow: "true"
-#      - name: Set tag
-#        run: |
-#          pwd
-#          git describe --tag
-#          $tg = & git describe --tag
-#          "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+#      - name: Find Tag
+#        id: tagger
+#        uses: jimschubert/query-tag-action@v1
+#        with:
+#          include: '9.2.*'
+#          skip-unshallow: "true"
+      - name: Set tag
+        run: |
+          pwd
+          git describe --tag
+          $tg = & git describe --tag
+          "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Build C#
         shell: pwsh
         env:
