@@ -7,6 +7,8 @@ on:
   push:
     tags:
       - "*"
+  workflow_dispatch
+        
 jobs:
   run-ci-tests-win:
     runs-on: windows-latest
