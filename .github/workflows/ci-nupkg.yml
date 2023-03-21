@@ -34,6 +34,8 @@ jobs:
       - name: Find Tag
         id: tagger
         uses: jimschubert/query-tag-action@v1
+        with:
+          include: '9.2.*'
 #      - name: Set tag
 #        run: |
 #          pwd
