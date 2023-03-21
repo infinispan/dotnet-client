@@ -38,6 +38,7 @@ jobs:
         uses: jimschubert/query-tag-action@v1
         with:
           include: '9.2.*'
+          skip-unshallow: "true"
 #      - name: Set tag
 #        run: |
 #          pwd
