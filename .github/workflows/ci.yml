@@ -7,7 +7,8 @@ on:
   push:
     tags:
       - "*"
-        
+    branches:
+      - '9.2.x' 
 jobs:
   run-ci-tests-win:
     runs-on: windows-latest
