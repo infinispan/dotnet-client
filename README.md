@@ -103,8 +103,8 @@ The C++ client library must match the compiler version in use for the swig wrapp
 To produce the .nupkg package just run the build with the *Pack* or *QuickPack* (if the project has already been built) argument.
 The toolchain produces two types of assembly with or without the natives:
 
-* if HOTROD_ARCH env var is not empty an Infinispan.HotRod.$HOTROD_ARCH.nupkg containing the natives dll is produced;
-* if HOTROD_ARCH env var is empty (or undef) an Inifnispan.HotRod.nupkg containing the toolchaing to build the natives is produced.
+* if HOTROD_CLIENT_ARCH env var is not empty an Infinispan.HotRod.$HOTROD_CLIENT_ARCH.nupkg containing the natives dll is produced;
+* if HOTROD_CLIENT_ARCH env var is empty (or undef) an Inifnispan.HotRod.nupkg containing the toolchaing to build the natives is produced.
 
 
 ### Building the native wrapper
@@ -115,6 +115,15 @@ Install the Infinispan.Hotrod.nupkg and set HOTROD_PREBUILT_DIR to the C++ clien
 ### Run the test suite
 The system must be able to find the native libraries under the swig/native_client/lib folder so add it either to the LD_LIBRARY_PATH (linux) or to the PATH (win) variable. Define a JBOSS_HOME pointing to your Infinispan server location (in Windows use the Unix file separator '/') and then run the test suite with dotnet:
 	dotnet test 
+
+### Using the .nupkg
+Look into the nuget archive for Infinispan.HotRod packages and find the one matching your architecture and compiler version (the C++ core uses STL so your runtime and the provided .dll must match). Add the nuget package to your .NET Core project:
+
+    dotnet add package Infinispan.HotRod.VS14-Win10-x64 --version 8.3.0.Alpha1
+
+now your application is equipped with all the Infinispan.HotRod features... have fun!
+
+The package comes with all the natives libraries, they will be copied into the bin\<configuration>\netcoreapp2.0 directory and you must have it on the PATH (or LD_LIBRARY_PATH) when you run the application.
 
 ## Reporting Issues ##
 Infinispan uses JIRA for issue management, hosted on issues.jboss.org

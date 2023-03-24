@@ -8,11 +8,11 @@ open Fake.NuGet.Install
 open Fake.DotNetCli
 
 let cppClientVersion = "8.1.0.SNAPSHOT"
-let cppClientPackageVersion = "8.2.0-Alpha2" // nuget does not support string values after.
+let cppClientPackageVersion = "8.2.0-Alpha3" // nuget does not support string values after.
 let swigVersion = "3.0.12"
 let protobufVersion = "3.4.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"
-let infinispanServerVersion = "9.1.1.Final"
+let infinispanServerVersion = "9.2.3.Final"
 
 let generateDir = "../../../src/Infinispan.HotRod/generated"
 let generateSwigDir = "../src/Infinispan.HotRod/generated"

@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageVersion>8.2.0-Alpha2</PackageVersion>
+    <PackageVersion Condition="'$(HOTROD_CLIENT_VERSION)' == ''">0.0.0-SNAPSHOT</PackageVersion>
+    <PackageVersion Condition="'$(HOTROD_CLIENT_VERSION)' != ''">$(HOTROD_CLIENT_VERSION)</PackageVersion>
     <Authors>infinispan.org</Authors>
     <Description>.NET core binding of C# HotRod client for connecting to infinispan</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -23,9 +24,17 @@
      </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <NativeLibs Include="../../swig/native_client/lib/**" />
+    <None Include="@(NativeLibs)">
+      <Link>%(RecursiveDir)%(FileName)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 
     <Choose>
-        <When Condition="'$(ARCH)' == ''">
+        <When Condition="'$(HOTROD_CLIENT_ARCH)' == ''">
             <PropertyGroup>
                 <PackageId>Infinispan.HotRod</PackageId>
             </PropertyGroup>
@@ -46,11 +55,16 @@
         </When>
         <Otherwise>
             <PropertyGroup>
-                <PackageId>Infinispan.HotRod.$(ARCH)</PackageId>
+                <PackageId>Infinispan.HotRod.$(HOTROD_CLIENT_ARCH)</PackageId>
             </PropertyGroup>
             <ItemGroup>
                 <Content Include="../../swig/native_client/lib/**">
-                    <PackagePath>runtimes/$(ARCH)/native/</PackagePath>
+                    <PackagePath>build</PackagePath>
+                </Content>
+            </ItemGroup>
+            <ItemGroup>
+                <Content Include="../../nupkg/build/Infinispan.HotRod.targets">
+                    <PackagePath>build/Infinispan.HotRod.$(HOTROD_CLIENT_ARCH).targets</PackagePath>
                 </Content>
             </ItemGroup>
         </Otherwise>
