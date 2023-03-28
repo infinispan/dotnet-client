@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <Reference Include="Google.Protobuf">
-      <HintPath>${GOOGLE_PROTOBUF_NUPKG}\Google.Protobuf.3.4.0\lib\net451\Google.Protobuf.dll</HintPath>
+      <HintPath>${GOOGLE_PROTOBUF_NUPKG}\Google.Protobuf.3.8.0\lib\net45\Google.Protobuf.dll</HintPath>
     </Reference>
     <Reference Include="System"/>
     <Reference Include="System.Core"/>
