@@ -36,7 +36,7 @@ echo Using HOTRODCPP_HOME=%HOTRODCPP_HOME%
 
 if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
   set HOTRODCSDLL=hotrodcs.dll
-  set PROTOBUFDLL=%GOOGLE_PROTOBUF_NUPKG%\Google.Protobuf.3.4.0\lib\net451\Google.Protobuf.dll
+  set PROTOBUFDLL=%GOOGLE_PROTOBUF_NUPKG%\Google.Protobuf.3.8.0\lib\net45\Google.Protobuf.dll
 ) else (
   set HOTRODCSDLL=%HOTROD_PREBUILT_LIB_DIR%\hotrodcs.dll
   set PROTOBUFDLL=%HOTROD_PREBUILT_LIB_DIR%\Google.Protobuf.dll
