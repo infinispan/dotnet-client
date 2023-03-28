@@ -99,7 +99,7 @@ jobs:
           nuget install Google.Protobuf -Version 3.8.0 -OutputDirectory nupkg
           set PROTOBUF_PROTOC_EXECUTABLE_CS=${{ github.workspace }}\nupkg\Google.Protobuf.Tools.3.8.0\tools\windows_x64\protoc.exe
           set GOOGLE_PROTOBUF_NUPKG=${{ github.workspace }}\nupkg
-          nuget install swigwin -Version 3.0.12 -OutputDirectory nupkg
+          nuget install swigwintools -Version 3.0.12 -OutputDirectory nupkg
           set SWIG_DIR=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\Lib
           set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\swig.exe
           set CLIENT_VERSION=%GITHUB_REF_NAME%
