@@ -53,7 +53,7 @@ if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
 if %errorlevel% neq 0 goto fail
 
 if  not "%buildTest%"=="skip" ( 
-ctest -V -C RelWithDebInfo -I 5,7
+ctest -V -C RelWithDebInfo
 )
 
 if %errorlevel% neq 0 goto fail
