@@ -7,7 +7,7 @@ if  not "%buildBuild%"=="skip" (
 rmdir /s /q build_windows
 mkdir build_windows
 cd build_windows
-
+set "myest=%~1"
 
 if [%CLIENT_VERSION%] neq [] set V1=%CLIENT_VERSION:*/=%
 
