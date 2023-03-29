@@ -3,11 +3,11 @@ echo Using generator -G %generator%
 
 set home_drive=%CD:~0,2%
 
+if  not "%buildBuild%"=="skip" ( 
 rmdir /s /q build_windows
 mkdir build_windows
 cd build_windows
 
-set "buildTest=%~1"
 
 if [%CLIENT_VERSION%] neq [] set V1=%CLIENT_VERSION:*/=%
 
@@ -50,29 +50,37 @@ if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
 ) else (
   cmake --build . --config RelWithDebInfo --target hotrodcs-test-bin
 )
+cd ..
+)
 if %errorlevel% neq 0 goto fail
 
 if  not "%buildTest%"=="skip" ( 
+cd build_windows
 ctest -V -C RelWithDebInfo
+cd ..
 )
 
 if %errorlevel% neq 0 goto fail
 
-if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
-  cpack -G ZIP --config CPackSourceConfig.cmake
-  if %errorlevel% neq 0 goto fail
-
-  cpack -G ZIP --config CPackConfig.cmake
-  if %errorlevel% neq 0 goto fail
-
-  cpack -G WIX -C RelWithDebInfo
-  if %errorlevel% neq 0 goto fail
-
-  cmake %* -P ../wix-bundle.cmake
-  if  "%packNuget%"=="true" (
-    cpack -G NuGet -R %nuget_package_name% -C RelWithDebInfo
+if  not "%buildPack%"=="skip" ( 
+cd build_windows
+  if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
+    cpack -G ZIP --config CPackSourceConfig.cmake
     if %errorlevel% neq 0 goto fail
+
+    cpack -G ZIP --config CPackConfig.cmake
+    if %errorlevel% neq 0 goto fail
+
+    cpack -G WIX -C RelWithDebInfo
+    if %errorlevel% neq 0 goto fail
+
+    cmake %* -P ../wix-bundle.cmake
+    if  "%packNuget%"=="true" (
+      cpack -G NuGet -R %nuget_package_name% -C RelWithDebInfo
+      if %errorlevel% neq 0 goto fail
+    )
   )
+cd ..
 )
 if %errorlevel% neq 0 goto fail
 endlocal

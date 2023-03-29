@@ -104,7 +104,18 @@ jobs:
           set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\swig.exe
           set CLIENT_VERSION=%GITHUB_REF_NAME%
           set packNuget=true
+          set buildTest=skip
+          set buildPack=skip
           build.bat
+      - name: Test C#
+        shell: cmd
+        run: |
+          echo '::echo::on'
+          set buildTest=
+          set buildBuild=skip
+          set buildPack=skip
+          cd build_windows
+          ctest -V -C RelWithDebInfo
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "build_windows/*.msi"
