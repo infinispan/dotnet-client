@@ -78,11 +78,11 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             var df = new DataFormat();
             df.Marshaller = new TransparentMarshaller();
             df.KeyMediaType = "application/json";
-            df.ValueMediaType = "application/json";
+            df.ValueMediaType = "application/unknown";
             var jsonCache = cache.WithDataFormat(df);
             cache.Put("k1", "value1");
             var retVal = jsonCache.Get("\x0003>\x0002k1");
-            Assert.AreEqual("\"\\u0003>\\u0006value1\"", retVal);
+            Assert.AreEqual("\u0003>\u0006value1", retVal);
         }
 
         [Test]
@@ -93,8 +93,8 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             df.KeyMediaType = "application/json";
             df.ValueMediaType = "application/json";
             var jsonCache = cache.WithDataFormat(df);
-            jsonCache.Put("\"k1\"", "value1");
-            var retVal = jsonCache.Get("\"k1\"");
+            jsonCache.Put("k1", "\"value1\"");
+            var retVal = jsonCache.Get("k1");
             Assert.AreEqual("\"value1\"", retVal);
         }
 
@@ -116,9 +116,9 @@ namespace Infinispan.HotRod.Tests.StandaloneXml
             df.KeyMediaType = "application/json";
             df.ValueMediaType = "application/json";
             var jsonCache = transcodingCache.WithDataFormat(df);
-            transcodingCache.Put("k1", "value1");
-            var retVal = jsonCache.Get("\"k1\"");
-            Assert.AreEqual("\"value1\"", retVal);
+            transcodingCache.Put("kx", "\"valuex\"");
+            var retVal = jsonCache.Get("\"kx\"");
+            Assert.AreEqual("\"valuex\"", retVal);
         }
 
         [Test]
