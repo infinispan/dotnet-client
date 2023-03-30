@@ -11,7 +11,7 @@ on:
       - '9.2.x' 
 jobs:
   run-ci-tests-win:
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v3
       - name: Inject slug/short variables
