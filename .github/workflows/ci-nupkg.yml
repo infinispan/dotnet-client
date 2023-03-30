@@ -55,28 +55,16 @@ jobs:
           buildTag: "${{ env.GITHUB_REF_NAME }}.latest"
         run: |
           .\build.ps1 QuickPack
-      #- name: Build C#
-      #  shell: cmd
-      #  run: |
-      #    echo '::echo::on'
-      #    where swig
-      #    where mvn
-      #    where java
-      #    dir
-      #    set generator="Visual Studio 17 2022"
-      #    set checkoutDir=${{ github.workspace }}
-      #    set INFINISPAN_VERSION=13.0.10.Final
-      #    set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-13.0.10.Final
-      #    set PROTOBUF_LIBRARY=${{ github.workspace }}\libs\lib\libprotobuf.lib
-      #    set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
-      #    set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
-      #    set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\protobuf\src
-      #    set HOTROD_SNK=${{ github.workspace }}\strongNames.key
-      #    powershell -file "build.ps1" "QuickPack"
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
+          assets: '*.nupkg'
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
-          removeArtifacts: true
-          tag: ${{ env.GITHUB_REF_NAME }}.latest
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
+          draft: true
