@@ -1,16 +1,4 @@
 if [%generator%] == [""] set generator="Visual Studio 17 2022"
-if NOT DEFINED HOTRODCPP_HOME set HOTRODCPP_HOME=%checkoutDir%/cpp-client/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%package_name%-WIN-x86_64
-echo Using generator -G %generator%
-
-set home_drive=%CD:~0,2%
-
-call :unquote u_generator %generator%
-
-if  not "%buildBuild%"=="skip" ( 
-rmdir /s /q build_windows
-mkdir build_windows
-cd build_windows
-set "myest=%~1"
 
 if [%CLIENT_VERSION%] neq [] set V1=%CLIENT_VERSION:*/=%
 
@@ -43,6 +31,19 @@ if "%HOTROD_PREBUILT_LIB_DIR%" == "" (
   set HOTRODCSDLL=%HOTROD_PREBUILT_LIB_DIR%\hotrodcs.dll
   set PROTOBUFDLL=%HOTROD_PREBUILT_LIB_DIR%\Google.Protobuf.dll
 )
+
+if NOT DEFINED HOTRODCPP_HOME set HOTRODCPP_HOME=%checkoutDir%/cpp-client/build_win/_CPack_Packages/WIN-x86_64/ZIP/infinispan-hotrod-cpp-%package_name%-WIN-x86_64
+echo Using generator -G %generator%
+
+set home_drive=%CD:~0,2%
+
+call :unquote u_generator %generator%
+
+if  not "%buildBuild%"=="skip" ( 
+rmdir /s /q build_windows
+mkdir build_windows
+cd build_windows
+set "myest=%~1"
 
 cmake -G "%u_generator%" -DHOTRODCPP_HOME=%HOTRODCPP_HOME% -DHOTROD_VERSION_MAJOR=%v_1major% -DHOTROD_VERSION_MINOR=%v_2minor% -DHOTROD_VERSION_PATCH=%v_3micro% -DHOTROD_VERSION_LABEL=%v_4qualifier% -DSWIG_DIR=%SWIG_DIR% -DSWIG_EXECUTABLE=%SWIG_EXECUTABLE% -DPROTOBUF_PROTOC_EXECUTABLE_CS="%PROTOBUF_PROTOC_EXECUTABLE_CS%" -DGOOGLE_PROTOBUF_NUPKG="%GOOGLE_PROTOBUF_NUPKG%" -DPROTOBUF_INCLUDE_DIR=%PROTOBUF_INCLUDE_DIR% -DJBOSS_HOME=%JBOSS_HOME% -DIKVM_CUSTOM_BIN_PATH=%IKVM_CUSTOM_BIN_PATH% -DOPENSSL_ROOT_DIR=%OPENSSL_ROOT_DIR% -DCONFIGURATION=RelWithDebInfo -DENABLE_DOXYGEN=1 -DENABLE_JAVA_TESTING=FALSE  -DProtobuf_LIBRARIES=%PROTOBUFDLL% %~4 ..
 if %errorlevel% neq 0 goto fail
