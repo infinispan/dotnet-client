@@ -496,6 +496,7 @@ if(WIN32) # Needed for prebuild on windows
       # #add_test(NAME csharp_tests_compatibility COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CompatibilityModeTestSuite TestResult-compatibility.xml)
       add_test(NAME csharp_tests_query COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ RemoteQueryTestSuite TestResult-query.xml)
       add_test(NAME csharp_tests_counter COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CounterTestSuite TestResult-counter.xml)
+      add_test(NAME csharp_tests_counter_with_listener COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CounterWithListenerTestSuite TestResult-counter.xml)
       add_test(NAME csharp_tests_cluster COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ ClusterTestSuite TestResult-cluster.xml)
       add_test(NAME csharp_tests_adminop COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ AdminOpTestSuite TestResult-adminop.xml)
 
