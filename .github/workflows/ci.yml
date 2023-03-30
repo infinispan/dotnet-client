@@ -115,7 +115,7 @@ jobs:
           set buildBuild=skip
           set buildPack=skip
           cd build_windows
-          ctest -V -C RelWithDebInfo
+          ctest --output-on-failure -V -C RelWithDebInfo
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "build_windows/*.msi"
