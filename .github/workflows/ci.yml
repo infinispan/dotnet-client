@@ -115,7 +115,16 @@ jobs:
           set buildBuild=skip
           set buildPack=skip
           cd build_windows
-          ctest --output-on-failure -V -C RelWithDebInfo
+          build.bat
+      - name: Pack C#
+        shell: cmd
+        run: |
+          echo '::echo::on'
+          set buildTest=skip
+          set buildBuild=skip
+          set buildPack=
+          cd build_windows
+          build.bat
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "build_windows/*.msi"
