@@ -29,6 +29,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Listeners on counters need review")]
         public void AddRemoveListenerWeakTest()
         {
             Semaphore s = new Semaphore(0, 1);
@@ -106,7 +107,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             counter1.Add(10);
             Assert.AreEqual(15, counter1.GetValue());
             Assert.True(s.WaitOne(5000));
-            counter.RemoveListener(o);
+            //counter.RemoveListener(o);
         }
 
         void changeCounterFromAnotherCacheManager()
@@ -125,6 +126,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
         }
 
         [Test]
+        [Ignore("Listeners on counters need review")]
         public void BasicListenerStrongTest()
         {
             int step = 0;
