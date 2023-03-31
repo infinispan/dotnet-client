@@ -114,7 +114,6 @@ jobs:
           set buildTest=
           set buildBuild=skip
           set buildPack=skip
-          cd build_windows
           build.bat
       - name: Pack C#
         shell: cmd
@@ -123,7 +122,6 @@ jobs:
           set buildTest=skip
           set buildBuild=skip
           set buildPack=
-          cd build_windows
           build.bat
       - name: Delete old release assets
         uses: mknejp/delete-release-assets@v1
