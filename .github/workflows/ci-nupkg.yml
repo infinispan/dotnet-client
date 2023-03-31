@@ -61,6 +61,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ env.GITHUB_REF_NAME }}-latest
           assets: '*.nupkg'
+          fail-if-no-assets: false
+          fail-if-no-release: false
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"

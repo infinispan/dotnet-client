@@ -125,10 +125,18 @@ jobs:
           set buildPack=
           cd build_windows
           build.bat
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
+          assets: '*.msi'
+          fail-if-no-assets: false
+          fail-if-no-release: false
       - uses: ncipollo/release-action@v1
         with:
           artifacts: "build_windows/*.msi"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           removeArtifacts: true
-          tag: ${{ env.GITHUB_REF_NAME }}.latest
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
