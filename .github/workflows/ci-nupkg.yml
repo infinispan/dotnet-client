@@ -45,8 +45,8 @@ jobs:
       - name: Set tag
         run: |
           pwd
-          git describe --tag --abbrev=0
-          $tg = & git describe --tag --abbrev=0
+          git describe --tag --match "9.*.*"
+          $tg = & git describe --tag --match "9.*.*"
           "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "ARCH=${{ steps.sysinfo.outputs.platform }}-${{ steps.sysinfo.outputs.release }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Build C#
