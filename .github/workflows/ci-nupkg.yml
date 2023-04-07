@@ -45,7 +45,7 @@ jobs:
       - name: Set tag
         run: |
           pwd
-          $tg = 0.0.0-${{ env.GITHUB_REF_NAME }}-latest
+          $tg = "0.0.0-${{ env.GITHUB_REF_NAME }}-latest"
           "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
           "ARCH=${{ steps.sysinfo.outputs.platform }}-${{ steps.sysinfo.outputs.release }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
       - name: Build C#
