@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageVersion>8.2.0-Alpha2</PackageVersion>
+    <PackageVersion>$(CLIENT_VERSION)</PackageVersion>
     <Authors>infinispan.org</Authors>
     <Description>.NET core binding of C# HotRod client for connecting to infinispan</Description>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
@@ -13,7 +13,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.4.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.8.0" />
     <PackageReference Include="NLog" Version="4.5.11" />
   </ItemGroup>
 

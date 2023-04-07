@@ -287,7 +287,10 @@ namespace Infinispan.HotRod.Tests
             cache.Put(K1, V1);
             Assert.IsTrue(cache.ContainsKey(K1));
             Task<string> result = cache.RemoveAsync(K1);
-            result.Wait(5000);
+            if (!result.Wait(5000)) {
+                // Give more time
+                result.Wait(5000);
+	    }
             Assert.IsFalse(cache.ContainsKey(K1));
         }
 

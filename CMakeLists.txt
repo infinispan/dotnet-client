@@ -496,6 +496,7 @@ if(WIN32) # Needed for prebuild on windows
       # #add_test(NAME csharp_tests_compatibility COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CompatibilityModeTestSuite TestResult-compatibility.xml)
       add_test(NAME csharp_tests_query COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ RemoteQueryTestSuite TestResult-query.xml)
       add_test(NAME csharp_tests_counter COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CounterTestSuite TestResult-counter.xml)
+      add_test(NAME csharp_tests_counter_with_listener COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ CounterWithListenerTestSuite TestResult-counter.xml)
       add_test(NAME csharp_tests_cluster COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ ClusterTestSuite TestResult-cluster.xml)
       add_test(NAME csharp_tests_adminop COMMAND nunit.bat bin/${PLATFORM}/$<CONFIG>/ AdminOpTestSuite TestResult-adminop.xml)
 
@@ -533,7 +534,7 @@ if(WIN32 AND NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
   file(TO_CMAKE_PATH ${PROTOBUF_PROTOC_EXECUTABLE_CS} CM_PROTOBUF_PROTOC_EXECUTABLE_CS)
   install(FILES "${NLOG_DLL_LOCAL}" DESTINATION lib/)
   install(FILES "${NLOG_LICENSE_LOCAL}" DESTINATION lib/ OPTIONAL)
-  install(FILES "${CM_GOOGLE_PROTOBUF_NUPKG}/Google.Protobuf.3.4.0/lib/netstandard1.0/Google.Protobuf.dll" DESTINATION lib/)
+  install(FILES "${CM_GOOGLE_PROTOBUF_NUPKG}/Google.Protobuf.3.8.0/lib/net45/Google.Protobuf.dll" DESTINATION lib/)
   install(FILES "${CM_PROTOBUF_PROTOC_EXECUTABLE_CS}" DESTINATION bin/)
 endif(WIN32 AND NOT DEFINED ENV{HOTROD_PREBUILT_LIB_DIR})
 
