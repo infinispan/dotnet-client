@@ -1,6 +1,6 @@
 name: infinispan-nupkg
 env:
-  ISPN_VER: "13.0.10.Final"
+  ISPN_VER: "14.0.6.Final"
 on:
   push:
     tags:
