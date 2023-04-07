@@ -52,7 +52,7 @@ jobs:
       - name: Build C#
         shell: pwsh
         env:
-          buildTag: "${{ env.GITHUB_REF_NAME }}.latest"
+          buildTag: "${{ env.GITHUB_REF_NAME }}-latest"
         run: |
           .\build.ps1 QuickPack
       - name: Delete old release assets
