@@ -1,36 +1,29 @@
 name: infinispan-netcore-tests
 env:
-  ISPN_VER: "13.0.10.Final"
-  cppTag: "0.1.3.Dev1"
+  ISPN_VER: "14.0.6.Final"
+  cppTag: "main"
   CLIENT_VERSION: ${{ github.event.release.tag_name }}
 on:
   push:
     tags:
-      - "*"
+      - "9.3.x"
+    branches:
+      - "main"
 jobs:
   run-ci-tests-win:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Inject slug/short variables
         uses: rlespinasse/github-slug-action@v4
       - run: echo $GITHUB_REF_NAME
       - name: Add msbuild to PATH
         uses: microsoft/setup-msbuild@v1.1
-      #        with:
-      #          vs-version: "[17.0,17.2)"
-      - name: Cache Protobuf
-        id: cache-protobuf
-        uses: actions/cache@v3
-        with:
-          path: ${{ github.workspace }}\libs
-          key: cache-protobuf
       - name: Build Protobuf
         shell: cmd
-        if: steps.cache-protobuf.outputs.cache-hit != 'true'
         run: |
           cd ${{ github.workspace }}
-          git clone -b v3.5.0 https://github.com/protocolbuffers/protobuf.git
+          git clone -b v3.8.0 https://github.com/protocolbuffers/protobuf.git
           mkdir libs
           cd protobuf
           mkdir build && cd build
@@ -44,17 +37,8 @@ jobs:
         with:
           python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
-      - name: Cache C++
-        id: cache-cpp
-        uses: actions/cache@v3
-        with:
-          path: |
-            ${{ github.workspace }}\cpp-client\build_win\_CPack_Packages\WIN-x86_64\ZIP
-            ${{ github.workspace }}\cpp-client\infinispan-server-13.0.10.Final
-          key: cache-cpp-${{ github.ref_name }}
       - name: Build C++
         shell: cmd
-        if: steps.cache-cpp.outputs.cache-hit != 'true'
         run: |
           echo '::echo::on'
           where swig
@@ -69,7 +53,7 @@ jobs:
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
           set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\libs\include
-          set INFINISPAN_VERSION=13.0.10.Final
+          set INFINISPAN_VERSION=14.0.6.Final
           set cppTag=%GITHUB_REF_NAME%
           set CLIENT_VERSION=%GITHUB_REF_NAME%
           git clone -b %cppTag% https://github.com/infinispan/cpp-client.git
@@ -96,8 +80,8 @@ jobs:
           dir
           set generator="Visual Studio 17 2022"
           set checkoutDir=${{ github.workspace }}
-          set INFINISPAN_VERSION=13.0.10.Final
-          set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-13.0.10.Final
+          set INFINISPAN_VERSION=14.0.6.Final
+          set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-14.0.6.Final
           set PROTOBUF_LIBRARY=${{ github.workspace }}\libs\lib\libprotobuf.lib
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
@@ -111,18 +95,45 @@ jobs:
           set NLOG_LICENSE=${{ github.workspace }}\License.txt
           nuget install NUnit.ConsoleRunner -Version 3.8.0 -OutputDirectory nupkg
           set PATH=%PATH%;${{ github.workspace }}\nupkg\Nunit.ConsoleRunner.3.8.0\tools
-          nuget install Google.Protobuf.Tools -Version 3.4.0 -OutputDirectory nupkg
-          nuget install Google.Protobuf -Version 3.4.0 -OutputDirectory nupkg
-          set PROTOBUF_PROTOC_EXECUTABLE_CS=${{ github.workspace }}\nupkg\Google.Protobuf.Tools.3.4.0\tools\windows_x64\protoc.exe
+          nuget install Google.Protobuf.Tools -Version 3.8.0 -OutputDirectory nupkg
+          nuget install Google.Protobuf -Version 3.8.0 -OutputDirectory nupkg
+          set PROTOBUF_PROTOC_EXECUTABLE_CS=${{ github.workspace }}\nupkg\Google.Protobuf.Tools.3.8.0\tools\windows_x64\protoc.exe
           set GOOGLE_PROTOBUF_NUPKG=${{ github.workspace }}\nupkg
-          nuget install swigwin -Version 3.0.9 -OutputDirectory nupkg
-          set SWIG_DIR=${{ github.workspace }}\nupkg\swigwin.3.0.9\tools\swigwin-3.0.9\Lib
-          set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwin.3.0.9\tools\swigwin-3.0.9\swig.exe
+          nuget install swigwintools -Version 3.0.12 -OutputDirectory nupkg
+          set SWIG_DIR=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\Lib
+          set SWIG_EXECUTABLE=${{ github.workspace }}\nupkg\swigwintools.3.0.12\tools\swigwin-3.0.12\swig.exe
           set CLIENT_VERSION=%GITHUB_REF_NAME%
           set packNuget=true
+          set buildTest=skip
+          set buildPack=skip
           build.bat
+      - name: Test C#
+        shell: cmd
+        run: |
+          echo '::echo::on'
+          set buildTest=
+          set buildBuild=skip
+          set buildPack=skip
+          build.bat
+      - name: Pack C#
+        shell: cmd
+        run: |
+          echo '::echo::on'
+          set buildTest=skip
+          set buildBuild=skip
+          set buildPack=
+          build.bat
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
+          assets: '*.msi'
+          fail-if-no-assets: false
+          fail-if-no-release: false
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "build_windows/*.msi,build_windows/*.nupkg"
+          artifacts: "build_windows/*.msi"
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
+          tag: ${{ env.GITHUB_REF_NAME }}-latest
