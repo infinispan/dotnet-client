@@ -1,0 +1,69 @@
+name: infinispan-nupkg
+env:
+  ISPN_VER: "14.0.6.Final"
+on:
+  push:
+    tags:
+      - "9.3.**"
+jobs:
+  run-ci-nupkg:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+      - name: Get Runner Info
+        uses: kenchan0130/actions-system-info@master
+        id: sysinfo
+      - run: echo $GITHUB_REF_NAME
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v1.1
+        with:
+          msbuild-architecture: x64
+      #        with:
+      #          vs-version: "[17.0,17.2)"
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      #- uses: actions/setup-python@v4
+      #  with:
+      #    python-version: "3.x" # Version range or exact version of a Python version to use, using SemVer's version range syntax
+      #    architecture: "x64" # optional x64 or x86. Defaults to x64 if not specified
+      - name: Setup nuget
+        uses: nuget/setup-nuget@v1
+#      - name: Find Tag
+#        id: tagger
+#        uses: jimschubert/query-tag-action@v1
+#        with:
+#          include: '9.2.*'
+#          skip-unshallow: "true"
+      - name: Set tag
+        run: |
+          pwd
+          $tg = "${{ env.GITHUB_REF_NAME }}"
+          "CLIENT_VERSION=$tg" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "ARCH=${{ steps.sysinfo.outputs.platform }}-${{ steps.sysinfo.outputs.release }}" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+      - name: Build C#
+        shell: pwsh
+        env:
+          buildTag: "${{ env.GITHUB_REF_NAME }}"
+        run: |
+          .\build.ps1 QuickPack
+      - name: Delete old release assets
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          tag: ${{ env.GITHUB_REF_NAME }}
+          assets: '*.nupkg'
+          fail-if-no-assets: false
+          fail-if-no-release: false
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "src/Infinispan.HotRod/bin/RelWithDebInfo/*.nupkg"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          allowUpdates: true
+          tag: ${{ env.GITHUB_REF_NAME }}
+          draft: true
