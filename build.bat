@@ -2,7 +2,7 @@ if [%generator%] == [""] set generator="Visual Studio 17 2022"
 
 if [%CLIENT_VERSION%] neq [] set V1=%CLIENT_VERSION:*/=%
 
-for /f "tokens=1,2,3,4 delims=." %%a in ("%V1%") do (
+for /f "tokens=1,2,3,4 delims=.-" %%a in ("%V1%") do (
    set v_1major=%%a
    set v_2minor=%%b
    set v_3micro=%%c
