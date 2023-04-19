@@ -19,7 +19,7 @@ if 1%v_1major% neq +1%v_1major% set v_1major=0
 if 1%v_2minor% neq +1%v_2minor% set v_2minor=1
 if 1%v_3micro% neq +1%v_3micro% set v_3micro=0
 
-set package_name=%v_1major%.%v_2minor%.%v_3micro%.%v_4qualifier%
+set package_name=%v_1major%.%v_2minor%.%v_3micro%-%v_4qualifier%
 set nuget_package_name=%v_1major%.%v_2minor%.%v_3micro%-%v_4qualifier%
 
 echo Using HOTRODCPP_HOME=%HOTRODCPP_HOME%
