@@ -134,3 +134,5 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           allowUpdates: true
           tag: ${{ env.GITHUB_REF_NAME }}
+          prerelease: ${{ !endsWith( env.GITHUB_REF_NAME, 'Final') }}
+

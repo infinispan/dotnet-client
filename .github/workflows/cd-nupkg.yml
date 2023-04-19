@@ -67,3 +67,5 @@ jobs:
           allowUpdates: true
           tag: ${{ env.GITHUB_REF_NAME }}
           draft: true
+          prerelease: ${{ !endsWith( env.GITHUB_REF_NAME, 'Final') }}
+
