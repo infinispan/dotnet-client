@@ -16,7 +16,7 @@ let cppClientPackageVersion = environVar "buildTag" // nuget does not support st
 let swigVersion = "3.0.12"
 let protobufVersion = "3.8.0" // if changing this, be sure to also update Google.Protobuf in src/Infinispan.HotRod/Infinispan.HotRod.csproj
 let nunitToolsVersion = "2.6.1"
-let infinispanServerVersion = "14.0.6.Final"
+let infinispanServerVersion = "15.0.0.Dev04"
 
 let generateDir = "../../../src/Infinispan.HotRod/generated"
 let generateSwigDir = "../src/Infinispan.HotRod/generated"

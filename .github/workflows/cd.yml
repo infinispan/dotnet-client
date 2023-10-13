@@ -1,6 +1,6 @@
 name: infinispan-netcore-tests
 env:
-  ISPN_VER: "14.0.6.Final"
+  ISPN_VER: "15.0.0.Dev04"
   CLIENT_VERSION: ${{ github.event.release.tag_name }}
 on:
   push:
@@ -50,7 +50,7 @@ jobs:
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
           set PROTOBUF_INCLUDE_DIR=${{ github.workspace }}\libs\include
-          set INFINISPAN_VERSION=14.0.6.Final
+          set INFINISPAN_VERSION=15.0.0.Dev04
           set cppTag=%GITHUB_REF_NAME%
           set CLIENT_VERSION=%GITHUB_REF_NAME%
           git clone -b %cppTag% https://github.com/infinispan/cpp-client.git
@@ -77,8 +77,8 @@ jobs:
           dir
           set generator="Visual Studio 17 2022"
           set checkoutDir=${{ github.workspace }}
-          set INFINISPAN_VERSION=14.0.6.Final
-          set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-14.0.6.Final
+          set INFINISPAN_VERSION=15.0.0.Dev04
+          set JBOSS_HOME=${{ github.workspace }}\cpp-client\infinispan-server-15.0.0.Dev04
           set PROTOBUF_LIBRARY=${{ github.workspace }}\libs\lib\libprotobuf.lib
           set PROTOBUF_PROTOC_EXECUTABLE=${{ github.workspace }}\libs\bin\protoc.exe
           set PROTOBUF_PROTOC_LIBRARY=${{ github.workspace }}\libs\lib\libprotoc.lib
