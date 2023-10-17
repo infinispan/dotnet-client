@@ -140,7 +140,7 @@ namespace Infinispan.HotRod.Tests.ClusteredIndexingXml
             IRemoteCache<String, Transaction> transactionCache = remoteManager.GetCache<String, Transaction>(NAMED_CACHE);
 
             QueryRequest qr = new QueryRequest();
-            qr.QueryString = "select t.accountId, max(t.amount), max(t.description) from sample_bank_account.Transaction t where t.longDescription : (+'beer' -'food') group by t.accountId";
+            qr.QueryString = "select t.accountId, max(t.amount), max(t.description) from sample_bank_account.Transaction t where t.longDescription : (+'beer') and   t.longDescription : (-'food') group by t.accountId";
 
             QueryResponse result = transactionCache.Query(qr);
 

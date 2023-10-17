@@ -95,7 +95,7 @@ message Account {
    }
 
    /**
-    * @Field(store = Store.YES)f
+    * @Field(store = Store.YES)
     */
    optional Limits limits = 4;
 
