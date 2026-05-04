@@ -1,5 +1,7 @@
 # C# Hot Rod Client #
 
+⚠️ THIS CLIENT HAS BEEN SUPERSEDED BY https://github.com/infinispan/Infinispan.Hotrod.Core ⚠️
+
 Two build modes are available:
 
 * Build mode 1 produces an .msi package to be used on Windows
