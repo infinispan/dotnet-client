@@ -2,19 +2,23 @@ name: infinispan-netcore-tests
 env:
   ISPN_VER: '13.0.10.Final'
 on: [push, pull_request]
+
+permissions:
+  contents: read
+
 jobs:
   run-ci-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-dotnet@v1
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/setup-dotnet@871f041373faaad213a635d9afb62905ec029bbb # v1
         with:
           dotnet-version: '6.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@91d3aa4956ec4a53e477c4907347b5e3481be8c9 # v2
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '11'
-      - uses: wei/wget@v1
+      - uses: wei/wget@c15e476d1463f4936cb54f882170d9d631f1aba5 # v1
         with:
           args: -q https://downloads.jboss.org/infinispan/$ISPN_VER/infinispan-server-$ISPN_VER.zip
       - name: Set env
