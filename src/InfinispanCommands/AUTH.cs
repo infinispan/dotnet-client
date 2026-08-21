@@ -39,6 +39,7 @@ namespace Infinispan.Hotrod.Commands
                     executeDigestMd5(ctx, client, stream);
                     break;
                 case "PLAIN":
+                case "EXTERNAL":
                     executePlain(ctx, client, stream);
                     break;
                 case "GSSAPI":

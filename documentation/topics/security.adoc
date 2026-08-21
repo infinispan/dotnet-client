@@ -9,6 +9,7 @@ The client supports the following SASL authentication mechanisms:
 * **SCRAM-SHA-384** -- Challenge-response authentication with SHA-384.
 * **SCRAM-SHA-512** -- Challenge-response authentication with SHA-512.
 * **GSSAPI** -- Kerberos authentication via GSSAPI.
+* **EXTERNAL** -- Authentication using a client TLS certificate.
 
 Set credentials and the authentication mechanism on the client:
 
@@ -52,6 +53,26 @@ client.Domain = "server.example.com";
 ----
 
 NOTE: GSSAPI requires a properly configured Kerberos environment (KDC, keytab, or ticket cache).
+
+=== Client Certificate (EXTERNAL) Authentication
+
+The EXTERNAL mechanism delegates authentication to the TLS layer.
+The server identifies the client by its TLS certificate, so no username or password is needed.
+
+[source,csharp]
+----
+using System.Security.Cryptography.X509Certificates;
+
+var client = new InfinispanClient();
+client.AddHost("server.example.com", 11222);
+client.AuthMech = "EXTERNAL";
+client.UseTLS = true;
+client.CACert = chain; // server CA chain
+----
+
+The client TLS certificate must be configured at the transport level.
+
+NOTE: The Infinispan server must be configured to require client certificates and map them to security identities.
 
 === TLS
 
