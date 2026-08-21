@@ -424,6 +424,79 @@ namespace Infinispan.Hotrod
             return cmd.Result;
         }
 
+        public CounterManager Counters()
+        {
+            return new CounterManager(this);
+        }
+
+        internal async Task<bool> CounterCreate(string name, CounterConfiguration config)
+        {
+            var cmd = new Commands.COUNTER_CREATE(name, config);
+            await Execute(null, cmd);
+            return cmd.Created;
+        }
+
+        internal async Task<long> CounterGet(string name)
+        {
+            var cmd = new Commands.COUNTER_GET(name);
+            await Execute(null, cmd);
+            return cmd.Value;
+        }
+
+        internal async Task<long> CounterAddAndGet(string name, long delta)
+        {
+            var cmd = new Commands.COUNTER_ADD_AND_GET(name, delta);
+            await Execute(null, cmd);
+            return cmd.Value;
+        }
+
+        internal async Task<long> CounterGetAndSet(string name, long value)
+        {
+            var cmd = new Commands.COUNTER_GET_AND_SET(name, value);
+            await Execute(null, cmd);
+            return cmd.PreviousValue;
+        }
+
+        internal async Task<(long OldValue, bool Success)> CounterCompareAndSwap(string name, long expect, long update)
+        {
+            var cmd = new Commands.COUNTER_CAS(name, expect, update);
+            await Execute(null, cmd);
+            return (cmd.OldValue, cmd.Success);
+        }
+
+        internal async Task CounterReset(string name)
+        {
+            var cmd = new Commands.COUNTER_RESET(name);
+            await Execute(null, cmd);
+        }
+
+        internal async Task CounterRemove(string name)
+        {
+            var cmd = new Commands.COUNTER_REMOVE(name);
+            await Execute(null, cmd);
+        }
+
+        internal async Task<bool> CounterIsDefined(string name)
+        {
+            var cmd = new Commands.COUNTER_IS_DEFINED(name);
+            await Execute(null, cmd);
+            return cmd.IsDefined;
+        }
+
+        internal async Task<CounterConfiguration> CounterGetConfiguration(string name)
+        {
+            var cmd = new Commands.COUNTER_GET_CONFIGURATION(name);
+            await Execute(null, cmd);
+            return cmd.Configuration;
+        }
+
+        internal async Task<IList<string>> CounterGetNames()
+        {
+            var cmd = new Commands.COUNTER_GET_NAMES();
+            await Execute(null, cmd);
+            return cmd.CounterNames;
+        }
+
         public IDictionary<int, ISet<K>> SplitBySegment<K>(Marshaller<K> km, CacheBase cache, ICollection<K> keys)
         {
             TopologyInfo topologyInfo;
@@ -475,11 +548,9 @@ namespace Infinispan.Hotrod
         private static Int32 MAXHASHVALUE { get; set; } = 0x7FFFFFFF;
             private async Task<CommandResult> Execute(CacheBase cache, Command cmd)
         {
-            TopologyInfo topologyInfo;
-            // Get the topology info for this cache. Initial hosts list will be used
-            // until a topology record is received for a given cache
-
-            topologyInfoMap.TryGetValue(cache, out topologyInfo);
+            TopologyInfo topologyInfo = null;
+            if (cache != null)
+                topologyInfoMap.TryGetValue(cache, out topologyInfo);
             var result = await ExecuteWithRetry(cache, cmd, topologyInfo);
             if (result.IsError)
             {
