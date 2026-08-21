@@ -18,15 +18,16 @@ Add the package to your project:
 Connect to an Infinispan cluster and use a cache:
 
 ```csharp
-var infinispan = new InfinispanClient();
-infinispan.AddHost("127.0.0.1", 11222);
+var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222");
 
-var cache = infinispan.NewCache(
+var cache = client.NewCache(
     new StringMarshaller(), new StringMarshaller(), "default");
 
 await cache.Put("key", "value");
 var result = await cache.Get("key");
 ```
+
+The URI supports multiple hosts (`hotrod://host1,host2,host3`), TLS (`hotrods://...`), and query parameters (`?sasl_mechanism=PLAIN`).
 
 A full working example is in the [Infinispan.Hotrod.Application](Infinispan.Hotrod.Application) folder.
 

@@ -22,8 +22,8 @@ namespace Infinispan.Hotrod.XUnitTest
 
             infinispan = new InfinispanClient();
             infinispan.AddHost(_container.Host, _container.Port);
-            infinispan.Version = 0x1f;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.Version = ProtocolVersion.Version31;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
 
             var admin = infinispan.Administration();
             foreach (var name in CacheNames)

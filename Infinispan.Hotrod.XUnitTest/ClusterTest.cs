@@ -56,9 +56,9 @@ namespace Infinispan.Hotrod.XUnitTest
             infinispan1.Password = "password";
             infinispan1.AuthMech = "SCRAM-SHA-256";
             infinispan1.AddHost("127.0.0.1", Server1Port);
-            infinispan1.Version = 0x1f;
+            infinispan1.Version = ProtocolVersion.Version31;
             infinispan1.ForceReturnValue = false;
-            infinispan1.ClientIntelligence = 0x03;
+            infinispan1.ClientIntelligence = ClientIntelligence.HashDistributionAware;
             distributedCache = infinispan1.NewCache(new StringMarshaller(), new StringMarshaller(), "distributed");
             localCache = infinispan1.NewCache(new StringMarshaller(), new StringMarshaller(), "namedCache");
         }

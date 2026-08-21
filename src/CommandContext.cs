@@ -15,9 +15,9 @@ namespace Infinispan.Hotrod
         public CacheBase Cache;
         public byte[] CacheNameAsBytes { get { return (Cache != null) ? Cache.NameAsBytes : new byte[] { }; } }
         public long MessageId;
-        public byte ClientIntelligence { get { return Client.Host.Cluster.ClientIntelligence; } }
+        public byte ClientIntelligence { get { return (byte)Client.Host.Cluster.ClientIntelligence; } }
         public byte? VersionOverride;
-        public byte Version => VersionOverride ?? Client.Host.Cluster.Version;
+        public byte Version => VersionOverride ?? (byte)Client.Host.Cluster.Version;
         public UInt32 TopologyId { get { return Client.Host.Cluster.TopologyId; } }
         public bool IsVersion40OrAbove => Version >= 40;
     }

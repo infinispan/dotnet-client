@@ -17,9 +17,9 @@ namespace Infinispan.Hotrod.XUnitTest
             _container = new InfinispanContainer("infinispan-noauth.xml");
             await _container.StartAsync();
             infinispan.AddHost(_container.Host, _container.Port);
-            infinispan.Version = 0x1f;
+            infinispan.Version = ProtocolVersion.Version31;
             infinispan.ForceReturnValue = false;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
             cache = infinispan.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
         }
 
@@ -46,9 +46,9 @@ namespace Infinispan.Hotrod.XUnitTest
         {
             var infinispan = new InfinispanClient();
             infinispan.AddHost("127.0.0.1", 19999);
-            infinispan.Version = 0x1f;
+            infinispan.Version = ProtocolVersion.Version31;
             infinispan.ForceReturnValue = false;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
             var cache = infinispan.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
             String key = UniqueKey.NextKey();
             var excpt = await Assert.ThrowsAsync<InfinispanException>(() => cache.Get(key));
@@ -73,7 +73,7 @@ namespace Infinispan.Hotrod.XUnitTest
         [Fact]
         public void VersionTest()
         {
-            Assert.NotEqual(0, _cache.Cluster.Version);
+            Assert.NotEqual((ProtocolVersion)0, _cache.Cluster.Version);
         }
 
         // TODO: Verify if GetProtocolVersion method is needed

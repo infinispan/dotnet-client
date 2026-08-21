@@ -44,9 +44,9 @@ namespace Infinispan.Hotrod.XUnitTest
             infinispan.Password = "password";
             infinispan.AuthMech = "SCRAM-SHA-256";
             infinispan.AddHost(_container.Host, _container.Port);
-            infinispan.Version = 0x1f;
+            infinispan.Version = ProtocolVersion.Version31;
             infinispan.ForceReturnValue = false;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
 
             metaCache = infinispan.NewCache(new StringMarshaller(), new StringMarshaller(), PROTOBUF_METADATA_CACHE_NAME);
             MediaType kvMediaType = new MediaType();

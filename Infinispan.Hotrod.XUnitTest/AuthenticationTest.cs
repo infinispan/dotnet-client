@@ -65,8 +65,8 @@ namespace Infinispan.Hotrod.XUnitTest
             ispnCluster.Password = PASS;
             ispnCluster.AuthMech = "PLAIN";
             ispnCluster.Domain = "node0";
-            ispnCluster.Version = 0x1f;
-            ispnCluster.ClientIntelligence = 0x01;
+            ispnCluster.Version = ProtocolVersion.Version31;
+            ispnCluster.ClientIntelligence = ClientIntelligence.Basic;
             ispnCluster.ForceReturnValue = false;
             ispnCluster.AddHost(_host, _port);
             var cache = ispnCluster.NewCache(new StringMarshaller(), new StringMarshaller(), AUTH_CACHE);
@@ -81,8 +81,8 @@ namespace Infinispan.Hotrod.XUnitTest
             ispnCluster.Password = PASS;
             ispnCluster.AuthMech = "SCRAM-SHA-256";
             ispnCluster.Domain = "node0";
-            ispnCluster.Version = 0x1f;
-            ispnCluster.ClientIntelligence = 0x01;
+            ispnCluster.Version = ProtocolVersion.Version31;
+            ispnCluster.ClientIntelligence = ClientIntelligence.Basic;
             ispnCluster.ForceReturnValue = false;
             ispnCluster.AddHost(_host, _port);
             var cache = ispnCluster.NewCache(new StringMarshaller(), new StringMarshaller(), AUTH_CACHE);
@@ -104,8 +104,8 @@ namespace Infinispan.Hotrod.XUnitTest
             ispnCluster.Password = password;
             ispnCluster.AuthMech = mech;
             ispnCluster.Domain = "node0";
-            ispnCluster.Version = 0x1f;
-            ispnCluster.ClientIntelligence = 0x01;
+            ispnCluster.Version = ProtocolVersion.Version31;
+            ispnCluster.ClientIntelligence = ClientIntelligence.Basic;
             ispnCluster.ForceReturnValue = false;
             ispnCluster.AddHost(_host, _port);
             return ispnCluster.NewCache(new StringMarshaller(), new StringMarshaller(), cacheName);

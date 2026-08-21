@@ -13,8 +13,8 @@ namespace Infinispan.Hotrod.Samples
             ispnCluster.User = "admin";
             ispnCluster.Password = "admin";
             ispnCluster.AuthMech = "PLAIN";
-            ispnCluster.Version = 0x1f;
-            ispnCluster.ClientIntelligence = 0x03;
+            ispnCluster.Version = ProtocolVersion.Version31;
+            ispnCluster.ClientIntelligence = ClientIntelligence.HashDistributionAware;
             ispnCluster.ForceReturnValue = false;
 
             var host = ispnCluster.AddHost("127.0.0.1", 11222);

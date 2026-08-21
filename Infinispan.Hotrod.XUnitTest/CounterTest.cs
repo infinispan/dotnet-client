@@ -15,8 +15,8 @@ namespace Infinispan.Hotrod.XUnitTest
             _container = new InfinispanContainer("infinispan-noauth.xml");
             await _container.StartAsync();
             infinispan.AddHost(_container.Host, _container.Port);
-            infinispan.Version = 0x1f;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.Version = ProtocolVersion.Version31;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
         }
 
         public async Task DisposeAsync()

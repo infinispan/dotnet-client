@@ -49,9 +49,9 @@ namespace Infinispan.Hotrod.XUnitTest
             infinispan_verified.UseTLS = true;
             infinispan_verified.CACert = chain;
             infinispan_verified.AddHost(host, port);
-            infinispan_verified.Version = 0x1f;
+            infinispan_verified.Version = ProtocolVersion.Version31;
             infinispan_verified.ForceReturnValue = false;
-            infinispan_verified.ClientIntelligence = 0x01;
+            infinispan_verified.ClientIntelligence = ClientIntelligence.Basic;
             cache_verified = infinispan_verified.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
 
             // Bad verified TLS: wrong CA cert
@@ -69,18 +69,18 @@ namespace Infinispan.Hotrod.XUnitTest
             infinispan_bad_verified.UseTLS = true;
             infinispan_bad_verified.CACert = bad_chain;
             infinispan_bad_verified.AddHost(host, port);
-            infinispan_bad_verified.Version = 0x1f;
+            infinispan_bad_verified.Version = ProtocolVersion.Version31;
             infinispan_bad_verified.ForceReturnValue = false;
-            infinispan_bad_verified.ClientIntelligence = 0x01;
+            infinispan_bad_verified.ClientIntelligence = ClientIntelligence.Basic;
             cache_bad_verified = infinispan_bad_verified.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
 
             // Unverified TLS: no CA cert
             var infinispan = new InfinispanClient();
             infinispan.UseTLS = true;
             infinispan.AddHost(host, port);
-            infinispan.Version = 0x1f;
+            infinispan.Version = ProtocolVersion.Version31;
             infinispan.ForceReturnValue = false;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
             cache = infinispan.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
         }
 

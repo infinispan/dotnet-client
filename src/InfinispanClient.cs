@@ -23,6 +23,16 @@ namespace Infinispan.Hotrod
         public InfinispanClient()
         {
         }
+
+        /// <summary>
+        /// Create an InfinispanClient from a Hot Rod URI.
+        /// Supported schemes: hotrod:// (plain) and hotrods:// (TLS).
+        /// Format: hotrod://[user:password@]host1[:port1][,host2[:port2]]?[sasl_mechanism=X&amp;...]
+        /// </summary>
+        public static InfinispanClient FromUri(string uri)
+        {
+            return HotRodURI.Parse(uri).ToClient();
+        }
         /// <summary>
         /// Username for the connection credentials
         /// </summary>
@@ -40,15 +50,14 @@ namespace Infinispan.Hotrod
         /// </summary>
         public string Domain { get; set; } = "infinispan";
         /// <summary>
-        /// HotRod protocol version. Supported: 31 (3.1), 40 (4.0), 41 (4.1).
+        /// HotRod protocol version.
         /// </summary>
-        public byte Version { get; set; } = 41;
+        public ProtocolVersion Version { get; set; } = ProtocolVersion.Version41;
         internal const byte HANDSHAKE_VERSION = 31;
         /// <summary>
-        /// Client intelligence. Supported values are: 0x01 (basic)
-        /// and 0x03 (hash-distribution)
+        /// Client intelligence.
         /// </summary>
-        public byte ClientIntelligence { get; set; } = 0x02;
+        public ClientIntelligence ClientIntelligence { get; set; } = ClientIntelligence.TopologyAware;
         /// <summary>
         /// Force the server must include a return value in the respose
         /// </summary>

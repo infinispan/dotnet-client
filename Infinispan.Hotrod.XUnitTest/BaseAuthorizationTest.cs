@@ -58,8 +58,8 @@ namespace Infinispan.Hotrod.XUnitTest
             ispnCluster.Password = password;
             ispnCluster.AuthMech = GetMech();
             ispnCluster.Domain = "node0";
-            ispnCluster.Version = 0x1f;
-            ispnCluster.ClientIntelligence = 0x01;
+            ispnCluster.Version = ProtocolVersion.Version31;
+            ispnCluster.ClientIntelligence = ClientIntelligence.Basic;
             ispnCluster.ForceReturnValue = false;
             ispnCluster.AddHost(_fixture.Host, _fixture.Port);
             return ispnCluster.NewCache(new StringMarshaller(), new StringMarshaller(), cacheName);

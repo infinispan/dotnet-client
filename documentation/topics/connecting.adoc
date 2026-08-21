@@ -1,8 +1,82 @@
 == Connecting to Infinispan
 
-=== Creating a Client
+=== Creating a Client from a URI
 
-Create an `InfinispanClient` and add one or more server nodes:
+The simplest way to create a client is from a Hot Rod URI:
+
+[source,csharp]
+----
+var client = InfinispanClient.FromUri("hotrod://localhost:11222");
+----
+
+The URI supports credentials, multiple hosts, TLS, and query parameters:
+
+[source,csharp]
+----
+// With authentication
+var client = InfinispanClient.FromUri("hotrod://admin:password@localhost:11222");
+
+// Multiple servers
+var client = InfinispanClient.FromUri("hotrod://server1:11222,server2:11222,server3:11222");
+
+// TLS (use hotrods:// scheme)
+var client = InfinispanClient.FromUri("hotrods://admin:password@localhost:11222");
+
+// With query parameters
+var client = InfinispanClient.FromUri(
+    "hotrod://admin:pass@localhost:11222?sasl_mechanism=SCRAM-SHA-256");
+----
+
+==== URI Format
+
+----
+hotrod://[user:password@]host1[:port1][,host2[:port2]...][?param=value&...]
+hotrods://...  (same, with TLS enabled)
+----
+
+==== Supported Query Parameters
+
+[cols="1,2"]
+|===
+|Parameter |Description
+
+|`sasl_mechanism`
+|SASL authentication mechanism (e.g. `PLAIN`, `SCRAM-SHA-256`). Auto-detected from credentials if omitted.
+
+|`token`
+|OAuth2 bearer token for `OAUTHBEARER` authentication.
+
+|`trust_store_file_name`, `trust_ca`
+|Path to PEM-encoded CA certificate for TLS verification.
+
+|`key_store_file_name`, `client_cert`
+|Path to client certificate for mutual TLS.
+
+|`key_store_password`, `client_key`
+|Path to client private key for mutual TLS.
+
+|`sni_host_name`, `sni_host`
+|TLS Server Name Indication (SNI) hostname.
+
+|`ssl_hostname_validation`, `verify_hostname`
+|Enable/disable TLS hostname verification (`true`/`false`).
+
+|`client_intelligence`
+|Client intelligence mode: `basic`, `topology_aware`, `hash_distribution_aware`. See <<_client_intelligence>>.
+
+|`protocol_version`, `version`
+|Hot Rod protocol version: `version31`, `version40`, `version41`.
+
+|`connect_timeout`
+|TCP connection timeout in milliseconds.
+
+|`socket_timeout`
+|Socket read/write timeout in milliseconds.
+|===
+
+=== Creating a Client Programmatically
+
+You can also create an `InfinispanClient` and configure it with properties:
 
 [source,csharp]
 ----
@@ -17,18 +91,18 @@ The client discovers other cluster members automatically via topology updates.
 
 `Version`::
 Hot Rod protocol version.
-Supported values: `31` (3.1), `40` (4.0), `41` (4.1).
-Defaults to `41`.
+Supported values: `ProtocolVersion.Version31` (3.1), `ProtocolVersion.Version40` (4.0), `ProtocolVersion.Version41` (4.1).
+Defaults to `Version41`.
 
 `ClientIntelligence`::
 Controls how the client interacts with the cluster topology.
 See <<_client_intelligence>> for details.
 +
-* `0x01` -- Basic: connects to a single server, no topology awareness.
-* `0x02` -- Topology-aware: discovers cluster members via topology updates.
-* `0x03` -- Hash-distribution-aware: routes operations to the primary owner based on consistent hashing.
+* `ClientIntelligence.Basic` -- Connects to a single server, no topology awareness.
+* `ClientIntelligence.TopologyAware` -- Discovers cluster members via topology updates.
+* `ClientIntelligence.HashDistributionAware` -- Routes operations to the primary owner based on consistent hashing.
 +
-Defaults to `0x02`.
+Defaults to `TopologyAware`.
 
 `ForceReturnValue`::
 When `true`, the server includes the previous value in responses to `Put`, `Remove`, and `Replace` operations.
@@ -59,15 +133,15 @@ client.SwitchCluster("BACKUP");
 
 The `ClientIntelligence` property controls how the client discovers and routes to cluster members:
 
-* **Basic** (`0x01`) -- Connects to a single server.
+* **Basic** (`ClientIntelligence.Basic`) -- Connects to a single server.
 No topology awareness.
-* **Topology-aware** (`0x02`) -- Discovers cluster members via topology updates.
+* **Topology-aware** (`ClientIntelligence.TopologyAware`) -- Discovers cluster members via topology updates.
 The client load-balances across known members.
 This is the default.
-* **Hash-distribution-aware** (`0x03`) -- Routes operations to the primary owner of the key based on consistent hashing.
+* **Hash-distribution-aware** (`ClientIntelligence.HashDistributionAware`) -- Routes operations to the primary owner of the key based on consistent hashing.
 Reduces network hops for key-based operations.
 
 [source,csharp]
 ----
-client.ClientIntelligence = 0x03;
+client.ClientIntelligence = ClientIntelligence.HashDistributionAware;
 ----

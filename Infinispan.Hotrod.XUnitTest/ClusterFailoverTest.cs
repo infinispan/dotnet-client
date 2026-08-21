@@ -25,16 +25,16 @@ namespace Infinispan.Hotrod.XUnitTest
 
             infinispan1.AddHost(container1.Host, container1.Port);
             infinispan1.AddHost("nyc", container2.Host, container2.Port);
-            infinispan1.Version = 0x1f;
+            infinispan1.Version = ProtocolVersion.Version31;
             infinispan1.ForceReturnValue = false;
-            infinispan1.ClientIntelligence = 0x01;
+            infinispan1.ClientIntelligence = ClientIntelligence.Basic;
             cache1 = infinispan1.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
 
             infinispan2.AddHost(container2.Host, container2.Port);
             infinispan2.AddHost("lon", container1.Host, container1.Port);
-            infinispan2.Version = 0x1f;
+            infinispan2.Version = ProtocolVersion.Version31;
             infinispan2.ForceReturnValue = false;
-            infinispan2.ClientIntelligence = 0x01;
+            infinispan2.ClientIntelligence = ClientIntelligence.Basic;
             cache2 = infinispan2.NewCache(new StringMarshaller(), new StringMarshaller(), "default");
         }
 

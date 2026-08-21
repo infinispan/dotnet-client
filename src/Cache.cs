@@ -19,7 +19,7 @@ namespace Infinispan.Hotrod
             {
                 ForceReturnValue = _cluster.ForceReturnValue;
             }
-            codec = Codec.getCodec(_cluster.Version);
+            codec = Codec.getCodec((byte)_cluster.Version);
         }
         public readonly string Name;
         public bool ForceReturnValue;

@@ -20,9 +20,9 @@ namespace Infinispan.Hotrod.XUnitTest
             _container = new InfinispanContainer("infinispan-noauth.xml");
             await _container.StartAsync();
             infinispan.AddHost(_container.Host, _container.Port);
-            infinispan.Version = 0x1f;
+            infinispan.Version = ProtocolVersion.Version31;
             infinispan.ForceReturnValue = false;
-            infinispan.ClientIntelligence = 0x01;
+            infinispan.ClientIntelligence = ClientIntelligence.Basic;
             marshaller = new StringMarshaller();
             cache = infinispan.NewCache(marshaller, marshaller, "default");
         }
