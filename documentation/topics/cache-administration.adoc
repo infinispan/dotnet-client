@@ -1,0 +1,161 @@
+[id='cache-administration_{context}']
+= Cache Administration
+:context: cache-administration
+
+The `CacheAdmin` API lets you create, remove, and manage caches, templates, and protobuf schemas on the server at runtime through the Hot Rod protocol.
+
+== Getting the Admin Handle
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("127.0.0.1", 11222);
+
+var admin = client.Administration();
+----
+
+== Creating Caches
+
+Create a cache with an XML configuration:
+
+[source,csharp]
+----
+await admin.CreateCache("my-cache", "<distributed-cache/>");
+----
+
+Create a cache from a server-side template:
+
+[source,csharp]
+----
+await admin.CreateCacheWithTemplate("my-cache", "my-template");
+----
+
+Use `GetOrCreateCache` for idempotent creation (no error if the cache already exists):
+
+[source,csharp]
+----
+await admin.GetOrCreateCache("my-cache");
+await admin.GetOrCreateCacheWithTemplate("my-cache", "my-template");
+----
+
+== Removing Caches
+
+[source,csharp]
+----
+await admin.RemoveCache("my-cache");
+----
+
+== Listing Caches
+
+[source,csharp]
+----
+ISet<string> names = await admin.GetCacheNames();
+----
+
+== Cache Configuration
+
+Update a cache configuration attribute at runtime:
+
+[source,csharp]
+----
+await admin.UpdateConfigurationAttribute(
+    "my-cache", "memory.max-count", "5000");
+----
+
+Assign an alias to a cache:
+
+[source,csharp]
+----
+await admin.AssignAlias("my-cache", "cache-alias");
+----
+
+== Index Management
+
+Rebuild the index for an indexed cache:
+
+[source,csharp]
+----
+await admin.ReindexCache("my-indexed-cache");
+----
+
+Update the index schema after a protobuf schema change:
+
+[source,csharp]
+----
+await admin.UpdateIndexSchema("my-indexed-cache");
+----
+
+== Templates
+
+Create and remove cache configuration templates:
+
+[source,csharp]
+----
+await admin.CreateTemplate("my-template", "<local-cache/>");
+
+await admin.RemoveTemplate("my-template");
+----
+
+== Admin Flags
+
+Cache and template operations accept optional `AdminFlag` values:
+
+`AdminFlag.Permanent`:: The cache or template survives server restarts (persisted to the global state).
+`AdminFlag.Volatile`:: The cache or template is not persisted.
+
+[source,csharp]
+----
+await admin.CreateCache("volatile-cache", flags: AdminFlag.Volatile);
+----
+
+== Schema Management
+
+The `SchemaAdmin` API manages protobuf schemas used for queries and protostream encoding.
+
+[source,csharp]
+----
+var schemas = admin.Schemas();
+----
+
+=== Registering Schemas
+
+[source,csharp]
+----
+var proto = @"
+package example;
+
+message Person {
+    required string name = 1;
+    required int32 age = 2;
+}
+";
+
+// Create a new schema (fails if it already exists)
+await schemas.Create("example.proto", proto);
+
+// Update an existing schema
+await schemas.Update("example.proto", proto);
+
+// Create or update (idempotent)
+await schemas.Save("example.proto", proto);
+----
+
+=== Deleting Schemas
+
+[source,csharp]
+----
+await schemas.Delete("example.proto");
+----
+
+=== Executing Arbitrary Server Tasks
+
+For advanced use cases, the underlying `Exec` method is available on the client to execute any server task by name:
+
+[source,csharp]
+----
+var parameters = new List<(string Name, byte[] Value)>
+{
+    ("param1", Encoding.UTF8.GetBytes("value1"))
+};
+byte[] result = await client.Exec("my-server-task", parameters);
+----

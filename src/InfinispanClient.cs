@@ -435,6 +435,18 @@ namespace Infinispan.Hotrod
             return new CounterManager(this);
         }
 
+        public CacheAdmin Administration()
+        {
+            return new CacheAdmin(this);
+        }
+
+        public async Task<byte[]> Exec(string taskName, List<(string Name, byte[] Value)> parameters)
+        {
+            var cmd = new Commands.EXEC(taskName, parameters);
+            await Execute(null, cmd);
+            return cmd.Result;
+        }
+
         internal async Task<bool> CounterCreate(string name, CounterConfiguration config)
         {
             var cmd = new Commands.COUNTER_CREATE(name, config);

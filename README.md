@@ -40,9 +40,12 @@ Supports the [Hot Rod 4.1](https://infinispan.org/docs/stable/titles/hotrod_prot
 - **Transactions**: Client-side transaction buffering with optimistic locking, one-phase and two-phase commit
 - **Near Caching**: Client-side LRU cache with server-driven invalidation via event listeners
 - **Query**: Ickle query language support
+- **Continuous Queries**: Real-time notifications when cache entries match or stop matching a query
 - **Stats**: Server-side cache statistics
 - **Events**: Client listeners with server-push event dispatch
 - **Counters**: Distributed strong and weak counters with get, set, add, compare-and-swap, reset
+- **Multimaps**: Associate multiple values with a single key (put, get, remove key/entry, contains, size)
+- **Administration**: Cache lifecycle (create, get-or-create, remove, list), templates, index management, schema registration, server task execution
 - **Security**: TLS (with optional server certificate verification), SASL authentication (PLAIN, SCRAM-SHA-256/384/512, GSSAPI, EXTERNAL)
 - **Topology**: Client intelligence with automatic cluster topology updates and failover
 - **ASP.NET Integration**: `IDistributedCache` and `HybridCache` implementations

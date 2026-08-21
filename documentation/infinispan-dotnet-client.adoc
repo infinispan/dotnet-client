@@ -20,11 +20,17 @@ include::topics/event-listeners.adoc[]
 
 include::topics/queries.adoc[]
 
+include::topics/continuous-queries.adoc[]
+
 include::topics/iteration.adoc[]
 
 include::topics/transactions.adoc[]
 
 include::topics/distributed-counters.adoc[]
+
+include::topics/multimaps.adoc[]
+
+include::topics/cache-administration.adoc[]
 
 include::topics/aspnet-integration.adoc[]
 
