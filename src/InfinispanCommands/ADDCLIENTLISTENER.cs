@@ -8,12 +8,12 @@ namespace Infinispan.Hotrod.Commands
     public class ADDCLIENTLISTENER : Command
     {
         public byte IncludeState;
-        private String FilterFactoryName = "";
-        private Tuple<byte[], byte[]>[] FilterArgs = null;
-        private String ConverterFactoryName = "";
-        private Tuple<byte[], byte[]>[] ConverterArgs = null;
-        private int Interests = 0;
-        private bool isBinary = false;
+        public String FilterFactoryName = "";
+        public byte[][] FilterParams = null;
+        public String ConverterFactoryName = "";
+        public byte[][] ConverterParams = null;
+        public int Interests = 0;
+        public bool isBinary = false;
 
         public ADDCLIENTLISTENER()
         {
@@ -33,41 +33,28 @@ namespace Infinispan.Hotrod.Commands
             base.Execute(ctx, client, stream);
             Codec.writeArray(StringMarshaller._ASCII.marshall(this.Listener.ListenerID), stream);
             stream.WriteByte(this.IncludeState);
-            if (!String.IsNullOrEmpty(this.FilterFactoryName))
-            {
-                Codec.writeArray(Encoding.ASCII.GetBytes(this.FilterFactoryName), stream);
-                var argsLen = (byte)(this.FilterArgs == null ? 0 : this.FilterArgs.Length);
-                stream.WriteByte(argsLen);
-                for (var i = 0; i < argsLen; i++)
-                {
-                    Codec.writeArray(this.FilterArgs[i].Item1, stream);
-                    Codec.writeArray(this.FilterArgs[i].Item2, stream);
-                }
-            }
-            else
-            {
-                stream.WriteByte(0);
-            }
-            if (!String.IsNullOrEmpty(this.ConverterFactoryName))
-            {
-                Codec.writeArray(Encoding.ASCII.GetBytes(this.ConverterFactoryName), stream);
-                var argsLen = (byte)(this.ConverterArgs == null ? 0 : this.ConverterArgs.Length);
-                stream.WriteByte(argsLen);
-                for (var i = 0; i < argsLen; i++)
-                {
-                    Codec.writeArray(this.ConverterArgs[i].Item1, stream);
-                    Codec.writeArray(this.ConverterArgs[i].Item2, stream);
-                }
-            }
-            else
-            {
-                stream.WriteByte(0);
-            }
-            Codec.writeVInt(this.Interests, stream);
+            WriteFactory(stream, this.FilterFactoryName, this.FilterParams);
+            WriteFactory(stream, this.ConverterFactoryName, this.ConverterParams);
             stream.WriteByte(isBinary ? (byte)1 : (byte)0);
+            Codec.writeVInt(this.Interests, stream);
             stream.Flush();
-            // Pre-register so include-state events arriving before the response are dispatched
             client.Host.Listeners[this.Listener.ListenerID] = this.Listener;
+        }
+
+        private static void WriteFactory(HotRodStream stream, string factoryName, byte[][] factoryParams)
+        {
+            if (!String.IsNullOrEmpty(factoryName))
+            {
+                Codec.writeArray(Encoding.ASCII.GetBytes(factoryName), stream);
+                var count = (byte)(factoryParams == null ? 0 : factoryParams.Length);
+                stream.WriteByte(count);
+                for (var i = 0; i < count; i++)
+                    Codec.writeArray(factoryParams[i], stream);
+            }
+            else
+            {
+                stream.WriteByte(0);
+            }
         }
 
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)

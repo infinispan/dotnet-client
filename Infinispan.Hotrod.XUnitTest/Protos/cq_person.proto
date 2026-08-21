@@ -1,0 +1,9 @@
+syntax = "proto3";
+package cq_test;
+
+option csharp_namespace = "CqTest";
+
+message CQPerson {
+    string name = 1;
+    int32 age = 2;
+}

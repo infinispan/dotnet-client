@@ -24,10 +24,12 @@
   <ItemGroup>
     <Protobuf Include="Protos/addressbook.proto"></Protobuf>
     <Protobuf Include="Protos/bank.proto"></Protobuf>
+    <Protobuf Include="Protos/cq_person.proto"></Protobuf>
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="resources/proto2/bank.proto" />
+    <EmbeddedResource Include="resources/proto2/cq_person.proto" />
     <EmbeddedResource Include="resources/client/infinispan-ca.pem" />
     <EmbeddedResource Include="resources/client/bad-infinispan-ca.pem" />
   </ItemGroup>

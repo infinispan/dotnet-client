@@ -190,6 +190,12 @@ namespace Infinispan.Hotrod
             await Execute(cache, cmd);
         }
 
+        internal async Task AddListener(CacheBase cache, IClientListener listener, bool includeState,
+            Commands.ADDCLIENTLISTENER cmd)
+        {
+            await Execute(cache, cmd);
+        }
+
         internal async Task RemoveListener(CacheBase cache, IClientListener listener)
         {
             Commands.REMOVECLIENTLISTENER cmd = new Commands.REMOVECLIENTLISTENER(listener);

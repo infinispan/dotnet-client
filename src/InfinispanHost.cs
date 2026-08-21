@@ -274,11 +274,11 @@ namespace Infinispan.Hotrod
             var e = new Event
             {
                 ListenerID = listenerId,
-                CustomMarker = (byte)_responseStream.ReadByte()
+                CustomMarker = (byte)_responseStream.ReadByte(),
+                Retried = (byte)_responseStream.ReadByte()
             };
             if (e.CustomMarker == 0)
             {
-                e.Retried = (byte)_responseStream.ReadByte();
                 e.Key = Codec.readArray(_responseStream);
                 e.Type = (EventType)opCode;
                 if (e.Type != EventType.REMOVED && e.Type != EventType.EXPIRED)

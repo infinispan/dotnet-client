@@ -1,0 +1,68 @@
+== Continuous Queries
+
+Continuous queries let you receive real-time notifications when cache entries match (or stop matching) a query.
+
+=== Overview
+
+A continuous query registers an Ickle query with the server and receives events whenever:
+
+* An entry starts matching the query (*Joining*)
+* A matching entry is updated and still matches (*Updated*)
+* An entry stops matching the query (*Leaving*)
+
+=== Prerequisites
+
+* An indexed cache with a registered protobuf schema
+* The cache must use `application/x-protostream` media type
+
+=== Creating a Continuous Query
+
+[source,csharp]
+----
+await using var cq = cache.ContinuousQuery(
+    "FROM example.Person WHERE age >= 18");
+----
+
+The `ContinuousQuery` implements `IAsyncDisposable`, so the `await using` pattern automatically removes the listener when the variable goes out of scope.
+
+=== Receiving Events
+
+Events are delivered through a `System.Threading.Channels.ChannelReader<CQEvent>`:
+
+[source,csharp]
+----
+await using var cq = cache.ContinuousQuery(
+    "FROM example.Person WHERE age >= 18");
+
+await foreach (var ev in cq.Events.ReadAllAsync(cancellationToken))
+{
+    Console.WriteLine($"Type={ev.Type}, Key={ev.Key}");
+    if (ev.Type == CQResultType.Joining)
+    {
+        // Entry now matches the query
+    }
+    else if (ev.Type == CQResultType.Leaving)
+    {
+        // Entry no longer matches the query
+    }
+}
+----
+
+=== CQEvent Properties
+
+`Type`:: The event type: `Joining`, `Updated`, or `Leaving`.
+`Key`:: The raw key bytes of the affected entry.
+`Value`:: The raw value bytes (may be null for `Leaving` events).
+`Projections`:: A list of raw byte arrays if the query uses projections.
+
+=== Lifecycle
+
+The continuous query listener is active from creation until disposal.
+Call `DisposeAsync()` (or use `await using`) to unregister the listener from the server:
+
+[source,csharp]
+----
+var cq = cache.ContinuousQuery("FROM example.Person WHERE age >= 18");
+// ... process events ...
+await cq.DisposeAsync();
+----

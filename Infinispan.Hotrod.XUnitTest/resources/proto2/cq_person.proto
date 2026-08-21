@@ -1,0 +1,10 @@
+syntax = "proto3";
+package cq_test;
+
+/* @Indexed */
+message CQPerson {
+    /* @Field(store = Store.YES) */
+    string name = 1;
+    /* @Field(store = Store.YES) */
+    int32 age = 2;
+}

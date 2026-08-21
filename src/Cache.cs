@@ -343,6 +343,18 @@ namespace Infinispan.Hotrod
         }
 
         /// <summary>
+        /// Register a continuous Ickle query. Matching entries are delivered to the returned ContinuousQuery's Events channel.
+        /// </summary>
+        /// <param name="query">Ickle query string</param>
+        /// <param name="namedParams">optional named parameter bindings</param>
+        /// <param name="channelSize">event channel buffer size</param>
+        public ContinuousQuery ContinuousQuery(string query,
+            IDictionary<string, object> namedParams = null, int channelSize = 64)
+        {
+            return new ContinuousQuery(Cluster, this, query, namedParams, channelSize);
+        }
+
+        /// <summary>
         /// Iterate over all entries in the cache
         /// </summary>
         /// <param name="batchSize">number of entries per server round-trip</param>
