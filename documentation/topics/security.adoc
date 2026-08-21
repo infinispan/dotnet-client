@@ -8,6 +8,7 @@ The client supports the following SASL authentication mechanisms:
 * **SCRAM-SHA-256** -- Challenge-response authentication with SHA-256.
 * **SCRAM-SHA-384** -- Challenge-response authentication with SHA-384.
 * **SCRAM-SHA-512** -- Challenge-response authentication with SHA-512.
+* **GSSAPI** -- Kerberos authentication via GSSAPI.
 
 Set credentials and the authentication mechanism on the client:
 
@@ -22,6 +23,35 @@ client.Domain = "infinispan";
 ----
 
 When `User` and `Password` are set but `AuthMech` is not specified, the client negotiates the mechanism with the server.
+
+=== Kerberos (GSSAPI) Authentication
+
+The client supports Kerberos authentication via the GSSAPI SASL mechanism.
+This uses the .NET `NegotiateAuthentication` API, which supports Kerberos on all platforms.
+
+The `Domain` property is used as the Kerberos service name target (`hotrod/<domain>`):
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("server.example.com", 11222);
+client.User = "user@EXAMPLE.COM";
+client.Password = "password";
+client.AuthMech = "GSSAPI";
+client.Domain = "server.example.com";
+----
+
+The client can also use an existing Kerberos ticket from the system credential cache by omitting the password and using `DefaultCredentials`:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("server.example.com", 11222);
+client.AuthMech = "GSSAPI";
+client.Domain = "server.example.com";
+----
+
+NOTE: GSSAPI requires a properly configured Kerberos environment (KDC, keytab, or ticket cache).
 
 === TLS
 

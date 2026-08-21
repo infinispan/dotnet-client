@@ -21,6 +21,8 @@ namespace Infinispan.Hotrod.Sasl
                     return new ScramMechanism(credential, ScramHashAlgorithm.SHA384);
                 case "SCRAM-SHA-512":
                     return new ScramMechanism(credential, ScramHashAlgorithm.SHA512);
+                case "GSSAPI":
+                    return new GssApiMechanism(credential);
                 default:
                     throw new NotSupportedException($"SASL mechanism '{mechanism}' is not supported");
             }

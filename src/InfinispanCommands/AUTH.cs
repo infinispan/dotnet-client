@@ -41,6 +41,9 @@ namespace Infinispan.Hotrod.Commands
                 case "PLAIN":
                     executePlain(ctx, client, stream);
                     break;
+                case "GSSAPI":
+                    executeGssApi(ctx, client, stream);
+                    break;
                 default:
                     if (!this.SaslMechName.StartsWith("SCRAM-SHA-"))
                     {
@@ -128,6 +131,20 @@ namespace Infinispan.Hotrod.Commands
                     break;
             }
         }
+        private void executeGssApi(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
+        {
+            base.Execute(ctx, client, stream);
+            Codec.writeArray(Encoding.ASCII.GetBytes(SaslMechName), stream);
+            var s = Convert.ToBase64String(Challenge);
+            s = SaslMech.Challenge(s);
+            Challenge = Convert.FromBase64String(s);
+            Codec.writeArray(Challenge, stream);
+            if (SaslMech is Sasl.GssApiMechanism gssApi && gssApi.IsComplete)
+                Completed = 1;
+            stream.Flush();
+            Step++;
+        }
+
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)
         {
             var completed = (byte)stream.ReadByte();
