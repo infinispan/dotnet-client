@@ -76,3 +76,54 @@ Calling `Refresh` or `RefreshAsync` performs a `Get` operation on the server, wh
 ----
 await cache.RefreshAsync("session-key");
 ----
+
+=== HybridCache
+
+The client integrates with .NET's `HybridCache`, which combines a fast in-process L1 cache with a distributed L2 cache and provides stampede protection (only one caller fetches on a cache miss).
+
+Register both Infinispan and HybridCache in a single call:
+
+[source,csharp]
+----
+builder.Services.AddInfinispanHybridCache(
+    infinispan =>
+    {
+        infinispan.CacheName = "hybrid";
+        infinispan.ConfigureClient = client =>
+        {
+            client.AddHost("infinispan-server", 11222);
+            client.User = "admin";
+            client.Password = "password";
+        };
+    },
+    hybrid =>
+    {
+        hybrid.MaximumPayloadBytes = 1024 * 1024;
+        hybrid.DefaultEntryOptions = new HybridCacheEntryOptions
+        {
+            Expiration = TimeSpan.FromMinutes(10),
+            LocalCacheExpiration = TimeSpan.FromMinutes(2)
+        };
+    });
+----
+
+The second parameter for `HybridCacheOptions` is optional.
+When omitted, the defaults are used.
+
+Then inject `HybridCache` and use it:
+
+[source,csharp]
+----
+public class MyService(HybridCache cache)
+{
+    public async Task<Product> GetProductAsync(string id)
+    {
+        return await cache.GetOrCreateAsync(
+            $"product:{id}",
+            async cancel => await LoadProductFromDatabase(id, cancel));
+    }
+}
+----
+
+Infinispan serves as the L2 distributed layer.
+The L1 in-process cache is managed by `HybridCache` automatically.
