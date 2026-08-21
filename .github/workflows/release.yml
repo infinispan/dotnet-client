@@ -53,7 +53,7 @@ jobs:
         run: dotnet pack src/Infinispan.Hotrod.csproj -c Release -o artifacts/
 
       - name: Push to NuGet
-        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.DOTNETCLIENT_PERSONAL_TOKEN }} --source https://api.nuget.org/v3/index.json --skip-duplicate
 
       - name: Commit release version and create tag
         run: |
