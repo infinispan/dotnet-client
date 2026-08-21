@@ -503,6 +503,67 @@ namespace Infinispan.Hotrod
             return cmd.CounterNames;
         }
 
+        public MultimapCache<K, V> NewMultimap<K, V>(Marshaller<K> keyM, Marshaller<V> valM,
+            string name, bool supportsDuplicates = false)
+        {
+            return new MultimapCache<K, V>(this, keyM, valM, name, supportsDuplicates);
+        }
+
+        internal async Task MultimapPut(CacheBase cache, byte[] key, byte[] value, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_PUT(key, value, supportsDuplicates);
+            await Execute(cache, cmd);
+        }
+
+        internal async Task<List<byte[]>> MultimapGet(CacheBase cache, byte[] key, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_GET(key, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Values;
+        }
+
+        internal async Task<bool> MultimapRemoveKey(CacheBase cache, byte[] key, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_REMOVE_KEY(key, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Removed;
+        }
+
+        internal async Task<bool> MultimapRemoveEntry(CacheBase cache, byte[] key, byte[] value, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_REMOVE_ENTRY(key, value, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Removed;
+        }
+
+        internal async Task<bool> MultimapContainsKey(CacheBase cache, byte[] key, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_CONTAINS_KEY(key, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Result;
+        }
+
+        internal async Task<bool> MultimapContainsValue(CacheBase cache, byte[] value, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_CONTAINS_VALUE(value, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Result;
+        }
+
+        internal async Task<bool> MultimapContainsEntry(CacheBase cache, byte[] key, byte[] value, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_CONTAINS_ENTRY(key, value, supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Result;
+        }
+
+        internal async Task<long> MultimapSize(CacheBase cache, bool supportsDuplicates)
+        {
+            var cmd = new Commands.MULTIMAP_SIZE(supportsDuplicates);
+            await Execute(cache, cmd);
+            return cmd.Value;
+        }
+
         public IDictionary<int, ISet<K>> SplitBySegment<K>(Marshaller<K> km, CacheBase cache, ICollection<K> keys)
         {
             TopologyInfo topologyInfo;

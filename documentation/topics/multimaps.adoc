@@ -1,0 +1,101 @@
+[id='multimaps_{context}']
+= Multimaps
+:context: multimaps
+
+Infinispan multimaps allow you to associate multiple values with a single key.
+The .NET Hot Rod client provides a `MultimapCache<K, V>` API that maps each key to a collection of values.
+
+== Creating a Multimap
+
+Use the `NewMultimap` factory method on `InfinispanClient`:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("127.0.0.1", 11222);
+
+var multimap = client.NewMultimap(
+    new StringMarshaller(), new StringMarshaller(), "my-multimap");
+----
+
+The `supportsDuplicates` parameter controls whether the same value can appear more than once for a given key:
+
+[source,csharp]
+----
+var multimap = client.NewMultimap(
+    new StringMarshaller(), new StringMarshaller(), "my-multimap",
+    supportsDuplicates: true);
+----
+
+== Storing Values
+
+`Put` adds a value to the collection for a key.
+Multiple calls with the same key accumulate values:
+
+[source,csharp]
+----
+await multimap.Put("colors", "red");
+await multimap.Put("colors", "blue");
+await multimap.Put("colors", "green");
+----
+
+== Retrieving Values
+
+`Get` returns all values associated with a key.
+If the key does not exist, an empty list is returned:
+
+[source,csharp]
+----
+IList<string> colors = await multimap.Get("colors");
+// colors = ["red", "blue", "green"]
+
+IList<string> empty = await multimap.Get("nonexistent");
+// empty = []
+----
+
+== Removing Entries
+
+Remove all values for a key:
+
+[source,csharp]
+----
+bool removed = await multimap.RemoveKey("colors");
+----
+
+Remove a specific value from a key:
+
+[source,csharp]
+----
+await multimap.Put("colors", "red");
+await multimap.Put("colors", "blue");
+
+bool removed = await multimap.RemoveEntry("colors", "red");
+// Only "blue" remains
+----
+
+Both methods return `false` if the key (or key-value pair) did not exist.
+
+== Checking Membership
+
+[source,csharp]
+----
+bool hasKey = await multimap.ContainsKey("colors");
+
+bool hasValue = await multimap.ContainsValue("red");
+
+bool hasEntry = await multimap.ContainsEntry("colors", "red");
+----
+
+== Size
+
+`Size` returns the total number of values across all keys:
+
+[source,csharp]
+----
+await multimap.Put("k1", "v1");
+await multimap.Put("k1", "v2");
+await multimap.Put("k2", "v3");
+
+long size = await multimap.Size();
+// size = 3
+----
