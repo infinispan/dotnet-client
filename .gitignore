@@ -355,3 +355,7 @@ MigrationBackup/
 _site/
 api/
 
+# Documentation build artifacts
+_docs/
+docs.zip
+
