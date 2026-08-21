@@ -42,8 +42,10 @@ Supports the [Hot Rod 4.1](https://infinispan.org/docs/stable/titles/hotrod_prot
 - **Query**: Ickle query language support
 - **Stats**: Server-side cache statistics
 - **Events**: Client listeners with server-push event dispatch
-- **Security**: TLS (with optional server certificate verification), SASL authentication (PLAIN, SCRAM-SHA-256)
+- **Counters**: Distributed strong and weak counters with get, set, add, compare-and-swap, reset
+- **Security**: TLS (with optional server certificate verification), SASL authentication (PLAIN, SCRAM-SHA-256/384/512, GSSAPI, EXTERNAL)
 - **Topology**: Client intelligence with automatic cluster topology updates and failover
+- **ASP.NET Integration**: `IDistributedCache` and `HybridCache` implementations
 
 ## Requirements
 
