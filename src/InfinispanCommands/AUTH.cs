@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Text;
-using BeetleX.Buffers;
 using System.Net;
-using MailKit.Security;
+using System.Text;
 
-namespace Infinispan.Hotrod.Core.Commands
+using Infinispan.Hotrod.Sasl;
+
+namespace Infinispan.Hotrod.Commands
 {
     public class AUTH : Command
     {
@@ -14,7 +14,7 @@ namespace Infinispan.Hotrod.Core.Commands
             Credential = c;
             NetworkReceive = OnReceive;
             SaslMechName = mech;
-            SaslMech = SaslMechanism.Create(mech, new Uri("hotrod://" + c.Domain), c);
+            SaslMech = SaslMechanism.Create(mech, c);
         }
         public int TimeOut { get; set; }
 
@@ -31,7 +31,7 @@ namespace Infinispan.Hotrod.Core.Commands
             base.OnExecute(ctx);
         }
 
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             switch (this.SaslMechName)
             {
@@ -51,7 +51,7 @@ namespace Infinispan.Hotrod.Core.Commands
                     break;
             }
         }
-        private void executeDigestMd5(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        private void executeDigestMd5(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             switch (Step)
             {
@@ -75,7 +75,7 @@ namespace Infinispan.Hotrod.Core.Commands
                     break;
             }
         }
-        private void executePlain(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        private void executePlain(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             switch (Step)
             {
@@ -98,7 +98,7 @@ namespace Infinispan.Hotrod.Core.Commands
                     break;
             }
         }
-        private void executeScram(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        private void executeScram(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             switch (Step)
             {

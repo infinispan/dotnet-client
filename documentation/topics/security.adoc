@@ -1,0 +1,51 @@
+== Security
+
+=== Authentication
+
+The client supports the following SASL authentication mechanisms:
+
+* **PLAIN** -- Simple username/password authentication.
+* **SCRAM-SHA-256** -- Challenge-response authentication with SHA-256.
+* **SCRAM-SHA-384** -- Challenge-response authentication with SHA-384.
+* **SCRAM-SHA-512** -- Challenge-response authentication with SHA-512.
+
+Set credentials and the authentication mechanism on the client:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("localhost", 11222);
+client.User = "admin";
+client.Password = "password";
+client.AuthMech = "SCRAM-SHA-256";
+client.Domain = "infinispan";
+----
+
+When `User` and `Password` are set but `AuthMech` is not specified, the client negotiates the mechanism with the server.
+
+=== TLS
+
+Enable TLS by setting `UseTLS` to `true`:
+
+[source,csharp]
+----
+client.UseTLS = true;
+----
+
+To verify the server certificate, provide an `X509Chain`:
+
+[source,csharp]
+----
+using System.Security.Cryptography.X509Certificates;
+
+var chain = new X509Chain();
+chain.ChainPolicy.CustomTrustStore.Add(
+    new X509Certificate2("/path/to/ca.pem"));
+chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
+
+client.UseTLS = true;
+client.CACert = chain;
+----
+
+When `CACert` is `null`, the client skips server certificate verification.
+This should only be used in development environments.

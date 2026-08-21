@@ -1,7 +1,7 @@
-namespace Infinispan.Hotrod.Core
+namespace Infinispan.Hotrod
 {
     internal interface ILogHandler
     {
-        public void Log(BeetleX.EventArgs.LogType type, string message);
+        public void Log(LogLevel type, string message);
     }
 }

@@ -1,46 +1,77 @@
-# Infinispan.Hotrod.Core
-This is a 100% C# .NET Core Hotrod client for Infinispan data grid.
+# Infinispan.Hotrod
 
-# Try It
-A sample Application is in the [Infinispan.Hotrod.Application](Infinispan.Hotrod.Application) folder, it uses the latest [nuget package](https://www.nuget.org/packages/Infinispan.Hotrod.Core) published.
+[![NuGet](https://img.shields.io/nuget/v/Infinispan.Hotrod)](https://www.nuget.org/packages/Infinispan.Hotrod)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/Infinispan.Hotrod)](https://www.nuget.org/packages/Infinispan.Hotrod)
+[![CI](https://github.com/infinispan/Infinispan.Hotrod/actions/workflows/test-on-repo.yml/badge.svg)](https://github.com/infinispan/Infinispan.Hotrod/actions/workflows/test-on-repo.yml)
+[![License](https://img.shields.io/github/license/infinispan/Infinispan.Hotrod)](LICENSE)
 
-# Status
-This is a work in progress.
+A .NET client for the [Infinispan](https://infinispan.org) Hot Rod protocol.
 
-# Features
-All the basic Hotrod request/response operations are supported over [Hotrod 3.0](https://infinispan.org/docs/stable/titles/hotrod_protocol/hotrod_protocol.html#hot_rod_protocol_3_0):
-- GET, GETWITHVERSION, GETWITHMETADATA
-- PUT, PUTIFABSENT
-- REPLACE, REPLACEWITHVERSION
-- REMOVE, REMOVEWITHVERSION
-- PUTALL, GETALL
-- CONTAINSKEY
-- CLEAR
-- SIZE
-- STATS
-- QUERY
-- ADDCLIENTLISTENER, REMOVECLIENTLISTENER
+## Quick Start
 
-For an updated list, all the implemented commands can be found in the [InfinispanCommands](src/InfinispanCommands) folder.
-## Security
-TLS is working (server cert verification available), authentication is available via SASL (PLAIN, DIGEST-MD5 and SCRAM-SHA-256).
+Add the package to your project:
 
-## Hotrod dotnet-client comparison
-The testsuite folder [Infinispan.Hotrod.Core.XUnitTest](Infinispan.Hotrod.Core.XUnitTest) is structured like the testsuite of the [official .NET client](https://github.com/infinispan/dotnet-client) so to make make it easier to compare the two products.
+```xml
+<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.1" />
+```
 
-# Plans
-The master plan is this:
-- code consolidation
-- queries (Done!)
-- new PING command (Done!)
-- client intelligence (Done!)
-- events (Done!)
-- ...
-things can be added or moved up/down basing on community requests.
+Connect to an Infinispan cluster and use a cache:
 
+```csharp
+var infinispan = new InfinispanClient();
+infinispan.AddHost("127.0.0.1", 11222);
 
-# Interact
-Please open an issue if you're interested in prioritize a feature (if you are _really_ interested consider to do it yourself and provide a pull request, yeah that would be great!)
+var cache = infinispan.NewCache(
+    new StringMarshaller(), new StringMarshaller(), "default");
 
-# Credits
-This project took some inspiration from the [set of extensions](https://github.com/beetlex-io/BeetleX#extended-components) of the [BeetleX](https://github.com/beetlex-io/BeetleX) component on which it's also based.
+await cache.Put("key", "value");
+var result = await cache.Get("key");
+```
+
+A full working example is in the [Infinispan.Hotrod.Application](Infinispan.Hotrod.Application) folder.
+
+## Features
+
+Supports the [Hot Rod 4.1](https://infinispan.org/docs/stable/titles/hotrod_protocol/hotrod_protocol.html) protocol with a pipelining architecture (single connection per server, multiplexed requests):
+
+- **CRUD**: Get, GetWithVersion, GetWithMetadata, Put, PutIfAbsent, Replace, ReplaceWithVersion, Remove, RemoveWithVersion
+- **Bulk**: PutAll, GetAll, KeySet, Clear, Size
+- **Iteration**: Server-side iteration with `EntrySet`, `Values`, `RetrieveEntries`, `RetrieveEntriesWithMetadata` (`IAsyncEnumerable`)
+- **Transactions**: Client-side transaction buffering with optimistic locking, one-phase and two-phase commit
+- **Near Caching**: Client-side LRU cache with server-driven invalidation via event listeners
+- **Query**: Ickle query language support
+- **Stats**: Server-side cache statistics
+- **Events**: Client listeners with server-push event dispatch
+- **Security**: TLS (with optional server certificate verification), SASL authentication (PLAIN, SCRAM-SHA-256)
+- **Topology**: Client intelligence with automatic cluster topology updates and failover
+
+## Requirements
+
+- .NET 10 or later
+- Docker (for running tests — [Testcontainers](https://dotnet.testcontainers.org/) manages the Infinispan server automatically)
+
+## Building and Testing
+
+```sh
+dotnet build
+dotnet test
+```
+
+Tests use Testcontainers to automatically pull and run an Infinispan server image — no manual server setup required.
+
+## Documentation
+
+API documentation is generated with [DocFX](https://dotnet.github.io/docfx/). To build and serve locally:
+
+```sh
+dotnet tool install -g docfx
+docfx docfx.json --serve
+```
+
+## Contributing
+
+Contributions are welcome. Please open an [issue](https://github.com/infinispan/Infinispan.Hotrod/issues) to discuss features or report bugs, or submit a pull request.
+
+## License
+
+[Apache License 2.0](LICENSE)

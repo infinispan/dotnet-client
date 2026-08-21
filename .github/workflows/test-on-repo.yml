@@ -1,38 +1,23 @@
-name: infinispan-netcore-tests
-env:
-  ISPN_VER: '13.0.10.Final'
+name: CI
 on: [push, pull_request]
 
 permissions:
   contents: read
 
 jobs:
-  run-ci-tests:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
-      - uses: actions/setup-dotnet@871f041373faaad213a635d9afb62905ec029bbb # v1
-        with:
-          dotnet-version: '6.x' # SDK Version to use; x will use the latest version of the 3.1 channel
-      - uses: actions/setup-java@91d3aa4956ec4a53e477c4907347b5e3481be8c9 # v2
-        with:
-          distribution: 'adopt' # See 'Supported distributions' for available options
-          java-version: '11'
-      - uses: wei/wget@c15e476d1463f4936cb54f882170d9d631f1aba5 # v1
-        with:
-          args: -q https://downloads.jboss.org/infinispan/$ISPN_VER/infinispan-server-$ISPN_VER.zip
-      - name: Set env
-        run: echo "JBOSS_HOME=$(echo $PWD/infinispan-server-$ISPN_VER)" >> $GITHUB_ENV
-      - run: pwd && unzip infinispan-server-$ISPN_VER.zip
-      - run: cp -r Infinispan.Hotrod.Core.XUnitTest/resources/conf/* $JBOSS_HOME/server/conf
-      - run: cp -r Infinispan.Hotrod.Core.XUnitTest/resources/conf/certificates/* $JBOSS_HOME/server/conf
-      - run: cp -r $JBOSS_HOME/server $JBOSS_HOME/server1
-      - run: dotnet build
-      - run: dotnet test
-      - run: |
-             cd Infinispan.Hotrod.Application
-             $JBOSS_HOME/bin/server.sh -c infinispan-noauth.xml &
-             timeout 20  bash -c "while ! sudo lsof -i:11222; do sleep 1; done"
-             dotnet run -p Infinispan.Hotrod.Application.CI.csproj
-             kill %%
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
+      - name: Set up .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Build
+        run: dotnet build
+
+      - name: Test
+        run: dotnet test --logger "console;verbosity=detailed"

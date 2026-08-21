@@ -1,0 +1,73 @@
+== Connecting to Infinispan
+
+=== Creating a Client
+
+Create an `InfinispanClient` and add one or more server nodes:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("server1", 11222);
+client.AddHost("server2", 11222);
+----
+
+The client discovers other cluster members automatically via topology updates.
+
+=== Client Properties
+
+`Version`::
+Hot Rod protocol version.
+Supported values: `31` (3.1), `40` (4.0), `41` (4.1).
+Defaults to `41`.
+
+`ClientIntelligence`::
+Controls how the client interacts with the cluster topology.
+See <<_client_intelligence>> for details.
++
+* `0x01` -- Basic: connects to a single server, no topology awareness.
+* `0x02` -- Topology-aware: discovers cluster members via topology updates.
+* `0x03` -- Hash-distribution-aware: routes operations to the primary owner based on consistent hashing.
++
+Defaults to `0x02`.
+
+`ForceReturnValue`::
+When `true`, the server includes the previous value in responses to `Put`, `Remove`, and `Replace` operations.
+Defaults to `false`.
+
+=== Multiple Clusters
+
+You can configure multiple named clusters for failover.
+If the active cluster becomes unavailable, the client switches to the next available cluster:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("PRIMARY", "dc1-server1", 11222);
+client.AddHost("PRIMARY", "dc1-server2", 11222);
+client.AddHost("BACKUP", "dc2-server1", 11222);
+client.AddHost("BACKUP", "dc2-server2", 11222);
+----
+
+You can also switch clusters manually:
+
+[source,csharp]
+----
+client.SwitchCluster("BACKUP");
+----
+
+=== Client Intelligence
+
+The `ClientIntelligence` property controls how the client discovers and routes to cluster members:
+
+* **Basic** (`0x01`) -- Connects to a single server.
+No topology awareness.
+* **Topology-aware** (`0x02`) -- Discovers cluster members via topology updates.
+The client load-balances across known members.
+This is the default.
+* **Hash-distribution-aware** (`0x03`) -- Routes operations to the primary owner of the key based on consistent hashing.
+Reduces network hops for key-based operations.
+
+[source,csharp]
+----
+client.ClientIntelligence = 0x03;
+----

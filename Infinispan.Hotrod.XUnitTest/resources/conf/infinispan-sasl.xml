@@ -1,0 +1,64 @@
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:16.2 https://infinispan.org/schemas/infinispan-config-16.2.xsd
+                            urn:infinispan:server:16.2 https://infinispan.org/schemas/infinispan-server-16.2.xsd"
+        xmlns="urn:infinispan:config:16.2"
+        xmlns:server="urn:infinispan:server:16.2">
+
+   <cache-container name="default" statistics="true">
+      <transport cluster="${infinispan.cluster.name}" stack="${infinispan.cluster.stack:tcp}"/>
+      <security>
+         <authorization>
+           <identity-role-mapper/>
+           <role name="admin" permissions="ALL"/>
+           <role name="reader" permissions="READ"/>
+           <role name="writer" permissions="WRITE"/>
+           <role name="supervisor" permissions="READ WRITE EXEC BULK_READ BULK_WRITE"/>
+           <role name="executor" permissions="READ WRITE BULK_READ EXEC ADMIN"/>
+         </authorization>
+      </security>
+      <local-cache name="default">
+         <expiration interval="1000"/>
+      </local-cache>
+      <local-cache name="namedCache"/>
+      <distributed-cache name="distributed">
+         <expiration interval="1000"/>
+      </distributed-cache>
+      <local-cache name="authCache">
+         <security>
+            <authorization roles="admin reader writer supervisor" enabled="true"/>
+         </security>
+      </local-cache>
+   </cache-container>
+
+   <server xmlns="urn:infinispan:server:16.2">
+      <interfaces>
+         <interface name="public">
+            <inet-address value="${infinispan.bind.address:0.0.0.0}"/>
+         </interface>
+      </interfaces>
+
+      <socket-bindings default-interface="public" port-offset="${infinispan.socket.binding.port-offset:0}">
+         <socket-binding name="default" port="${infinispan.bind.port:11222}"/>
+      </socket-bindings>
+
+      <security>
+         <security-realms>
+            <security-realm name="default">
+               <properties-realm/>
+            </security-realm>
+         </security-realms>
+      </security>
+
+      <endpoints socket-binding="default" security-realm="default">
+        <endpoint>
+         <hotrod-connector name="hotrod">
+           <authentication security-realm="default">
+             <sasl server-name="node0" mechanisms="SCRAM-SHA-256 PLAIN" qop="auth"/>
+           </authentication>
+         </hotrod-connector>
+         <rest-connector name="rest"/>
+        </endpoint>
+      </endpoints>
+   </server>
+</infinispan>

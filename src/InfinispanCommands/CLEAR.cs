@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using BeetleX.Buffers;
 
-namespace Infinispan.Hotrod.Core.Commands
+
+namespace Infinispan.Hotrod.Commands
 {
     public class CLEAR : Command
     {
@@ -20,13 +20,13 @@ namespace Infinispan.Hotrod.Core.Commands
             base.OnExecute(ctx);
         }
 
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
         }
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)
         {
-            return new Result{ Status =  ResultStatus.Completed, ResultType = ResultType.Null };
+            return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Null };
         }
     }
 }

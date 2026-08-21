@@ -1,25 +1,23 @@
-﻿using BeetleX.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infinispan.Hotrod.Core.Commands
+
+namespace Infinispan.Hotrod.Commands
 {
     public class ADDCLIENTLISTENER : Command
     {
         public byte IncludeState;
         private String FilterFactoryName = "";
-        private Tuple<byte[], byte[]>[] FilterArgs;
+        private Tuple<byte[], byte[]>[] FilterArgs = null;
         private String ConverterFactoryName = "";
-        private Tuple<byte[], byte[]>[] ConverterArgs;
-        private int Interests;
-        private bool isBinary;
-        private IDictionary<string, InfinispanRequest> ListenerMap;
+        private Tuple<byte[], byte[]>[] ConverterArgs = null;
+        private int Interests = 0;
+        private bool isBinary = false;
 
-        public ADDCLIENTLISTENER(IDictionary<string, InfinispanRequest> listenerMap)
+        public ADDCLIENTLISTENER()
         {
             NetworkReceive = OnReceive;
-            this.ListenerMap = listenerMap;
         }
         public override string Name => "ADDCLIENTLISTENER";
 
@@ -30,7 +28,7 @@ namespace Infinispan.Hotrod.Core.Commands
         {
             base.OnExecute(ctx);
         }
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
             Codec.writeArray(StringMarshaller._ASCII.marshall(this.Listener.ListenerID), stream);
@@ -68,26 +66,21 @@ namespace Infinispan.Hotrod.Core.Commands
             Codec.writeVInt(this.Interests, stream);
             stream.WriteByte(isBinary ? (byte)1 : (byte)0);
             stream.Flush();
+            // Pre-register so include-state events arriving before the response are dispatched
+            client.Host.Listeners[this.Listener.ListenerID] = this.Listener;
         }
 
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)
         {
             if (request.ResponseStatus == Codec30.NO_ERROR_STATUS)
             {
-                InfinispanRequest oldReq;
-                if (request.Cluster.ListenerMap.TryGetValue(this.Listener.ListenerID, out oldReq))
+                if (this.Listener is AbstractClientListener acl)
                 {
-                    oldReq.Command.Listener = null;
-                    oldReq.rs.TokenSource.Cancel();
+                    acl.Activate();
                 }
-                var acl = this.Listener as AbstractClientListener;
-                if (acl != null)
-                {
-                    acl.task = request.CurrentProcessingResponseTask;
-                }
-                request.Cluster.ListenerMap[this.Listener.ListenerID] = request;
-                return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Event };
+                return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
             }
+            request.Client.Host.Listeners.TryRemove(this.Listener.ListenerID, out _);
             return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Error };
         }
 

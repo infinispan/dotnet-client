@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using BeetleX.Buffers;
 
-namespace Infinispan.Hotrod.Core.Commands
+
+namespace Infinispan.Hotrod.Commands
 {
     public class REPLACEWITHVERSION<K, V> : CommandWithKey<K>, ICommandWithExpiration
     {
@@ -34,7 +34,7 @@ namespace Infinispan.Hotrod.Core.Commands
         {
             base.OnExecute(ctx);
         }
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
             Codec.writeArray(KeyMarshaller.marshall(Key), stream);
@@ -48,7 +48,7 @@ namespace Infinispan.Hotrod.Core.Commands
             Replaced = Codec30.isSuccess(request.ResponseStatus);
             if ((request.Command.Flags & 0x01) == 1 && Codec30.hasPrevious(request.ResponseStatus))
             {
-                var retValAsArray = Codec.readArray(stream);
+                var retValAsArray = Codec.readPreviousValue(stream, request.context.Version);
                 if (retValAsArray.Length > 0)
                 {
                     PrevValue = ValueMarshaller.unmarshall(retValAsArray);

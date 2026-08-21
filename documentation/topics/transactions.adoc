@@ -1,0 +1,64 @@
+== Transactions
+
+The .NET client supports optimistic transactions with version-based conflict detection.
+
+=== Basic Usage
+
+Begin a transaction on a cache, perform operations, and then commit or rollback:
+
+[source,csharp]
+----
+var tx = cache.BeginTransaction(timeoutMs: 30000);
+
+var value = await tx.Get("key");
+await tx.Put("key", "new-value");
+await tx.Remove("other-key");
+
+await tx.CommitAsync();
+----
+
+If a conflict is detected during commit (another client modified an entry after the transaction read it), an `InfinispanException` is thrown.
+
+=== Transaction Operations
+
+`Get(key)`::
+Reads a value within the transaction.
+The first read fetches from the server and tracks the entry version for optimistic locking.
+Subsequent reads of the same key return the locally buffered value.
+
+`Put(key, value)`::
+Buffers a write operation.
+Reads the current version from the server if the key hasn't been read yet in this transaction.
+
+`PutBlind(key, value)`::
+Buffers a write without reading the current value.
+Useful for unconditional writes when you don't need conflict detection on the key.
+
+`Remove(key)`::
+Buffers a remove operation.
+
+=== Commit Strategies
+
+`CommitAsync()`::
+One-phase commit.
+Prepares and commits in a single round-trip.
+Suitable for transactions modifying a single cache.
+
+`CommitTwoPhaseAsync()`::
+Two-phase commit (XA protocol).
+Sends a prepare followed by a separate commit.
+
+`RollbackAsync()`::
+Rolls back all buffered modifications.
+
+=== Expiration in Transactions
+
+You can set expiration on entries written within a transaction:
+
+[source,csharp]
+----
+var tx = cache.BeginTransaction();
+await tx.Put("key", "value",
+    lifespan: new ExpirationTime { Unit = TimeUnit.MINUTES, Value = 5 });
+await tx.CommitAsync();
+----

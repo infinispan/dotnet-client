@@ -1,9 +1,9 @@
-﻿using BeetleX.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infinispan.Hotrod.Core.Commands
+
+namespace Infinispan.Hotrod.Commands
 {
     public class SIZE : Command
     {
@@ -21,7 +21,7 @@ namespace Infinispan.Hotrod.Core.Commands
             base.OnExecute(ctx);
         }
 
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
         }
@@ -29,7 +29,7 @@ namespace Infinispan.Hotrod.Core.Commands
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)
         {
             Size = Codec.readVInt(stream);
-            return new Result{ Status =  ResultStatus.Completed, ResultType = ResultType.Object };
+            return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
         }
     }
 }

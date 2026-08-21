@@ -1,13 +1,10 @@
-using BeetleX.Buffers;
-using BeetleX.Clients;
-using MessagePack;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infinispan.Hotrod.Core
+namespace Infinispan.Hotrod
 {
     public class Codec
     {
@@ -66,17 +63,19 @@ namespace Infinispan.Hotrod.Core
 
         public static Int32 readInt(ResponseStream stream)
         {
-            Int32 val = readShort(stream);
-            val = (val << 16) + readShort(stream);
-            return val;
+            int b1 = stream.ReadByte();
+            int b2 = stream.ReadByte();
+            int b3 = stream.ReadByte();
+            int b4 = stream.ReadByte();
+            return (b1 << 24) | (b2 << 16) | (b3 << 8) | b4;
         }
         public static Int64 readLong(ResponseStream stream)
         {
-            Int64 val = readInt(stream);
-            val = (val << 32) + readInt(stream);
+            Int64 val = (long)readInt(stream) << 32;
+            val |= readInt(stream) & 0xFFFFFFFFL;
             return val;
         }
-        public static void writeVLong(Int64 val, PipeStream stream)
+        public static void writeVLong(Int64 val, HotRodStream stream)
         {
             while (val > 0x7f)
             {
@@ -86,12 +85,17 @@ namespace Infinispan.Hotrod.Core
             }
             stream.Write((byte)val);
         }
-        public static void writeVInt(Int32 val, PipeStream stream)
+        public static void writeVInt(Int32 val, HotRodStream stream)
         {
             writeVLong(val, stream);
         }
 
-        public static void writeVUInt(UInt32 val, PipeStream stream)
+        public static void writeSignedVInt(Int32 val, HotRodStream stream)
+        {
+            writeVInt((val << 1) ^ (val >> 31), stream);
+        }
+
+        public static void writeVUInt(UInt32 val, HotRodStream stream)
         {
             while (val > 0x7f)
             {
@@ -102,7 +106,7 @@ namespace Infinispan.Hotrod.Core
             stream.Write((byte)val);
         }
 
-        public static void writeInt(Int32 v, PipeStream stream)
+        public static void writeInt(Int32 v, HotRodStream stream)
         {
             // Write Int value on the wire, MSB first
             stream.Write((byte)(v >> 24));
@@ -111,7 +115,7 @@ namespace Infinispan.Hotrod.Core
             stream.Write((byte)v);
         }
 
-        public static void writeLong(Int64 v, PipeStream stream)
+        public static void writeLong(Int64 v, HotRodStream stream)
         {
             // Write LONG value on the wire, MSB first
             stream.Write((byte)(v >> 56));
@@ -124,7 +128,7 @@ namespace Infinispan.Hotrod.Core
             stream.Write((byte)v);
         }
 
-        public static void writeArray(byte[] arr, PipeStream stream)
+        public static void writeArray(byte[] arr, HotRodStream stream)
         {
             writeVInt((Int32)arr.Length, stream);
             if (arr.Length > 0)
@@ -132,7 +136,7 @@ namespace Infinispan.Hotrod.Core
                 stream.Write(arr, 0, arr.Length);
             }
         }
-        public static void writeMediaType(MediaType mt, PipeStream stream)
+        public static void writeMediaType(MediaType mt, HotRodStream stream)
         {
             if (mt == null)
             {
@@ -196,7 +200,33 @@ namespace Infinispan.Hotrod.Core
             }
             return mt;
         }
-        public static void writeExpirations(ExpirationTime Lifespan, ExpirationTime MaxIdle, PipeStream stream)
+        public static byte[] readPreviousValue(ResponseStream stream, byte version)
+        {
+            if (version >= 40)
+            {
+                readMetadataFields(stream);
+                return readArray(stream);
+            }
+            return readArray(stream);
+        }
+
+        public static void readMetadataFields(ResponseStream stream)
+        {
+            var flags = (byte)stream.ReadByte();
+            if ((flags & 0x01) == 0)
+            {
+                readLong(stream);  // created
+                readVInt(stream);  // lifespan
+            }
+            if ((flags & 0x02) == 0)
+            {
+                readLong(stream);  // lastUsed
+                readVInt(stream);  // maxIdle
+            }
+            readLong(stream);  // version
+        }
+
+        public static void writeExpirations(ExpirationTime Lifespan, ExpirationTime MaxIdle, HotRodStream stream)
         {
             byte units = (byte)(((int)Lifespan.Unit << 4) + (int)MaxIdle.Unit);
             stream.WriteByte(units);

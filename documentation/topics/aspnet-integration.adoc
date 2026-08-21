@@ -1,0 +1,78 @@
+== ASP.NET Core Integration
+
+The client provides an `IDistributedCache` implementation for integration with ASP.NET Core session state, response caching, and any component that uses the standard distributed cache abstraction.
+
+=== Dependency Injection
+
+Register Infinispan as the distributed cache provider in `Program.cs` or `Startup.cs`:
+
+[source,csharp]
+----
+using Infinispan.Hotrod;
+
+builder.Services.AddInfinispanCache(options =>
+{
+    options.CacheName = "sessions";
+    options.ConfigureClient = client =>
+    {
+        client.AddHost("infinispan-server", 11222);
+        client.User = "admin";
+        client.Password = "password";
+        client.AuthMech = "SCRAM-SHA-256";
+    };
+});
+----
+
+This registers `InfinispanDistributedCache` as the `IDistributedCache` singleton.
+
+=== Configuration Options
+
+`CacheName`::
+The name of the Infinispan cache to use.
+Defaults to `"default"`.
+
+`ConfigureClient`::
+A callback to configure the underlying `InfinispanClient` (add hosts, set credentials, enable TLS, etc.).
+
+=== Direct Usage
+
+You can also use `InfinispanDistributedCache` directly without dependency injection:
+
+[source,csharp]
+----
+using var client = new InfinispanClient();
+client.AddHost("localhost", 11222);
+
+using var cache = new InfinispanDistributedCache(client, "my-cache");
+
+await cache.SetAsync("key", Encoding.UTF8.GetBytes("value"),
+    new DistributedCacheEntryOptions
+    {
+        AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30),
+        SlidingExpiration = TimeSpan.FromMinutes(5)
+    });
+
+var data = await cache.GetAsync("key");
+----
+
+=== Expiration Mapping
+
+The `DistributedCacheEntryOptions` are mapped to Infinispan expiration as follows:
+
+`AbsoluteExpirationRelativeToNow`::
+Mapped to the Hot Rod entry lifespan.
+
+`AbsoluteExpiration`::
+Converted to a relative duration from the current time and mapped to the entry lifespan.
+
+`SlidingExpiration`::
+Mapped to the Hot Rod entry max idle time.
+
+=== Refresh
+
+Calling `Refresh` or `RefreshAsync` performs a `Get` operation on the server, which resets the server-side idle timer for entries with a sliding expiration:
+
+[source,csharp]
+----
+await cache.RefreshAsync("session-key");
+----

@@ -1,0 +1,104 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 10.0.0)'
+        required: true
+      next_version:
+        description: 'Next development version (e.g. 10.0.1-dev.1)'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate version inputs
+        run: |
+          if [[ ! "${{ inputs.version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Invalid release version format: ${{ inputs.version }}"
+            exit 1
+          fi
+          if [[ ! "${{ inputs.next_version }}" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?$ ]]; then
+            echo "::error::Invalid next version format: ${{ inputs.next_version }}"
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
+        with:
+          dotnet-version: '10.x'
+
+      - name: Set release version
+        run: |
+          sed -i "s|<Version>.*</Version>|<Version>${{ inputs.version }}</Version>|" src/Infinispan.Hotrod.csproj
+
+      - name: Build
+        run: dotnet build -c Release
+
+      - name: Test
+        run: dotnet test -c Release --logger "console;verbosity=detailed"
+
+      - name: Pack NuGet package
+        run: dotnet pack src/Infinispan.Hotrod.csproj -c Release -o artifacts/
+
+      - name: Push to NuGet
+        run: dotnet nuget push artifacts/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Commit release version and create tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/Infinispan.Hotrod.csproj
+          git commit -m "Release ${{ inputs.version }}"
+          git tag "v${{ inputs.version }}"
+
+      - name: Install asciidoctor
+        run: sudo gem install asciidoctor --no-document
+
+      - name: Build documentation archive
+        run: |
+          mkdir -p _docs/api
+          asciidoctor -o _docs/dotnet_client.html documentation/infinispan-dotnet-client.adoc
+          dotnet tool install -g docfx
+          docfx docfx.json
+          cp -r _site/* _docs/api/
+          cd _docs && zip -qr ../docs.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3
+        with:
+          tag_name: "v${{ inputs.version }}"
+          files: |
+            artifacts/*.nupkg
+            docs.zip
+          generate_release_notes: true
+
+      - name: Notify website
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4
+        with:
+          token: ${{ secrets.API_TOKEN_GITHUB }}
+          repository: infinispan/infinispan.github.io
+          event-type: release_updated
+          client-payload: '{"project": "dotnet-client"}'
+
+      - name: Bump to next development version
+        run: |
+          sed -i "s|<Version>.*</Version>|<Version>${{ inputs.next_version }}</Version>|" src/Infinispan.Hotrod.csproj
+          git add src/Infinispan.Hotrod.csproj
+          git commit -m "Bump version to ${{ inputs.next_version }}"
+
+      - name: Push commits and tag
+        run: |
+          git push origin HEAD
+          git push origin "v${{ inputs.version }}"

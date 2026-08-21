@@ -1,16 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Org.Infinispan.Protostream;
 using Org.Infinispan.Query.Remote.Client;
-using System.Threading;
 
-namespace Infinispan.Hotrod.Core
+namespace Infinispan.Hotrod
 {
     public class CacheBase
     {
-        public CacheBase(InfinispanDG ispnCluster, string name)
+        public CacheBase(InfinispanClient ispnCluster, string name)
         {
             _cluster = ispnCluster;
             Name = name;
@@ -26,8 +26,8 @@ namespace Infinispan.Hotrod.Core
         public MediaType KeyMediaType;
         public MediaType ValueMediaType;
         public readonly byte[] NameAsBytes;
-        private readonly InfinispanDG _cluster;
-        public InfinispanDG Cluster { get { return _cluster; } }
+        private readonly InfinispanClient _cluster;
+        public InfinispanClient Cluster { get { return _cluster; } }
         public bool UseCacheDefaultLifespan;
         public bool UseCacheDefaultMaxIdle;
         public readonly Codec30 codec;
@@ -35,21 +35,26 @@ namespace Infinispan.Hotrod.Core
         private int getFlags()
         {
             int retVal = 0;
-            if (ForceReturnValue) retVal += 1;
-            if (UseCacheDefaultLifespan) retVal += 2;
-            if (UseCacheDefaultMaxIdle) retVal += 4;
+            if (ForceReturnValue)
+                retVal += 1;
+            if (UseCacheDefaultLifespan)
+                retVal += 2;
+            if (UseCacheDefaultMaxIdle)
+                retVal += 4;
             return retVal;
         }
     }
     public class Cache<K, V> : CacheBase
     {
-        public Cache(InfinispanDG ispnCluster, Marshaller<K> keyM, Marshaller<V> valM, string name) : base(ispnCluster, name)
+        public Cache(InfinispanClient ispnCluster, Marshaller<K> keyM, Marshaller<V> valM, string name) : base(ispnCluster, name)
         {
             KeyMarshaller = keyM;
             ValueMarshaller = valM;
         }
-        readonly Marshaller<K> KeyMarshaller;
-        readonly Marshaller<V> ValueMarshaller;
+        internal readonly Marshaller<K> KeyMarshaller;
+        internal readonly Marshaller<V> ValueMarshaller;
+        private NearCache<K, V> _nearCache;
+        private NearCacheListener<K, V> _nearCacheListener;
 
         /// <summary>
         /// Get an entry from the cache
@@ -58,7 +63,11 @@ namespace Infinispan.Hotrod.Core
         /// <returns>the value of the entry or null (async)</returns>
         public async Task<V> Get(K key)
         {
-            return await Cluster.Get(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
+            if (_nearCache != null && _nearCache.TryGet(key, out var cached))
+                return cached;
+            var value = await Cluster.Get(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
+            _nearCache?.Put(key, value);
+            return value;
         }
         /// <summary>
         /// Get an entry from the cache with its version
@@ -88,7 +97,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns></returns>
         public async Task<V> Put(K key, V value, ExpirationTime lifespan = null, ExpirationTime maxidle = null)
         {
-            return await Cluster.Put(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            var prev = await Cluster.Put(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            _nearCache?.Invalidate(key);
+            return prev;
         }
         /// <summary>
         /// Put an entry in the cache if absent, does nothing otherwise
@@ -100,7 +111,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns></returns>
         public async Task<V> PutIfAbsent(K key, V value, ExpirationTime lifespan = null, ExpirationTime maxidle = null)
         {
-            return await Cluster.PutIfAbsent(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            var prev = await Cluster.PutIfAbsent(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            _nearCache?.Invalidate(key);
+            return prev;
         }
         /// <summary>
         /// Return the number of entries in a cache
@@ -126,7 +139,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns>true if the entry has been removed</returns>
         public async Task<(V PrevValue, Boolean Removed)> Remove(K key)
         {
-            return await Cluster.Remove(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
+            var result = await Cluster.Remove(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
+            _nearCache?.Invalidate(key);
+            return result;
         }
         /// <summary>
         /// Clear the cache
@@ -134,6 +149,7 @@ namespace Infinispan.Hotrod.Core
         public async Task Clear()
         {
             await Cluster.Clear(this);
+            _nearCache?.Clear();
         }
         /// <summary>
         /// Return true is the cache is empty
@@ -160,7 +176,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns>if replaced (the previous value, true) otherwise (null,false)</returns>
         public async Task<(V PrevValue, Boolean Replaced)> Replace(K key, V value, ExpirationTime lifespan = null, ExpirationTime maxidle = null)
         {
-            return await Cluster.Replace(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            var result = await Cluster.Replace(KeyMarshaller, ValueMarshaller, this, key, value, lifespan, maxidle);
+            _nearCache?.Invalidate(key);
+            return result;
         }
         /// <summary>
         /// Replace the value of an entry with the given version
@@ -173,7 +191,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns>if replaced true otherwise false</returns>
         public async Task<Boolean> ReplaceWithVersion(K key, V value, Int64 version, ExpirationTime lifeSpan = null, ExpirationTime maxIdle = null)
         {
-            return await Cluster.ReplaceWithVersion(KeyMarshaller, ValueMarshaller, (CacheBase)this, key, value, version, lifeSpan, maxIdle);
+            var replaced = await Cluster.ReplaceWithVersion(KeyMarshaller, ValueMarshaller, (CacheBase)this, key, value, version, lifeSpan, maxIdle);
+            if (replaced) _nearCache?.Invalidate(key);
+            return replaced;
         }
         /// <summary>
         /// Remove an entry with the given version
@@ -183,7 +203,9 @@ namespace Infinispan.Hotrod.Core
         /// <returns>if replaced (the previous value, true) otherwise (null,false)</returns>
         public async Task<(V V, Boolean Removed)> RemoveWithVersion(K key, Int64 version)
         {
-            return await Cluster.RemoveWithVersion(KeyMarshaller, ValueMarshaller, (CacheBase)this, key, version);
+            var result = await Cluster.RemoveWithVersion(KeyMarshaller, ValueMarshaller, (CacheBase)this, key, version);
+            if (result.Removed) _nearCache?.Invalidate(key);
+            return result;
         }
         /// <summary>
         /// Run a query on the cache
@@ -241,6 +263,11 @@ namespace Infinispan.Hotrod.Core
         public async Task PutAll(Dictionary<K, V> map, ExpirationTime lifespan = null, ExpirationTime maxidle = null)
         {
             await Cluster.PutAll(KeyMarshaller, ValueMarshaller, this, map, lifespan, maxidle);
+            if (_nearCache != null)
+            {
+                foreach (var key in map.Keys)
+                    _nearCache.Invalidate(key);
+            }
         }
         /// <summary>
         /// Get all the entries matching the keys in the set
@@ -249,7 +276,13 @@ namespace Infinispan.Hotrod.Core
         /// <returns>a map with the found entries</returns>
         public async Task<IDictionary<K, V>> GetAll(ISet<K> keys)
         {
-            return await Cluster.GetAll(KeyMarshaller, ValueMarshaller, this, keys);
+            var result = await Cluster.GetAll(KeyMarshaller, ValueMarshaller, this, keys);
+            if (_nearCache != null)
+            {
+                foreach (var entry in result)
+                    _nearCache.Put(entry.Key, entry.Value);
+            }
+            return result;
         }
         /// <summary>
         /// An optimized for speed version of GetAll
@@ -308,6 +341,110 @@ namespace Infinispan.Hotrod.Core
         {
             await Cluster.RemoveListener(this, listener);
         }
+
+        /// <summary>
+        /// Iterate over all entries in the cache
+        /// </summary>
+        /// <param name="batchSize">number of entries per server round-trip</param>
+        public async IAsyncEnumerable<KeyValuePair<K, V>> RetrieveEntries(int batchSize = 1000)
+        {
+            var iterationId = await Cluster.IterationStart(this, batchSize, false);
+            try
+            {
+                while (true)
+                {
+                    var next = await Cluster.IterationNext(this, iterationId);
+                    foreach (var entry in next.Entries)
+                    {
+                        yield return new KeyValuePair<K, V>(
+                            KeyMarshaller.unmarshall(entry.Key),
+                            ValueMarshaller.unmarshall(entry.Value));
+                    }
+                    if (next.Finished) break;
+                }
+            }
+            finally
+            {
+                await Cluster.IterationEnd(this, iterationId);
+            }
+        }
+
+        /// <summary>
+        /// Iterate over all entries with their metadata
+        /// </summary>
+        /// <param name="batchSize">number of entries per server round-trip</param>
+        public async IAsyncEnumerable<KeyValuePair<K, ValueWithMetadata<V>>> RetrieveEntriesWithMetadata(int batchSize = 1000)
+        {
+            var iterationId = await Cluster.IterationStart(this, batchSize, true);
+            try
+            {
+                while (true)
+                {
+                    var next = await Cluster.IterationNext(this, iterationId);
+                    foreach (var entry in next.Entries)
+                    {
+                        var vwm = new ValueWithMetadata<V>
+                        {
+                            Value = ValueMarshaller.unmarshall(entry.Value),
+                            Version = entry.Version,
+                            Created = entry.Created,
+                            Lifespan = entry.Lifespan,
+                            LastUsed = entry.LastUsed,
+                            MaxIdle = entry.MaxIdle
+                        };
+                        yield return new KeyValuePair<K, ValueWithMetadata<V>>(
+                            KeyMarshaller.unmarshall(entry.Key), vwm);
+                    }
+                    if (next.Finished) break;
+                }
+            }
+            finally
+            {
+                await Cluster.IterationEnd(this, iterationId);
+            }
+        }
+
+        /// <summary>
+        /// Return all cache entries as key-value pairs
+        /// </summary>
+        public IAsyncEnumerable<KeyValuePair<K, V>> EntrySet(int batchSize = 1000) => RetrieveEntries(batchSize);
+
+        /// <summary>
+        /// Return all cache values
+        /// </summary>
+        public async IAsyncEnumerable<V> Values(int batchSize = 1000)
+        {
+            await foreach (var entry in RetrieveEntries(batchSize))
+                yield return entry.Value;
+        }
+
+        /// <summary>
+        /// Begin a new transaction on this cache
+        /// </summary>
+        /// <param name="timeoutMs">transaction timeout in milliseconds</param>
+        public TransactionContext<K, V> BeginTransaction(long timeoutMs = 60000)
+        {
+            return new TransactionContext<K, V>(this, timeoutMs);
+        }
+
+        /// <summary>
+        /// Enable near caching with server-side invalidation.
+        /// Caches Get results locally and invalidates on remote modifications.
+        /// </summary>
+        /// <param name="maxEntries">maximum number of entries in the near cache</param>
+        public async Task EnableNearCache(int maxEntries = 10000)
+        {
+            if (_nearCache != null)
+                throw new InvalidOperationException("Near cache is already enabled");
+            _nearCache = new NearCache<K, V>(maxEntries);
+            _nearCacheListener = new NearCacheListener<K, V>(_nearCache, KeyMarshaller);
+            await AddListener(_nearCacheListener);
+        }
+
+        /// <summary>
+        /// Returns near cache statistics, or null if near caching is not enabled.
+        /// </summary>
+        public NearCacheStats NearCacheStats => _nearCache?.GetStats();
 
         private static List<Object> unwrapWithProjection(QueryResponse resp)
         {
@@ -418,7 +555,7 @@ namespace Infinispan.Hotrod.Core
         /// <summary>
         ///   Number of entries stored in Hot Rod server since the server started running.
         /// </summary>
-        public const String TOTAL_NR_OF_ENTRIES = "totalNumberOfEntries";
+        public const String TOTAL_NR_OF_ENTRIES = "approximateEntries";
 
         /// <summary>
         ///   Number of put operations.
@@ -568,17 +705,15 @@ namespace Infinispan.Hotrod.Core
 
     public abstract class AbstractClientListener : IClientListener
     {
-        private Task _task;
-        public Task task { set => _task = value; }
+        private readonly TaskCompletionSource _completionSource = new(TaskCreationOptions.RunContinuationsAsynchronously);
         public abstract string ListenerID { get; set; }
         public void Wait()
         {
-            try
-            {
-                _task.Wait();
-            }
+            try { _completionSource.Task.Wait(); }
             catch { }
         }
+        internal void Activate() { }
+        internal void Complete() => _completionSource.TrySetResult();
         public abstract void OnError(Exception ex = null);
         public abstract void OnEvent(Event e);
     }

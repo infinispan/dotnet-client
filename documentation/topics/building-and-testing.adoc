@@ -1,0 +1,17 @@
+== Building and Testing
+
+=== Building
+
+[source,shell]
+----
+dotnet build
+----
+
+=== Running Tests
+
+Tests use xUnit and require a running Infinispan server (via https://dotnet.testcontainers.org/[Testcontainers] or a manual instance):
+
+[source,shell]
+----
+dotnet test
+----

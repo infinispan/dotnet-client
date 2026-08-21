@@ -1,0 +1,47 @@
+== Near Caching
+
+=== Overview
+
+Near caching stores recently accessed cache entries in a local bounded cache to avoid server round-trips on repeated reads.
+The .NET client uses server-side event listeners for invalidation: when other clients modify entries, the server sends invalidation events and the client automatically removes stale entries from the local cache.
+
+=== Configuration
+
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(), new StringMarshaller(), "my-cache");
+
+await cache.EnableNearCache(maxEntries: 5000);
+----
+
+The `maxEntries` parameter sets the maximum number of entries in the local LRU cache.
+The default is 10000 entries.
+
+=== Behavior
+
+The near cache intercepts `Get`, `Put`, and `Remove` operations:
+
+* **Get**: If the key is in the local cache, the value is returned immediately without a server round-trip.
+If the key is not present locally, the client fetches it from the server and stores it in the local cache.
+* **Put and Remove**: The operation is sent to the server first, then the local entry is eagerly invalidated.
+
+When other clients modify entries, the server sends events through the near cache listener.
+The client automatically removes invalidated entries from the local cache.
+On listener errors, the entire near cache is cleared as a safety measure.
+
+=== Statistics
+
+You can inspect near cache performance through the `NearCacheStats` property:
+
+[source,csharp]
+----
+var stats = cache.NearCacheStats;
+if (stats != null)
+{
+    Console.WriteLine($"hits={stats.Hits} misses={stats.Misses}");
+    Console.WriteLine($"invalidations={stats.Invalidations} size={stats.Size}");
+}
+----
+
+Returns `null` if near caching is not enabled.

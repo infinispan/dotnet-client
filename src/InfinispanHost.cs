@@ -1,228 +1,366 @@
-﻿using System;
-using System.Collections;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-namespace Infinispan.Hotrod.Core
+
+namespace Infinispan.Hotrod
 {
-    // Describes an Infinispan node
     public class InfinispanHost : IDisposable
     {
-        public InfinispanHost(InfinispanDG cluster, string host, int port)
+        public InfinispanHost(InfinispanClient cluster, string host, int port)
         {
             Name = host;
             Port = port;
             Cluster = cluster;
             SSL = Cluster.UseTLS;
             Available = true;
-            Master = true;
         }
 
-        private int mDisposed = 0;
+        private int _disposed;
+        private long _messageId;
+        private InfinispanConnection _connection;
+        private ResponseStream _responseStream;
+        private readonly SemaphoreSlim _connectLock = new(1, 1);
+        private readonly SemaphoreSlim _writeLock = new(1, 1);
+        private Task _readLoopTask;
+        private readonly ConcurrentDictionary<long, PendingRequest> _pending = new();
+        internal readonly ConcurrentDictionary<string, IClientListener> Listeners = new();
 
-        private int mCount = 0;
-        public int getMCount()
-        {
-            return mCount;
-        }
-        private int mServed = 0;
-        public int getMServed()
-        {
-            return mServed;
-        }
-        private int mRequest = 0;
-        public int getMRequest()
-        {
-            return mRequest;
-        }
-        public int getQueueSize()
-        {
-            return mQueue.Count;
-        }
-
-        public int getPoolSize()
-        {
-            return mPool.Count;
-        }
-        private long messageId = 1;
-        public long NewMessageId()
-        {
-            return messageId++;
-        }
-        private Queue<TaskCompletionSource<InfinispanClient>> mQueue = new Queue<TaskCompletionSource<InfinispanClient>>();
-
-        private Stack<InfinispanClient> mPool = new Stack<InfinispanClient>();
-
-        public int QueueMaxLength { get; set; } = 8192;
-
-        public int MaxConnections { get; set; } = 30;
-
-        public readonly InfinispanDG Cluster;
+        public readonly InfinispanClient Cluster;
         public string Name { get; set; }
-
         public int Port { get; set; }
-
         public string Password { get; set; }
         public string User { get; set; }
         public string Domain { get; set; }
         public string AuthMech { get; set; }
+        public bool SSL { get; set; }
+        public bool Available { get; set; }
 
-        public bool Master { get; set; }
-
-        public bool SSL { get; set; } = false;
-
-        // Pop a client for usage
-        public Task<InfinispanClient> Pop()
+        public long NewMessageId()
         {
-            lock (mPool)
+            return Interlocked.Increment(ref _messageId);
+        }
+
+        public async Task<Result> ExecuteAsync(CacheBase cache, Command cmd)
+        {
+            var conn = await EnsureConnectedAsync();
+            if (conn == null)
             {
-                TaskCompletionSource<InfinispanClient> result = new TaskCompletionSource<InfinispanClient>();
-                mRequest++;
-                // If no client is available...
-                if (!mPool.TryPop(out InfinispanClient client))
+                return new Result { ResultType = ResultType.NetError, Messge = "Connection failed" };
+            }
+
+            var messageId = NewMessageId();
+            var context = new CommandContext
+            {
+                MessageId = messageId,
+                Client = conn,
+                Cache = cache
+            };
+            var tcs = new TaskCompletionSource<Result>(TaskCreationOptions.RunContinuationsAsynchronously);
+            var pending = new PendingRequest { Command = cmd, Context = context, Cache = cache, Completion = tcs };
+            _pending[messageId] = pending;
+
+            try
+            {
+                await _writeLock.WaitAsync();
+                try
                 {
-                    mCount++;
-                    //  ...and clients are not too much...
-                    if (mCount <= MaxConnections)
+                    conn.Send(context, cmd);
+                }
+                finally
+                {
+                    _writeLock.Release();
+                }
+            }
+            catch (Exception ex)
+            {
+                _pending.TryRemove(messageId, out _);
+                return new Result { ResultType = ResultType.NetError, Messge = ex.Message };
+            }
+
+            return await tcs.Task;
+        }
+
+        private async Task<InfinispanConnection> EnsureConnectedAsync()
+        {
+            if (_connection?.IsConnected == true)
+                return _connection;
+
+            await _connectLock.WaitAsync();
+            try
+            {
+                if (_connection?.IsConnected == true)
+                    return _connection;
+
+                _connection?.Disconnect();
+                _connection = new InfinispanConnection(this);
+                if (!await _connection.ConnectAsync())
+                {
+                    Available = false;
+                    return null;
+                }
+                Available = true;
+
+                if (!string.IsNullOrEmpty(Password))
+                {
+                    if (!await AuthenticateAsync(_connection))
+                        return null;
+                }
+
+                _responseStream = new ResponseStream(_connection.GetStream());
+                _readLoopTask = Task.Run(ReadLoop);
+                return _connection;
+            }
+            finally
+            {
+                _connectLock.Release();
+            }
+        }
+
+        private async Task<bool> AuthenticateAsync(InfinispanConnection conn)
+        {
+            var rs = new ResponseStream(conn.GetStream());
+
+            var mechList = new Commands.AUTHMECHLIST();
+            var ctx = new CommandContext { MessageId = NewMessageId(), Client = conn, Cache = null, VersionOverride = InfinispanClient.HANDSHAKE_VERSION };
+            conn.Send(ctx, mechList);
+            if (!ReadSingleResponse(rs, ctx.MessageId, out var status))
+                return false;
+            var req = new InfinispanRequest { ResponseStatus = status, Cluster = Cluster, Client = conn };
+            mechList.OnReceive(req, rs);
+
+            bool found = false;
+            if (AuthMech != null)
+            {
+                foreach (var mech in mechList.availableMechs)
+                {
+                    if (AuthMech.Equals(mech))
                     {
-                        // ... create a new one ...
-                        client = new InfinispanClient(this);
-                        result.SetResult(client);
+                        found = true;
+                        break;
                     }
-                    else
+                }
+            }
+            if (!found)
+                return false;
+
+            var auth = new Commands.AUTH(AuthMech, new System.Net.NetworkCredential(User, Password, Domain));
+            while (auth.Completed == 0)
+            {
+                ctx = new CommandContext { MessageId = NewMessageId(), Client = conn, Cache = null, VersionOverride = InfinispanClient.HANDSHAKE_VERSION };
+                conn.Send(ctx, auth);
+                if (!ReadSingleResponse(rs, ctx.MessageId, out status))
+                    return false;
+                req = new InfinispanRequest { ResponseStatus = status, Cluster = Cluster, Client = conn };
+                auth.OnReceive(req, rs);
+            }
+            return true;
+        }
+
+        private bool ReadSingleResponse(ResponseStream rs, long expectedMessageId, out byte status)
+        {
+            status = 0;
+            if (rs.ReadByte() != 0xA1)
+                return false;
+            var inMessageId = Codec.readVLong(rs);
+            if (inMessageId != 0 && inMessageId != expectedMessageId)
+                return false;
+            rs.ReadByte(); // opcode
+            status = (byte)rs.ReadByte();
+            var topologyChanged = (byte)rs.ReadByte();
+            if (topologyChanged != 0)
+                ReadAndApplyTopology(rs, null);
+            if (Codec30.hasError(status))
+            {
+                Codec.readArray(rs); // consume error message
+                return false;
+            }
+            return true;
+        }
+
+        private void ReadLoop()
+        {
+            try
+            {
+                while (_disposed == 0)
+                {
+                    var magic = _responseStream.ReadByte();
+                    if (magic != 0xA1)
                     {
-                        // ... otherwise put the request in queue (see Push below)
-                        if (mQueue.Count > QueueMaxLength)
+                        FailAllPending("Bad Magic Number");
+                        break;
+                    }
+                    var messageId = Codec.readVLong(_responseStream);
+                    var opCode = (byte)_responseStream.ReadByte();
+                    var status = (byte)_responseStream.ReadByte();
+                    var topologyChanged = (byte)_responseStream.ReadByte();
+
+                    if (topologyChanged != 0)
+                    {
+                        // Find any pending request's cache for topology context
+                        CacheBase topologyCache = null;
+                        foreach (var p in _pending.Values)
                         {
-                            result.SetResult(null);
+                            if (p.Cache != null) { topologyCache = p.Cache; break; }
+                        }
+                        ReadAndApplyTopology(_responseStream, topologyCache);
+                    }
+
+                    if (IsEvent(opCode))
+                    {
+                        DispatchEvent(opCode);
+                        continue;
+                    }
+
+                    var errMsg = Codec30.hasError(status) ? Codec.readArray(_responseStream) : null;
+
+                    if (_pending.TryRemove(messageId, out var pending))
+                    {
+                        if (errMsg != null)
+                        {
+                            pending.Completion.TrySetResult(new Result
+                            {
+                                ResultType = ResultType.Error,
+                                Messge = Encoding.ASCII.GetString(errMsg)
+                            });
                         }
                         else
                         {
-                            mQueue.Enqueue(result);
-                        }
-                    }
-                }
-                else
-                {
-                    result.SetResult(client);
-                }
-                return result.Task;
-            }
-        }
-        public bool Available { get; set; }
-        public async Task<Result> Connect(InfinispanClient client)
-        {
-            if (!client.TcpClient.IsConnected)
-            {
-                if ((await client.TcpClient.Connect()).Connected)
-                {
-                    this.Available = true;
-                    if (!string.IsNullOrEmpty(Password))
-                    {
-                        Commands.AUTHMECHLIST authMechList = new Commands.AUTHMECHLIST();
-                        InfinispanRequest request = new InfinispanRequest(null, client, authMechList);
-                        var taskResult = await request.Execute();
-                        if (taskResult.ResultType == ResultType.DataError ||
-                            taskResult.ResultType == ResultType.Error
-                            || taskResult.ResultType == ResultType.NetError)
-                        {
-                            return taskResult;
-                        }
-                        bool found = false;
-                        if (this.AuthMech != null)
-                        {
-                            for (int i = 0; i < authMechList.availableMechs.Length; i++)
+                            var request = new InfinispanRequest
                             {
-                                if (this.AuthMech.Equals(authMechList.availableMechs[i]))
+                                ResponseStatus = status,
+                                ResponseOpCode = opCode,
+                                Cluster = Cluster,
+                                Client = _connection,
+                                Command = pending.Command,
+                                context = pending.Context
+                            };
+                            try
+                            {
+                                var result = pending.Command.OnReceive(request, _responseStream);
+                                pending.Completion.TrySetResult(result);
+                            }
+                            catch (Exception ex)
+                            {
+                                pending.Completion.TrySetResult(new Result
                                 {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!found)
-                        {
-                            // TODO: check if error is handled correctly
-                            taskResult.Messge = "SASL mech: " + this.AuthMech + " not available server side";
-                            taskResult.ResultType = ResultType.NetError;
-                            return taskResult;
-                        }
-                        Commands.AUTH auth = new Commands.AUTH(this.AuthMech, new System.Net.NetworkCredential(User, Password, Domain));
-                        while (auth.Completed == 0)
-                        {
-                            request = new InfinispanRequest(null, client, auth);
-                            taskResult = await request.Execute();
-                            if (taskResult.ResultType == ResultType.DataError ||
-                                taskResult.ResultType == ResultType.Error
-                                || taskResult.ResultType == ResultType.NetError)
-                            {
-                                return taskResult;
+                                    ResultType = ResultType.Error,
+                                    Messge = ex.Message
+                                });
                             }
                         }
                     }
-                    var temp = new TaskCompletionSource<Result>();
-                    temp.SetResult(new Result());
-                    return temp.Task.Result;
-                }
-                else
-                {
-                    this.Available = false;
-                    return new Result { ResultType = ResultType.NetError, Messge = client.TcpClient.LastError.Message };
                 }
             }
-            return new Result { ResultType = ResultType.Simple, Messge = "Connected" };
+            catch (Exception ex)
+            {
+                if (_disposed == 0)
+                    FailAllPending(ex.Message);
+            }
         }
 
-        // Return a client for others
-        public void Push(InfinispanClient client)
+        private bool IsEvent(byte opCode)
         {
-            TaskCompletionSource<InfinispanClient> item = null;
-            lock (mPool)
+            return Enum.IsDefined(typeof(EventType), opCode);
+        }
+
+        private void DispatchEvent(byte opCode)
+        {
+            var listenerId = StringMarshaller._ASCII.unmarshall(Codec.readArray(_responseStream));
+            var e = new Event
             {
-                mServed++;
-                if (mDisposed > 0)
+                ListenerID = listenerId,
+                CustomMarker = (byte)_responseStream.ReadByte()
+            };
+            if (e.CustomMarker == 0)
+            {
+                e.Retried = (byte)_responseStream.ReadByte();
+                e.Key = Codec.readArray(_responseStream);
+                e.Type = (EventType)opCode;
+                if (e.Type != EventType.REMOVED && e.Type != EventType.EXPIRED)
+                    e.Version = Codec.readLong(_responseStream);
+            }
+            else
+            {
+                e.customData = Codec.readArray(_responseStream);
+            }
+
+            if (Listeners.TryGetValue(listenerId, out var listener))
+                Task.Run(() => listener.OnEvent(e));
+        }
+
+        private void ReadAndApplyTopology(ResponseStream rs, CacheBase cache)
+        {
+            var t = new TopologyInfo { TopologyId = Codec.readVUInt(rs) };
+            var serversNum = Codec.readVInt(rs);
+            t.servers = new List<Tuple<byte[], ushort>>();
+            t.hosts = new InfinispanHost[serversNum];
+            for (int i = 0; i < serversNum; i++)
+            {
+                var addr = Codec.readArray(rs);
+                var port = Codec.readUnsignedShort(rs);
+                t.servers.Add(Tuple.Create(addr, port));
+            }
+            t.HashFuncNum = (byte)rs.ReadByte();
+            if (t.HashFuncNum > 0)
+            {
+                var segmentsNum = Codec.readVInt(rs);
+                t.OwnersPerSegment = new List<List<int>>();
+                for (int i = 0; i < segmentsNum; i++)
                 {
-                    // If this host has been disposed clean up...
-                    client.TcpClient.DisConnect();
+                    var ownerNumPerSeg = (byte)rs.ReadByte();
+                    var owners = new List<int>();
+                    for (int j = 0; j < ownerNumPerSeg; j++)
+                        owners.Add(Codec.readVInt(rs));
+                    t.OwnersPerSegment.Add(owners);
                 }
-                else
+            }
+
+            if (cache != null && Monitor.TryEnter(Cluster.mActiveCluster))
+            {
+                try { Cluster.UpdateTopologyInfo(t, cache); }
+                finally { Monitor.Exit(Cluster.mActiveCluster); }
+            }
+        }
+
+        private void FailAllPending(string message)
+        {
+            foreach (var key in _pending.Keys)
+            {
+                if (_pending.TryRemove(key, out var pending))
                 {
-                    // ... otherwise see if someone is in queue waiting for client
-                    // set item to this client
-                    if (!mQueue.TryDequeue(out item))
+                    pending.Completion.TrySetResult(new Result
                     {
-                        mPool.Push(client);
-                    }
-
+                        ResultType = ResultType.NetError,
+                        Messge = message
+                    });
                 }
             }
-            if (item != null)
+            foreach (var listener in Listeners.Values)
             {
-                Task.Run(() => item.SetResult(client));
+                Task.Run(() => listener.OnError(new IOException(message)));
             }
         }
-        public async Task shutdown()
-        {
-            var tasks = new List<Task>();
-            foreach (var tcs in mQueue)
-            {
-                tasks.Add(tcs.Task);
-            }
-            await Task.WhenAll(tasks.ToArray());
-        }
-        // Disposing this host. Disconnecting the clients
+
         public void Dispose()
         {
-            if (System.Threading.Interlocked.CompareExchange(ref mDisposed, 1, 0) == 0)
+            if (Interlocked.CompareExchange(ref _disposed, 1, 0) == 0)
             {
-                while (mPool.TryPop(out InfinispanClient item))
-                {
-                    item.TcpClient.DisConnect();
-                }
-                while (mQueue.TryDequeue(out TaskCompletionSource<InfinispanClient> t))
-                {
-                    t.SetCanceled();
-                }
+                FailAllPending("Host disposed");
+                _connection?.Disconnect();
             }
         }
+    }
+
+    internal class PendingRequest
+    {
+        public Command Command;
+        public CommandContext Context;
+        public CacheBase Cache;
+        public TaskCompletionSource<Result> Completion;
     }
 }

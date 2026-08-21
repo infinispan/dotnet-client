@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Infinispan.Hotrod.Core;
+using Infinispan.Hotrod;
 namespace Infinispan.Hotrod.Application
 {
 
@@ -10,7 +10,7 @@ namespace Infinispan.Hotrod.Application
         {
             var myKey = "myKey";
             /// [Create a cluster object]
-            InfinispanDG dg = new InfinispanDG();
+            InfinispanClient dg = new InfinispanClient();
             // Use a non-authenticated non-encrypted cluster;
             dg.AddHost("127.0.0.1", 11222);
             /// [Create a cluster object]

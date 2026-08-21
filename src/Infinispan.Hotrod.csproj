@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net10.0</TargetFrameworks>
+    <Version>10.0.0-beta.1</Version>
+    <Company>infinispan.org</Company>
+    <Authors>Infinispan community</Authors>
+    <Description>A .NET client for the Infinispan Hot Rod protocol</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/infinispan/dotnet-client</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/infinispan/dotnet-client</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <SignAssembly>false</SignAssembly>
+    <PackageReleaseNotes />
+  </PropertyGroup>
+  <ItemGroup>
+<PackageReference Include="Google.Protobuf" Version="3.36.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.83.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.6" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.6" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.400" PrivateAssets="All" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="Protos/query.proto"></Protobuf>
+    <Protobuf Include="Protos/message-wrapping.proto"></Protobuf>
+    <Protobuf Include="Protos/base_types.proto"></Protobuf>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../infinispan_icon_rgb_lightbluewhite_64px.png">
+      <Pack>True</Pack>
+      <PackagePath>icon.png</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,11 +1,11 @@
-﻿using BeetleX.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Org.Infinispan.Query.Remote.Client;
-using Google.Protobuf;
 
-namespace Infinispan.Hotrod.Core.Commands
+using Google.Protobuf;
+using Org.Infinispan.Query.Remote.Client;
+
+namespace Infinispan.Hotrod.Commands
 {
     public class QUERY : Command
     {
@@ -23,7 +23,7 @@ namespace Infinispan.Hotrod.Core.Commands
             base.OnExecute(ctx);
         }
 
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             ctx.IsReqResCommand = true;
             ctx.CmdReqMediaType = new MediaType();

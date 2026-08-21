@@ -1,0 +1,165 @@
+== Cache Operations
+
+=== Basic Operations
+
+Call `NewCache` on the client to obtain a typed cache handle, then use `Put`, `Get`, and `Remove`:
+
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(), new StringMarshaller(), "my-cache");
+
+// Store an entry.
+await cache.Put("key", "value");
+
+// Retrieve an entry.
+var value = await cache.Get("key");
+
+// Delete an entry.
+await cache.Remove("key");
+----
+
+Additional operations:
+
+`PutIfAbsent(key, value)`::
+Stores the entry only if the key does not already exist.
+
+`Replace(key, value)`::
+Replaces the value only if the key already exists.
+Returns a tuple `(PrevValue, Replaced)`.
+
+`ContainsKey(key)`::
+Returns `true` if the cache contains an entry for the given key.
+
+`Clear()`::
+Removes all entries from the cache.
+
+`Size()`::
+Returns the number of entries in the cache.
+
+`IsEmpty()`::
+Returns `true` if the cache has no entries.
+
+`Stats()`::
+Returns server-side cache statistics such as `timeSinceStart`, `currentNumberOfEntries`, `stores`, `retrievals`, `hits`, and `misses`.
+
+`Ping()`::
+Pings the server and returns media type and protocol information.
+
+=== Versioned and Metadata Operations
+
+Use `GetWithVersion` to retrieve the value along with its version number for optimistic locking:
+
+[source,csharp]
+----
+var vwv = await cache.GetWithVersion("key");
+if (vwv != null)
+{
+    Console.WriteLine($"value={vwv.Value} version={vwv.Version}");
+}
+----
+
+Use `GetWithMetadata` to retrieve the value along with server-side metadata (version, creation time, lifespan, last-used time, and max idle time):
+
+[source,csharp]
+----
+var vwm = await cache.GetWithMetadata("key");
+if (vwm != null)
+{
+    Console.WriteLine($"value={vwm.Value} version={vwm.Version}");
+    Console.WriteLine($"created={vwm.Created} lifespan={vwm.Lifespan}");
+    Console.WriteLine($"lastUsed={vwm.LastUsed} maxIdle={vwm.MaxIdle}");
+}
+----
+
+Use the version for optimistic locking with `ReplaceWithVersion` and `RemoveWithVersion`:
+
+[source,csharp]
+----
+bool replaced = await cache.ReplaceWithVersion("key", "new-value", vwv.Version);
+
+var (prev, removed) = await cache.RemoveWithVersion("key", vwv.Version);
+----
+
+=== Bulk Operations
+
+`PutAll` stores multiple entries in a single operation:
+
+[source,csharp]
+----
+var entries = new Dictionary<string, string>
+{
+    { "key1", "val1" },
+    { "key2", "val2" },
+    { "key3", "val3" }
+};
+await cache.PutAll(entries);
+----
+
+`GetAll` retrieves multiple keys in a single operation:
+
+[source,csharp]
+----
+var keys = new HashSet<string> { "key1", "key2" };
+var result = await cache.GetAll(keys);
+----
+
+`KeySet` returns the set of all keys:
+
+[source,csharp]
+----
+var keys = await cache.KeySet();
+----
+
+==== Partitioned Bulk Operations
+
+When the client has hash-distribution-aware intelligence, `PutAllPart` and `GetAllPart` split operations by segment owner and dispatch them in parallel:
+
+[source,csharp]
+----
+var partResult = cache.GetAllPart(keys);
+partResult.WaitAll();
+var entries = partResult.Result();
+----
+
+These operations are not atomic and may partially fail.
+
+=== Expiration
+
+Use `ExpirationTime` to control entry expiration on `Put`, `PutIfAbsent`, `Replace`, and `PutAll`:
+
+[source,csharp]
+----
+await cache.Put("key", "value",
+    lifespan: new ExpirationTime { Unit = TimeUnit.SECONDS, Value = 30 },
+    maxidle: new ExpirationTime { Unit = TimeUnit.SECONDS, Value = 10 });
+----
+
+`lifespan`::
+The maximum time an entry can live in the cache before expiring, regardless of access.
+
+`maxidle`::
+The maximum idle time.
+The entry expires if it is not accessed within this duration.
+
+Supported time units: `SECONDS`, `MILLISECONDS`, `MICROSECONDS`, `NANOSECONDS`, `MINUTES`, `HOURS`, `DAYS`.
+Use `TimeUnit.DEFAULT` to inherit the cache's configured default, or `TimeUnit.INFINITE` for no expiration.
+
+=== Operation Flags
+
+Cache-level flags modify server-side behavior:
+
+`ForceReturnValue`::
+Forces the server to return the previous value in mutation responses.
+
+`UseCacheDefaultLifespan`::
+Uses the cache's default lifespan instead of the value specified in the operation.
+
+`UseCacheDefaultMaxIdle`::
+Uses the cache's default max idle time instead of the value specified in the operation.
+
+[source,csharp]
+----
+cache.ForceReturnValue = true;
+var previous = await cache.Put("key", "new-value");
+----

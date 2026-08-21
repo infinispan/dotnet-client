@@ -1,0 +1,45 @@
+== Iteration
+
+You can iterate over all entries in a cache using `RetrieveEntries`.
+The iterator fetches entries in batches from the server using `IAsyncEnumerable`.
+
+[source,csharp]
+----
+await foreach (var entry in cache.RetrieveEntries(batchSize: 500))
+{
+    Console.WriteLine($"key={entry.Key} value={entry.Value}");
+}
+----
+
+=== Iteration with Metadata
+
+Use `RetrieveEntriesWithMetadata` to include entry metadata (version, creation time, lifespan, last-used time, max idle) with each entry:
+
+[source,csharp]
+----
+await foreach (var entry in cache.RetrieveEntriesWithMetadata(batchSize: 500))
+{
+    Console.WriteLine($"key={entry.Key} value={entry.Value.Value}");
+    Console.WriteLine($"version={entry.Value.Version} created={entry.Value.Created}");
+    Console.WriteLine($"lifespan={entry.Value.Lifespan} maxIdle={entry.Value.MaxIdle}");
+}
+----
+
+=== Convenience Methods
+
+`EntrySet(batchSize)`::
+An alias for `RetrieveEntries`.
+Returns all cache entries as key-value pairs.
+
+`Values(batchSize)`::
+Iterates over all cache values, discarding the keys.
+
+[source,csharp]
+----
+await foreach (var value in cache.Values())
+{
+    Console.WriteLine(value);
+}
+----
+
+The default batch size for all iteration methods is 1000 entries per server round-trip.

@@ -1,0 +1,66 @@
+== Event Listeners
+
+=== Cache Entry Events
+
+You can register listeners to receive notifications when cache entries are created, modified, removed, or expired.
+Implement the `IClientListener` interface or extend `AbstractClientListener`:
+
+[source,csharp]
+----
+public class MyListener : AbstractClientListener
+{
+    private string _id = Guid.NewGuid().ToString();
+    public override string ListenerID { get => _id; set => _id = value; }
+
+    public override void OnEvent(Event e)
+    {
+        Console.WriteLine($"type={e.Type} key={Encoding.ASCII.GetString(e.Key)}");
+    }
+
+    public override void OnError(Exception ex)
+    {
+        Console.WriteLine($"Listener error: {ex?.Message}");
+    }
+}
+----
+
+Register and remove the listener on a cache:
+
+[source,csharp]
+----
+var listener = new MyListener();
+await cache.AddListener(listener);
+
+// Wait for events...
+listener.Wait();
+
+await cache.RemoveListener(listener);
+----
+
+=== Event Types
+
+The `Event.Type` field indicates the type of event:
+
+* `EventType.CREATED` -- A new entry was created.
+* `EventType.MODIFIED` -- An existing entry was modified.
+* `EventType.REMOVED` -- An entry was removed.
+* `EventType.EXPIRED` -- An entry expired.
+
+=== Event Fields
+
+Each `Event` contains the following fields:
+
+`Key`:: The key of the affected entry as `byte[]`.
+`Version`:: The entry version after the event.
+`Type`:: The event type.
+`Retried`:: Whether this is a retried event delivery.
+`ListenerID`:: The identifier of the listener that received the event.
+
+=== Include Current State
+
+Pass `includeState: true` to `AddListener` to receive synthetic events for all existing entries upon registration:
+
+[source,csharp]
+----
+await cache.AddListener(listener, includeState: true);
+----

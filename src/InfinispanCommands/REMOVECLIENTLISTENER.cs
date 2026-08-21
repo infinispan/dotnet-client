@@ -1,10 +1,8 @@
-﻿using BeetleX.Buffers;
-using BeetleX.Clients;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infinispan.Hotrod.Core.Commands
+namespace Infinispan.Hotrod.Commands
 {
     public class REMOVECLIENTLISTENER : Command
     {
@@ -22,7 +20,7 @@ namespace Infinispan.Hotrod.Core.Commands
         {
             base.OnExecute(ctx);
         }
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
             Codec.writeArray(StringMarshaller._ASCII.marshall(this.Listener.ListenerID), stream);
@@ -33,11 +31,10 @@ namespace Infinispan.Hotrod.Core.Commands
         {
             if (request.ResponseStatus == Codec30.NO_ERROR_STATUS)
             {
-                InfinispanRequest oldReq;
-                if (request.Cluster.ListenerMap.TryGetValue(this.Listener.ListenerID, out oldReq))
+                request.Client.Host.Listeners.TryRemove(this.Listener.ListenerID, out _);
+                if (this.Listener is AbstractClientListener acl)
                 {
-                    request.Cluster.ListenerMap.Remove(this.Listener.ListenerID);
-                    oldReq.rs.TokenSource.Cancel();
+                    acl.Complete();
                 }
                 return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
             }

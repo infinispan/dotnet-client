@@ -1,9 +1,9 @@
-﻿using BeetleX.Buffers;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infinispan.Hotrod.Core.Commands
+
+namespace Infinispan.Hotrod.Commands
 {
     public class KEYSET<K> : Command
     {
@@ -25,7 +25,7 @@ namespace Infinispan.Hotrod.Core.Commands
             base.OnExecute(ctx);
         }
 
-        internal override void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
             Codec.writeVInt(Scope, stream);

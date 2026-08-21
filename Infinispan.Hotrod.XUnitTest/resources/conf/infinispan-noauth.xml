@@ -1,0 +1,35 @@
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:16.2 https://infinispan.org/schemas/infinispan-config-16.2.xsd
+                            urn:infinispan:server:16.2 https://infinispan.org/schemas/infinispan-server-16.2.xsd"
+        xmlns="urn:infinispan:config:16.2"
+        xmlns:server="urn:infinispan:server:16.2">
+
+   <cache-container name="default" statistics="true">
+      <transport cluster="${infinispan.cluster.name}" stack="${infinispan.cluster.stack:tcp}"/>
+      <local-cache name="default" statistics="true">
+         <expiration interval="1000"/>
+      </local-cache>
+      <local-cache name="namedCache"/>
+      <distributed-cache name="distributed">
+         <expiration interval="1000"/>
+      </distributed-cache>
+      <local-cache name="transactional" statistics="true">
+         <transaction mode="NON_XA" locking="PESSIMISTIC"/>
+      </local-cache>
+   </cache-container>
+
+   <server xmlns="urn:infinispan:server:16.2">
+      <interfaces>
+         <interface name="public">
+            <inet-address value="${infinispan.bind.address:0.0.0.0}"/>
+         </interface>
+      </interfaces>
+
+      <socket-bindings default-interface="public" port-offset="${infinispan.socket.binding.port-offset:0}">
+         <socket-binding name="default" port="${infinispan.bind.port:11222}"/>
+      </socket-bindings>
+
+      <endpoints socket-binding="default"/>
+   </server>
+</infinispan>

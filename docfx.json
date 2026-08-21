@@ -1,0 +1,36 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": ["src/Infinispan.Hotrod.csproj"],
+          "src": "."
+        }
+      ],
+      "dest": "api"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": ["api/**.yml", "api/index.md"]
+      },
+      {
+        "files": ["docs/**.md", "docs/**/toc.yml", "toc.yml", "*.md"]
+      }
+    ],
+    "resource": [
+      {
+        "files": ["infinispan_icon_rgb_lightbluewhite_64px.png"]
+      }
+    ],
+    "output": "_site",
+    "globalMetadataFiles": [],
+    "globalMetadata": {
+      "_appTitle": "Infinispan.Hotrod",
+      "_appLogoPath": "infinispan_icon_rgb_lightbluewhite_64px.png",
+      "_enableSearch": true
+    },
+    "template": ["default", "modern"]
+  }
+}

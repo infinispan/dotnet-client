@@ -1,0 +1,83 @@
+== Typed Caches and Marshalling
+
+=== Custom Marshallers
+
+The client uses typed caches with pluggable marshallers.
+A `Marshaller<T>` converts between a type `T` and `byte[]` for Hot Rod wire encoding.
+
+To create a custom marshaller, extend `Marshaller<T>`:
+
+[source,csharp]
+----
+public class JsonMarshaller<T> : Marshaller<T>
+{
+    public override byte[] marshall(T t)
+    {
+        var json = JsonSerializer.Serialize(t);
+        return Encoding.UTF8.GetBytes(json);
+    }
+
+    public override T unmarshall(byte[] buff)
+    {
+        var json = Encoding.UTF8.GetString(buff);
+        return JsonSerializer.Deserialize<T>(json);
+    }
+}
+----
+
+Then use it when creating a cache:
+
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(),
+    new JsonMarshaller<Person>(),
+    "people");
+
+await cache.Put("john", new Person { Name = "John", Age = 30 });
+var person = await cache.Get("john");
+----
+
+=== Built-in Marshallers
+
+The client includes the following built-in marshallers:
+
+`StringMarshaller`::
+Converts strings to and from `byte[]` using a configurable encoding.
+Defaults to ASCII.
++
+[source,csharp]
+----
+// ASCII (default)
+var ascii = new StringMarshaller();
+
+// UTF-8
+var utf8 = new StringMarshaller(Encoding.UTF8);
+----
+
+`ByteArrayMarshaller`::
+A no-op identity marshaller for `byte[]` values.
++
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(), ByteArrayMarshaller.Instance, "binary-cache");
+----
+
+=== Protocol Buffers
+
+For interoperability with Java and other Hot Rod clients, use Protocol Buffers for marshalling.
+Implement a marshaller that uses the `Google.Protobuf` library:
+
+[source,csharp]
+----
+public class ProtobufMarshaller<T> : Marshaller<T>
+    where T : Google.Protobuf.IMessage<T>, new()
+{
+    private readonly Google.Protobuf.MessageParser<T> _parser =
+        new Google.Protobuf.MessageParser<T>(() => new T());
+
+    public override byte[] marshall(T t) => t.ToByteArray();
+    public override T unmarshall(byte[] buff) => _parser.ParseFrom(buff);
+}
+----

@@ -1,10 +1,9 @@
-﻿using BeetleX.Buffers;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
-using System.Collections.Concurrent;
 
-namespace Infinispan.Hotrod.Core
+namespace Infinispan.Hotrod
 {
     public abstract class Command
     {
@@ -40,7 +39,7 @@ namespace Infinispan.Hotrod.Core
         {
         }
 
-        internal virtual void Execute(CommandContext ctx, InfinispanClient client, PipeStream stream)
+        internal virtual void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             OnExecute(ctx); // Build the message. But there's no need to build anything for hotrod
             stream.WriteByte(0xA0);
@@ -61,6 +60,15 @@ namespace Infinispan.Hotrod.Core
                 Codec.writeMediaType(ctx.Cache?.KeyMediaType, stream);
                 Codec.writeMediaType(ctx.Cache?.ValueMediaType, stream);
             }
+            if (ctx.IsVersion40OrAbove)
+            {
+                WriteOtherParams(stream);
+            }
+        }
+
+        protected virtual void WriteOtherParams(HotRodStream stream)
+        {
+            Codec.writeVInt(0, stream);
         }
 
         public abstract Result OnReceive(InfinispanRequest request, ResponseStream stream);

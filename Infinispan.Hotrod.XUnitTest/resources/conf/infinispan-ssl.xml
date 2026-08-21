@@ -1,0 +1,45 @@
+<infinispan
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:infinispan:config:16.2 https://infinispan.org/schemas/infinispan-config-16.2.xsd
+                            urn:infinispan:server:16.2 https://infinispan.org/schemas/infinispan-server-16.2.xsd"
+        xmlns="urn:infinispan:config:16.2"
+        xmlns:server="urn:infinispan:server:16.2">
+
+   <cache-container name="default" statistics="true">
+      <transport cluster="${infinispan.cluster.name}" stack="${infinispan.cluster.stack:tcp}"/>
+      <distributed-cache name="default">
+         <expiration interval="1000"/>
+      </distributed-cache>
+      <distributed-cache name="distributed">
+         <expiration interval="1000"/>
+      </distributed-cache>
+      <replicated-cache name="CacheForQueryTest"/>
+   </cache-container>
+
+   <server xmlns="urn:infinispan:server:16.2">
+      <interfaces>
+         <interface name="public">
+            <inet-address value="${infinispan.bind.address:0.0.0.0}"/>
+         </interface>
+      </interfaces>
+
+      <socket-bindings default-interface="public" port-offset="${infinispan.socket.binding.port-offset:0}">
+         <socket-binding name="default" port="${infinispan.bind.port:11222}"/>
+      </socket-bindings>
+
+      <security>
+         <security-realms>
+            <security-realm name="default">
+               <server-identities>
+                  <ssl>
+                     <keystore path="keystore.jks" relative-to="infinispan.server.config.path"
+                               password="secret" alias="hotrod"/>
+                  </ssl>
+               </server-identities>
+            </security-realm>
+         </security-realms>
+      </security>
+
+      <endpoints socket-binding="default" security-realm="default"/>
+   </server>
+</infinispan>

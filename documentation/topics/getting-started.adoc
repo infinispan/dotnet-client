@@ -1,0 +1,39 @@
+== Getting Started
+
+=== Installation
+
+Add the NuGet package to your project:
+
+[source,shell]
+----
+dotnet add package Infinispan.Hotrod
+----
+
+Or add the package reference directly to your `.csproj`:
+
+[source,xml]
+----
+<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.1" />
+----
+
+=== Quick Start
+
+[source,csharp]
+----
+using Infinispan.Hotrod;
+
+var client = new InfinispanClient();
+client.AddHost("localhost", 11222);
+client.User = "admin";
+client.Password = "password";
+
+var cache = client.NewCache(
+    new StringMarshaller(), new StringMarshaller(), "default");
+
+await cache.Put("greeting", "hello world");
+
+var value = await cache.Get("greeting");
+Console.WriteLine(value); // hello world
+
+client.Dispose();
+----

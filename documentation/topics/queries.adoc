@@ -1,0 +1,54 @@
+== Queries
+
+=== Overview
+
+The .NET client supports the Ickle query language for searching indexed caches.
+Queries require a cache with an indexed protobuf schema registered on the server.
+
+=== Basic Queries
+
+Use the simplified `Query` method with a query string:
+
+[source,csharp]
+----
+var results = await cache.Query("FROM example.Person WHERE age >= 30");
+----
+
+The method returns a `List<Object>` containing deserialized cache entries.
+
+=== Query with Projections
+
+When the query uses a `SELECT` clause, the results contain `Object[]` arrays with the projected fields:
+
+[source,csharp]
+----
+var results = await cache.Query(
+    "SELECT name, age FROM example.Person WHERE age >= 30");
+foreach (Object[] row in results)
+{
+    Console.WriteLine($"name={row[0]} age={row[1]}");
+}
+----
+
+=== QueryRequest API
+
+For more control, use the `QueryRequest` API directly:
+
+[source,csharp]
+----
+using Org.Infinispan.Query.Remote.Client;
+
+var request = new QueryRequest();
+request.QueryString = "FROM example.Person WHERE age > :minAge";
+// Set parameters as needed on the QueryRequest
+
+var response = await cache.Query(request);
+Console.WriteLine($"results={response.NumResults}");
+Console.WriteLine($"projections={response.ProjectionSize}");
+----
+
+The `QueryResponse` contains:
+
+`NumResults`:: The number of results returned.
+`ProjectionSize`:: The number of projected fields per result, or zero if no projection is used.
+`Results`:: The result entries as `WrappedMessage` values.

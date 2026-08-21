@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Infinispan.Hotrod.Core
+namespace Infinispan.Hotrod
 {
     /// <summary>
     /// InfinispanException represent a generic exception
@@ -17,5 +17,6 @@ namespace Infinispan.Hotrod.Core
         {
             Result = result;
         }
+        public InfinispanException(string message) : base(message) { }
     }
 }
