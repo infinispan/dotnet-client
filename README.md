@@ -3,7 +3,7 @@
 [![NuGet](https://img.shields.io/nuget/v/Infinispan.Hotrod)](https://www.nuget.org/packages/Infinispan.Hotrod)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/Infinispan.Hotrod)](https://www.nuget.org/packages/Infinispan.Hotrod)
 [![CI](https://github.com/infinispan/Infinispan.Hotrod/actions/workflows/test-on-repo.yml/badge.svg)](https://github.com/infinispan/Infinispan.Hotrod/actions/workflows/test-on-repo.yml)
-[![License](https://img.shields.io/github/license/infinispan/Infinispan.Hotrod)](LICENSE)
+[![License](https://img.shields.io/github/license/infinispan/dotnet-client)](LICENSE)
 
 A .NET client for the [Infinispan](https://infinispan.org) Hot Rod protocol.
 
