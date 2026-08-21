@@ -24,6 +24,8 @@ include::topics/iteration.adoc[]
 
 include::topics/transactions.adoc[]
 
+include::topics/distributed-counters.adoc[]
+
 include::topics/aspnet-integration.adoc[]
 
 include::topics/building-and-testing.adoc[]

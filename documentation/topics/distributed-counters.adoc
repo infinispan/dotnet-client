@@ -1,0 +1,103 @@
+[id='distributed-counters_{context}']
+= Distributed Counters
+:context: distributed-counters
+
+Infinispan distributed counters provide cluster-wide atomic counters.
+The .NET Hot Rod client supports both strong and weak counters with operations such as get, set, add, compare-and-swap, and reset.
+
+== Counter Types
+
+Strong counters:: Provide strong consistency guarantees. All operations are atomic and consistent across the cluster.
+Weak counters:: Optimized for high-throughput counting. They trade strong consistency for performance by using a configurable concurrency level.
+
+== Counter Configuration
+
+Counters are configured with:
+
+* *Type*: `Strong` or `Weak`
+* *Storage*: `Volatile` (lost on restart) or `Persistent` (survives restart)
+* *Bounded*: Whether the counter has lower and upper bounds
+* *Initial value*: The starting value
+
+== Creating and Using Counters
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("127.0.0.1", 11222);
+
+// Get the counter manager
+var counters = client.Counters();
+
+// Define a strong counter
+await counters.Define("my-counter", new CounterConfiguration
+{
+    Type = CounterType.Strong,
+    Storage = CounterStorage.Persistent,
+    InitialValue = 0
+});
+
+// Define a bounded strong counter
+await counters.Define("bounded-counter", new CounterConfiguration
+{
+    Type = CounterType.Strong,
+    Storage = CounterStorage.Volatile,
+    Bounded = true,
+    LowerBound = 0,
+    UpperBound = 100,
+    InitialValue = 50
+});
+
+// Define a weak counter
+await counters.Define("weak-counter", new CounterConfiguration
+{
+    Type = CounterType.Weak,
+    Storage = CounterStorage.Volatile,
+    ConcurrencyLevel = 4,
+    InitialValue = 0
+});
+----
+
+== Counter Operations
+
+[source,csharp]
+----
+// Get a counter handle
+var counter = counters.Counter("my-counter");
+
+// Get the current value
+long value = await counter.Get();
+
+// Add a delta and get the result
+long newValue = await counter.AddAndGet(5);
+
+// Set a value and get the previous one
+long previous = await counter.GetAndSet(42);
+
+// Compare and swap
+var (oldValue, success) = await counter.CompareAndSwap(42, 100);
+if (success)
+{
+    Console.WriteLine("Swapped successfully");
+}
+
+// Reset to initial value
+await counter.Reset();
+----
+
+== Counter Manager Operations
+
+[source,csharp]
+----
+// Check if a counter is defined
+bool exists = await counters.IsDefined("my-counter");
+
+// Get counter configuration
+CounterConfiguration config = await counters.GetConfiguration("my-counter");
+
+// List all counter names
+IList<string> names = await counters.Names();
+
+// Remove a counter
+await counters.Remove("my-counter");
+----
