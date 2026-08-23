@@ -29,6 +29,26 @@ var result = await cache.Get("key");
 
 The URI supports multiple hosts (`hotrod://host1,host2,host3`), TLS (`hotrods://...`), and query parameters (`?sasl_mechanism=PLAIN`).
 
+### LINQ Queries
+
+Query indexed caches with standard C# LINQ expressions — the provider translates them to Ickle queries automatically:
+
+```csharp
+using Infinispan.Hotrod.Linq;
+
+var cache = client.NewCache<Person>("people")
+    .WithEncoding(MediaType.Protobuf)
+    .Build();
+
+var results = await cache.AsQueryable()
+    .Where(p => p.BornIn == "London" && p.BornYear > 1989)
+    .OrderBy(p => p.LastName)
+    .Take(10)
+    .ToListAsync();
+```
+
+String matching, projections, pagination, and terminal operators (`CountAsync`, `FirstAsync`, `SingleAsync`) are all supported. See the [query documentation](documentation/topics/queries.adoc) for details.
+
 A full working example is in the [Infinispan.Hotrod.Application](Infinispan.Hotrod.Application) folder.
 
 ## Features
@@ -40,7 +60,7 @@ Supports the [Hot Rod 4.1](https://infinispan.org/docs/stable/titles/hotrod_prot
 - **Iteration**: Server-side iteration with `EntrySet`, `Values`, `RetrieveEntries`, `RetrieveEntriesWithMetadata` (`IAsyncEnumerable`)
 - **Transactions**: Client-side transaction buffering with optimistic locking, one-phase and two-phase commit
 - **Near Caching**: Client-side LRU cache with server-driven invalidation via event listeners
-- **Query**: Ickle query language support
+- **Query**: Ickle query language and LINQ-to-Ickle provider
 - **Continuous Queries**: Real-time notifications when cache entries match or stop matching a query
 - **Stats**: Server-side cache statistics
 - **Events**: Client listeners with server-push event dispatch
