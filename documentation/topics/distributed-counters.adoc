@@ -23,8 +23,7 @@ Counters are configured with:
 
 [source,csharp]
 ----
-var client = new InfinispanClient();
-client.AddHost("127.0.0.1", 11222);
+var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222");
 
 // Get the counter manager
 var counters = client.Counters();

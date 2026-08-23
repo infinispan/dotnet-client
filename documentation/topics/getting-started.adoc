@@ -13,7 +13,7 @@ Or add the package reference directly to your `.csproj`:
 
 [source,xml]
 ----
-<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.1" />
+<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.2" />
 ----
 
 === Quick Start
@@ -22,13 +22,13 @@ Or add the package reference directly to your `.csproj`:
 ----
 using Infinispan.Hotrod;
 
-var client = new InfinispanClient();
-client.AddHost("localhost", 11222);
-client.User = "admin";
-client.Password = "password";
+// Connect with a URI (simplest approach)
+var client = InfinispanClient.FromUri("hotrod://admin:password@localhost:11222");
 
-var cache = client.NewCache(
-    new StringMarshaller(), new StringMarshaller(), "default");
+// Create a typed cache using the builder
+var cache = client.NewCache<string>("default")
+    .WithEncoding(MediaType.PlainText)
+    .Build();
 
 await cache.Put("greeting", "hello world");
 
@@ -37,3 +37,15 @@ Console.WriteLine(value); // hello world
 
 client.Dispose();
 ----
+
+You can also create the client programmatically:
+
+[source,csharp]
+----
+var client = new InfinispanClient();
+client.AddHost("localhost", 11222);
+client.User = "admin";
+client.Password = "password";
+----
+
+See <<Connecting to Infinispan>> for full connection options including TLS, multiple hosts, and query parameters.

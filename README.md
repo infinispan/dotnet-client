@@ -12,7 +12,7 @@ A .NET client for the [Infinispan](https://infinispan.org) Hot Rod protocol.
 Add the package to your project:
 
 ```xml
-<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.1" />
+<PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.2" />
 ```
 
 Connect to an Infinispan cluster and use a cache:

@@ -6,8 +6,9 @@ Call `NewCache` on the client to obtain a typed cache handle, then use `Put`, `G
 
 [source,csharp]
 ----
-var cache = client.NewCache(
-    new StringMarshaller(), new StringMarshaller(), "my-cache");
+var cache = client.NewCache<string>("my-cache")
+    .WithEncoding(MediaType.PlainText)
+    .Build();
 
 // Store an entry.
 await cache.Put("key", "value");
@@ -17,6 +18,14 @@ var value = await cache.Get("key");
 
 // Delete an entry.
 await cache.Remove("key");
+----
+
+You can also create caches with explicit marshallers:
+
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(), new StringMarshaller(), "my-cache");
 ----
 
 Additional operations:

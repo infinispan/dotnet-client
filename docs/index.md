@@ -7,24 +7,21 @@ A .NET client for the Infinispan Hot Rod protocol.
 1. Add the package to your project:
 
    ```xml
-   <PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.1" />
+   <PackageReference Include="Infinispan.Hotrod" Version="10.0.0-beta.2" />
    ```
 
-2. Create a cluster connection:
+2. Connect to the cluster:
 
    ```csharp
-   var infinispan = new InfinispanClient();
-   infinispan.AddHost("127.0.0.1", 11222);
-   infinispan.Version = 0x1f;
-   infinispan.ForceReturnValue = false;
-   infinispan.ClientIntelligence = 0x01;
+   var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222");
    ```
 
 3. Create a cache:
 
    ```csharp
-   var cache = infinispan.NewCache(
-       new StringMarshaller(), new StringMarshaller(), "default");
+   var cache = client.NewCache<string>("default")
+       .WithEncoding(MediaType.PlainText)
+       .Build();
    ```
 
 4. Use the cache:

@@ -11,8 +11,7 @@ Use the `NewMultimap` factory method on `InfinispanClient`:
 
 [source,csharp]
 ----
-var client = new InfinispanClient();
-client.AddHost("127.0.0.1", 11222);
+var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222");
 
 var multimap = client.NewMultimap(
     new StringMarshaller(), new StringMarshaller(), "my-multimap");

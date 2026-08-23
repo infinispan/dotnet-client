@@ -11,7 +11,15 @@ The client supports the following SASL authentication mechanisms:
 * **GSSAPI** -- Kerberos authentication via GSSAPI.
 * **EXTERNAL** -- Authentication using a client TLS certificate.
 
-Set credentials and the authentication mechanism on the client:
+Set credentials and the authentication mechanism using a URI:
+
+[source,csharp]
+----
+var client = InfinispanClient.FromUri(
+    "hotrod://admin:password@localhost:11222?sasl_mechanism=SCRAM-SHA-256");
+----
+
+Or configure the client programmatically:
 
 [source,csharp]
 ----

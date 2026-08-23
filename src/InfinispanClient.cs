@@ -102,7 +102,6 @@ namespace Infinispan.Hotrod
         /// <param name="clusterName">name of the owner cluster</param>
         /// <param name="host">node address</param>
         /// <param name="port">port</param>
-        /// <param name="ssl">overrides the cluster TLS setting</param>
         /// <returns></returns>
         public InfinispanHost AddHost(string clusterName, string host, int port = 11222)
         {

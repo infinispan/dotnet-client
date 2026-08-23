@@ -40,8 +40,7 @@ You can also use `InfinispanDistributedCache` directly without dependency inject
 
 [source,csharp]
 ----
-using var client = new InfinispanClient();
-client.AddHost("localhost", 11222);
+using var client = InfinispanClient.FromUri("hotrod://admin:password@localhost:11222");
 
 using var cache = new InfinispanDistributedCache(client, "my-cache");
 

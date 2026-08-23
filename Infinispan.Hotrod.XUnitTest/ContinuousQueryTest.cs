@@ -38,7 +38,7 @@ namespace Infinispan.Hotrod.XUnitTest
                 cos.Flush();
                 return WrappedMessageHelper.WrapMessage(personBytes, "cq_test.CQPerson");
             }
-            throw new NotSupportedException($"Cannot marshall {obj?.GetType()}");
+            throw new NotSupportedException($"Cannot Marshall {obj?.GetType()}");
         }
 
         public override object Unmarshall(byte[] buff)

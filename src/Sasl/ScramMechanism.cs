@@ -89,8 +89,7 @@ namespace Infinispan.Hotrod.Sasl
                 ScramHashAlgorithm.SHA512 => HashAlgorithmName.SHA512,
                 _ => throw new NotSupportedException()
             };
-            using var pbkdf2 = new Rfc2898DeriveBytes(password, salt, iterations, hashName);
-            return pbkdf2.GetBytes(HmacLength());
+            return Rfc2898DeriveBytes.Pbkdf2(password, salt, iterations, hashName, HmacLength());
         }
 
         private byte[] ComputeHmac(byte[] key, string data)

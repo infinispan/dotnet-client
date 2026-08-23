@@ -8,9 +8,7 @@ The `CacheAdmin` API lets you create, remove, and manage caches, templates, and 
 
 [source,csharp]
 ----
-var client = new InfinispanClient();
-client.AddHost("127.0.0.1", 11222);
-
+var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222");
 var admin = client.Administration();
 ----
 

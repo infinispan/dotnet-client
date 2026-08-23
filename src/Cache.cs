@@ -186,8 +186,8 @@ namespace Infinispan.Hotrod
         /// <param name="key">entry key</param>
         /// <param name="value">new value</param>
         /// <param name="version">entry version</param>
-        /// <param name="lifespan">lifespan for the entry</param>
-        /// <param name="maxidle">max idle time</param>
+        /// <param name="lifeSpan">lifespan for the entry</param>
+        /// <param name="maxIdle">max idle time</param>
         /// <returns>if replaced true otherwise false</returns>
         public async Task<Boolean> ReplaceWithVersion(K key, V value, Int64 version, ExpirationTime lifeSpan = null, ExpirationTime maxIdle = null)
         {
@@ -704,7 +704,7 @@ namespace Infinispan.Hotrod
         ///   Retrive the value of the specified statistic.
         /// </summary>
         ///
-        /// <param name="statName">name of the statistic to retrieve</param>
+        /// <param name="statsName">name of the statistic to retrieve</param>
         ///
         /// <returns>the value for the specified statistic as a string or null</returns>
         public String GetStatistic(String statsName)
@@ -716,7 +716,7 @@ namespace Infinispan.Hotrod
         ///   Retrive the value of the specified statistic.
         /// </summary>
         ///
-        /// <param name="statName">name of the statistic to retrieve</param>
+        /// <param name="statsName">name of the statistic to retrieve</param>
         ///
         /// <returns>the value for the specified statistic as an int or -1 if no value is available</returns>
         public int GetIntStatistic(String statsName)

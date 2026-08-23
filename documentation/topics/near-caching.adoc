@@ -9,8 +9,9 @@ The .NET client uses server-side event listeners for invalidation: when other cl
 
 [source,csharp]
 ----
-var cache = client.NewCache(
-    new StringMarshaller(), new StringMarshaller(), "my-cache");
+var cache = client.NewCache<string>("my-cache")
+    .WithEncoding(MediaType.PlainText)
+    .Build();
 
 await cache.EnableNearCache(maxEntries: 5000);
 ----

@@ -11,13 +11,13 @@ To create a custom marshaller, extend `Marshaller<T>`:
 ----
 public class JsonMarshaller<T> : Marshaller<T>
 {
-    public override byte[] marshall(T t)
+    public override byte[] Marshall(T t)
     {
         var json = JsonSerializer.Serialize(t);
         return Encoding.UTF8.GetBytes(json);
     }
 
-    public override T unmarshall(byte[] buff)
+    public override T Unmarshall(byte[] buff)
     {
         var json = Encoding.UTF8.GetString(buff);
         return JsonSerializer.Deserialize<T>(json);
@@ -67,17 +67,23 @@ var cache = client.NewCache(
 === Protocol Buffers
 
 For interoperability with Java and other Hot Rod clients, use Protocol Buffers for marshalling.
-Implement a marshaller that uses the `Google.Protobuf` library:
+The client includes a built-in `ProtobufMarshaller<T>` that works with any `Google.Protobuf.IMessage<T>` type.
+
+When you use the `CacheBuilder` with `MediaType.Protobuf` encoding, the marshaller is selected automatically:
 
 [source,csharp]
 ----
-public class ProtobufMarshaller<T> : Marshaller<T>
-    where T : Google.Protobuf.IMessage<T>, new()
-{
-    private readonly Google.Protobuf.MessageParser<T> _parser =
-        new Google.Protobuf.MessageParser<T>(() => new T());
+var cache = client.NewCache<Person>("people")
+    .WithEncoding(MediaType.Protobuf)
+    .Build();
+----
 
-    public override byte[] marshall(T t) => t.ToByteArray();
-    public override T unmarshall(byte[] buff) => _parser.ParseFrom(buff);
-}
+You can also use the marshaller explicitly with the traditional `NewCache` API:
+
+[source,csharp]
+----
+var cache = client.NewCache(
+    new StringMarshaller(),
+    new ProtobufMarshaller<Person>(),
+    "people");
 ----
