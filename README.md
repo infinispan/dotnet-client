@@ -49,7 +49,7 @@ var results = await cache.AsQueryable()
 
 String matching, projections, pagination, and terminal operators (`CountAsync`, `FirstAsync`, `SingleAsync`) are all supported. See the [query documentation](documentation/topics/queries.adoc) for details.
 
-A full working example is in the [Infinispan.Hotrod.Application](Infinispan.Hotrod.Application) folder.
+A full working example is in the [Infinispan.Hotrod.Samples](Infinispan.Hotrod.Samples) folder. More tutorials are available at [infinispan.org](https://infinispan.org/tutorials/?language=c%23).
 
 ## Features
 
