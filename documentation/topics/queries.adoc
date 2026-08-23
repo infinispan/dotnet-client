@@ -2,53 +2,417 @@
 
 === Overview
 
-The .NET client supports the Ickle query language for searching indexed caches.
-Queries require a cache with an indexed protobuf schema registered on the server.
+The .NET client supports two ways to query indexed caches:
 
-=== Basic Queries
+* **Ickle queries** — write query strings directly using the Ickle query language.
+* **LINQ queries** — write idiomatic C# using standard LINQ operators, which are automatically translated to Ickle.
 
-Use the simplified `Query` method with a query string:
+Both approaches require a cache with an indexed protobuf schema registered on the server.
 
-[source,csharp]
-----
-var results = await cache.Query("FROM example.Person WHERE age >= 30");
-----
-
-The method returns a `List<Object>` containing deserialized cache entries.
-
-=== Query with Projections
-
-When the query uses a `SELECT` clause, the results contain `Object[]` arrays with the projected fields:
+The examples below assume a cache created as follows:
 
 [source,csharp]
 ----
-var results = await cache.Query(
-    "SELECT name, age FROM example.Person WHERE age >= 30");
-foreach (Object[] row in results)
-{
-    Console.WriteLine($"name={row[0]} age={row[1]}");
-}
+using Infinispan.Hotrod;
+using Infinispan.Hotrod.Linq;
+
+var cache = client.NewCache<Person>("people")
+    .WithEncoding(MediaType.Protobuf)
+    .Build();
 ----
 
-=== QueryRequest API
+=== Filtering
 
-For more control, use the `QueryRequest` API directly:
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+// Simple comparison
+var adults = await cache.AsQueryable()
+    .Where(p => p.Age >= 18)
+    .ToListAsync();
 
-[source,csharp]
+// Combined conditions with AND / OR
+var filtered = await cache.AsQueryable()
+    .Where(p => p.BornIn == "London" && p.Age > 25)
+    .ToListAsync();
+
+// Negation
+var notLondon = await cache.AsQueryable()
+    .Where(p => !(p.BornIn == "London"))
+    .ToListAsync();
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+var adults = await (
+    from p in cache.AsQueryable()
+    where p.Age >= 18
+    select p
+).ToListAsync();
+
+var filtered = await (
+    from p in cache.AsQueryable()
+    where p.BornIn == "London" && p.Age > 25
+    select p
+).ToListAsync();
+
+var notLondon = await (
+    from p in cache.AsQueryable()
+    where !(p.BornIn == "London")
+    select p
+).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+var adults = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.age >= 18");
+
+var filtered = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.bornIn = :city AND p.age > :minAge",
+    new Dictionary<string, object> { ["city"] = "London", ["minAge"] = 25 });
+
+var notLondon = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.bornIn != 'London'");
+----
+
+==== Captured Variables and Named Parameters
+
+Captured variables in LINQ expressions are automatically extracted and sent as named parameters.
+With Ickle strings, use `:paramName` placeholders and an `IDictionary<string, object>`.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+string city = "London";
+int minYear = 1990;
+var results = await cache.AsQueryable()
+    .Where(p => p.BornIn == city && p.BornYear > minYear)
+    .ToListAsync();
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+string city = "London";
+int minYear = 1990;
+var results = await (
+    from p in cache.AsQueryable()
+    where p.BornIn == city && p.BornYear > minYear
+    select p
+).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+string city = "London";
+int minYear = 1990;
+var results = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.bornIn = :city AND p.bornYear > :minYear",
+    new Dictionary<string, object> { ["city"] = city, ["minYear"] = minYear });
+----
+
+All three generate the same query: `FROM example.Person e WHERE (e.bornIn = :p0 AND e.bornYear > :p1)`.
+
+Supported parameter types: `string`, `int`, `long`, `double`, `float`, `bool`, and `float[]`.
+
+=== String Matching
+
+Use standard `string` methods in LINQ, which translate to Ickle `LIKE` clauses.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+// Contains -> LIKE '%value%'
+var results = await cache.AsQueryable()
+    .Where(p => p.FirstName.Contains("arr"))
+    .ToListAsync();
+
+// StartsWith -> LIKE 'value%'
+var results = await cache.AsQueryable()
+    .Where(p => p.FirstName.StartsWith("Ha"))
+    .ToListAsync();
+
+// EndsWith -> LIKE '%value'
+var results = await cache.AsQueryable()
+    .Where(p => p.LastName.EndsWith("er"))
+    .ToListAsync();
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+var results = await (
+    from p in cache.AsQueryable()
+    where p.FirstName.Contains("arr")
+    select p
+).ToListAsync();
+
+var results = await (
+    from p in cache.AsQueryable()
+    where p.FirstName.StartsWith("Ha")
+    select p
+).ToListAsync();
+
+var results = await (
+    from p in cache.AsQueryable()
+    where p.LastName.EndsWith("er")
+    select p
+).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+var results = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.firstName LIKE '%arr%'");
+
+var results = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.firstName LIKE 'Ha%'");
+
+var results = await cache.Query<Person>(
+    "FROM example.Person p WHERE p.lastName LIKE '%er'");
+----
+
+=== Sorting
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+var sorted = await cache.AsQueryable()
+    .OrderBy(p => p.LastName)
+    .ThenByDescending(p => p.Age)
+    .ToListAsync();
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+var sorted = await (
+    from p in cache.AsQueryable()
+    orderby p.LastName, p.Age descending
+    select p
+).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+var sorted = await cache.Query<Person>(
+    "FROM example.Person p ORDER BY p.lastName, p.age DESC");
+----
+
+=== Pagination
+
+Use `Skip` and `Take` in LINQ, or `StartOffset` and `MaxResults` on a `QueryRequest`.
+
+NOTE: `Skip` and `Take` are only available in LINQ method syntax. You can combine query syntax with method syntax for pagination.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+var page = await cache.AsQueryable()
+    .OrderBy(p => p.LastName)
+    .Skip(20)
+    .Take(10)
+    .ToListAsync();
+----
+
+.LINQ query + method syntax
+[source,csharp,role="secondary"]
+----
+var page = await (
+    from p in cache.AsQueryable()
+    where p.BornIn == "London"
+    orderby p.LastName
+    select p
+).Skip(20).Take(10).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
 ----
 using Org.Infinispan.Query.Remote.Client;
 
 var request = new QueryRequest();
-request.QueryString = "FROM example.Person WHERE age > :minAge";
-// Set parameters as needed on the QueryRequest
+request.QueryString = "FROM example.Person p ORDER BY p.lastName";
+request.StartOffset = 20;
+request.MaxResults = 10;
 
 var response = await cache.Query(request);
-Console.WriteLine($"results={response.NumResults}");
-Console.WriteLine($"projections={response.ProjectionSize}");
 ----
 
-The `QueryResponse` contains:
+=== Projections
 
-`NumResults`:: The number of results returned.
-`ProjectionSize`:: The number of projected fields per result, or zero if no projection is used.
-`Results`:: The result entries as `WrappedMessage` values.
+Use `Select` in LINQ to retrieve only specific fields, which generates an Ickle `SELECT` clause.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+var names = await cache.AsQueryable()
+    .Where(p => p.BornIn == "London")
+    .Select(p => new { p.FirstName, p.LastName })
+    .ToListAsync();
+
+foreach (var n in names)
+    Console.WriteLine($"{n.FirstName} {n.LastName}");
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+var names = await (
+    from p in cache.AsQueryable()
+    where p.BornIn == "London"
+    select new { p.FirstName, p.LastName }
+).ToListAsync();
+
+foreach (var n in names)
+    Console.WriteLine($"{n.FirstName} {n.LastName}");
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+var results = await cache.Query(
+    "SELECT p.firstName, p.lastName FROM example.Person p WHERE p.bornIn = 'London'");
+foreach (Object[] row in results)
+    Console.WriteLine($"{row[0]} {row[1]}");
+----
+
+=== Terminal Operators
+
+Terminal operators retrieve single values or counts.
+These are only available in LINQ method syntax.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+// Count
+int count = await cache.AsQueryable()
+    .Where(p => p.BornIn == "London")
+    .CountAsync();
+
+// First (throws if empty)
+var first = await cache.AsQueryable()
+    .Where(p => p.LastName == "Potter")
+    .FirstAsync();
+
+// FirstOrDefault (returns default if empty)
+var maybe = await cache.AsQueryable()
+    .Where(p => p.LastName == "Dumbledore")
+    .FirstOrDefaultAsync();
+
+// Single (throws if not exactly one)
+var unique = await cache.AsQueryable()
+    .Where(p => p.Id == 42)
+    .SingleAsync();
+
+// LongCount
+long total = await cache.AsQueryable()
+    .LongCountAsync();
+
+// Terminal with predicate
+var harry = await cache.AsQueryable()
+    .FirstAsync(p => p.FirstName == "Harry");
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+// Count — use the raw QueryRequest API for totalResults
+var request = new QueryRequest();
+request.QueryString = "FROM example.Person p WHERE p.bornIn = 'London'";
+request.MaxResults = 0;
+var response = await cache.Query(request);
+long count = response.TotalResults;
+
+// First — limit to 1 result
+var first = (await cache.Query<Person>(
+    "FROM example.Person p WHERE p.lastName = :name",
+    new Dictionary<string, object> { ["name"] = "Potter" }))[0];
+----
+
+=== Combining Operators
+
+Chain multiple operators together for complex queries.
+
+.LINQ method syntax
+[source,csharp,role="primary"]
+----
+var topYoungLondoners = await cache.AsQueryable()
+    .Where(p => p.BornIn == "London")
+    .Where(p => p.BornYear >= 1990)
+    .OrderByDescending(p => p.BornYear)
+    .Take(5)
+    .ToListAsync();
+----
+
+.LINQ query syntax
+[source,csharp,role="secondary"]
+----
+var topYoungLondoners = await (
+    from p in cache.AsQueryable()
+    where p.BornIn == "London" && p.BornYear >= 1990
+    orderby p.BornYear descending
+    select p
+).Take(5).ToListAsync();
+----
+
+.Ickle string
+[source,csharp,role="secondary"]
+----
+var request = new QueryRequest();
+request.QueryString =
+    "FROM example.Person p WHERE p.bornIn = 'London' AND p.bornYear >= 1990 ORDER BY p.bornYear DESC";
+request.MaxResults = 5;
+var response = await cache.Query(request);
+----
+
+Multiple `Where` calls in LINQ are combined with `AND`.
+
+=== Operator Reference
+
+[cols="1,1"]
+|===
+|LINQ |Ickle
+
+|`Where(p => p.X == v)`
+|`WHERE e.x = :p0`
+
+|`Where(p => p.X > v && p.Y == w)`
+|`WHERE (e.x > :p0 AND e.y = :p1)`
+
+|`Where(p => p.Name.Contains("oh"))`
+|`WHERE e.name LIKE :p0`
+
+|`OrderBy(p => p.X)`
+|`ORDER BY e.x`
+
+|`OrderByDescending(p => p.X)`
+|`ORDER BY e.x DESC`
+
+|`Skip(n)`
+|`startOffset = n`
+
+|`Take(n)`
+|`maxResults = n`
+
+|`Select(p => new { p.X, p.Y })`
+|`SELECT e.x, e.y`
+
+|`Count()` / `CountAsync()`
+|Uses `TotalResults`
+
+|`First()` / `FirstAsync()`
+|`maxResults = 1`
+|===
+
+=== Property Name Mapping
+
+The LINQ provider automatically maps C# property names (PascalCase) to protobuf field names (camelCase) using the protobuf descriptor.
+For example, `p.FirstName` in C# maps to `e.firstName` in the generated Ickle query.
+No manual configuration is needed when using protobuf-generated types.

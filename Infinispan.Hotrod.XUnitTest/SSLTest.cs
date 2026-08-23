@@ -42,7 +42,7 @@ namespace Infinispan.Hotrod.XUnitTest
                 fcacert = reader.ReadToEnd();
             }
             var chain = new X509Chain();
-            chain.ChainPolicy.CustomTrustStore.Add(X509CertificateLoader.LoadCertificate(StringMarshaller._ASCII.marshall(fcacert)));
+            chain.ChainPolicy.CustomTrustStore.Add(X509CertificateLoader.LoadCertificate(StringMarshaller._ASCII.Marshall(fcacert)));
             chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
             chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
             var infinispan_verified = new InfinispanClient();
@@ -62,7 +62,7 @@ namespace Infinispan.Hotrod.XUnitTest
                 bad_fcacert = reader.ReadToEnd();
             }
             var bad_chain = new X509Chain();
-            bad_chain.ChainPolicy.CustomTrustStore.Add(X509CertificateLoader.LoadCertificate(StringMarshaller._ASCII.marshall(bad_fcacert)));
+            bad_chain.ChainPolicy.CustomTrustStore.Add(X509CertificateLoader.LoadCertificate(StringMarshaller._ASCII.Marshall(bad_fcacert)));
             bad_chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
             bad_chain.ChainPolicy.TrustMode = X509ChainTrustMode.CustomRootTrust;
             var infinispan_bad_verified = new InfinispanClient();

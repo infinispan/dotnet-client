@@ -16,7 +16,7 @@ namespace Infinispan.Hotrod.XUnitTest
 {
     internal class CQPersonMarshaller : Marshaller<object>
     {
-        public override byte[] marshall(object obj)
+        public override byte[] Marshall(object obj)
         {
             if (obj is string s)
             {
@@ -41,7 +41,7 @@ namespace Infinispan.Hotrod.XUnitTest
             throw new NotSupportedException($"Cannot marshall {obj?.GetType()}");
         }
 
-        public override object unmarshall(byte[] buff)
+        public override object Unmarshall(byte[] buff)
         {
             var wm = WrappedMessage.Parser.ParseFrom(buff);
             if (wm.ScalarOrMessageCase == WrappedMessage.ScalarOrMessageOneofCase.WrappedString)

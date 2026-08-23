@@ -56,7 +56,7 @@ namespace Infinispan.Hotrod.XUnitTest
             return bytes;
         }
 
-        public override byte[] marshall(Object obj)
+        public override byte[] Marshall(Object obj)
         {
             if (obj is String)
             {
@@ -81,7 +81,7 @@ namespace Infinispan.Hotrod.XUnitTest
             throw new NotImplementedException();
         }
 
-        public override Object unmarshall(byte[] buff)
+        public override Object Unmarshall(byte[] buff)
         {
             base_types bt = base_types.Parser.ParseFrom(buff);
             if (bt.I32 != 0)

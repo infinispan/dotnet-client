@@ -16,6 +16,9 @@
     <PackageReleaseNotes />
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="Infinispan.Hotrod.XUnitTest" />
+  </ItemGroup>
+  <ItemGroup>
 <PackageReference Include="Google.Protobuf" Version="3.36.0" />
     <PackageReference Include="Grpc.Tools" Version="2.83.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

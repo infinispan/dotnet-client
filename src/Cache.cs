@@ -518,7 +518,7 @@ namespace Infinispan.Hotrod
             return result;
         }
 
-        private static WrappedMessage WrapParameterValue(object value)
+        internal static WrappedMessage WrapParameterValue(object value)
         {
             var wm = new WrappedMessage();
             switch (value)

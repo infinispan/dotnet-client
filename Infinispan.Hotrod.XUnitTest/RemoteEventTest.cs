@@ -225,7 +225,7 @@ namespace Infinispan.Hotrod.XUnitTest
         private void AssertOnly(string key, LoggingEventListener listener, EventType et, bool isCustom = false)
         {
             var remoteEvent = listener.PollEvent(et);
-            Assert.Equal(key, _marshaller.unmarshall(remoteEvent.Key));
+            Assert.Equal(key, _marshaller.Unmarshall(remoteEvent.Key));
             if (et != EventType.CREATED || isCustom)
             {
                 Assert.Empty(listener.createdEvents);
