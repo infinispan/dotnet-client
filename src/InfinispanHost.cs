@@ -270,7 +270,7 @@ namespace Infinispan.Hotrod
 
         private void DispatchEvent(byte opCode)
         {
-            var listenerId = StringMarshaller._ASCII.unmarshall(Codec.readArray(_responseStream));
+            var listenerId = StringMarshaller._ASCII.Unmarshall(Codec.readArray(_responseStream));
             var e = new Event
             {
                 ListenerID = listenerId,

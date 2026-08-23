@@ -36,7 +36,7 @@ namespace Infinispan.Hotrod.Commands
             keys = new HashSet<K>();
             while (stream.ReadByte() == 1)
             {
-                keys.Add(this.KeyMarshaller.unmarshall(Codec.readArray(stream)));
+                keys.Add(this.KeyMarshaller.Unmarshall(Codec.readArray(stream)));
             }
             return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
         }

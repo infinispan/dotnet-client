@@ -37,10 +37,10 @@ namespace Infinispan.Hotrod.Commands
         internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
-            Codec.writeArray(KeyMarshaller.marshall(Key), stream);
+            Codec.writeArray(KeyMarshaller.Marshall(Key), stream);
             Codec.writeExpirations(Lifespan, MaxIdle, stream);
             Codec.writeLong(Version, stream);
-            Codec.writeArray(ValueMarshaller.marshall(Value), stream);
+            Codec.writeArray(ValueMarshaller.Marshall(Value), stream);
             stream.Flush();
         }
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)
@@ -51,7 +51,7 @@ namespace Infinispan.Hotrod.Commands
                 var retValAsArray = Codec.readPreviousValue(stream, request.context.Version);
                 if (retValAsArray.Length > 0)
                 {
-                    PrevValue = ValueMarshaller.unmarshall(retValAsArray);
+                    PrevValue = ValueMarshaller.Unmarshall(retValAsArray);
                     return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
                 }
             }

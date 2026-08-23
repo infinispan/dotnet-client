@@ -41,8 +41,8 @@ namespace Infinispan.Hotrod.Commands
             Codec.writeVInt(Map.Count, stream);
             foreach (var entry in Map)
             {
-                Codec.writeArray(KeyMarshaller.marshall(entry.Key), stream);
-                Codec.writeArray(ValueMarshaller.marshall(entry.Value), stream);
+                Codec.writeArray(KeyMarshaller.Marshall(entry.Key), stream);
+                Codec.writeArray(ValueMarshaller.Marshall(entry.Value), stream);
             }
             stream.Flush();
         }

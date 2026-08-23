@@ -23,7 +23,7 @@ namespace Infinispan.Hotrod.Commands
         internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
-            Codec.writeArray(StringMarshaller._ASCII.marshall(this.Listener.ListenerID), stream);
+            Codec.writeArray(StringMarshaller._ASCII.Marshall(this.Listener.ListenerID), stream);
             stream.Flush();
         }
 

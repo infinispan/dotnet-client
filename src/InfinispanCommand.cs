@@ -106,7 +106,7 @@ namespace Infinispan.Hotrod
 
         internal override byte[] getKeyAsBytes()
         {
-            return KeyMarshaller.marshall(this.Key);
+            return KeyMarshaller.Marshall(this.Key);
         }
     }
     public interface ICommandWithExpiration

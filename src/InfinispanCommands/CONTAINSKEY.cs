@@ -26,7 +26,7 @@ namespace Infinispan.Hotrod.Commands
         internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
-            Codec.writeArray(KeyMarshaller.marshall(Key), stream);
+            Codec.writeArray(KeyMarshaller.Marshall(Key), stream);
         }
 
         public override Result OnReceive(InfinispanRequest request, ResponseStream stream)

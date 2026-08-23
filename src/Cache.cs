@@ -222,11 +222,22 @@ namespace Infinispan.Hotrod
         /// This method returns the result set as a list of cache objects if the query has no select projection,
         /// otherwise return a list of tuples
         /// <param name="query">the query string</param>
+        /// <param name="namedParameters">optional named parameter bindings</param>
         /// <returns>the resultSet</returns>
-        public async Task<List<Object>> Query(String query)
+        public async Task<List<Object>> Query(String query, IDictionary<string, object> namedParameters = null)
         {
             var qr = new QueryRequest();
             qr.QueryString = query;
+            if (namedParameters != null)
+            {
+                foreach (var kv in namedParameters)
+                {
+                    var np = new QueryRequest.Types.NamedParameter();
+                    np.Name = kv.Key;
+                    np.Value = WrapParameterValue(kv.Value);
+                    qr.NamedParameters.Add(np);
+                }
+            }
             var queryResponse = await Cluster.Query(qr, (CacheBase)this);
             List<Object> result = new List<Object>();
             if (queryResponse.ProjectionSize > 0)
@@ -239,7 +250,7 @@ namespace Infinispan.Hotrod
 
                 if (wm.WrappedBytes != null)
                 {
-                    Object u = ValueMarshaller.unmarshall(wm.WrappedBytes.ToByteArray());
+                    Object u = ValueMarshaller.Unmarshall(wm.WrappedBytes.ToByteArray());
                     result.Add(u);
                 }
             }
@@ -343,7 +354,7 @@ namespace Infinispan.Hotrod
         }
 
         /// <summary>
-        /// Register a continuous Ickle query. Matching entries are delivered to the returned ContinuousQuery's Events channel.
+        /// Register a continuous Ickle query. Matching entries are delivered to the returned ContinuousQuery's Events channel as raw bytes.
         /// </summary>
         /// <param name="query">Ickle query string</param>
         /// <param name="namedParams">optional named parameter bindings</param>
@@ -352,6 +363,19 @@ namespace Infinispan.Hotrod
             IDictionary<string, object> namedParams = null, int channelSize = 64)
         {
             return new ContinuousQuery(Cluster, this, query, namedParams, channelSize);
+        }
+
+        /// <summary>
+        /// Register a typed continuous Ickle query. Events are auto-deserialized using the cache's marshallers.
+        /// </summary>
+        /// <param name="query">Ickle query string</param>
+        /// <param name="namedParams">optional named parameter bindings</param>
+        /// <param name="channelSize">event channel buffer size</param>
+        public ContinuousQuery<K, V> TypedContinuousQuery(string query,
+            IDictionary<string, object> namedParams = null, int channelSize = 64)
+        {
+            var inner = new ContinuousQuery(Cluster, this, query, namedParams, channelSize);
+            return new ContinuousQuery<K, V>(inner, KeyMarshaller, ValueMarshaller, channelSize);
         }
 
         /// <summary>
@@ -369,8 +393,8 @@ namespace Infinispan.Hotrod
                     foreach (var entry in next.Entries)
                     {
                         yield return new KeyValuePair<K, V>(
-                            KeyMarshaller.unmarshall(entry.Key),
-                            ValueMarshaller.unmarshall(entry.Value));
+                            KeyMarshaller.Unmarshall(entry.Key),
+                            ValueMarshaller.Unmarshall(entry.Value));
                     }
                     if (next.Finished) break;
                 }
@@ -397,7 +421,7 @@ namespace Infinispan.Hotrod
                     {
                         var vwm = new ValueWithMetadata<V>
                         {
-                            Value = ValueMarshaller.unmarshall(entry.Value),
+                            Value = ValueMarshaller.Unmarshall(entry.Value),
                             Version = entry.Version,
                             Created = entry.Created,
                             Lifespan = entry.Lifespan,
@@ -405,7 +429,7 @@ namespace Infinispan.Hotrod
                             MaxIdle = entry.MaxIdle
                         };
                         yield return new KeyValuePair<K, ValueWithMetadata<V>>(
-                            KeyMarshaller.unmarshall(entry.Key), vwm);
+                            KeyMarshaller.Unmarshall(entry.Key), vwm);
                     }
                     if (next.Finished) break;
                 }
@@ -457,6 +481,75 @@ namespace Infinispan.Hotrod
         /// Returns near cache statistics, or null if near caching is not enabled.
         /// </summary>
         public NearCacheStats NearCacheStats => _nearCache?.GetStats();
+
+        /// <summary>
+        /// Run a typed query returning deserialized results using the cache's value marshaller.
+        /// </summary>
+        /// <typeparam name="T">the expected result type</typeparam>
+        /// <param name="query">the query string</param>
+        /// <param name="namedParameters">optional named parameter bindings</param>
+        /// <returns>a list of typed results</returns>
+        public async Task<List<T>> Query<T>(String query, IDictionary<string, object> namedParameters = null) where T : V
+        {
+            var qr = new QueryRequest();
+            qr.QueryString = query;
+            if (namedParameters != null)
+            {
+                foreach (var kv in namedParameters)
+                {
+                    var np = new QueryRequest.Types.NamedParameter();
+                    np.Name = kv.Key;
+                    np.Value = WrapParameterValue(kv.Value);
+                    qr.NamedParameters.Add(np);
+                }
+            }
+            var queryResponse = await Cluster.Query(qr, (CacheBase)this);
+            var result = new List<T>();
+            for (int i = 0; i < queryResponse.NumResults; i++)
+            {
+                WrappedMessage wm = queryResponse.Results[i];
+                if (wm.WrappedBytes != null)
+                {
+                    var u = ValueMarshaller.Unmarshall(wm.WrappedBytes.ToByteArray());
+                    if (u is T typed)
+                        result.Add(typed);
+                }
+            }
+            return result;
+        }
+
+        private static WrappedMessage WrapParameterValue(object value)
+        {
+            var wm = new WrappedMessage();
+            switch (value)
+            {
+                case string s:
+                    wm.WrappedString = s;
+                    break;
+                case int i:
+                    wm.WrappedInt32 = i;
+                    break;
+                case long l:
+                    wm.WrappedInt64 = l;
+                    break;
+                case double d:
+                    wm.WrappedDouble = d;
+                    break;
+                case float f:
+                    wm.WrappedFloat = f;
+                    break;
+                case float[] floats:
+                    return WrappedMessage.Parser.ParseFrom(
+                        WrappedMessageHelper.WrapFloatArray(floats));
+                case bool b:
+                    wm.WrappedBool = b;
+                    break;
+                default:
+                    wm.WrappedString = value.ToString();
+                    break;
+            }
+            return wm;
+        }
 
         private static List<Object> unwrapWithProjection(QueryResponse resp)
         {

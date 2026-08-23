@@ -35,7 +35,7 @@ namespace Infinispan.Hotrod.Commands
             Codec.writeVInt(Keys.Count, stream);
             foreach (var k in Keys)
             {
-                Codec.writeArray(KeyMarshaller.marshall(k), stream);
+                Codec.writeArray(KeyMarshaller.Marshall(k), stream);
             }
             stream.Flush();
         }
@@ -49,8 +49,8 @@ namespace Infinispan.Hotrod.Commands
                 Entries = new Dictionary<K, V>();
                 for (var i = 0; i < resCount; i++)
                 {
-                    K k = KeyMarshaller.unmarshall(Codec.readArray(stream));
-                    V v = ValueMarshaller.unmarshall(Codec.readArray(stream));
+                    K k = KeyMarshaller.Unmarshall(Codec.readArray(stream));
+                    V v = ValueMarshaller.Unmarshall(Codec.readArray(stream));
                     Entries.Add(k, v);
                 }
                 return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };

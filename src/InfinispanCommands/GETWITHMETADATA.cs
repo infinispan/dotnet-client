@@ -28,7 +28,7 @@ namespace Infinispan.Hotrod.Commands
         internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
-            Codec.writeArray(KeyMarshaller.marshall(Key), stream);
+            Codec.writeArray(KeyMarshaller.Marshall(Key), stream);
             stream.Flush();
         }
 
@@ -51,7 +51,7 @@ namespace Infinispan.Hotrod.Commands
                 ValueWithMetadata.MaxIdle = (Int32)Codec.readVInt(stream);
             }
             ValueWithMetadata.Version = Codec.readLong(stream);
-            ValueWithMetadata.Value = ValueMarshaller.unmarshall(Codec.readArray(stream));
+            ValueWithMetadata.Value = ValueMarshaller.Unmarshall(Codec.readArray(stream));
             return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
         }
     }

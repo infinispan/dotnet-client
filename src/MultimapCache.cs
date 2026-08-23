@@ -39,52 +39,52 @@ namespace Infinispan.Hotrod
         public async Task Put(K key, V value)
         {
             await _client.MultimapPut(_cache,
-                _keyMarshaller.marshall(key),
-                _valueMarshaller.marshall(value),
+                _keyMarshaller.Marshall(key),
+                _valueMarshaller.Marshall(value),
                 _supportsDuplicates);
         }
 
         public async Task<IList<V>> Get(K key)
         {
             var rawValues = await _client.MultimapGet(_cache,
-                _keyMarshaller.marshall(key), _supportsDuplicates);
+                _keyMarshaller.Marshall(key), _supportsDuplicates);
             var result = new List<V>(rawValues.Count);
             foreach (var raw in rawValues)
-                result.Add(_valueMarshaller.unmarshall(raw));
+                result.Add(_valueMarshaller.Unmarshall(raw));
             return result;
         }
 
         public async Task<bool> RemoveKey(K key)
         {
             return await _client.MultimapRemoveKey(_cache,
-                _keyMarshaller.marshall(key), _supportsDuplicates);
+                _keyMarshaller.Marshall(key), _supportsDuplicates);
         }
 
         public async Task<bool> RemoveEntry(K key, V value)
         {
             return await _client.MultimapRemoveEntry(_cache,
-                _keyMarshaller.marshall(key),
-                _valueMarshaller.marshall(value),
+                _keyMarshaller.Marshall(key),
+                _valueMarshaller.Marshall(value),
                 _supportsDuplicates);
         }
 
         public async Task<bool> ContainsKey(K key)
         {
             return await _client.MultimapContainsKey(_cache,
-                _keyMarshaller.marshall(key), _supportsDuplicates);
+                _keyMarshaller.Marshall(key), _supportsDuplicates);
         }
 
         public async Task<bool> ContainsValue(V value)
         {
             return await _client.MultimapContainsValue(_cache,
-                _valueMarshaller.marshall(value), _supportsDuplicates);
+                _valueMarshaller.Marshall(value), _supportsDuplicates);
         }
 
         public async Task<bool> ContainsEntry(K key, V value)
         {
             return await _client.MultimapContainsEntry(_cache,
-                _keyMarshaller.marshall(key),
-                _valueMarshaller.marshall(value),
+                _keyMarshaller.Marshall(key),
+                _valueMarshaller.Marshall(value),
                 _supportsDuplicates);
         }
 

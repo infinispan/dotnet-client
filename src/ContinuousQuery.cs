@@ -86,12 +86,81 @@ namespace Infinispan.Hotrod
                         string s => WrappedMessageHelper.WrapString(s),
                         int i => WrappedMessageHelper.WrapInt32(i),
                         long l => WrappedMessageHelper.WrapInt64(l),
+                        float f => WrappedMessageHelper.WrapFloat(f),
+                        double d => WrappedMessageHelper.WrapDouble(d),
+                        bool b => WrappedMessageHelper.WrapBool(b),
+                        float[] fa => WrappedMessageHelper.WrapFloatArray(fa),
                         _ => WrappedMessageHelper.WrapString(kv.Value.ToString())
                     });
                 }
             }
             return result.ToArray();
         }
+    }
+
+    /// <summary>
+    /// A typed continuous query that auto-deserializes event keys and values using the cache's marshallers.
+    /// </summary>
+    public class ContinuousQuery<K, V> : IAsyncDisposable
+    {
+        private readonly ContinuousQuery _inner;
+        private readonly Marshaller<K> _keyMarshaller;
+        private readonly Marshaller<V> _valueMarshaller;
+        private readonly Channel<CQEvent<K, V>> _typedChannel;
+        private readonly Task _pumpTask;
+
+        public ChannelReader<CQEvent<K, V>> Events => _typedChannel.Reader;
+
+        internal ContinuousQuery(ContinuousQuery inner, Marshaller<K> keyMarshaller, Marshaller<V> valueMarshaller, int channelSize = 64)
+        {
+            _inner = inner;
+            _keyMarshaller = keyMarshaller;
+            _valueMarshaller = valueMarshaller;
+            _typedChannel = Channel.CreateBounded<CQEvent<K, V>>(new BoundedChannelOptions(channelSize)
+            {
+                FullMode = BoundedChannelFullMode.Wait
+            });
+
+            _pumpTask = Task.Run(async () =>
+            {
+                try
+                {
+                    await foreach (var raw in _inner.Events.ReadAllAsync())
+                    {
+                        var typed = new CQEvent<K, V>
+                        {
+                            Type = raw.Type,
+                            Key = raw.Key != null ? _keyMarshaller.Unmarshall(raw.Key) : default,
+                            Value = raw.Value != null ? _valueMarshaller.Unmarshall(raw.Value) : default,
+                            Projections = raw.Projections
+                        };
+                        await _typedChannel.Writer.WriteAsync(typed);
+                    }
+                }
+                catch (ChannelClosedException) { }
+                finally
+                {
+                    _typedChannel.Writer.TryComplete();
+                }
+            });
+        }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _inner.DisposeAsync();
+            await _pumpTask;
+        }
+    }
+
+    /// <summary>
+    /// A typed continuous query event with deserialized key and value.
+    /// </summary>
+    public class CQEvent<K, V>
+    {
+        public CQResultType Type { get; internal set; }
+        public K Key { get; internal set; }
+        public V Value { get; internal set; }
+        public IList<byte[]> Projections { get; internal set; }
     }
 
     internal class CQListener : AbstractClientListener

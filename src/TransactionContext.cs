@@ -23,7 +23,7 @@ namespace Infinispan.Hotrod
             _valueMarshaller = cache.ValueMarshaller;
         }
 
-        private string KeyToString(K key) => Convert.ToBase64String(_keyMarshaller.marshall(key));
+        private string KeyToString(K key) => Convert.ToBase64String(_keyMarshaller.Marshall(key));
 
         /// <summary>
         /// Get a value within the transaction. Reads from local buffer first,
@@ -37,7 +37,7 @@ namespace Infinispan.Hotrod
             {
                 if (entry.Removed)
                     return default;
-                return entry.Value != null ? _valueMarshaller.unmarshall(entry.Value) : default;
+                return entry.Value != null ? _valueMarshaller.Unmarshall(entry.Value) : default;
             }
 
             var vwv = await _cache.GetWithVersion(key);
@@ -46,7 +46,7 @@ namespace Infinispan.Hotrod
             {
                 txEntry.Existed = true;
                 txEntry.Version = vwv.Version;
-                txEntry.Value = _valueMarshaller.marshall(vwv.Value);
+                txEntry.Value = _valueMarshaller.Marshall(vwv.Value);
             }
             _entries[keyStr] = txEntry;
             return vwv != null ? vwv.Value : default;
@@ -70,7 +70,7 @@ namespace Infinispan.Hotrod
                 }
                 _entries[keyStr] = entry;
             }
-            entry.Value = _valueMarshaller.marshall(value);
+            entry.Value = _valueMarshaller.Marshall(value);
             entry.Removed = false;
             entry.Lifespan = lifespan;
             entry.MaxIdle = maxidle;
@@ -88,7 +88,7 @@ namespace Infinispan.Hotrod
                 entry = new TransactionEntry { Read = false };
                 _entries[keyStr] = entry;
             }
-            entry.Value = _valueMarshaller.marshall(value);
+            entry.Value = _valueMarshaller.Marshall(value);
             entry.Removed = false;
             entry.Lifespan = lifespan;
             entry.MaxIdle = maxidle;

@@ -161,6 +161,16 @@ namespace Infinispan.Hotrod
         {
             return new Cache<K, V>(this, keyM, valM, name);
         }
+
+        /// <summary>
+        /// Returns a <see cref="CacheBuilder{V}"/> for fluently configuring a cache with string keys.
+        /// Call <c>.WithEncoding(MediaType.Protobuf)</c> (or PlainText, JSON) then <c>.Build()</c>.
+        /// Marshallers are inferred from the value type and encoding.
+        /// </summary>
+        public CacheBuilder<V> NewCache<V>(string name)
+        {
+            return new CacheBuilder<V>(this, name);
+        }
         public void EnableLog(LogLevel type)
         {
             enabledType = type;
@@ -596,7 +606,7 @@ namespace Infinispan.Hotrod
             IDictionary<int, ISet<K>> res = new Dictionary<int, ISet<K>>();
             foreach (var k in keys)
             {
-                var segment = this.getSegmentFromBytes(km.marshall(k), topologyInfo);
+                var segment = this.getSegmentFromBytes(km.Marshall(k), topologyInfo);
                 if (!res.ContainsKey(segment))
                 {
                     res[segment] = new HashSet<K>();
@@ -617,7 +627,7 @@ namespace Infinispan.Hotrod
             IDictionary<int, IDictionary<K, V>> res = new Dictionary<int, IDictionary<K, V>>();
             foreach (var entry in map)
             {
-                var segment = this.getSegmentFromBytes(km.marshall(entry.Key), topologyInfo);
+                var segment = this.getSegmentFromBytes(km.Marshall(entry.Key), topologyInfo);
                 if (!res.ContainsKey(segment))
                 {
                     res[segment] = new Dictionary<K, V>();

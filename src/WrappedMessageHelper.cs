@@ -6,11 +6,18 @@ namespace Infinispan.Hotrod
 {
     public static class WrappedMessageHelper
     {
-        private const int FieldWrappedString = 9;
-        private const int FieldWrappedInt32 = 5;
+        private const int FieldWrappedDouble = 1;
+        private const int FieldWrappedFloat = 2;
         private const int FieldWrappedInt64 = 3;
+        private const int FieldWrappedInt32 = 5;
+        private const int FieldWrappedBool = 8;
+        private const int FieldWrappedString = 9;
         private const int FieldWrappedDescriptorFullName = 16;
         private const int FieldWrappedMessageBytes = 17;
+        private const int FieldWrappedContainerSize = 27;
+        private const int FieldWrappedContainerTypeName = 28;
+        private const int FieldWrappedContainerMessage = 30;
+        private const string FloatArrayTypeName = "org.infinispan.protostream.commons.FloatArray";
 
         public static byte[] WrapMessage(byte[] messageBytes, string descriptorFullName)
         {
@@ -39,6 +46,43 @@ namespace Infinispan.Hotrod
         {
             var buf = new List<byte>();
             AppendVarintField(buf, FieldWrappedInt64, (ulong)v);
+            return buf.ToArray();
+        }
+
+        public static byte[] WrapFloat(float v)
+        {
+            var buf = new List<byte>();
+            AppendTag(buf, FieldWrappedFloat, 5); // wireFixed32
+            buf.AddRange(BitConverter.GetBytes(v));
+            return buf.ToArray();
+        }
+
+        public static byte[] WrapDouble(double v)
+        {
+            var buf = new List<byte>();
+            AppendTag(buf, FieldWrappedDouble, 1); // wireFixed64
+            buf.AddRange(BitConverter.GetBytes(v));
+            return buf.ToArray();
+        }
+
+        public static byte[] WrapBool(bool v)
+        {
+            var buf = new List<byte>();
+            AppendVarintField(buf, FieldWrappedBool, v ? 1UL : 0UL);
+            return buf.ToArray();
+        }
+
+        public static byte[] WrapFloatArray(float[] values)
+        {
+            var buf = new List<byte>();
+            AppendLenDelimited(buf, FieldWrappedContainerTypeName, Encoding.UTF8.GetBytes(FloatArrayTypeName));
+            AppendVarintField(buf, FieldWrappedContainerSize, (ulong)values.Length);
+            AppendLenDelimited(buf, FieldWrappedContainerMessage, Array.Empty<byte>());
+            foreach (var f in values)
+            {
+                AppendTag(buf, FieldWrappedFloat, 5); // wireFixed32
+                buf.AddRange(BitConverter.GetBytes(f));
+            }
             return buf.ToArray();
         }
 
@@ -89,7 +133,7 @@ namespace Infinispan.Hotrod
             return r;
         }
 
-        internal static void ScanFields(byte[] data, Action<int, int, byte[]> fn)
+        public static void ScanFields(byte[] data, Action<int, int, byte[]> fn)
         {
             int pos = 0;
             while (pos < data.Length)

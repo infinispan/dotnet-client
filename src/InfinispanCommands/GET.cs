@@ -29,7 +29,7 @@ namespace Infinispan.Hotrod.Commands
         internal override void Execute(CommandContext ctx, InfinispanConnection client, HotRodStream stream)
         {
             base.Execute(ctx, client, stream);
-            Codec.writeArray(KeyMarshaller.marshall(Key), stream);
+            Codec.writeArray(KeyMarshaller.Marshall(Key), stream);
             stream.Flush();
         }
 
@@ -39,7 +39,7 @@ namespace Infinispan.Hotrod.Commands
             {
                 return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Null };
             }
-            Value = ValueMarshaller.unmarshall(Codec.readArray(stream));
+            Value = ValueMarshaller.Unmarshall(Codec.readArray(stream));
             return new Result { Status = ResultStatus.Completed, ResultType = ResultType.Object };
         }
 

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Google.Protobuf;
+using Google.Protobuf.Reflection;
+using Org.Infinispan.Protostream;
 
 namespace Infinispan.Hotrod
 {
@@ -13,8 +16,8 @@ namespace Infinispan.Hotrod
     /// <typeparam name="T">The type handled by the Marshaller</typeparam>
     public abstract class Marshaller<T>
     {
-        public abstract byte[] marshall(T t);
-        public abstract T unmarshall(byte[] buff);
+        public abstract byte[] Marshall(T t);
+        public abstract T Unmarshall(byte[] buff);
     }
 
     /// <summary>
@@ -24,8 +27,8 @@ namespace Infinispan.Hotrod
     {
         public static readonly ByteArrayMarshaller Instance = new ByteArrayMarshaller();
 
-        public override byte[] marshall(byte[] t) => t;
-        public override byte[] unmarshall(byte[] buff) => buff;
+        public override byte[] Marshall(byte[] t) => t;
+        public override byte[] Unmarshall(byte[] buff) => buff;
     }
 
     /// <summary>
@@ -45,13 +48,81 @@ namespace Infinispan.Hotrod
         {
             Encoding = (enc == null) ? Encoding.ASCII : Encoding = enc;
         }
-        public override byte[] marshall(string t)
+        public override byte[] Marshall(string t)
         {
             return t == null ? null : Encoding.GetBytes(t);
         }
-        public override string unmarshall(byte[] buff)
+        public override string Unmarshall(byte[] buff)
         {
             return buff == null ? null : Encoding.GetString(buff);
+        }
+    }
+
+    /// <summary>
+    /// A string marshaller that wraps values in the protostream WrappedMessage envelope.
+    /// Use this for keys in protostream-encoded caches.
+    /// </summary>
+    public class ProtostreamStringMarshaller : Marshaller<string>
+    {
+        public override byte[] Marshall(string t)
+        {
+            return t == null ? null : WrappedMessageHelper.WrapString(t);
+        }
+
+        public override string Unmarshall(byte[] buff)
+        {
+            if (buff == null) return null;
+            return WrappedMessageHelper.UnwrapString(buff);
+        }
+    }
+
+    /// <summary>
+    /// A marshaller for Google.Protobuf generated message types that wraps values in the protostream WrappedMessage envelope.
+    /// Use this for values in protostream-encoded caches where the entity type is generated from a .proto file.
+    /// </summary>
+    /// <typeparam name="T">A Google.Protobuf generated message type</typeparam>
+    public class ProtobufMarshaller<T> : Marshaller<T> where T : IMessage<T>, new()
+    {
+        private readonly string _descriptorFullName;
+        private readonly MessageParser<T> _parser;
+
+        /// <summary>
+        /// Creates a ProtobufMarshaller, automatically deriving the descriptor full name
+        /// from the generated protobuf class.
+        /// </summary>
+        public ProtobufMarshaller()
+            : this(new T().Descriptor.FullName)
+        {
+        }
+
+        /// <summary>
+        /// Creates a ProtobufMarshaller for the given protobuf descriptor full name.
+        /// </summary>
+        /// <param name="descriptorFullName">the protobuf descriptor full name (e.g. "tutorial.Person")</param>
+        public ProtobufMarshaller(string descriptorFullName)
+        {
+            _descriptorFullName = descriptorFullName;
+            _parser = new MessageParser<T>(() => new T());
+        }
+
+        public override byte[] Marshall(T t)
+        {
+            if (t == null) return null;
+            var size = t.CalculateSize();
+            var bytes = new byte[size];
+            var cos = new CodedOutputStream(bytes);
+            t.WriteTo(cos);
+            cos.Flush();
+            return WrappedMessageHelper.WrapMessage(bytes, _descriptorFullName);
+        }
+
+        public override T Unmarshall(byte[] buff)
+        {
+            if (buff == null) return default;
+            var inner = WrappedMessageHelper.UnwrapBytes(buff);
+            if (inner != null)
+                return _parser.ParseFrom(inner);
+            return _parser.ParseFrom(buff);
         }
     }
 }

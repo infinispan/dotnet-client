@@ -154,7 +154,7 @@ namespace Infinispan.Hotrod
         public override void OnEvent(Event e)
         {
             if (e.Key != null)
-                _nearCache.Invalidate(_keyMarshaller.unmarshall(e.Key));
+                _nearCache.Invalidate(_keyMarshaller.Unmarshall(e.Key));
             else
                 _nearCache.Clear();
         }

@@ -294,6 +294,26 @@ namespace Infinispan.Hotrod
 
     public class MediaType
     {
+        public static readonly MediaType Protostream = new MediaType
+        {
+            InfoType = 2,
+            CustomMediaType = Encoding.ASCII.GetBytes("application/x-protostream")
+        };
+
+        public static readonly MediaType PlainText = new MediaType
+        {
+            InfoType = 2,
+            CustomMediaType = Encoding.ASCII.GetBytes("text/plain")
+        };
+
+        public static readonly MediaType JSON = new MediaType
+        {
+            InfoType = 2,
+            CustomMediaType = Encoding.ASCII.GetBytes("application/json")
+        };
+
+        public static readonly MediaType Protobuf = Protostream;
+
         public byte InfoType;
         public Int32 PredefinedMediaType;
         public byte[] CustomMediaType;
