@@ -4,7 +4,7 @@ The client provides an `IDistributedCache` implementation for integration with A
 
 === Dependency Injection
 
-Register Infinispan as the distributed cache provider in `Program.cs` or `Startup.cs`:
+Register {brandname} as the distributed cache provider in `Program.cs` or `Startup.cs`:
 
 [source,csharp]
 ----
@@ -28,7 +28,7 @@ This registers `InfinispanDistributedCache` as the `IDistributedCache` singleton
 === Configuration Options
 
 `CacheName`::
-The name of the Infinispan cache to use.
+The name of the {brandname} cache to use.
 Defaults to `"default"`.
 
 `ConfigureClient`::
@@ -56,7 +56,7 @@ var data = await cache.GetAsync("key");
 
 === Expiration Mapping
 
-The `DistributedCacheEntryOptions` are mapped to Infinispan expiration as follows:
+The `DistributedCacheEntryOptions` are mapped to {brandname} expiration as follows:
 
 `AbsoluteExpirationRelativeToNow`::
 Mapped to the Hot Rod entry lifespan.
@@ -80,7 +80,7 @@ await cache.RefreshAsync("session-key");
 
 The client integrates with .NET's `HybridCache`, which combines a fast in-process L1 cache with a distributed L2 cache and provides stampede protection (only one caller fetches on a cache miss).
 
-Register both Infinispan and HybridCache in a single call:
+Register both {brandname} and HybridCache in a single call:
 
 [source,csharp]
 ----
@@ -124,5 +124,5 @@ public class MyService(HybridCache cache)
 }
 ----
 
-Infinispan serves as the L2 distributed layer.
+{brandname} serves as the L2 distributed layer.
 The L1 in-process cache is managed by `HybridCache` automatically.

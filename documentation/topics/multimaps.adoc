@@ -2,7 +2,7 @@
 = Multimaps
 :context: multimaps
 
-Infinispan multimaps allow you to associate multiple values with a single key.
+{brandname} multimaps allow you to associate multiple values with a single key.
 The .NET Hot Rod client provides a `MultimapCache<K, V>` API that maps each key to a collection of values.
 
 == Creating a Multimap

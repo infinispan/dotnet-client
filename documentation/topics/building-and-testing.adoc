@@ -9,7 +9,7 @@ dotnet build
 
 === Running Tests
 
-Tests use xUnit and require a running Infinispan server (via https://dotnet.testcontainers.org/[Testcontainers] or a manual instance):
+Tests use xUnit and require a running {brandname} server (via https://dotnet.testcontainers.org/[Testcontainers] or a manual instance):
 
 [source,shell]
 ----

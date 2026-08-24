@@ -1,8 +1,15 @@
-= Infinispan .NET Client Guide
+:brandname: Infinispan
+
+= {brandname} Hot Rod .NET Client Guide
 :toc: left
 :toclevels: 3
+:source-highlighter: highlight.js
+:highlightjs-theme: github
+:icons: font
+:docinfo: shared-head
+:docinfodir: docinfo
 
-This guide covers the Infinispan .NET client for the Hot Rod binary protocol.
+This guide covers the {brandname} .NET client for the Hot Rod binary protocol.
 
 include::topics/getting-started.adoc[]
 

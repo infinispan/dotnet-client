@@ -48,4 +48,4 @@ client.User = "admin";
 client.Password = "password";
 ----
 
-See <<Connecting to Infinispan>> for full connection options including TLS, multiple hosts, and query parameters.
+See <<Connecting to {brandname}>> for full connection options including TLS, multiple hosts, and query parameters.

@@ -23,8 +23,11 @@ var cache = client.NewCache<Person>("people")
 
 === Filtering
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 // Simple comparison
 var adults = await cache.AsQueryable()
@@ -42,8 +45,9 @@ var notLondon = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 var adults = await (
     from p in cache.AsQueryable()
@@ -64,8 +68,9 @@ var notLondon = await (
 ).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 var adults = await cache.Query<Person>(
     "FROM example.Person p WHERE p.age >= 18");
@@ -77,14 +82,18 @@ var filtered = await cache.Query<Person>(
 var notLondon = await cache.Query<Person>(
     "FROM example.Person p WHERE p.bornIn != 'London'");
 ----
+====
 
 ==== Captured Variables and Named Parameters
 
 Captured variables in LINQ expressions are automatically extracted and sent as named parameters.
 With Ickle strings, use `:paramName` placeholders and an `IDictionary<string, object>`.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 string city = "London";
 int minYear = 1990;
@@ -93,8 +102,9 @@ var results = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 string city = "London";
 int minYear = 1990;
@@ -105,8 +115,9 @@ var results = await (
 ).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 string city = "London";
 int minYear = 1990;
@@ -114,6 +125,7 @@ var results = await cache.Query<Person>(
     "FROM example.Person p WHERE p.bornIn = :city AND p.bornYear > :minYear",
     new Dictionary<string, object> { ["city"] = city, ["minYear"] = minYear });
 ----
+====
 
 All three generate the same query: `FROM example.Person e WHERE (e.bornIn = :p0 AND e.bornYear > :p1)`.
 
@@ -123,8 +135,11 @@ Supported parameter types: `string`, `int`, `long`, `double`, `float`, `bool`, a
 
 Use standard `string` methods in LINQ, which translate to Ickle `LIKE` clauses.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 // Contains -> LIKE '%value%'
 var results = await cache.AsQueryable()
@@ -142,8 +157,9 @@ var results = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 var results = await (
     from p in cache.AsQueryable()
@@ -164,8 +180,9 @@ var results = await (
 ).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 var results = await cache.Query<Person>(
     "FROM example.Person p WHERE p.firstName LIKE '%arr%'");
@@ -176,11 +193,15 @@ var results = await cache.Query<Person>(
 var results = await cache.Query<Person>(
     "FROM example.Person p WHERE p.lastName LIKE '%er'");
 ----
+====
 
 === Sorting
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 var sorted = await cache.AsQueryable()
     .OrderBy(p => p.LastName)
@@ -188,8 +209,9 @@ var sorted = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 var sorted = await (
     from p in cache.AsQueryable()
@@ -198,12 +220,14 @@ var sorted = await (
 ).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 var sorted = await cache.Query<Person>(
     "FROM example.Person p ORDER BY p.lastName, p.age DESC");
 ----
+====
 
 === Pagination
 
@@ -211,8 +235,11 @@ Use `Skip` and `Take` in LINQ, or `StartOffset` and `MaxResults` on a `QueryRequ
 
 NOTE: `Skip` and `Take` are only available in LINQ method syntax. You can combine query syntax with method syntax for pagination.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 var page = await cache.AsQueryable()
     .OrderBy(p => p.LastName)
@@ -221,8 +248,9 @@ var page = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query + method syntax
-[source,csharp,role="secondary"]
+LINQ query + method syntax::
++
+[source,csharp]
 ----
 var page = await (
     from p in cache.AsQueryable()
@@ -232,8 +260,9 @@ var page = await (
 ).Skip(20).Take(10).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 using Org.Infinispan.Query.Remote.Client;
 
@@ -244,13 +273,17 @@ request.MaxResults = 10;
 
 var response = await cache.Query(request);
 ----
+====
 
 === Projections
 
 Use `Select` in LINQ to retrieve only specific fields, which generates an Ickle `SELECT` clause.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 var names = await cache.AsQueryable()
     .Where(p => p.BornIn == "London")
@@ -261,8 +294,9 @@ foreach (var n in names)
     Console.WriteLine($"{n.FirstName} {n.LastName}");
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 var names = await (
     from p in cache.AsQueryable()
@@ -274,22 +308,27 @@ foreach (var n in names)
     Console.WriteLine($"{n.FirstName} {n.LastName}");
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 var results = await cache.Query(
     "SELECT p.firstName, p.lastName FROM example.Person p WHERE p.bornIn = 'London'");
 foreach (Object[] row in results)
     Console.WriteLine($"{row[0]} {row[1]}");
 ----
+====
 
 === Terminal Operators
 
 Terminal operators retrieve single values or counts.
 These are only available in LINQ method syntax.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 // Count
 int count = await cache.AsQueryable()
@@ -320,8 +359,9 @@ var harry = await cache.AsQueryable()
     .FirstAsync(p => p.FirstName == "Harry");
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 // Count — use the raw QueryRequest API for totalResults
 var request = new QueryRequest();
@@ -335,13 +375,17 @@ var first = (await cache.Query<Person>(
     "FROM example.Person p WHERE p.lastName = :name",
     new Dictionary<string, object> { ["name"] = "Potter" }))[0];
 ----
+====
 
 === Combining Operators
 
 Chain multiple operators together for complex queries.
 
-.LINQ method syntax
-[source,csharp,role="primary"]
+[tabs]
+====
+LINQ method syntax::
++
+[source,csharp]
 ----
 var topYoungLondoners = await cache.AsQueryable()
     .Where(p => p.BornIn == "London")
@@ -351,8 +395,9 @@ var topYoungLondoners = await cache.AsQueryable()
     .ToListAsync();
 ----
 
-.LINQ query syntax
-[source,csharp,role="secondary"]
+LINQ query syntax::
++
+[source,csharp]
 ----
 var topYoungLondoners = await (
     from p in cache.AsQueryable()
@@ -362,8 +407,9 @@ var topYoungLondoners = await (
 ).Take(5).ToListAsync();
 ----
 
-.Ickle string
-[source,csharp,role="secondary"]
+Ickle string::
++
+[source,csharp]
 ----
 var request = new QueryRequest();
 request.QueryString =
@@ -371,6 +417,7 @@ request.QueryString =
 request.MaxResults = 5;
 var response = await cache.Query(request);
 ----
+====
 
 Multiple `Where` calls in LINQ are combined with `AND`.
 

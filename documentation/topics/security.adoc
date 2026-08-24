@@ -80,7 +80,7 @@ client.CACert = chain; // server CA chain
 
 The client TLS certificate must be configured at the transport level.
 
-NOTE: The Infinispan server must be configured to require client certificates and map them to security identities.
+NOTE: The {brandname} server must be configured to require client certificates and map them to security identities.
 
 === TLS
 

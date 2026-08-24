@@ -2,7 +2,7 @@
 = Distributed Counters
 :context: distributed-counters
 
-Infinispan distributed counters provide cluster-wide atomic counters.
+{brandname} distributed counters provide cluster-wide atomic counters.
 The .NET Hot Rod client supports both strong and weak counters with operations such as get, set, add, compare-and-swap, and reset.
 
 == Counter Types

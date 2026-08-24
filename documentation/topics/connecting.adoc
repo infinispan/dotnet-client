@@ -1,4 +1,4 @@
-== Connecting to Infinispan
+== Connecting to {brandname}
 
 === Creating a Client from a URI
 
