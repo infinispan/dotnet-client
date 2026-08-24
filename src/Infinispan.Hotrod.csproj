@@ -10,10 +10,13 @@
     <RepositoryUrl>https://github.com/infinispan/dotnet-client</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
     <SignAssembly>false</SignAssembly>
     <PackageReleaseNotes />
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
   <ItemGroup>
     <InternalsVisibleTo Include="Infinispan.Hotrod.XUnitTest" />
@@ -40,5 +43,8 @@
       <Pack>True</Pack>
       <PackagePath>icon.png</PackagePath>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 </Project>
