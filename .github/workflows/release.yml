@@ -16,7 +16,8 @@ permissions:
 jobs:
   release:
     permissions:
-      id-token: write  # enable GitHub OIDC token issuance for this job
+      contents: write
+      id-token: write
     runs-on: ubuntu-latest
 
     steps:
