@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <DocsDir>$(MSBuildProjectDirectory)/_docs</DocsDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DocsCss Include="documentation/css/**/*" />
+    <DocsJs Include="documentation/js/**/*" />
+    <DocfxOutput Include="_site/**/*" />
+  </ItemGroup>
+
+  <Target Name="BuildAsciidoc">
+    <RemoveDir Directories="$(DocsDir)" />
+    <MakeDir Directories="$(DocsDir)" />
+    <Exec Command="asciidoctor -r asciidoctor-tabs -o $(DocsDir)/dotnet_client.html documentation/index.adoc" />
+    <Copy SourceFiles="@(DocsCss)" DestinationFolder="$(DocsDir)/css/%(RecursiveDir)" />
+    <Copy SourceFiles="@(DocsJs)" DestinationFolder="$(DocsDir)/js/%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="BuildDocfx">
+    <Exec Command="docfx docfx.json" />
+  </Target>
+
+  <Target Name="BuildDocs" DependsOnTargets="BuildAsciidoc;BuildDocfx">
+    <MakeDir Directories="$(DocsDir)/api" />
+    <Copy SourceFiles="@(DocfxOutput)" DestinationFolder="$(DocsDir)/api/%(RecursiveDir)" />
+  </Target>
+
+  <Target Name="PackageDocs" DependsOnTargets="BuildDocs">
+    <ZipDirectory SourceDirectory="$(DocsDir)" DestinationFile="docs.zip" Overwrite="true" />
+  </Target>
+
+</Project>

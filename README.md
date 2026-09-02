@@ -87,10 +87,31 @@ Tests use Testcontainers to automatically pull and run an Infinispan server imag
 
 ## Documentation
 
-API documentation is generated with [DocFX](https://dotnet.github.io/docfx/). To build and serve locally:
+The full documentation (user guide + API reference) can be built using `docs.proj`:
 
 ```sh
+dotnet msbuild docs.proj -t:BuildDocs
+```
+
+This requires [asciidoctor](https://asciidoctor.org/) with the `asciidoctor-tabs` extension and [DocFX](https://dotnet.github.io/docfx/):
+
+```sh
+gem install asciidoctor 'asciidoctor-tabs:1.0.0.beta.6'
 dotnet tool install -g docfx
+```
+
+Individual targets are also available:
+
+| Target | Description |
+|--------|-------------|
+| `BuildAsciidoc` | Build the user guide HTML from AsciiDoc sources |
+| `BuildDocfx` | Generate the API reference with DocFX |
+| `BuildDocs` | Both of the above, merged into `_docs/` |
+| `PackageDocs` | `BuildDocs` + zip into `docs.zip` |
+
+To serve the API docs locally for preview:
+
+```sh
 docfx docfx.json --serve
 ```
 
