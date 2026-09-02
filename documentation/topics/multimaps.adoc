@@ -1,11 +1,9 @@
-[id='multimaps_{context}']
-= Multimaps
-:context: multimaps
+== Multimaps
 
 {brandname} multimaps allow you to associate multiple values with a single key.
 The .NET Hot Rod client provides a `MultimapCache<K, V>` API that maps each key to a collection of values.
 
-== Creating a Multimap
+=== Creating a Multimap
 
 Use the `NewMultimap` factory method on `InfinispanClient`:
 
@@ -26,7 +24,7 @@ var multimap = client.NewMultimap(
     supportsDuplicates: true);
 ----
 
-== Storing Values
+=== Storing Values
 
 `Put` adds a value to the collection for a key.
 Multiple calls with the same key accumulate values:
@@ -38,7 +36,7 @@ await multimap.Put("colors", "blue");
 await multimap.Put("colors", "green");
 ----
 
-== Retrieving Values
+=== Retrieving Values
 
 `Get` returns all values associated with a key.
 If the key does not exist, an empty list is returned:
@@ -52,7 +50,7 @@ IList<string> empty = await multimap.Get("nonexistent");
 // empty = []
 ----
 
-== Removing Entries
+=== Removing Entries
 
 Remove all values for a key:
 
@@ -74,7 +72,7 @@ bool removed = await multimap.RemoveEntry("colors", "red");
 
 Both methods return `false` if the key (or key-value pair) did not exist.
 
-== Checking Membership
+=== Checking Membership
 
 [source,csharp]
 ----
@@ -85,7 +83,7 @@ bool hasValue = await multimap.ContainsValue("red");
 bool hasEntry = await multimap.ContainsEntry("colors", "red");
 ----
 
-== Size
+=== Size
 
 `Size` returns the total number of values across all keys:
 

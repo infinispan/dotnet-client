@@ -1,16 +1,14 @@
-[id='distributed-counters_{context}']
-= Distributed Counters
-:context: distributed-counters
+== Distributed Counters
 
 {brandname} distributed counters provide cluster-wide atomic counters.
 The .NET Hot Rod client supports both strong and weak counters with operations such as get, set, add, compare-and-swap, and reset.
 
-== Counter Types
+=== Counter Types
 
 Strong counters:: Provide strong consistency guarantees. All operations are atomic and consistent across the cluster.
 Weak counters:: Optimized for high-throughput counting. They trade strong consistency for performance by using a configurable concurrency level.
 
-== Counter Configuration
+=== Counter Configuration
 
 Counters are configured with:
 
@@ -19,7 +17,7 @@ Counters are configured with:
 * *Bounded*: Whether the counter has lower and upper bounds
 * *Initial value*: The starting value
 
-== Creating and Using Counters
+=== Creating and Using Counters
 
 [source,csharp]
 ----
@@ -57,7 +55,7 @@ await counters.Define("weak-counter", new CounterConfiguration
 });
 ----
 
-== Counter Operations
+=== Counter Operations
 
 [source,csharp]
 ----
@@ -84,7 +82,7 @@ if (success)
 await counter.Reset();
 ----
 
-== Counter Manager Operations
+=== Counter Manager Operations
 
 [source,csharp]
 ----

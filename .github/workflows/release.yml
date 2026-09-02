@@ -76,13 +76,8 @@ jobs:
 
       - name: Build documentation archive
         run: |
-          mkdir -p _docs/api
-          asciidoctor -r asciidoctor-tabs -o _docs/dotnet_client.html documentation/index.adoc
-          cp -r documentation/css documentation/js _docs/
           dotnet tool install -g docfx
-          docfx docfx.json
-          cp -r _site/* _docs/api/
-          cd _docs && zip -qr ../docs.zip .
+          dotnet msbuild docs.proj -t:PackageDocs
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228 # v3

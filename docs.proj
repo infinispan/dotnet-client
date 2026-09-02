@@ -14,7 +14,7 @@
   <Target Name="BuildAsciidoc">
     <RemoveDir Directories="$(DocsDir)" />
     <MakeDir Directories="$(DocsDir)" />
-    <Exec Command="asciidoctor -r asciidoctor-tabs -o $(DocsDir)/dotnet_client.html documentation/index.adoc" />
+    <Exec Command="asciidoctor -r asciidoctor-tabs -o $(DocsDir)/index.html documentation/index.adoc" />
     <Copy SourceFiles="@(DocsCss)" DestinationFolder="$(DocsDir)/css/%(RecursiveDir)" />
     <Copy SourceFiles="@(DocsJs)" DestinationFolder="$(DocsDir)/js/%(RecursiveDir)" />
   </Target>

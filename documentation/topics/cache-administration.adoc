@@ -1,10 +1,8 @@
-[id='cache-administration_{context}']
-= Cache Administration
-:context: cache-administration
+== Cache Administration
 
 The `CacheAdmin` API lets you create, remove, and manage caches, templates, and protobuf schemas on the server at runtime through the Hot Rod protocol.
 
-== Getting the Admin Handle
+=== Getting the Admin Handle
 
 [source,csharp]
 ----
@@ -12,7 +10,7 @@ var client = InfinispanClient.FromUri("hotrod://admin:password@127.0.0.1:11222")
 var admin = client.Administration();
 ----
 
-== Creating Caches
+=== Creating Caches
 
 Create a cache with an XML configuration:
 
@@ -36,21 +34,21 @@ await admin.GetOrCreateCache("my-cache");
 await admin.GetOrCreateCacheWithTemplate("my-cache", "my-template");
 ----
 
-== Removing Caches
+=== Removing Caches
 
 [source,csharp]
 ----
 await admin.RemoveCache("my-cache");
 ----
 
-== Listing Caches
+=== Listing Caches
 
 [source,csharp]
 ----
 ISet<string> names = await admin.GetCacheNames();
 ----
 
-== Cache Configuration
+=== Cache Configuration
 
 Update a cache configuration attribute at runtime:
 
@@ -67,7 +65,7 @@ Assign an alias to a cache:
 await admin.AssignAlias("my-cache", "cache-alias");
 ----
 
-== Index Management
+=== Index Management
 
 Rebuild the index for an indexed cache:
 
@@ -83,7 +81,7 @@ Update the index schema after a protobuf schema change:
 await admin.UpdateIndexSchema("my-indexed-cache");
 ----
 
-== Templates
+=== Templates
 
 Create and remove cache configuration templates:
 
@@ -94,7 +92,7 @@ await admin.CreateTemplate("my-template", "<local-cache/>");
 await admin.RemoveTemplate("my-template");
 ----
 
-== Admin Flags
+=== Admin Flags
 
 Cache and template operations accept optional `AdminFlag` values:
 
@@ -106,7 +104,7 @@ Cache and template operations accept optional `AdminFlag` values:
 await admin.CreateCache("volatile-cache", flags: AdminFlag.Volatile);
 ----
 
-== Schema Management
+=== Schema Management
 
 The `SchemaAdmin` API manages protobuf schemas used for queries and protostream encoding.
 
@@ -115,7 +113,7 @@ The `SchemaAdmin` API manages protobuf schemas used for queries and protostream 
 var schemas = admin.Schemas();
 ----
 
-=== Registering Schemas
+==== Registering Schemas
 
 [source,csharp]
 ----
@@ -138,14 +136,14 @@ await schemas.Update("example.proto", proto);
 await schemas.Save("example.proto", proto);
 ----
 
-=== Deleting Schemas
+==== Deleting Schemas
 
 [source,csharp]
 ----
 await schemas.Delete("example.proto");
 ----
 
-=== Executing Arbitrary Server Tasks
+==== Executing Arbitrary Server Tasks
 
 For advanced use cases, the underlying `Exec` method is available on the client to execute any server task by name:
 
