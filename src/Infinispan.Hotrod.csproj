@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
-    <Version>10.0.0-beta.4</Version>
+    <Version>10.0.0-beta.5</Version>
     <Company>infinispan.org</Company>
     <Authors>Infinispan community</Authors>
     <Description>A .NET client for the Infinispan Hot Rod protocol</Description>
