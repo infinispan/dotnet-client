@@ -17,7 +17,7 @@ jobs:
           dotnet-version: '10.x'
 
       - name: Build
-        run: dotnet build
+        run: dotnet build Infinispan.Hotrod.sln
 
       - name: Test
-        run: dotnet test --logger "console;verbosity=detailed"
+        run: dotnet test Infinispan.Hotrod.sln --logger "console;verbosity=detailed"
