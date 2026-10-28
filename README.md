@@ -84,6 +84,11 @@ dotnet test
 ```
 
 Tests use Testcontainers to automatically pull and run an Infinispan server image — no manual server setup required.
+To run tests against a different server version, set the `INFINISPAN_SERVER_IMAGE` environment variable:
+
+```sh
+INFINISPAN_SERVER_IMAGE=quay.io/infinispan/server:16.3.1 dotnet test
+```
 
 ## Documentation
 
