@@ -31,6 +31,11 @@ namespace Infinispan.Hotrod
         public bool UseCacheDefaultLifespan;
         public bool UseCacheDefaultMaxIdle;
         public readonly Codec30 codec;
+        public const int FlagSkipCacheLoad = 0x08;
+        public const int FlagSkipIndexing = 0x10;
+        public const int FlagSkipListenerNotification = 0x20;
+        public const int FlagPeek = 0x40;
+
         public Int32 Flags { get { return getFlags(); } }
         private int getFlags()
         {
@@ -86,6 +91,19 @@ namespace Infinispan.Hotrod
         public async Task<ValueWithMetadata<V>> GetWithMetadata(K key)
         {
             return await Cluster.GetWithMetadata(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
+        }
+        /// <summary>
+        /// Get an entry from the cache with its metadata without affecting its expiration or eviction lifecycle.
+        /// Unlike <see cref="GetWithMetadata(K)"/>, this does not reset the max-idle timer nor update the eviction
+        /// access order, making it suitable for inspecting a value while letting the entry expire naturally.
+        /// Entries that have already exceeded their idle time but were not yet reaped may still be returned;
+        /// evicted entries are not. Requires Infinispan server 16.3+.
+        /// </summary>
+        /// <param name="key">key of the entry</param>
+        /// <returns>the value with metadata of the entry or null (async)</returns>
+        public async Task<ValueWithMetadata<V>> Peek(K key)
+        {
+            return await Cluster.Peek(KeyMarshaller, ValueMarshaller, (CacheBase)this, key);
         }
         /// <summary>
         /// Put/replace an entry in the cache

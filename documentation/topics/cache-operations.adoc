@@ -81,6 +81,17 @@ if (vwm != null)
 }
 ----
 
+Use `Peek` to inspect a value and its metadata without affecting the entry's expiration or eviction lifecycle. Unlike `GetWithMetadata`, it does not reset the max-idle timer nor update the eviction access order, making it suitable for monitoring an entry while letting it expire naturally. Entries that have already exceeded their idle time but were not yet reaped may still be returned; evicted entries are not. Requires Infinispan server 16.3+:
+
+[source,csharp]
+----
+var vwm = await cache.Peek("key");
+if (vwm != null)
+{
+    Console.WriteLine($"value={vwm.Value} lifespan={vwm.Lifespan} maxIdle={vwm.MaxIdle}");
+}
+----
+
 Use the version for optimistic locking with `ReplaceWithVersion` and `RemoveWithVersion`:
 
 [source,csharp]
@@ -166,6 +177,20 @@ Uses the cache's default lifespan instead of the value specified in the operatio
 
 `UseCacheDefaultMaxIdle`::
 Uses the cache's default max idle time instead of the value specified in the operation.
+
+`FlagSkipCacheLoad`::
+Skips loading the entry from a cache store (persistence) if it is not already in memory.
+
+`FlagSkipIndexing`::
+Skips indexing the entry, so the change is not reflected in queries until the entry is reindexed.
+
+`FlagSkipListenerNotification`::
+Suppresses event notifications to client and server listeners for this operation.
+
+`FlagPeek`::
+Skips updating the entry's last access time on read operations, so max-idle expiration and eviction order are not affected.
+This flag is used internally by the `Peek` method.
+Requires Infinispan server 16.3+.
 
 [source,csharp]
 ----

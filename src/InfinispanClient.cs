@@ -311,6 +311,14 @@ namespace Infinispan.Hotrod
             var result = await Execute(cache, cmd);
             return cmd.ValueWithMetadata;
         }
+
+        internal async ValueTask<ValueWithMetadata<V>> Peek<K, V>(Marshaller<K> km, Marshaller<V> vm, CacheBase cache, K key)
+        {
+            Commands.GETWITHMETADATA<K, V> cmd = new Commands.GETWITHMETADATA<K, V>(km, vm, key);
+            cmd.Flags = cache.Flags | CacheBase.FlagPeek;
+            var result = await Execute(cache, cmd);
+            return cmd.ValueWithMetadata;
+        }
         internal async ValueTask<Int32> Size(CacheBase cache)
         {
             Commands.SIZE cmd = new Commands.SIZE();
