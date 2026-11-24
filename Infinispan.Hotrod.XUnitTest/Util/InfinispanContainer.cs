@@ -12,7 +12,7 @@ namespace Infinispan.Hotrod.Tests.Util
     public class InfinispanContainer : IAsyncDisposable
     {
         private const int InfinispanPort = 11222;
-        private const string DefaultImage = "quay.io/infinispan/server:16.2";
+        private const string DefaultImage = "quay.io/infinispan/server:latest";
         private static readonly string ConfDir = Path.GetFullPath(
             Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "resources", "conf"));
 
@@ -22,6 +22,9 @@ namespace Infinispan.Hotrod.Tests.Util
         public string Host => _container.Hostname;
         public int Port => _fixedHostPort ?? _container.GetMappedPublicPort(InfinispanPort);
 
+        /// <summary>Docker image of the Infinispan server. Can be overridden with the INFINISPAN_SERVER_IMAGE environment variable.</summary>
+        public string Image { get; }
+
         public InfinispanContainer(
             string configFile,
             string user = null,
@@ -30,13 +33,15 @@ namespace Infinispan.Hotrod.Tests.Util
             string[] networkAliases = null,
             IDictionary<string, string> envVars = null,
             int? hostPort = null,
-            IDictionary<string, string> resourceMappings = null)
+            IDictionary<string, string> resourceMappings = null,
+            string image = null)
         {
             _fixedHostPort = hostPort;
+            Image = image ?? Environment.GetEnvironmentVariable("INFINISPAN_SERVER_IMAGE") ?? DefaultImage;
             var configPath = Path.Combine(ConfDir, configFile);
             var configContent = File.ReadAllBytes(configPath);
 
-            var builder = new ContainerBuilder(DefaultImage)
+            var builder = new ContainerBuilder(Image)
                 .WithExposedPort(InfinispanPort)
                 .WithResourceMapping(configContent, "/opt/infinispan/server/conf/infinispan.xml")
                 .WithWaitStrategy(
